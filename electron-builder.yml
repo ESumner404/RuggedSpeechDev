@@ -1,0 +1,35 @@
+appId: dev.opssumner.mywords
+productName: My Words
+directories:
+  output: release
+files:
+  - dist/**
+  - package.json
+asar: true
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+
+# Per-user install, no admin rights (CLAUDE.md §3): schools and families
+# frequently cannot elevate.
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  uninstallDisplayName: ${productName}
+
+# Windows 10 Pro is the only shipping target (CLAUDE.md §1). This mac target
+# exists purely so the app can be built and run locally for development and
+# testing — it is not a release channel. Unsigned: expect Gatekeeper to
+# require right-click > Open on first launch.
+mac:
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+  category: public.app-category.education
+  identity: null
