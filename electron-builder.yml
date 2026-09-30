@@ -1,5 +1,5 @@
-appId: dev.opssumner.mywords
-productName: My Words
+appId: dev.opssumner.myspeech2
+productName: My Speech 2
 directories:
   output: release
 files:
@@ -11,6 +11,11 @@ win:
   target:
     - target: nsis
       arch: [x64]
+  # Code signing (PLAN.md Phase 8): NOT YET CONFIGURED. Without a
+  # certificate, Windows SmartScreen warns on every install — get one and
+  # set win.certificateFile/certificatePassword (or CSC_LINK/CSC_KEY_PASSWORD
+  # env vars) here before this ships to a real family or school. This has a
+  # lead time; CLAUDE.md flagged starting it back in Phase 1.
 
 # Per-user install, no admin rights (CLAUDE.md §3): schools and families
 # frequently cannot elevate.
@@ -22,6 +27,9 @@ nsis:
   createDesktopShortcut: true
   createStartMenuShortcut: true
   uninstallDisplayName: ${productName}
+  # Offers to keep or remove the child's data on uninstall (PLAN.md Phase 8)
+  # — NOT YET VERIFIED on real Windows; see the comment in the script itself.
+  include: build/installer.nsh
 
 # Windows 10 Pro is the only shipping target (CLAUDE.md §1). This mac target
 # exists purely so the app can be built and run locally for development and

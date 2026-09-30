@@ -1,8 +1,10 @@
 import { join } from 'node:path';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import {
   app,
   BrowserWindow,
+  dialog,
+  ipcMain,
   Menu,
   powerSaveBlocker,
   protocol,
@@ -132,6 +134,62 @@ if (!gotLock) {
         (_details, callback) => callback({ cancel: true }),
       );
     }
+
+    // Camera/mic for Phase 4's photo and voice-clip capture — everything
+    // else denied by default rather than left to Electron's own default.
+    session.defaultSession.setPermissionRequestHandler((_webContents, permission, callback) => {
+      callback(permission === 'media');
+    });
+
+    ipcMain.handle('parent:set-fullscreen', (event, value: boolean) => {
+      BrowserWindow.fromWebContents(event.sender)?.setFullScreen(value);
+    });
+
+    ipcMain.handle('parent:is-fullscreen', (event) => {
+      return BrowserWindow.fromWebContents(event.sender)?.isFullScreen() ?? false;
+    });
+
+    // Backup is an explicit user action producing a file the adult controls
+    // (CLAUDE.md I2) — a native save/open dialog, not a silent write
+    // anywhere on disk. The renderer only ever hands over an opaque string
+    // and gets one back; it never sees a filesystem path.
+    ipcMain.handle('backup:save', async (event, data: string) => {
+      const win = BrowserWindow.fromWebContents(event.sender);
+      const dialogOptions = {
+        title: 'Save backup',
+        defaultPath: `my-speech-backup-${new Date().toISOString().slice(0, 10)}.mwbackup`,
+        filters: [{ name: 'My Speech 2 backup', extensions: ['mwbackup'] }],
+      };
+      const result = win
+        ? await dialog.showSaveDialog(win, dialogOptions)
+        : await dialog.showSaveDialog(dialogOptions);
+      if (result.canceled || !result.filePath) return { ok: false as const };
+      await writeFile(result.filePath, data, 'utf-8');
+      return { ok: true as const };
+    });
+
+    ipcMain.handle('backup:restore', async (event) => {
+      const win = BrowserWindow.fromWebContents(event.sender);
+      const dialogOptions = {
+        title: 'Restore backup',
+        filters: [{ name: 'My Speech 2 backup', extensions: ['mwbackup'] }],
+        properties: ['openFile'] as Array<'openFile'>,
+      };
+      const result = win
+        ? await dialog.showOpenDialog(win, dialogOptions)
+        : await dialog.showOpenDialog(dialogOptions);
+      if (result.canceled || result.filePaths.length === 0) return { ok: false as const };
+      const data = await readFile(result.filePaths[0]!, 'utf-8');
+      return { ok: true as const, data };
+    });
+
+    // Off by default (PLAN.md Phase 8) — this is a real Windows login-item
+    // setting, not a preference this app stores itself, so it's read back
+    // from the OS rather than cached in the renderer's own database.
+    ipcMain.handle('startup:get-open-at-login', () => app.getLoginItemSettings().openAtLogin);
+    ipcMain.handle('startup:set-open-at-login', (_event, value: boolean) => {
+      app.setLoginItemSettings({ openAtLogin: value });
+    });
 
     mainWindow = createWindow();
 

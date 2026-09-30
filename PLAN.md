@@ -1,4 +1,4 @@
-# PLAN.md — My Words
+# PLAN.md — My Speech 2
 
 Phased build. Each phase is independently shippable and leaves the application
 working. Do not begin a phase until the previous phase's acceptance criteria
@@ -130,7 +130,7 @@ The largest phase. Consider splitting 4a (Parent Mode + editing) and 4b
 
 **Scope**
 
-- PIN gate: hold the padlock three seconds, then numeric PIN. Configurable,
+- PIN gate: a standard "Parent Mode" button, then numeric PIN. Configurable,
   with a documented reset procedure for a forgotten PIN.
 - Parent Mode: add/edit/hide/reorder buttons, create pages, create categories,
   hide vocabulary, set grid size and vocabulary level, toggle fullscreen.

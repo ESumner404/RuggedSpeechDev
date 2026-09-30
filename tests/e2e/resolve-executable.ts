@@ -15,20 +15,25 @@ export function resolveExecutablePath(): string {
   }
 
   if (process.platform === 'darwin') {
-    const macDir = readdirSync(RELEASE_DIR).find((d) => d.startsWith('mac'));
-    if (macDir) {
+    // electron-builder names the --dir output for the host arch: "mac-arm64"
+    // on Apple Silicon, plain "mac" on x64. Match that exactly rather than
+    // any "mac*" prefix — a stale build for the other arch (e.g. left over
+    // from `npm run dist:mac`, which builds both) would otherwise be picked
+    // by directory listing order and silently launch old code.
+    const macDir = process.arch === 'arm64' ? 'mac-arm64' : 'mac';
+    if (existsSync(join(RELEASE_DIR, macDir))) {
       const appBundle = readdirSync(join(RELEASE_DIR, macDir)).find((f) =>
         f.endsWith('.app'),
       );
       if (appBundle) {
-        return join(RELEASE_DIR, macDir, appBundle, 'Contents/MacOS/My Words');
+        return join(RELEASE_DIR, macDir, appBundle, 'Contents/MacOS/My Speech 2');
       }
     }
   } else if (process.platform === 'win32') {
-    const candidate = join(RELEASE_DIR, 'win-unpacked', 'My Words.exe');
+    const candidate = join(RELEASE_DIR, 'win-unpacked', 'My Speech 2.exe');
     if (existsSync(candidate)) return candidate;
   } else {
-    const candidate = join(RELEASE_DIR, 'linux-unpacked', 'my-words');
+    const candidate = join(RELEASE_DIR, 'linux-unpacked', 'my-speech-2');
     if (existsSync(candidate)) return candidate;
   }
 

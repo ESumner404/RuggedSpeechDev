@@ -1,4 +1,4 @@
-# CLAUDE.md — My Words
+# CLAUDE.md — My Speech 2
 
 A communication companion for when speaking is difficult.
 
