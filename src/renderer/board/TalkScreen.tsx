@@ -1,9 +1,16 @@
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
-import { ensureSeeded, getActiveProfile, getBoard, getSessionState, setSessionState } from '../store/db';
+import {
+  ensureSeeded,
+  getActiveProfile,
+  getBoard,
+  getSessionState,
+  pressMode,
+  setSessionState,
+} from '../store/db';
 import { ROOT_BOARD_ID } from '../vocab/starter';
 import type { Board, Item } from '../store/types';
-import { announceText } from '../speech/announce';
+import { announceItem, announceText } from '../speech/announce';
 import { Grid } from './Grid';
 import { SentenceStrip, type SentenceChip } from './SentenceStrip';
 
@@ -65,9 +72,15 @@ export function TalkScreen({ onExit }: Props) {
       boardStack.value = [...boardStack.value, item.load_board.id];
       return;
     }
-    // Press mode: add to sentence. Nothing speaks until Speak is pressed
-    // (invariant I5) — the same tap never both builds and announces.
-    sentence.value = [...sentence.value, { chipId: crypto.randomUUID(), item }];
+    // What a press does is an adult's choice (PLAN.md Phase 1 press mode).
+    // By default it only adds to the sentence — nothing speaks until Speak
+    // is pressed. Either way, speech only ever follows a person's press
+    // (invariant I5).
+    const mode = pressMode.value;
+    if (mode !== 'speak') {
+      sentence.value = [...sentence.value, { chipId: crypto.randomUUID(), item }];
+    }
+    if (mode !== 'sentence') void announceItem(item);
   }
 
   function handleBack(): void {

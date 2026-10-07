@@ -1,8 +1,8 @@
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
-import { getBoard, getMyPages } from '../store/db';
+import { getBoard, getMyPages, pressMode } from '../store/db';
 import type { Board, Item, MyPage } from '../store/types';
-import { announceText } from '../speech/announce';
+import { announceItem, announceText } from '../speech/announce';
 import { Grid } from './Grid';
 import { SentenceStrip, type SentenceChip } from './SentenceStrip';
 
@@ -44,9 +44,13 @@ export function MyPagesScreen({ onExit }: Props) {
   }, [selectedPageId.value]);
 
   function handlePress(item: Item): void {
-    // Press mode only: add to sentence, nothing speaks until Speak is
-    // pressed (invariant I5) — same rule as Talk, same muscle memory.
-    sentence.value = [...sentence.value, { chipId: crypto.randomUUID(), item }];
+    // Same press mode as Talk (an adult's choice in Parent Mode), same
+    // muscle memory: by default a press only adds to the sentence.
+    const mode = pressMode.value;
+    if (mode !== 'speak') {
+      sentence.value = [...sentence.value, { chipId: crypto.randomUUID(), item }];
+    }
+    if (mode !== 'sentence') void announceItem(item);
   }
 
   function handleRemoveChip(chipId: string): void {

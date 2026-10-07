@@ -80,6 +80,28 @@ export function moveButton(board: Board, buttonId: string, direction: 'up' | 'do
   return { ...board, grid: { ...board.grid, order: reshapeOrder(next, board.grid.rows, board.grid.columns) } };
 }
 
+/**
+ * Drag-and-drop reordering (PLAN.md Phase 4): two buttons trade places and
+ * every other button stays exactly where it was, so one drag never shifts
+ * anything a child has learned the position of (invariant I3). The ▲/▼
+ * buttons remain as the keyboard-accessible fallback.
+ */
+export function swapButtons(board: Board, firstId: string, secondId: string): Board {
+  const flat = flattenOrder(board);
+  const first = flat.indexOf(firstId);
+  const second = flat.indexOf(secondId);
+  if (first === -1 || second === -1 || first === second) return board;
+
+  const next = [...flat];
+  next[first] = secondId;
+  next[second] = firstId;
+  return { ...board, grid: { ...board.grid, order: reshapeOrder(next, board.grid.rows, board.grid.columns) } };
+}
+
+export function hasEmptySlot(board: Board): boolean {
+  return flattenOrder(board).includes(null);
+}
+
 export function addButton(board: Board, item: Item): Board {
   const flat = flattenOrder(board);
   const emptyIndex = flat.indexOf(null);

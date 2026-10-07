@@ -21,9 +21,12 @@ import type {
   PhraseBank,
   PhraseBankSlotId,
   PlaceRecord,
+  PressMode,
   Profile,
+  QuickAccessId,
   RecentEntry,
 } from './types';
+import { DEFAULT_QUICK_ACCESS, isValidQuickAccess } from './quickAccess';
 
 // Bumped on every write to the recent-history store. A page displaying
 // that history (FavouritesScreen) reads this in its render body to
@@ -240,7 +243,26 @@ function emptyGridOrder(rows: GridSize, columns: GridSize): (string | null)[][] 
   return Array.from({ length: rows }, () => Array.from({ length: columns }, () => null));
 }
 
-const MY_PAGES_GRID_SIZE: GridSize = 3;
+const NEW_BOARD_GRID_SIZE: GridSize = 3;
+
+/** A new, empty board — used for My Pages and for folders (categories) an
+ * adult adds to the Talk tree. Starts 3×3; resizing is the adult's own
+ * deliberate action afterwards (invariant I3). */
+export async function createBoard(name: string, id: string = `board-${randomId()}`): Promise<Board> {
+  const db = await openMyWordsDB();
+  const board: Board = {
+    id,
+    name,
+    grid: {
+      rows: NEW_BOARD_GRID_SIZE,
+      columns: NEW_BOARD_GRID_SIZE,
+      order: emptyGridOrder(NEW_BOARD_GRID_SIZE, NEW_BOARD_GRID_SIZE),
+    },
+    buttons: [],
+  };
+  await db.put('boards', board);
+  return board;
+}
 
 /** My Pages (fully custom pages, built from scratch in Parent Mode — feature
  * review follow-up, Sep 2026). Stored as a small ordered list in `meta`,
@@ -260,16 +282,9 @@ async function saveMyPages(pages: MyPage[]): Promise<void> {
 }
 
 export async function createMyPage(name: string): Promise<MyPage> {
-  const db = await openMyWordsDB();
   const id = randomId();
   const boardId = `mypage-${id}`;
-  const board: Board = {
-    id: boardId,
-    name,
-    grid: { rows: MY_PAGES_GRID_SIZE, columns: MY_PAGES_GRID_SIZE, order: emptyGridOrder(MY_PAGES_GRID_SIZE, MY_PAGES_GRID_SIZE) },
-    buttons: [],
-  };
-  await db.put('boards', board);
+  await createBoard(name, boardId);
   const page: MyPage = { id, name, boardId };
   await saveMyPages([...(await getMyPages()), page]);
   return page;
@@ -552,6 +567,56 @@ export async function setPreferredSpeechRate(rate: number): Promise<void> {
   preferredSpeechRate.value = rate;
 }
 
+// Voice pitch (PLAN.md Phase 1: "rate and pitch") — same cached-signal shape
+// as rate, for the same reason.
+export const DEFAULT_SPEECH_PITCH = 1;
+export const preferredSpeechPitch = signal<number>(DEFAULT_SPEECH_PITCH);
+
+export async function getPreferredSpeechPitch(): Promise<number> {
+  const db = await openMyWordsDB();
+  return ((await db.get('meta', 'preferredSpeechPitch')) as number | undefined) ?? DEFAULT_SPEECH_PITCH;
+}
+
+export async function setPreferredSpeechPitch(pitch: number): Promise<void> {
+  const db = await openMyWordsDB();
+  await db.put('meta', pitch, 'preferredSpeechPitch');
+  preferredSpeechPitch.value = pitch;
+}
+
+// Press mode (PLAN.md Phase 1: speak immediately / add to sentence / both).
+// Defaults to building a sentence — nothing speaks until Speak is pressed.
+export const DEFAULT_PRESS_MODE: PressMode = 'sentence';
+export const pressMode = signal<PressMode>(DEFAULT_PRESS_MODE);
+
+export async function getPressMode(): Promise<PressMode> {
+  const db = await openMyWordsDB();
+  const stored = await db.get('meta', 'pressMode');
+  return stored === 'speak' || stored === 'both' || stored === 'sentence' ? stored : DEFAULT_PRESS_MODE;
+}
+
+export async function setPressMode(mode: PressMode): Promise<void> {
+  const db = await openMyWordsDB();
+  await db.put('meta', mode, 'pressMode');
+  pressMode.value = mode;
+}
+
+// Quick Access bar configuration (PLAN.md Phase 2). A stored value that
+// isn't a valid six-button layout containing Help falls back to the default
+// rather than leaving the child without a bar.
+export const quickAccessButtons = signal<QuickAccessId[]>(DEFAULT_QUICK_ACCESS);
+
+export async function getQuickAccess(): Promise<QuickAccessId[]> {
+  const db = await openMyWordsDB();
+  const stored = await db.get('meta', 'quickAccess');
+  return isValidQuickAccess(stored) ? stored : [...DEFAULT_QUICK_ACCESS];
+}
+
+export async function setQuickAccess(buttons: QuickAccessId[]): Promise<void> {
+  const db = await openMyWordsDB();
+  await db.put('meta', buttons, 'quickAccess');
+  quickAccessButtons.value = buttons;
+}
+
 // Medical info (feature review, Aug 2026) — edited in Parent Mode, shown
 // via the always-available Medical Info button without needing the PIN.
 export const DEFAULT_MEDICAL_INFO: MedicalInfo = {
@@ -642,6 +707,13 @@ export type BackupPayload = {
     accessSettings: AccessSettings;
     medicalInfo: MedicalInfo;
     myPages: MyPage[];
+    // Added after the first backups were made, so optional: an older backup
+    // file still restores, leaving these as they are.
+    quickAccess?: QuickAccessId[];
+    pressMode?: PressMode;
+    speechRate?: number;
+    speechPitch?: number;
+    voiceURI?: string | null;
   };
 };
 
@@ -705,6 +777,14 @@ export async function exportBackupPayload(): Promise<BackupPayload> {
     getMyPages(),
   ]);
 
+  const [quickAccess, pressModeValue, speechRate, speechPitch, voiceURI] = await Promise.all([
+    getQuickAccess(),
+    getPressMode(),
+    getPreferredSpeechRate(),
+    getPreferredSpeechPitch(),
+    getPreferredVoiceURI(),
+  ]);
+
   return {
     formatVersion: 1,
     boards,
@@ -726,6 +806,11 @@ export async function exportBackupPayload(): Promise<BackupPayload> {
       accessSettings,
       medicalInfo,
       myPages,
+      quickAccess,
+      pressMode: pressModeValue,
+      speechRate,
+      speechPitch,
+      voiceURI: voiceURI ?? null,
     },
   };
 }
@@ -778,6 +863,14 @@ export async function importBackupPayload(payload: BackupPayload): Promise<void>
   await db.put('meta', payload.meta.myPages, 'myPages');
   await db.put('meta', true, 'seeded');
 
+  // Fields added after the first backups were made may be absent; those are
+  // simply left as they are.
+  if (isValidQuickAccess(payload.meta.quickAccess)) await setQuickAccess(payload.meta.quickAccess);
+  if (payload.meta.pressMode) await setPressMode(payload.meta.pressMode);
+  if (payload.meta.speechRate !== undefined) await setPreferredSpeechRate(payload.meta.speechRate);
+  if (payload.meta.speechPitch !== undefined) await setPreferredSpeechPitch(payload.meta.speechPitch);
+  if (payload.meta.voiceURI !== undefined) await setPreferredVoiceURI(payload.meta.voiceURI ?? undefined);
+
   recentVersion.value += 1;
   dayPlanVersion.value += 1;
   activeProfileVersion.value += 1;
@@ -795,4 +888,7 @@ export function resetDBConnectionForTests(): void {
   myPagesVersion.value = 0;
   preferredVoiceURI.value = undefined;
   preferredSpeechRate.value = DEFAULT_SPEECH_RATE;
+  preferredSpeechPitch.value = DEFAULT_SPEECH_PITCH;
+  pressMode.value = DEFAULT_PRESS_MODE;
+  quickAccessButtons.value = DEFAULT_QUICK_ACCESS;
 }

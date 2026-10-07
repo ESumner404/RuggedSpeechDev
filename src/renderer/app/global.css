@@ -218,13 +218,17 @@ button {
    row, always in the same position regardless of which tab is active. */
 .page-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   padding: 0.75rem;
   border-bottom: 1px solid var(--color-border);
 }
 
+/* Wraps rather than squashing: Parent Mode has a dozen tabs. A basis keeps
+   the two- and three-tab rows on the child screens sharing the width
+   equally, exactly as before. */
 .page-tabs__tab {
-  flex: 1;
+  flex: 1 1 8rem;
   min-height: calc(var(--tap-target-min) * 0.7);
   border: 2px solid var(--color-border);
   border-radius: 8px;
@@ -1048,6 +1052,52 @@ button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+/* Static highlight only — no motion (CLAUDE.md §8). */
+.parent-mode-screen__button-row--drop-target {
+  outline: 3px dashed #1d4ed8;
+  outline-offset: 2px;
+}
+
+.parent-mode-screen__drag-handle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(var(--tap-target-min) * 0.5);
+  min-height: calc(var(--tap-target-min) * 0.5);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-chip-background);
+  font-size: 1.3rem;
+  cursor: grab;
+  user-select: none;
+}
+
+.quick-access-tab__hint {
+  margin: 0 0 1rem;
+}
+
+.quick-access-tab__slots {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+}
+
+.quick-access-tab__slot label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-weight: 600;
+}
+
+.quick-access-tab__slot select {
+  min-height: calc(var(--tap-target-min) * 0.6);
+  font-size: 1rem;
 }
 
 .parent-mode-screen__label-input {

@@ -15,11 +15,17 @@ import {
   DEFAULT_ACCESS_SETTINGS,
   accessSettingsVersion,
   getAccessSettings,
+  getPreferredSpeechPitch,
   getPreferredSpeechRate,
   getPreferredVoiceURI,
+  getPressMode,
+  getQuickAccess,
   hasCompletedFirstRun,
+  preferredSpeechPitch,
   preferredSpeechRate,
   preferredVoiceURI,
+  pressMode,
+  quickAccessButtons,
 } from '../store/db';
 import { applyAccessSettings } from '../access/applyAccessSettings';
 import { focusNext } from '../access/focusOrder';
@@ -53,6 +59,9 @@ export function App() {
     void hasCompletedFirstRun().then((done) => (firstRunDone.value = done));
     void getPreferredVoiceURI().then((uri) => (preferredVoiceURI.value = uri));
     void getPreferredSpeechRate().then((rate) => (preferredSpeechRate.value = rate));
+    void getPreferredSpeechPitch().then((pitch) => (preferredSpeechPitch.value = pitch));
+    void getPressMode().then((mode) => (pressMode.value = mode));
+    void getQuickAccess().then((buttons) => (quickAccessButtons.value = buttons));
   }, []);
 
   // Applies immediately when an adult changes a visual or scanning setting

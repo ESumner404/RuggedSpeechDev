@@ -95,6 +95,66 @@ describe('ParentModeScreen', () => {
     expect(after!.grid.order[0]![1]).toBe(firstCellBefore);
   });
 
+  it('dragging one button onto another swaps just those two, and persists (PLAN.md Phase 4)', async () => {
+    const before = await getBoard(ROOT_BOARD_ID);
+    const [firstId, secondId] = [before!.grid.order[0]![0]!, before!.grid.order[0]![1]!];
+    const label = (id: string) => before!.buttons.find((b) => b.id === id)!.label;
+
+    const handle = rowFor(container, label(firstId)).querySelector('.parent-mode-screen__drag-handle')!;
+    const target = rowFor(container, label(secondId));
+
+    act(() => {
+      handle.dispatchEvent(new Event('dragstart', { bubbles: true }));
+    });
+    act(() => {
+      target.dispatchEvent(new Event('dragover', { bubbles: true, cancelable: true }));
+    });
+    expect(target.className).toContain('drop-target');
+    act(() => {
+      target.dispatchEvent(new Event('drop', { bubbles: true, cancelable: true }));
+    });
+    await new Promise((resolve) => setTimeout(resolve, 60));
+
+    const after = await getBoard(ROOT_BOARD_ID);
+    expect(after!.grid.order[0]![0]).toBe(secondId);
+    expect(after!.grid.order[0]![1]).toBe(firstId);
+    // Everything else stays exactly where it was (invariant I3).
+    expect(after!.grid.order.slice(1)).toEqual(before!.grid.order.slice(1));
+    expect(after!.grid.order[0]!.slice(2)).toEqual(before!.grid.order[0]!.slice(2));
+  });
+
+  it('adding a folder creates a new board and a button on this one that opens it', async () => {
+    const select = container.querySelector<HTMLSelectElement>('.parent-mode-screen__board-picker select')!;
+    act(() => {
+      select.value = 'food';
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await waitFor(() => rowFor(container, 'apple') !== undefined);
+
+    const form = container.querySelector<HTMLFormElement>('.parent-mode-screen__add-folder')!;
+    const nameInput = form.querySelector<HTMLInputElement>('.parent-mode-screen__label-input')!;
+    act(() => {
+      nameInput.value = 'Sweets';
+      nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    act(() => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+
+    // waitFor above is synchronous, so poll the store directly.
+    for (let attempt = 0; attempt < 100; attempt += 1) {
+      const current = await getBoard('food');
+      if (current?.buttons.some((b) => b.label === 'Sweets' && b.load_board)) break;
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+    const food = await getBoard('food');
+    const folderButton = food!.buttons.find((b) => b.label === 'Sweets')!;
+    const folder = await getBoard(folderButton.load_board!.id);
+    expect(folder).toMatchObject({ name: 'Sweets', buttons: [] });
+    // The new board shows up in the picker straight away.
+    expect(Array.from(select.options).map((o) => o.textContent)).toContain('Sweets');
+  });
+
   it('adding a button places it in the next empty slot and persists', async () => {
     // The root board is a full 4×4 with no empty slot; "food" (3×3, 5
     // buttons) has room.

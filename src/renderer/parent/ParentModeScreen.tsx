@@ -4,6 +4,7 @@ import { BoardsTab } from './BoardsTab';
 import { MyPagesTab } from './MyPagesTab';
 import { PeoplePlacesTab } from './PeoplePlacesTab';
 import { ProfilesTab } from './ProfilesTab';
+import { QuickAccessTab } from './QuickAccessTab';
 import { AccessTab } from './AccessTab';
 import { GeneralTab } from './GeneralTab';
 import { MedicalInfoTab } from './MedicalInfoTab';
@@ -21,6 +22,7 @@ type Tab =
   | 'places'
   | 'myday'
   | 'mypages'
+  | 'quickaccess'
   | 'profiles'
   | 'access'
   | 'backup'
@@ -102,6 +104,14 @@ export function ParentModeScreen({ onExit }: Props) {
         <button
           type="button"
           class="page-tabs__tab"
+          aria-pressed={tab.value === 'quickaccess'}
+          onClick={() => (tab.value = 'quickaccess')}
+        >
+          Quick Access
+        </button>
+        <button
+          type="button"
+          class="page-tabs__tab"
           aria-pressed={tab.value === 'profiles'}
           onClick={() => (tab.value = 'profiles')}
         >
@@ -154,6 +164,7 @@ export function ParentModeScreen({ onExit }: Props) {
       {tab.value === 'places' && <PeoplePlacesTab kind="places" />}
       {tab.value === 'myday' && <DayBuilderTab />}
       {tab.value === 'mypages' && <MyPagesTab />}
+      {tab.value === 'quickaccess' && <QuickAccessTab />}
       {tab.value === 'profiles' && <ProfilesTab />}
       {tab.value === 'access' && <AccessTab />}
       {tab.value === 'backup' && <BackupTab />}

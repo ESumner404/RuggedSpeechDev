@@ -21,7 +21,7 @@ You'll be shown a **recovery code** once the PIN is set. Write it down somewhere
 
 ## Everyday use
 
-- The five buttons across the top (Home, Help, Yes, No, Favourites, Keyboard) are always there, from anywhere in the app.
+- The six buttons across the top (to begin with: Home, Help, Yes, No, Favourites, Keyboard) are always there, from anywhere in the app. An adult can choose different ones under **Parent Mode → Quick Access** — Help always stays, so it's never more than one press away.
 - The **Parent Mode** button in the corner opens the settings — one press, then your PIN.
 - Nothing is ever spoken unless somebody presses something. The app never guesses or finishes a sentence on its own.
 

@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'preact/hooks';
 import type { Item } from '../store/types';
 import { PhotoThumbnail } from '../ui/PhotoThumbnail';
 import { resolveBackgroundColor } from '../ui/fitzgerald';
-import { preferredSpeechRate, preferredVoiceURI, saveFavourite } from '../store/db';
+import { preferredSpeechPitch, preferredSpeechRate, preferredVoiceURI, saveFavourite } from '../store/db';
 import { speak } from '../speech/speak';
 
 type ScanHighlight = 'row' | 'cell' | null;
@@ -79,6 +79,7 @@ export function BoardButton({
       void saveFavourite(item);
       speak('Added to Favourites', {
         rate: preferredSpeechRate.value,
+        pitch: preferredSpeechPitch.value,
         ...(preferredVoiceURI.value ? { voiceURI: preferredVoiceURI.value } : {}),
       });
     }, LONG_PRESS_MS);

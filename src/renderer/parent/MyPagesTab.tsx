@@ -1,7 +1,16 @@
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { createMyPage, deleteMyPage, getBoard, getMyPages, renameMyPage, updateBoard } from '../store/db';
-import { addButton, moveButton, resizeGrid, slugify, toggleButtonHidden, updateButtonLabel } from './boardEditing';
+import {
+  addButton,
+  moveButton,
+  resizeGrid,
+  slugify,
+  swapButtons,
+  toggleButtonHidden,
+  updateButtonLabel,
+} from './boardEditing';
+import { useRowDragDrop } from './useRowDragDrop';
 import { FITZGERALD_COLORS, type FitzgeraldClass } from '../ui/fitzgerald';
 import type { Board, GridSize, Item, MyPage } from '../store/types';
 import { VALID_GRID_SIZES } from '../store/types';
@@ -81,6 +90,10 @@ export function MyPagesTab() {
       error.value = err instanceof Error ? err.message : String(err);
     }
   }
+
+  const drag = useRowDragDrop((draggedId, targetId) => {
+    withErrorHandling((current) => swapButtons(current, draggedId, targetId));
+  });
 
   function handleAddButton(event: Event): void {
     event.preventDefault();
@@ -204,7 +217,22 @@ export function MyPagesTab() {
 
           <ul class="parent-mode-screen__button-list">
             {board.value.buttons.map((button) => (
-              <li class="parent-mode-screen__button-row" key={button.id}>
+              <li
+                class={`parent-mode-screen__button-row${drag.overId.value === button.id ? ' parent-mode-screen__button-row--drop-target' : ''}`}
+                key={button.id}
+                onDragOver={(event) => drag.over(event, button.id)}
+                onDrop={(event) => drag.drop(event, button.id)}
+              >
+                <span
+                  class="parent-mode-screen__drag-handle"
+                  draggable
+                  role="img"
+                  aria-label={`Drag ${button.label} to swap places with another button`}
+                  onDragStart={(event) => drag.start(event, button.id)}
+                  onDragEnd={() => drag.end()}
+                >
+                  ⠿
+                </span>
                 <input
                   class="parent-mode-screen__label-input"
                   type="text"

@@ -101,7 +101,7 @@ test.describe('Phase 7 — Access', () => {
       // in this whole test, since setting it up is itself a Parent Mode
       // action, not part of the "two switches" journey being tested.
       await enterParentModeExisting(page, '2580');
-      await page.locator('.page-tabs__tab', { hasText: 'Access' }).click();
+      await page.locator('.page-tabs__tab', { hasText: /^Access$/ }).click();
       const scanSelect = page.locator('.access-tab__section', { hasText: 'Switch scanning' }).locator('select');
       await scanSelect.selectOption('twoSwitchStepped');
       await page.locator('.parent-mode-screen__exit').click();
@@ -149,7 +149,7 @@ test.describe('Phase 7 — Access', () => {
       await completeFirstRun(page, '1111');
 
       await enterParentModeExisting(page, '1111');
-      await page.locator('.page-tabs__tab', { hasText: 'Access' }).click();
+      await page.locator('.page-tabs__tab', { hasText: /^Access$/ }).click();
 
       const contrastSelect = page.locator('.access-tab__section', { hasText: 'Visual' }).locator('select');
       await contrastSelect.selectOption('dark');
@@ -195,7 +195,7 @@ test.describe('Phase 7 — Access', () => {
       await page.locator('.talk-screen__nav-button', { hasText: 'Home' }).click();
 
       await enterParentModeExisting(page, '3333');
-      await page.locator('.page-tabs__tab', { hasText: 'Access' }).click();
+      await page.locator('.page-tabs__tab', { hasText: /^Access$/ }).click();
       const checkbox = page
         .locator('.access-tab__checkbox', { hasText: 'Low-arousal' })
         .locator('input[type="checkbox"]');
@@ -221,7 +221,7 @@ test.describe('Phase 7 — Access', () => {
       await completeFirstRun(page, '4444');
 
       await enterParentModeExisting(page, '4444');
-      await page.locator('.page-tabs__tab', { hasText: 'Access' }).click();
+      await page.locator('.page-tabs__tab', { hasText: /^Access$/ }).click();
       const rateSlider = page.locator('.access-tab__section', { hasText: 'Speech rate' }).locator('input[type="range"]');
       await rateSlider.fill('0.75');
       await page.locator('.parent-mode-screen__exit').click();

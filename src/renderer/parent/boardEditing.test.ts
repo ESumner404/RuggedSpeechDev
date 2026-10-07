@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { addButton, moveButton, resizeGrid, toggleButtonHidden, updateButtonLabel } from './boardEditing';
+import {
+  addButton,
+  hasEmptySlot,
+  moveButton,
+  resizeGrid,
+  swapButtons,
+  toggleButtonHidden,
+  updateButtonLabel,
+} from './boardEditing';
 import type { Board } from '../store/types';
 
 function makeBoard(): Board {
@@ -68,6 +76,46 @@ describe('moveButton', () => {
   it('does nothing for a button that is not on this board', () => {
     const board = makeBoard();
     expect(moveButton(board, 'nope', 'up')).toEqual(board);
+  });
+});
+
+describe('swapButtons (drag-and-drop)', () => {
+  function threeButtons(): Board {
+    return {
+      ...makeBoard(),
+      grid: { rows: 2, columns: 2, order: [['a', 'b'], ['c', null]] },
+      buttons: [
+        { id: 'a', label: 'A' },
+        { id: 'b', label: 'B' },
+        { id: 'c', label: 'C' },
+      ],
+    };
+  }
+
+  it('trades two buttons and leaves every other position untouched', () => {
+    const next = swapButtons(threeButtons(), 'a', 'c');
+    expect(next.grid.order).toEqual([['c', 'b'], ['a', null]]);
+  });
+
+  it('does nothing when dropped on itself, or when either button is not on this board', () => {
+    const board = threeButtons();
+    expect(swapButtons(board, 'a', 'a')).toEqual(board);
+    expect(swapButtons(board, 'a', 'nope')).toEqual(board);
+    expect(swapButtons(board, 'nope', 'a')).toEqual(board);
+  });
+
+  it('a hidden button still takes part, since position is independent of visibility', () => {
+    const hidden = toggleButtonHidden(threeButtons(), 'b');
+    expect(swapButtons(hidden, 'b', 'c').grid.order).toEqual([['a', 'c'], ['b', null]]);
+  });
+});
+
+describe('hasEmptySlot', () => {
+  it('reports whether a button could be added without resizing', () => {
+    expect(hasEmptySlot(makeBoard())).toBe(true);
+    expect(
+      hasEmptySlot({ ...makeBoard(), grid: { rows: 2, columns: 2, order: [['a', 'b'], ['c', 'd']] } }),
+    ).toBe(false);
   });
 });
 

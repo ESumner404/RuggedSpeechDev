@@ -4,7 +4,7 @@ import { render } from 'preact';
 import { act } from 'preact/test-utils';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { TalkScreen } from './TalkScreen';
-import { resetDBConnectionForTests } from '../store/db';
+import { pressMode, resetDBConnectionForTests } from '../store/db';
 
 async function waitFor(check: () => boolean, timeoutMs = 2000): Promise<void> {
   const start = Date.now();
@@ -85,6 +85,68 @@ describe('TalkScreen', () => {
 
     await waitFor(() => findBoardButton(container, 'I') !== undefined);
     expect(findBoardButton(container, 'apple')).toBeUndefined();
+  });
+});
+
+describe('TalkScreen press mode (PLAN.md Phase 1)', () => {
+  let container: HTMLElement;
+  let spoken: string[];
+
+  beforeEach(async () => {
+    indexedDB = new IDBFactory();
+    resetDBConnectionForTests();
+    spoken = [];
+    (window as unknown as { speechSynthesis: unknown }).speechSynthesis = {
+      getVoices: () => [],
+      cancel: () => {},
+      speak: (utterance: { text: string }) => spoken.push(utterance.text),
+    };
+    (globalThis as unknown as { SpeechSynthesisUtterance: unknown }).SpeechSynthesisUtterance = class {
+      text: string;
+      rate = 1;
+      pitch = 1;
+      voice = null;
+      constructor(text: string) {
+        this.text = text;
+      }
+    };
+    container = document.createElement('div');
+    render(<TalkScreen onExit={() => {}} />, container);
+    await waitFor(() => container.querySelectorAll('.board-button').length > 0);
+  });
+
+  afterEach(() => {
+    render(null, container);
+  });
+
+  const chips = () => Array.from(container.querySelectorAll('.sentence-strip__chip')).map((el) => el.textContent);
+
+  it('"sentence" (the default) only adds the word — nothing speaks until Speak is pressed', () => {
+    act(() => buttonLabelled(container, 'I').click());
+    expect(chips()).toEqual(['I']);
+    expect(spoken).toEqual([]);
+  });
+
+  it('"speak" says the word straight away and leaves the sentence empty', () => {
+    pressMode.value = 'speak';
+    act(() => buttonLabelled(container, 'I').click());
+    expect(spoken).toEqual(['I']);
+    expect(chips()).toEqual([]);
+  });
+
+  it('"both" says the word and adds it to the sentence', () => {
+    pressMode.value = 'both';
+    act(() => buttonLabelled(container, 'want').click());
+    expect(spoken).toEqual(['want']);
+    expect(chips()).toEqual(['want']);
+  });
+
+  it('opening a folder never speaks, whatever the press mode', async () => {
+    pressMode.value = 'both';
+    act(() => buttonLabelled(container, 'Food').click());
+    await waitFor(() => findBoardButton(container, 'apple') !== undefined);
+    expect(spoken).toEqual([]);
+    expect(chips()).toEqual([]);
   });
 });
 

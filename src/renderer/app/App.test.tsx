@@ -4,7 +4,7 @@ import { render } from 'preact';
 import { act } from 'preact/test-utils';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { App } from './App';
-import { resetDBConnectionForTests, setFirstRunCompleted } from '../store/db';
+import { resetDBConnectionForTests, setFirstRunCompleted, setQuickAccess } from '../store/db';
 
 async function waitFor(check: () => boolean, timeoutMs = 2000): Promise<void> {
   const start = Date.now();
@@ -111,6 +111,33 @@ describe('App', () => {
 
     expect(spoken).toEqual(['yes', 'no']);
     expect(container.querySelector('.my-pages-screen__empty-title')?.textContent).toBe('No pages yet');
+  });
+
+  it('the Quick Access bar follows the adult-chosen layout, and each button goes where it says', async () => {
+    await setQuickAccess(['help', 'talk', 'yes', 'no', 'myday', 'home']);
+    render(null, container);
+    container = document.createElement('div');
+    render(<App />, container);
+    await waitFor(() => container.querySelectorAll('.quick-access-bar__button').length === 6);
+    await waitFor(
+      () => Array.from(container.querySelectorAll('.quick-access-bar__button')).map((b) => b.textContent)[1] === 'Talk',
+    );
+
+    expect(Array.from(container.querySelectorAll('.quick-access-bar__button')).map((b) => b.textContent)).toEqual([
+      'Help',
+      'Talk',
+      'Yes',
+      'No',
+      'My Day',
+      'Home',
+    ]);
+
+    act(() => quickAccessButton(container, 'Talk').click());
+    expect(container.querySelector('.talk-screen')).not.toBeNull();
+    act(() => quickAccessButton(container, 'My Day').click());
+    expect(container.querySelector('.talk-screen')).toBeNull();
+    act(() => quickAccessButton(container, 'Help').click());
+    expect(container.querySelector('.page-tabs__tab[aria-pressed="true"]')?.textContent).toBe('Help');
   });
 
   it('a single press of the Parent Mode button opens the PIN gate', () => {

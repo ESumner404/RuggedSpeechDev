@@ -127,6 +127,28 @@ export type Profile = {
   rootBoardId: string;
 };
 
+// Press mode (PLAN.md Phase 1): what pressing a board button does. Speaking
+// on a press is still a person pressing something (invariant I5) — what's
+// ruled out is anything speaking without a press.
+export type PressMode = 'sentence' | 'speak' | 'both';
+
+// Quick Access (PLAN.md Phase 2): six adult-configurable buttons that sit on
+// every screen. Positions only change through an adult's deliberate choice
+// in Parent Mode (invariant I3).
+export const QUICK_ACCESS_IDS = [
+  'home',
+  'help',
+  'yes',
+  'no',
+  'favourites',
+  'keyboard',
+  'talk',
+  'myday',
+  'mypages',
+  'feelings',
+] as const;
+export type QuickAccessId = (typeof QUICK_ACCESS_IDS)[number];
+
 // My Pages (PLAN.md Phase 1 Home tile; built out later): fully custom pages
 // an adult builds from scratch in Parent Mode, separate from the built-in
 // Talk board tree. A page is a thin, ordered reference to its own Board

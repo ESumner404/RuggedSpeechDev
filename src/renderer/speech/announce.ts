@@ -1,10 +1,17 @@
 import { speak, type SpeakOptions } from './speak';
-import { getVoiceClip, preferredSpeechRate, preferredVoiceURI, recordUtteranceIfEnabled } from '../store/db';
+import {
+  getVoiceClip,
+  preferredSpeechPitch,
+  preferredSpeechRate,
+  preferredVoiceURI,
+  recordUtteranceIfEnabled,
+} from '../store/db';
 import type { Item } from '../store/types';
 
 function baseSpeakOptions(): SpeakOptions {
   return {
     rate: preferredSpeechRate.value,
+    pitch: preferredSpeechPitch.value,
     ...(preferredVoiceURI.value ? { voiceURI: preferredVoiceURI.value } : {}),
   };
 }

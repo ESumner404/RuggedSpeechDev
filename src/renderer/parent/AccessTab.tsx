@@ -2,13 +2,19 @@ import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import {
   DEFAULT_ACCESS_SETTINGS,
+  DEFAULT_PRESS_MODE,
+  DEFAULT_SPEECH_PITCH,
   DEFAULT_SPEECH_RATE,
   getAccessSettings,
+  getPreferredSpeechPitch,
   getPreferredSpeechRate,
+  getPressMode,
   setAccessSettings,
+  setPreferredSpeechPitch,
   setPreferredSpeechRate,
+  setPressMode,
 } from '../store/db';
-import type { AccessSettings, ContrastMode, ScanningMode } from '../store/types';
+import type { AccessSettings, ContrastMode, PressMode, ScanningMode } from '../store/types';
 
 // Access (PLAN.md Phase 7): everything here defaults off, and stays off
 // for a family that never opens this tab — ordinary touch/mouse behaviour
@@ -16,16 +22,23 @@ import type { AccessSettings, ContrastMode, ScanningMode } from '../store/types'
 export function AccessTab() {
   const settings = useSignal<AccessSettings>(DEFAULT_ACCESS_SETTINGS);
   const speechRate = useSignal<number>(DEFAULT_SPEECH_RATE);
+  const speechPitch = useSignal<number>(DEFAULT_SPEECH_PITCH);
+  const press = useSignal<PressMode>(DEFAULT_PRESS_MODE);
   const loaded = useSignal(false);
 
   useEffect(() => {
-    void Promise.all([getAccessSettings(), getPreferredSpeechRate()]).then(
-      ([loadedSettings, loadedRate]) => {
-        settings.value = loadedSettings;
-        speechRate.value = loadedRate;
-        loaded.value = true;
-      },
-    );
+    void Promise.all([
+      getAccessSettings(),
+      getPreferredSpeechRate(),
+      getPreferredSpeechPitch(),
+      getPressMode(),
+    ]).then(([loadedSettings, loadedRate, loadedPitch, loadedPress]) => {
+      settings.value = loadedSettings;
+      speechRate.value = loadedRate;
+      speechPitch.value = loadedPitch;
+      press.value = loadedPress;
+      loaded.value = true;
+    });
   }, []);
 
   async function update(next: AccessSettings): Promise<void> {
@@ -36,6 +49,16 @@ export function AccessTab() {
   async function updateSpeechRate(rate: number): Promise<void> {
     speechRate.value = rate;
     await setPreferredSpeechRate(rate);
+  }
+
+  async function updateSpeechPitch(pitch: number): Promise<void> {
+    speechPitch.value = pitch;
+    await setPreferredSpeechPitch(pitch);
+  }
+
+  async function updatePressMode(mode: PressMode): Promise<void> {
+    press.value = mode;
+    await setPressMode(mode);
   }
 
   if (!loaded.value) return null;
@@ -57,6 +80,43 @@ export function AccessTab() {
             value={speechRate.value}
             onInput={(event) => void updateSpeechRate(Number((event.target as HTMLInputElement).value))}
           />
+        </label>
+      </section>
+
+      <section class="access-tab__section">
+        <h2 class="access-tab__heading">Voice pitch</h2>
+        <p class="access-tab__hint">
+          How high or low the voice sounds. Lower can feel calmer; higher can sound younger.
+        </p>
+        <label class="access-tab__slider-row">
+          Pitch ×{speechPitch.value.toFixed(2)}
+          <input
+            type="range"
+            min={0.5}
+            max={1.5}
+            step={0.05}
+            value={speechPitch.value}
+            onInput={(event) => void updateSpeechPitch(Number((event.target as HTMLInputElement).value))}
+          />
+        </label>
+      </section>
+
+      <section class="access-tab__section">
+        <h2 class="access-tab__heading">When a button is pressed</h2>
+        <p class="access-tab__hint">
+          On the Talk board and My Pages. Words are only ever spoken because someone pressed
+          something — this just chooses what that press does.
+        </p>
+        <label class="access-tab__select-row">
+          A press
+          <select
+            value={press.value}
+            onChange={(event) => void updatePressMode((event.target as HTMLSelectElement).value as PressMode)}
+          >
+            <option value="sentence">Adds the word to the sentence (speak with Speak)</option>
+            <option value="speak">Speaks the word straight away</option>
+            <option value="both">Does both</option>
+          </select>
         </label>
       </section>
 
