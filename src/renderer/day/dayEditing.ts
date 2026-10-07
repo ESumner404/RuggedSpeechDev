@@ -39,12 +39,19 @@ export function updateActivity(
 ): DayActivity[] {
   return activities.map((activity) => {
     if (activity.id !== id) return activity;
-    const nameChanged = updates.name !== undefined && updates.name !== activity.name;
-    return {
-      ...activity,
-      ...updates,
-      ...(nameChanged ? { changedFrom: activity.name } : {}),
-    };
+    const next: DayActivity = { ...activity, ...updates };
+    if (updates.name === undefined || updates.name === activity.name) return next;
+
+    // Typing a new name arrives one keystroke at a time. The name to show
+    // struck through is the one the child last saw — the oldest unannounced
+    // one — not whatever half-typed word came just before this keystroke.
+    // Typing back to that original name means nothing has changed after all.
+    const original = activity.changedFrom ?? activity.name;
+    if (updates.name === original) {
+      delete next.changedFrom;
+      return next;
+    }
+    return { ...next, changedFrom: original };
   });
 }
 

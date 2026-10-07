@@ -106,8 +106,8 @@ export function FirstRunWizard({ onComplete }: Props) {
           <h1 class="first-run-wizard__title">Choose a grid size</h1>
           <p class="first-run-wizard__hint">
             Bigger buttons, fewer per page — or smaller buttons with more choices at once. This
-            can be changed later in Parent Mode, but button positions stay put once set
-            (CLAUDE.md I3), so it's worth getting right now.
+            can be changed later in Parent Mode, but a child learns where buttons are, so
+            it's worth getting right now.
           </p>
           {gridError.value && <p class="first-run-wizard__error">{gridError.value}</p>}
           <div class="first-run-wizard__grid-sizes">
