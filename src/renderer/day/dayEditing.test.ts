@@ -54,6 +54,21 @@ describe('updateActivity', () => {
     const result = updateActivity([activity('a', { name: 'Lunch' })], 'a', { name: 'Lunch' });
     expect(result[0]?.changedFrom).toBeUndefined();
   });
+
+  it('keeps the name the child last saw while a new one is typed a keystroke at a time', () => {
+    let activities = [activity('a', { name: 'Lunch' })];
+    for (const partial of ['G', 'Gr', 'Gra', "Grandma's"]) {
+      activities = updateActivity(activities, 'a', { name: partial });
+    }
+    expect(activities[0]).toMatchObject({ name: "Grandma's", changedFrom: 'Lunch' });
+  });
+
+  it('typing back to the original name means nothing changed after all', () => {
+    let activities = [activity('a', { name: 'Lunch' })];
+    activities = updateActivity(activities, 'a', { name: 'Lunc' });
+    activities = updateActivity(activities, 'a', { name: 'Lunch' });
+    expect(activities[0]?.changedFrom).toBeUndefined();
+  });
 });
 
 describe('acknowledgeChange', () => {
