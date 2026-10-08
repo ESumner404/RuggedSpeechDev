@@ -16,11 +16,14 @@ async function setUpPin(page: Page, pin: string): Promise<void> {
 }
 
 async function completeFirstRun(page: Page, pin: string): Promise<void> {
-  await page.locator('.first-run-wizard__button--primary').click();
-  await page.locator('.first-run-wizard__button--primary').click();
+  // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+  for (let step = 0; step < 7; step += 1) {
+    await page.locator('.first-run-wizard__button--primary').click();
+  }
   await setUpPin(page, pin);
   await setUpPin(page, pin);
   await page.locator('.pin-gate__button').click();
+  await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
   await expect(page.locator('.home-screen__tile').first()).toBeVisible();
 }
 
@@ -43,7 +46,7 @@ function boardButton(page: Page, label: string) {
   });
 }
 
-test.describe('My Pages — fully custom pages (feature review follow-up, Sep 2026)', () => {
+test.describe('My Pages, fully custom pages (feature review follow-up, Sep 2026)', () => {
   let userDataDir: string;
 
   test.beforeEach(() => {
@@ -84,7 +87,7 @@ test.describe('My Pages — fully custom pages (feature review follow-up, Sep 20
     await page.locator('.parent-mode-screen__exit').click();
     await page.locator('.home-screen__tile', { hasText: 'My Pages' }).click();
 
-    // Exactly one page — opens straight to it, no picker tap needed.
+    // Exactly one page, opens straight to it, no picker tap needed.
     await expect(boardButton(page, 'stomp')).toBeVisible();
     await boardButton(page, 'stomp').click();
     await page.locator('.sentence-strip__speak').click();
@@ -124,7 +127,7 @@ test.describe('My Pages — fully custom pages (feature review follow-up, Sep 20
     await page.locator('.parent-mode-screen__exit').click();
     await page.locator('.home-screen__tile', { hasText: 'My Pages' }).click();
 
-    // Only one page left — straight in, no picker.
+    // Only one page left, straight in, no picker.
     await expect(page.locator('.my-pages-screen__picker')).toHaveCount(0);
     await expect(page.locator('.talk-screen__grid')).toBeVisible();
 

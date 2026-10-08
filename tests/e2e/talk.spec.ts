@@ -15,14 +15,17 @@ async function setUpPin(page: Page, pin: string): Promise<void> {
   await page.locator('.pin-gate__key--submit').click();
 }
 
-/** The first-run wizard (PLAN.md Phase 8) is mandatory and blocks
- * everything else — every fresh-profile test has to clear it first. */
+/** The first-run wizard (docs/build-plan.md Phase 8) is mandatory and blocks
+ * everything else, every fresh-profile test has to clear it first. */
 async function completeFirstRun(page: Page, pin: string): Promise<void> {
-  await page.locator('.first-run-wizard__button--primary').click(); // voice -> grid
-  await page.locator('.first-run-wizard__button--primary').click(); // grid -> pin
+  // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+  for (let step = 0; step < 7; step += 1) {
+    await page.locator('.first-run-wizard__button--primary').click();
+  }
   await setUpPin(page, pin);
   await setUpPin(page, pin);
   await page.locator('.pin-gate__button').click();
+  await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
   await expect(page.locator('.home-screen__tile').first()).toBeVisible();
 }
 
@@ -52,7 +55,7 @@ async function lastSpoken(page: Page): Promise<string | undefined> {
   return page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken.at(-1));
 }
 
-test.describe('Phase 1 — the core board', () => {
+test.describe('Phase 1, the core board', () => {
   let userDataDir: string;
 
   test.beforeEach(() => {
@@ -172,7 +175,7 @@ test.describe('Phase 1 — the core board', () => {
 
     await page.locator('.home-screen__tile', { hasText: 'Talk' }).click();
     // "go" is not one of the seeded default favourites, unlike most of the
-    // root board — a real test of the long press, not a pre-existing one.
+    // root board, a real test of the long press, not a pre-existing one.
     const goButton = boardButton(page, 'go');
     await goButton.dispatchEvent('pointerdown');
     await page.waitForTimeout(900);

@@ -14,7 +14,7 @@ function minutesUntil(activity: DayActivity, now: Date): number | null {
 
 /**
  * Which warning (if any) is due right now for this activity. Off by
- * default (PLAN.md Phase 5) — callers only invoke this when an adult has
+ * default (docs/build-plan.md Phase 5), callers only invoke this when an adult has
  * deliberately turned countdowns on. The adult's chosen countdownMinutes
  * controls how far ahead the countdown window opens; the two spoken
  * warnings themselves are always fixed at 2 and 1 minutes before start,

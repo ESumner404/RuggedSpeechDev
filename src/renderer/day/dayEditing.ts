@@ -29,7 +29,7 @@ export function moveActivity(
 /**
  * Editing the name of an already-built activity records what it used to
  * be called, so the child's My Day screen can show the old one struck
- * through next to the new one and speak the change once (PLAN.md Phase 5:
+ * through next to the new one and speak the change once (docs/build-plan.md Phase 5:
  * "change of plan").
  */
 export function updateActivity(
@@ -43,8 +43,8 @@ export function updateActivity(
     if (updates.name === undefined || updates.name === activity.name) return next;
 
     // Typing a new name arrives one keystroke at a time. The name to show
-    // struck through is the one the child last saw — the oldest unannounced
-    // one — not whatever half-typed word came just before this keystroke.
+    // struck through is the one the child last saw, the oldest unannounced
+    // one, not whatever half-typed word came just before this keystroke.
     // Typing back to that original name means nothing has changed after all.
     const original = activity.changedFrom ?? activity.name;
     if (updates.name === original) {

@@ -1,9 +1,31 @@
+# Dependencies and build output
 node_modules/
 dist/
 out/
 release/
 coverage/
+
+# Test output
 test-results/
 playwright-report/
+
+# Local and editor files
 .DS_Store
+Thumbs.db
 *.log
+.vscode/
+.idea/
+
+# Assistant and tool settings (not part of the project)
+.claude/
+CLAUDE.md
+
+# Secrets and signing material: never commit these
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.p12
+*.cer
+*.keystore

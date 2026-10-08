@@ -4,7 +4,8 @@ import { render } from 'preact';
 import { act } from 'preact/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PrintTab } from './PrintTab';
-import { ensureSeeded, resetDBConnectionForTests } from '../store/db';
+import { ensureSeeded, resetDBConnectionForTests, saveDayPlan } from '../store/db';
+import { getDateString } from '../day/dayLogic';
 import { ROOT_BOARD_ID } from '../vocab/starter';
 
 async function waitFor(check: () => boolean, timeoutMs = 2000): Promise<void> {
@@ -70,5 +71,42 @@ describe('PrintTab', () => {
   it('the board picker starts at the root Talk board', () => {
     const [boardSelect] = Array.from(container.querySelectorAll<HTMLSelectElement>('select')).slice(1, 2);
     expect(boardSelect?.value).toBe(ROOT_BOARD_ID);
+  });
+
+  it("prints a day's plan as numbered picture cards, in order, with times", async () => {
+    const today = getDateString(new Date());
+    await saveDayPlan({
+      date: today,
+      activities: [
+        { id: 'a', name: 'Breakfast', time: '08:00', image: { kind: 'emoji', char: '🥣' } },
+        { id: 'b', name: 'Swimming', time: '14:30', image: { kind: 'emoji', char: '🏊' } },
+        { id: 'c', name: 'Bath' },
+      ],
+    });
+
+    const select = container.querySelector<HTMLSelectElement>('.print-tab__controls select')!;
+    act(() => {
+      select.value = 'schedule';
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await waitFor(() => container.querySelectorAll('.print-schedule__card').length === 3);
+
+    const cards = Array.from(container.querySelectorAll('.print-schedule__card'));
+    expect(cards.map((c) => c.querySelector('.print-card__label')?.textContent)).toEqual(['Breakfast', 'Swimming', 'Bath']);
+    expect(cards.map((c) => c.querySelector('.print-schedule__step')?.textContent)).toEqual(['1', '2', '3']);
+    expect(cards[0]!.querySelector('.print-card__emoji')?.textContent).toBe('🥣');
+    expect(cards[1]!.querySelector('.print-schedule__time')?.textContent).toBe('2:30pm');
+    expect(cards[2]!.querySelector('.print-schedule__time')).toBeNull();
+    // It's the schedule being shown, not the board cards.
+    expect(container.querySelector('.print-card-grid')).toBeNull();
+  });
+
+  it('says so when nothing is planned for the day', async () => {
+    const select = container.querySelector<HTMLSelectElement>('.print-tab__controls select')!;
+    act(() => {
+      select.value = 'schedule';
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await waitFor(() => container.querySelector('.print-schedule__empty') !== null);
   });
 });

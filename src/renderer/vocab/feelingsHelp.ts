@@ -10,9 +10,9 @@ function feelingWord(id: string, label: string, emoji: string): Item {
   };
 }
 
-// Emotion, sensory and physical needs together — a sensory need is a need
+// Emotion, sensory and physical needs together, a sensory need is a need
 // to be met, not a problem to report, so these read as "too loud" / "need
-// space", never "sensory issue" (CLAUDE.md §7).
+// space", never "sensory issue" (PRINCIPLES.md §7).
 export const FEELINGS_ITEMS: Item[] = [
   feelingWord('happy', 'happy', '😊'),
   feelingWord('sad', 'sad', '😢'),
@@ -48,8 +48,8 @@ function helpPhrase(id: string, label: string, emoji: string): Item {
   };
 }
 
-// Speaks the phrase and stops — the app is not a safeguarding record
-// (CLAUDE.md §6). Nothing here notifies anyone or logs differently from
+// Speaks the phrase and stops, the app is not a safeguarding record
+// (PRINCIPLES.md §6). Nothing here notifies anyone or logs differently from
 // any other utterance.
 export const HELP_ITEMS: Item[] = [
   helpPhrase('lost', "I'm lost", '❓'),

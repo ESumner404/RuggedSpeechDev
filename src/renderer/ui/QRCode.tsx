@@ -1,23 +1,29 @@
-import qrcode from 'qrcode-generator';
+import { buildQrMatrix, qrToSvg } from './qr';
 
 type Props = {
   text: string;
   class?: string;
+  // What a screen reader says for the picture. Never the text itself, the
+  // text is shown beside the code, and may be private.
+  label?: string;
 };
 
 /**
- * Renders a QR code entirely offline — qrcode-generator is a pure,
- * dependency-free JS encoder (CLAUDE.md §3: "every added dependency is a
- * liability"; this one adds none of its own, and never touches the
- * network — no lookup, no remote rendering service).
+ * Renders a QR code entirely offline (invariant I1): nothing is looked up
+ * and nothing is fetched, and the text never leaves this machine. See
+ * qr.ts for why the drawing is done here rather than by the library.
  */
-export function QRCode({ text, class: className }: Props) {
-  // Type 0 = automatic sizing for whatever text length is given; 'M' is a
-  // reasonable balance between error tolerance and how dense the code gets.
-  const code = qrcode(0, 'M');
-  code.addData(text);
-  code.make();
-  const svg = code.createSvgTag({ scalable: true });
+export function QRCode({ text, class: className, label = 'QR code' }: Props) {
+  const matrix = buildQrMatrix(text);
 
-  return <div class={className} dangerouslySetInnerHTML={{ __html: svg }} />;
+  if (!matrix.ok) {
+    return matrix.reason === 'too-long' ? (
+      <p class="qr-code__too-long">
+        There is too much text to fit in one QR code. Shorten what has been entered and the code
+        will appear here.
+      </p>
+    ) : null;
+  }
+
+  return <div class={`qr-code ${className ?? ''}`} dangerouslySetInnerHTML={{ __html: qrToSvg(matrix, label) }} />;
 }

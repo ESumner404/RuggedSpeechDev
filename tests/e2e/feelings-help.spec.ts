@@ -34,18 +34,21 @@ async function setUpPin(page: Page, pin: string): Promise<void> {
   await page.locator('.pin-gate__key--submit').click();
 }
 
-/** The first-run wizard (PLAN.md Phase 8) is mandatory and blocks
- * everything else — every fresh-profile test has to clear it first. */
+/** The first-run wizard (docs/build-plan.md Phase 8) is mandatory and blocks
+ * everything else, every fresh-profile test has to clear it first. */
 async function completeFirstRun(page: Page, pin: string): Promise<void> {
-  await page.locator('.first-run-wizard__button--primary').click();
-  await page.locator('.first-run-wizard__button--primary').click();
+  // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+  for (let step = 0; step < 7; step += 1) {
+    await page.locator('.first-run-wizard__button--primary').click();
+  }
   await setUpPin(page, pin);
   await setUpPin(page, pin);
   await page.locator('.pin-gate__button').click();
+  await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
   await expect(page.locator('.home-screen__tile').first()).toBeVisible();
 }
 
-test.describe('Phase 2 — Feelings, Help, and fast access', () => {
+test.describe('Phase 2. Feelings, Help, and fast access', () => {
   let userDataDir: string;
 
   test.beforeEach(() => {
@@ -118,7 +121,7 @@ test.describe('Phase 2 — Feelings, Help, and fast access', () => {
 
     await app.close();
 
-    // Relaunch against the same profile directory — this is what "survives
+    // Relaunch against the same profile directory, this is what "survives
     // a restart" actually means, not just "the variable is still in scope".
     app = await launch();
     page = await app.firstWindow();
@@ -149,7 +152,7 @@ test.describe('Phase 2 — Feelings, Help, and fast access', () => {
     await expect(page.locator('.calm-tab__phase')).toHaveText('Breathe in');
     expect(await lastSpoken(page)).toBe('Breathe in');
 
-    // Real time, not simulated — proves the phase genuinely advances on
+    // Real time, not simulated, proves the phase genuinely advances on
     // its own once started, not just that the first press worked.
     await expect(page.locator('.calm-tab__phase')).toHaveText('Hold', { timeout: 6000 });
 

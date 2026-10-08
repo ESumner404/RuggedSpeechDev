@@ -1,14 +1,14 @@
 import type { BackupPayload } from '../store/db';
 
-// The backup file is a single JSON envelope (CLAUDE.md I2: an explicit,
+// The backup file is a single JSON envelope (PRINCIPLES.md I2: an explicit,
 // self-contained file the adult controls). Encryption is optional because
-// the file can contain a child's photographs and contact details — when
+// the file can contain a child's photographs and contact details, when
 // used, it's AES-GCM with a PBKDF2-derived key, entirely in the renderer via
 // Web Crypto, so no passphrase or key material ever needs to leave this
 // process or touch disk unencrypted.
 
-// Kept as the original app name from before the "My Speech" / "My Speech 2"
-// renames — it's an internal format tag stored inside every backup file,
+// Kept as the original app name from before the "Rugged Speech Test" / "Rugged Speech Test"
+// renames, it's an internal format tag stored inside every backup file,
 // invisible to the user, and changing it would make every backup made
 // before a rename fail to import (the check below is an exact string
 // match).
@@ -101,14 +101,14 @@ function parseEnvelope(fileText: string): Envelope {
   try {
     parsed = JSON.parse(fileText);
   } catch {
-    throw new BackupFormatError('This file is not a My Speech 2 backup.');
+    throw new BackupFormatError('This file is not a Rugged Speech Test backup.');
   }
   if (
     typeof parsed !== 'object' ||
     parsed === null ||
     (parsed as { format?: unknown }).format !== FORMAT
   ) {
-    throw new BackupFormatError('This file is not a My Speech 2 backup.');
+    throw new BackupFormatError('This file is not a Rugged Speech Test backup.');
   }
   return parsed as Envelope;
 }

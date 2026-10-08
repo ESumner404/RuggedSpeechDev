@@ -12,7 +12,7 @@ function shape(): GridShape {
   };
 }
 
-describe('scanning (PLAN.md Phase 7)', () => {
+describe('scanning (docs/build-plan.md Phase 7)', () => {
   it('starts on the first row that has anything selectable', () => {
     expect(initialScanPhase(shape())).toEqual({ kind: 'row', row: 0 });
   });
@@ -21,7 +21,7 @@ describe('scanning (PLAN.md Phase 7)', () => {
     let phase = initialScanPhase(shape());
     phase = advanceScan(phase, shape());
     expect(phase).toEqual({ kind: 'row', row: 1 });
-    // Row 2 is entirely empty — skipped straight back to row 0.
+    // Row 2 is entirely empty, skipped straight back to row 0.
     phase = advanceScan(phase, shape());
     expect(phase).toEqual({ kind: 'row', row: 0 });
   });

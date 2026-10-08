@@ -2,7 +2,9 @@ import 'fake-indexeddb/auto';
 import { render } from 'preact';
 import { act } from 'preact/test-utils';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { IDBFactory } from 'fake-indexeddb';
 import { KeyboardScreen } from './KeyboardScreen';
+import { keyboardLayoutSetting, resetDBConnectionForTests, savePerson } from '../store/db';
 
 function key(container: HTMLElement, char: string): HTMLButtonElement {
   const button = Array.from(
@@ -64,10 +66,11 @@ describe('KeyboardScreen', () => {
   it('a suggestion only ever changes the text when it is pressed', () => {
     act(() => key(container, 'w').click());
     act(() => key(container, 'a').click());
-    expect(textbox(container)).toBe('wa'); // still untouched right up to the press
+    act(() => key(container, 'n').click());
+    expect(textbox(container)).toBe('wan'); // still untouched right up to the press
 
     const suggestion = container.querySelector<HTMLButtonElement>('.prediction-bar__suggestion');
-    expect(suggestion?.textContent).toBe('want'); // "want" and "water" both match; alphabetical tiebreak
+    expect(suggestion?.textContent).toBe('want');
 
     act(() => suggestion!.click());
     expect(textbox(container)).toBe('want '); // word completed, trailing space, ready for the next one
@@ -94,5 +97,49 @@ describe('KeyboardScreen', () => {
     expect(container.querySelector('.on-screen-keyboard')).not.toBeNull();
     expect(container.querySelector('.keyboard-screen__textbox')).not.toBeNull();
     expect(container.querySelector('.sentence-strip__speak')).not.toBeNull();
+  });
+});
+
+describe('KeyboardScreen personal words and layout', () => {
+  let container: HTMLElement;
+
+  async function open(): Promise<void> {
+    container = document.createElement('div');
+    render(<KeyboardScreen />, container);
+    await new Promise((resolve) => setTimeout(resolve, 60));
+  }
+
+  beforeEach(() => {
+    indexedDB = new IDBFactory();
+    resetDBConnectionForTests();
+  });
+
+  const suggestions = () => Array.from(container.querySelectorAll('.prediction-bar__suggestion')).map((el) => el.textContent);
+
+  it("suggests the names of the people this person has added, as well as the built-in words", async () => {
+    await savePerson({ id: 'gran', name: 'Grandad Joe', phrases: [] });
+    await open();
+    act(() => key(container, 'g').click());
+    act(() => key(container, 'r').click());
+    act(() => key(container, 'a').click());
+    expect(suggestions()).toContain('Grandad');
+    // Only ever suggested: the text is exactly what was typed.
+    expect(textbox(container)).toBe('gra');
+  });
+
+  it('lays the letters out in alphabetical order when an adult has chosen that', async () => {
+    keyboardLayoutSetting.signal.value = 'alphabetical';
+    await open();
+    const rows = Array.from(container.querySelectorAll('.on-screen-keyboard__row')).map((row) =>
+      Array.from(row.querySelectorAll('.on-screen-keyboard__key'))
+        .map((k) => k.textContent)
+        .join(''),
+    );
+    expect(rows.slice(0, 4)).toEqual(['1234567890', 'abcdefghi', 'jklmnopqr', 'stuvwxyz']);
+  });
+
+  it('keeps the usual order by default', async () => {
+    await open();
+    expect(container.querySelector('.on-screen-keyboard__row:nth-child(2)')?.textContent).toBe('qwertyuiop');
   });
 });

@@ -1,6 +1,6 @@
 /**
- * Downscale target for any stored photo (PLAN.md Phase 4: "max 800px on
- * the long edge"). Pure sizing math — kept separate from the actual
+ * Downscale target for any stored photo (docs/build-plan.md Phase 4: "max 800px on
+ * the long edge"). Pure sizing math, kept separate from the actual
  * canvas drawing so it's testable without a DOM canvas.
  */
 export function computeDownscaledSize(
@@ -16,8 +16,8 @@ export function computeDownscaledSize(
 
 /**
  * Draws a camera frame or imported image onto a canvas at the downscaled
- * size and returns the result as a JPEG blob — never a filesystem path,
- * so a backup file stays self-contained (CLAUDE.md §4).
+ * size and returns the result as a JPEG blob, never a filesystem path,
+ * so a backup file stays self-contained (PRINCIPLES.md §4).
  */
 export function downscaleToBlob(
   source: CanvasImageSource,

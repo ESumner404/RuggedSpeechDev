@@ -17,15 +17,18 @@ async function setUpPin(page: Page, pin: string): Promise<void> {
   await page.locator('.pin-gate__key--submit').click();
 }
 
-/** The first-run wizard (PLAN.md Phase 8) is mandatory and blocks
- * everything else — it sets the Parent PIN as its own third screen, so a
+/** The first-run wizard (docs/build-plan.md Phase 8) is mandatory and blocks
+ * everything else, it sets the Parent PIN as its own third screen, so a
  * fresh profile already has a PIN by the time Home is reachable at all. */
 async function completeFirstRun(page: Page, pin: string): Promise<void> {
-  await page.locator('.first-run-wizard__button--primary').click();
-  await page.locator('.first-run-wizard__button--primary').click();
+  // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+  for (let step = 0; step < 7; step += 1) {
+    await page.locator('.first-run-wizard__button--primary').click();
+  }
   await setUpPin(page, pin);
   await setUpPin(page, pin);
   await page.locator('.pin-gate__button').click();
+  await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
   await expect(page.locator('.home-screen__tile').first()).toBeVisible();
 }
 
@@ -45,7 +48,7 @@ async function spyOnSpeech(page: Page): Promise<void> {
   });
 }
 
-test.describe('Phase 4 — photo capture, voice clips, and People/Places', () => {
+test.describe('Phase 4, photo capture, voice clips, and People/Places', () => {
   let userDataDir: string;
 
   test.beforeEach(() => {
@@ -57,7 +60,7 @@ test.describe('Phase 4 — photo capture, voice clips, and People/Places', () =>
   });
 
   // Electron is Chromium underneath, so the same fake-media-device switches
-  // Chromium supports work here — a synthetic camera/mic without needing
+  // Chromium supports work here, a synthetic camera/mic without needing
   // real hardware in this environment.
   function launchWithFakeMedia() {
     return electron.launch({
@@ -87,7 +90,7 @@ test.describe('Phase 4 — photo capture, voice clips, and People/Places', () =>
     await expect(page.locator('.people-places-tab__record-name')).toHaveText('Auntie Sam');
     await expect(page.locator('.people-places-tab__thumb')).toBeVisible();
 
-    // "appear as a working button" — exit to the child's Talk board and
+    // "appear as a working button", exit to the child's Talk board and
     // press it like any other vocabulary item.
     await page.locator('.parent-mode-screen__exit').click();
     await page.locator('.home-screen__tile', { hasText: 'Talk' }).click();
@@ -141,7 +144,7 @@ test.describe('Phase 4 — photo capture, voice clips, and People/Places', () =>
     await page.locator('button[type="submit"]', { hasText: 'Save person' }).click();
     await expect(page.locator('.people-places-tab__record-name')).toHaveText('Dad');
 
-    // Spy on Audio playback specifically — a voice clip plays through an
+    // Spy on Audio playback specifically, a voice clip plays through an
     // <audio> element, not speechSynthesis.
     const playedAudio = await page.evaluate(async () => {
       let played = false;
@@ -160,14 +163,14 @@ test.describe('Phase 4 — photo capture, voice clips, and People/Places', () =>
     expect(playedAudio).toBe(true);
 
     const spoken = await page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken);
-    expect(spoken).toEqual([]); // the synthesiser never ran — the clip did
+    expect(spoken).toEqual([]); // the synthesiser never ran, the clip did
 
     await app.close();
   });
 
   test('photo storage is quota-safe: 200 stored photos does not break the app', async () => {
     // The IndexedDB work itself finishes in milliseconds (confirmed while
-    // debugging this) — this environment's Playwright/CDP round-trip for
+    // debugging this), this environment's Playwright/CDP round-trip for
     // this particular evaluate() call just runs slower than the default
     // 30s test budget under the full test runner, for reasons that didn't
     // reproduce outside it. Generous, not indefinite.
@@ -218,7 +221,7 @@ test.describe('Phase 4 — photo capture, voice clips, and People/Places', () =>
 
     expect(count).toBeGreaterThanOrEqual(200);
 
-    // The app still works normally afterward — round-trip Home and back
+    // The app still works normally afterward, round-trip Home and back
     // into Talk (we're still on the Talk board from the setup above).
     await page.locator('.quick-access-bar__button', { hasText: 'Home' }).click();
     await expect(page.locator('.home-screen')).toBeVisible();

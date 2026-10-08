@@ -1,5 +1,12 @@
 import type { Board, GridSize, Item } from '../store/types';
 
+/** Everything about a button an adult can change. `null` clears a field. */
+export type ButtonChanges = {
+  [K in 'label' | 'vocalization' | 'image' | 'background_color' | 'voiceClipBlobId' | 'stage' | 'target']?:
+    | Item[K]
+    | null;
+};
+
 export function slugify(label: string): string {
   const base = label
     .toLowerCase()
@@ -10,7 +17,7 @@ export function slugify(label: string): string {
 }
 
 // Pure transforms over a Board. The caller (ParentModeScreen) persists the
-// result with store/db's updateBoard — nothing here touches IndexedDB, so
+// result with store/db's updateBoard, nothing here touches IndexedDB, so
 // every rule (capacity checks, position preservation) is testable without it.
 
 export function toggleButtonHidden(board: Board, buttonId: string): Board {
@@ -58,8 +65,8 @@ function reshapeOrder(
 }
 
 /**
- * Swaps a button with its neighbour in the flat (row-major) order —
- * the keyboard-accessible fallback PLAN.md Phase 4 asks for alongside
+ * Swaps a button with its neighbour in the flat (row-major) order,
+ * the keyboard-accessible fallback docs/build-plan.md Phase 4 asks for alongside
  * drag-and-drop. Position is independent of visibility: a hidden button
  * still moves.
  */
@@ -81,7 +88,7 @@ export function moveButton(board: Board, buttonId: string, direction: 'up' | 'do
 }
 
 /**
- * Drag-and-drop reordering (PLAN.md Phase 4): two buttons trade places and
+ * Drag-and-drop reordering (docs/build-plan.md Phase 4): two buttons trade places and
  * every other button stays exactly where it was, so one drag never shifts
  * anything a child has learned the position of (invariant I3). The ▲/▼
  * buttons remain as the keyboard-accessible fallback.
@@ -106,7 +113,7 @@ export function addButton(board: Board, item: Item): Board {
   const flat = flattenOrder(board);
   const emptyIndex = flat.indexOf(null);
   if (emptyIndex === -1) {
-    throw new Error('No empty slot on this board — resize the grid or remove a button first.');
+    throw new Error('No empty slot on this board. Resize the grid or remove a button first.');
   }
   const next = [...flat];
   next[emptyIndex] = item.id;
@@ -119,14 +126,46 @@ export function addButton(board: Board, item: Item): Board {
 
 /**
  * Changes a board's own grid dimensions (invariant I3: this is the only
- * way layout changes — never automatically). Every currently-placed
+ * way layout changes, never automatically). Every currently-placed
  * button, hidden or not, must still fit; refuses rather than silently
  * losing one.
  */
 export function resizeGrid(board: Board, rows: GridSize, columns: GridSize): Board {
   const placed = flattenOrder(board).filter((id): id is string => id !== null);
   if (placed.length > rows * columns) {
-    throw new Error('Too many buttons for that grid size — hide or remove some first.');
+    throw new Error('Too many buttons for that grid size. Hide or remove some first.');
   }
   return { ...board, grid: { rows, columns, order: reshapeOrder(placed, rows, columns) } };
+}
+
+/**
+ * Changes one button in place. Position never changes, however much else
+ * does (invariant I3). Passing `null` for a field removes it, so "says"
+ * text, a voice clip, a stage or a focus-word mark can be taken away again.
+ */
+export function updateButton(board: Board, buttonId: string, changes: ButtonChanges): Board {
+  return {
+    ...board,
+    buttons: board.buttons.map((button) => {
+      if (button.id !== buttonId) return button;
+      const next: Record<string, unknown> = { ...button };
+      for (const [field, value] of Object.entries(changes)) {
+        if (value === null) delete next[field];
+        else if (value !== undefined) next[field] = value;
+      }
+      return next as Item;
+    }),
+  };
+}
+
+/** Takes a button off the board and leaves its slot empty, so no other button moves. */
+export function removeButton(board: Board, buttonId: string): Board {
+  return {
+    ...board,
+    buttons: board.buttons.filter((button) => button.id !== buttonId),
+    grid: {
+      ...board.grid,
+      order: board.grid.order.map((row) => row.map((cell) => (cell === buttonId ? null : cell))),
+    },
+  };
 }

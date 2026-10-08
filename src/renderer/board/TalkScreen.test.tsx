@@ -4,7 +4,7 @@ import { render } from 'preact';
 import { act } from 'preact/test-utils';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { TalkScreen } from './TalkScreen';
-import { pressMode, resetDBConnectionForTests } from '../store/db';
+import { pressMode, resetDBConnectionForTests, sentencePicturesSetting } from '../store/db';
 
 async function waitFor(check: () => boolean, timeoutMs = 2000): Promise<void> {
   const start = Date.now();
@@ -48,6 +48,22 @@ describe('TalkScreen', () => {
     expect(chips).toEqual(['I', 'want']);
   });
 
+  it('shows a picture beside each word in the sentence only when an adult has asked for that', () => {
+    act(() => buttonLabelled(container, 'I').click());
+    expect(container.querySelector('.sentence-strip__picture')).toBeNull();
+
+    act(() => {
+      sentencePicturesSetting.signal.value = true;
+    });
+    act(() => buttonLabelled(container, 'want').click());
+    const chips = Array.from(container.querySelectorAll('.sentence-strip__chip'));
+    expect(chips).toHaveLength(2);
+    expect(chips.every((chip) => chip.querySelector('.sentence-strip__picture') !== null)).toBe(true);
+    // The word is still there for a screen reader, and the picture is hidden from it.
+    expect(chips[0]!.getAttribute('aria-label')).toBe('Remove "I"');
+    expect(chips[0]!.querySelector('.sentence-strip__picture')!.getAttribute('aria-hidden')).toBe('true');
+  });
+
   it('removes a chip when it is tapped', () => {
     act(() => buttonLabelled(container, 'I').click());
     act(() => buttonLabelled(container, 'want').click());
@@ -88,7 +104,7 @@ describe('TalkScreen', () => {
   });
 });
 
-describe('TalkScreen press mode (PLAN.md Phase 1)', () => {
+describe('TalkScreen press mode (docs/build-plan.md Phase 1)', () => {
   let container: HTMLElement;
   let spoken: string[];
 
@@ -121,7 +137,7 @@ describe('TalkScreen press mode (PLAN.md Phase 1)', () => {
 
   const chips = () => Array.from(container.querySelectorAll('.sentence-strip__chip')).map((el) => el.textContent);
 
-  it('"sentence" (the default) only adds the word — nothing speaks until Speak is pressed', () => {
+  it('"sentence" (the default) only adds the word, nothing speaks until Speak is pressed', () => {
     act(() => buttonLabelled(container, 'I').click());
     expect(chips()).toEqual(['I']);
     expect(spoken).toEqual([]);
@@ -150,7 +166,7 @@ describe('TalkScreen press mode (PLAN.md Phase 1)', () => {
   });
 });
 
-describe('TalkScreen crash recovery (PLAN.md Phase 8)', () => {
+describe('TalkScreen crash recovery (docs/build-plan.md Phase 8)', () => {
   let container: HTMLElement;
 
   beforeEach(() => {
@@ -172,7 +188,7 @@ describe('TalkScreen crash recovery (PLAN.md Phase 8)', () => {
     act(() => buttonLabelled(container, 'Food').click());
     await waitFor(() => findBoardButton(container, 'apple') !== undefined);
 
-    // No Home/Back press — this stands in for the process disappearing
+    // No Home/Back press, this stands in for the process disappearing
     // mid-conversation rather than exiting deliberately.
     render(null, container);
 
@@ -189,7 +205,7 @@ describe('TalkScreen crash recovery (PLAN.md Phase 8)', () => {
     render(null, secondContainer);
   });
 
-  it('a deliberate Home press clears the recovery state — the next mount starts fresh', async () => {
+  it('a deliberate Home press clears the recovery state, the next mount starts fresh', async () => {
     render(<TalkScreen onExit={() => {}} />, container);
     await waitFor(() => findBoardButton(container, 'I') !== undefined);
 

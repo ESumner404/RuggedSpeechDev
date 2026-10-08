@@ -1,12 +1,13 @@
 import { useSignal } from '@preact/signals';
-import { exportBackupPayload, importBackupPayload } from '../store/db';
+import { useEffect } from 'preact/hooks';
+import { exportBackupPayload, importBackupPayload, lastBackupSetting } from '../store/db';
 import { BackupFormatError, BackupPassphraseError, backupNeedsPassphrase, decodeBackup, encodeBackup } from './backupCodec';
 
 type RestoreStep = 'idle' | 'needs-passphrase' | 'confirming' | 'done';
 
-// Backup and restore to a single file via the native dialog (PLAN.md Phase
+// Backup and restore to a single file via the native dialog (docs/build-plan.md Phase
 // 6). Restoring replaces everything on the device, so it gets its own
-// explicit confirmation step beyond the file picker itself — the whole
+// explicit confirmation step beyond the file picker itself, the whole
 // point of I2 is that nothing about the child's data moves without an
 // adult deliberately choosing it.
 export function BackupTab() {
@@ -16,6 +17,10 @@ export function BackupTab() {
   const saveStatus = useSignal<string | null>(null);
   const saveError = useSignal<string | null>(null);
   const saving = useSignal(false);
+
+  useEffect(() => {
+    void lastBackupSetting.load();
+  }, []);
 
   const restoreStep = useSignal<RestoreStep>('idle');
   const restoreFileData = useSignal<string | null>(null);
@@ -45,6 +50,7 @@ export function BackupTab() {
       const result = await window.myWords.backup.save(encoded);
       saveStatus.value = result.ok ? 'Backup saved.' : null;
       if (result.ok) {
+        await lastBackupSetting.set(Date.now());
         savePassphrase.value = '';
         saveConfirmPassphrase.value = '';
       }
@@ -111,8 +117,17 @@ export function BackupTab() {
     <div class="parent-mode-screen__body backup-tab">
       <section class="backup-tab__section">
         <h2 class="backup-tab__heading">Save a backup</h2>
+        <p class="backup-tab__last">
+          {lastBackupSetting.signal.value === null
+            ? 'Last backup: never on this computer.'
+            : `Last backup: ${new Date(lastBackupSetting.signal.value).toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}.`}
+        </p>
         <p class="backup-tab__hint">
-          One file with everything — boards, photos, people, places, My Day. Optionally
+          One file with everything: boards, photos, people, places, My Day. Optionally
           protect it with a passphrase, since it can contain a child's photographs and
           contact details.
         </p>

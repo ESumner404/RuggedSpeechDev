@@ -15,7 +15,7 @@ async function setUpPin(page: Page, pin: string): Promise<void> {
   await page.locator('.pin-gate__key--submit').click();
 }
 
-/** The row whose label input currently holds this value — a controlled
+/** The row whose label input currently holds this value, a controlled
  * input's live value, not the static HTML attribute, and the board list
  * itself loads asynchronously, so this polls rather than snapshotting once. */
 async function rowWithLabel(page: Page, label: string, timeoutMs = 5000) {
@@ -35,15 +35,18 @@ async function rowWithLabel(page: Page, label: string, timeoutMs = 5000) {
   }
 }
 
-/** The first-run wizard (PLAN.md Phase 8) is mandatory and blocks
- * everything else — it sets the Parent PIN as its own third screen, so a
+/** The first-run wizard (docs/build-plan.md Phase 8) is mandatory and blocks
+ * everything else, it sets the Parent PIN as its own third screen, so a
  * fresh profile already has a PIN by the time Home is reachable at all. */
 async function completeFirstRun(page: Page, pin: string): Promise<void> {
-  await page.locator('.first-run-wizard__button--primary').click();
-  await page.locator('.first-run-wizard__button--primary').click();
+  // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+  for (let step = 0; step < 7; step += 1) {
+    await page.locator('.first-run-wizard__button--primary').click();
+  }
   await setUpPin(page, pin);
   await setUpPin(page, pin);
   await page.locator('.pin-gate__button').click();
+  await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
   await expect(page.locator('.home-screen__tile').first()).toBeVisible();
 }
 
@@ -83,7 +86,7 @@ async function stubOpenDialog(app: ElectronApplication, filePath: string): Promi
   }, filePath);
 }
 
-test.describe('Phase 6 — Profiles, backup, print', () => {
+test.describe('Phase 6. Profiles, backup, print', () => {
   test('switching profile opens Talk at the new page, and never disturbs Home layout or history', async () => {
     const userDataDir = mkdtempSync(join(tmpdir(), 'mywords-e2e-profiles-'));
     try {
@@ -101,13 +104,13 @@ test.describe('Phase 6 — Profiles, backup, print', () => {
       await page.locator('.quick-access-bar__button', { hasText: 'Yes' }).click();
 
       // Exiting Parent Mode returns to whatever screen the Parent Mode
-      // button was pressed from — back to Home first, so the comparison
+      // button was pressed from, back to Home first, so the comparison
       // below is a true like-for-like Home layout check.
       await page.locator('.quick-access-bar__button', { hasText: 'Home' }).click();
       await enterParentModeExisting(page, '7777');
       await page.locator('.page-tabs__tab', { hasText: 'Profiles' }).click();
       // hasText on the row would also match the board picker's own "School"
-      // option in every other row — filter on the name label specifically.
+      // option in every other row, filter on the name label specifically.
       const schoolRow = page
         .locator('.profiles-tab__row')
         .filter({ has: page.locator('.profiles-tab__name', { hasText: /^School$/ }) });
@@ -115,7 +118,7 @@ test.describe('Phase 6 — Profiles, backup, print', () => {
       await expect(schoolRow.locator('.profiles-tab__active')).toBeVisible();
       await page.locator('.parent-mode-screen__exit').click();
 
-      // Home layout is exactly what it was before — no button moved.
+      // Home layout is exactly what it was before, no button moved.
       const homeTilesAfter = await page.locator('.home-screen__tile').allTextContents();
       expect(homeTilesAfter).toEqual(homeTilesBefore);
 

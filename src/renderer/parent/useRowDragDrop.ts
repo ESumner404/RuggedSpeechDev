@@ -1,7 +1,7 @@
 import { useSignal } from '@preact/signals';
 
-// Drag-and-drop reordering for the button lists in Parent Mode (PLAN.md
-// Phase 4). Only a small handle is draggable — making the whole row
+// Drag-and-drop reordering for the button lists in Parent Mode (docs/build-plan.md
+// Phase 4). Only a small handle is draggable, making the whole row
 // draggable would turn selecting text inside its label field into an
 // accidental drag. Rows are the drop targets, and a drop swaps the two
 // buttons (see swapButtons). The ▲/▼ buttons stay as the keyboard fallback.

@@ -3,10 +3,10 @@ import { useEffect, useRef } from 'preact/hooks';
 import { BREATH_CYCLE, QUIET_TIME_DURATIONS_MIN, formatCountdown, nextBreathStepIndex } from './breathingCycle';
 import { announceText } from '../speech/announce';
 
-// Feature review, Aug 2026: "meltdown/overwhelm support — a 'calm down' or
+// Feature review, Aug 2026: "meltdown/overwhelm support, a 'calm down' or
 // sensory break section... breathing exercises or a countdown timer."
-// Lives alongside Feelings and Help rather than as its own Home tile —
-// same reachability, no new fixed position to add (CLAUDE.md I3).
+// Lives alongside Feelings and Help rather than as its own Home tile,
+// same reachability, no new fixed position to add (PRINCIPLES.md I3).
 export function CalmTab() {
   const breathingActive = useSignal(false);
   const breathStepIndex = useSignal(0);

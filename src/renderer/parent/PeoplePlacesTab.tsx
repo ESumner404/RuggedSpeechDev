@@ -1,6 +1,8 @@
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import {
+  deletePerson,
+  deletePlace,
   getBoard,
   getPeople,
   getPlaces,
@@ -10,7 +12,8 @@ import {
   saveVoiceClip,
   updateBoard,
 } from '../store/db';
-import { addButton, slugify } from './boardEditing';
+import { addButton, removeButton, slugify } from './boardEditing';
+import { createPageWithButtons } from '../store/pages';
 import { PhotoCapture } from './PhotoCapture';
 import { VoiceClipRecorder } from './VoiceClipRecorder';
 import { FITZGERALD_COLORS } from '../ui/fitzgerald';
@@ -34,6 +37,30 @@ export function PeoplePlacesTab({ kind }: Props) {
   const voiceClipBlob = useSignal<Blob | null>(null);
   const error = useSignal<string | null>(null);
   const saving = useSignal(false);
+  const confirmRemoveId = useSignal<string | null>(null);
+  const pageMessage = useSignal<string | null>(null);
+
+  // Turns the phrases saved with someone into a real page of buttons, one
+  // phrase each, in My Pages.
+  async function handleMakePage(record: Record_): Promise<void> {
+    pageMessage.value = null;
+    const page = await createPageWithButtons(
+      record.name,
+      record.phrases.map((phrase) => ({ label: phrase })),
+    );
+    pageMessage.value = `Made a page called “${page.name}” in My Pages, with a button for each phrase.`;
+  }
+
+  // Takes the record and its button off the board together, so a removed
+  // person can't linger as a button that goes nowhere.
+  async function handleRemove(record: Record_): Promise<void> {
+    confirmRemoveId.value = null;
+    if (kind === 'people') await deletePerson(record.id);
+    else await deletePlace(record.id);
+    const board = await getBoard(kind);
+    if (board) await updateBoard(removeButton(board, record.id));
+    await refresh();
+  }
 
   async function refresh(): Promise<void> {
     records.value = kind === 'people' ? await getPeople() : await getPlaces();
@@ -42,10 +69,10 @@ export function PeoplePlacesTab({ kind }: Props) {
   // ParentModeScreen renders a separate <PeoplePlacesTab kind="people"> /
   // kind="places"> element per tab rather than reusing one instance with a
   // changing prop, so switching tabs unmounts and remounts this component
-  // — fields already start blank on a fresh mount. (An earlier version of
+  //, fields already start blank on a fresh mount. (An earlier version of
   // this effect also reset fields keyed on [kind], on the mistaken
   // assumption that kind could change under a live instance; since it
-  // can't, that reset only ever fired once, right after mount — and since
+  // can't, that reset only ever fired once, right after mount, and since
   // Preact defers useEffect to after paint, that "once" could land late
   // enough to wipe out a fast fill-then-submit sequence already in
   // flight.)
@@ -143,6 +170,31 @@ export function PeoplePlacesTab({ kind }: Props) {
             >
               Hear name
             </button>
+            {record.phrases.length > 0 && (
+              <button type="button" class="people-places-tab__preview" onClick={() => void handleMakePage(record)}>
+                Make a page of these phrases
+              </button>
+            )}
+            {confirmRemoveId.value === record.id ? (
+              <span class="people-places-tab__confirm">
+                Remove {record.name}?
+                <button type="button" class="people-places-tab__remove" onClick={() => void handleRemove(record)}>
+                  Yes, remove
+                </button>
+                <button type="button" class="people-places-tab__preview" onClick={() => (confirmRemoveId.value = null)}>
+                  Keep
+                </button>
+              </span>
+            ) : (
+              <button
+                type="button"
+                class="people-places-tab__remove"
+                aria-label={`Remove ${record.name}`}
+                onClick={() => (confirmRemoveId.value = record.id)}
+              >
+                Remove
+              </button>
+            )}
           </li>
         ))}
         {records.value.length === 0 && (
@@ -151,6 +203,11 @@ export function PeoplePlacesTab({ kind }: Props) {
       </ul>
 
       {error.value && <p class="people-places-tab__error">{error.value}</p>}
+      {pageMessage.value && (
+        <p class="people-places-tab__ready" role="status">
+          {pageMessage.value}
+        </p>
+      )}
 
       <form class="people-places-tab__form" onSubmit={(event) => void handleSave(event)}>
         <h2 class="people-places-tab__form-title">Add a {title.toLowerCase()}</h2>

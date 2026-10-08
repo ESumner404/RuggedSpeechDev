@@ -2,7 +2,8 @@ import { useSignal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
 import type { Board, Item } from '../store/types';
 import { BoardButton } from './BoardButton';
-import { DEFAULT_ACCESS_SETTINGS, accessSettingsVersion, getAccessSettings } from '../store/db';
+import { DEFAULT_ACCESS_SETTINGS, accessSettingsVersion, getAccessSettings, wordStageSetting } from '../store/db';
+import { isItemShown } from './visibility';
 import {
   advanceScan,
   gridScanningActive,
@@ -14,7 +15,7 @@ import {
 import { moveFocus, type Direction } from '../access/gridNavigation';
 
 // A control outside the board grid itself (e.g. Talk's Speak button) that
-// still needs to be reachable by the same two inputs — otherwise switch
+// still needs to be reachable by the same two inputs, otherwise switch
 // scanning could build a sentence but never actually speak it.
 export type AuxiliaryControl = { label: string; onActivate: () => void };
 
@@ -31,15 +32,18 @@ const ARROW_DIRECTIONS: Record<string, Direction> = {
   ArrowRight: 'right',
 };
 
-// Every cell in board.grid.order gets a slot, filled or not — grids never
+// Every cell in board.grid.order gets a slot, filled or not, grids never
 // reflow to fill gaps (invariant I3). A button's row/column is data, not a
 // layout side-effect of how many buttons happen to exist right now. That
 // same fixed shape is what switch scanning and arrow-key navigation
-// (PLAN.md Phase 7) sweep over.
+// (docs/build-plan.md Phase 7) sweep over.
 export function Grid({ board, onPress, auxiliaryControls = [] }: Props) {
+  // Reading the signal here means the board follows a change of word stage
+  // made in Parent Mode without needing to be reopened.
+  const wordStage = wordStageSetting.signal.value;
   const itemsById = new Map(board.buttons.map((button) => [button.id, button]));
 
-  // The auxiliary row is one past the board's own rows — scanned as if it
+  // The auxiliary row is one past the board's own rows, scanned as if it
   // were just another row, so Speak (etc.) is reachable without ever
   // leaving the same Space/Enter scan sweep the board itself uses.
   const auxRow = board.grid.rows;
@@ -49,7 +53,7 @@ export function Grid({ board, onPress, auxiliaryControls = [] }: Props) {
     if (hasAux && row === auxRow) return column < auxiliaryControls.length;
     const cellId = board.grid.order[row]?.[column];
     const item = cellId ? itemsById.get(cellId) : undefined;
-    return Boolean(item) && !item!.hidden;
+    return Boolean(item) && isItemShown(item!, wordStage);
   }
 
   function firstSelectableCell(): { row: number; column: number } {
@@ -94,10 +98,10 @@ export function Grid({ board, onPress, auxiliaryControls = [] }: Props) {
     }
     const cellId = board.grid.order[row]?.[column];
     const item = cellId ? itemsById.get(cellId) : undefined;
-    if (item && !item.hidden) wrappedPress(item);
+    if (item && isItemShown(item, wordStage)) wrappedPress(item);
   }
 
-  // Switch scanning (PLAN.md Phase 7): Space and Enter so any
+  // Switch scanning (docs/build-plan.md Phase 7): Space and Enter so any
   // keyboard-emulating switch interface works, whichever mode is active.
   // One-switch timed has only Space, auto-advancing on a timer; two-switch
   // stepped uses Space to advance and Enter to select.
@@ -154,7 +158,7 @@ export function Grid({ board, onPress, auxiliaryControls = [] }: Props) {
     };
   }, [access.value.scanningMode, access.value.scanIntervalMs, board]);
 
-  // External keyboard navigation (PLAN.md Phase 7): a roving tabindex, off
+  // External keyboard navigation (docs/build-plan.md Phase 7): a roving tabindex, off
   // while scanning owns Space/Enter instead.
   useEffect(() => {
     if (access.value.scanningMode !== 'off') return;
@@ -217,10 +221,10 @@ export function Grid({ board, onPress, auxiliaryControls = [] }: Props) {
         {board.grid.order.map((row, rowIndex) =>
           row.map((cellId, columnIndex) => {
             const found = cellId ? itemsById.get(cellId) : undefined;
-            // A hidden button leaves its slot empty rather than closing the
-            // gap — Parent Mode's "hide vocabulary" must not reshuffle every
-            // other button's position (invariant I3).
-            const item = found?.hidden ? undefined : found;
+            // A hidden button, or one whose word stage hasn't been reached,
+            // leaves its slot empty rather than closing the gap, it must not
+            // reshuffle every other button's position (invariant I3).
+            const item = found && isItemShown(found, wordStage) ? found : undefined;
             const key = `${rowIndex}-${columnIndex}`;
             if (!item) return <div class="board-grid__empty" key={key} />;
             return (

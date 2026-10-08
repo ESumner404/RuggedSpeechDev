@@ -2,7 +2,16 @@ import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { collectVocabularyWords } from '../vocab/starter';
 import { applySuggestion, getSuggestions } from './prediction';
-import { getWordFrequencies, incrementWordFrequency } from '../store/db';
+import {
+  customPhrasesSetting,
+  getAllBoards,
+  getPeople,
+  getPhraseBank,
+  getPlaces,
+  getWordFrequencies,
+  incrementWordFrequency,
+} from '../store/db';
+import { collectPersonalWords, mergeVocabulary } from './personalWords';
 import { announceText } from '../speech/announce';
 import { OnScreenKeyboard } from './OnScreenKeyboard';
 import { PhraseBankTab } from './PhraseBankTab';
@@ -18,6 +27,24 @@ export function KeyboardScreen() {
   const frequency = useSignal<Record<string, number>>({});
   const noPressure = useSignal(false);
   const showing = useSignal(false);
+  // The built-in words, plus this person's own: family names, the words on
+  // pages an adult has built, and their saved phrases.
+  const vocabulary = useSignal<string[]>(VOCABULARY);
+
+  useEffect(() => {
+    void Promise.all([getAllBoards(), getPeople(), getPlaces(), getPhraseBank()]).then(
+      ([boards, people, places, phraseBank]) => {
+        const personal = collectPersonalWords({
+          boards,
+          people,
+          places,
+          customPhrases: customPhrasesSetting.signal.value,
+          phraseBank,
+        });
+        vocabulary.value = mergeVocabulary(VOCABULARY, personal);
+      },
+    );
+  }, []);
 
   useEffect(() => {
     void getWordFrequencies().then((loaded) => {
@@ -37,9 +64,9 @@ export function KeyboardScreen() {
     text.value = text.value.slice(0, -1);
   }
 
-  // Suggestions only ever change the text through this handler — an
+  // Suggestions only ever change the text through this handler, an
   // explicit press. Nothing else touches text.value on their behalf
-  // (PLAN.md Phase 3 acceptance).
+  // (docs/build-plan.md Phase 3 acceptance).
   function pressSuggestion(word: string): void {
     text.value = applySuggestion(text.value, word);
     void incrementWordFrequency(word)
@@ -55,7 +82,7 @@ export function KeyboardScreen() {
     announceText(trimmed);
   }
 
-  const suggestions = getSuggestions(text.value, VOCABULARY, frequency.value);
+  const suggestions = getSuggestions(text.value, vocabulary.value, frequency.value);
   const showBody = noPressure.value || tab.value === 'keyboard';
 
   return (
@@ -104,7 +131,7 @@ export function KeyboardScreen() {
 
           {!noPressure.value && (
             <div class="prediction-bar">
-              {suggestions.length === 0 && <span class="prediction-bar__empty">—</span>}
+              {suggestions.length === 0 && <span class="prediction-bar__empty">…</span>}
               {suggestions.map((word) => (
                 <button
                   type="button"

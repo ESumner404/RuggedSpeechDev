@@ -4,9 +4,9 @@ import { getActiveProfileId, getAllBoards, getProfiles, saveProfile, setActivePr
 import { ROOT_BOARD_ID } from '../vocab/starter';
 import type { Board, Profile } from '../store/types';
 
-// Profiles change which board Talk opens to by default (PLAN.md Phase 6).
-// They never touch the Home screen's own layout — that position is
-// load-bearing motor memory (CLAUDE.md I3) — so this tab only offers a
+// Profiles change which board Talk opens to by default (docs/build-plan.md Phase 6).
+// They never touch the Home screen's own layout, that position is
+// load-bearing motor memory (PRINCIPLES.md I3), so this tab only offers a
 // root-board picker per profile plus which one is active right now.
 export function ProfilesTab() {
   const profiles = useSignal<Profile[]>([]);
@@ -39,7 +39,7 @@ export function ProfilesTab() {
   return (
     <div class="parent-mode-screen__body">
       <p class="profiles-tab__hint">
-        Same vocabulary everywhere — this only chooses which page Talk opens to first, for
+        Same vocabulary everywhere. This only chooses which page Talk opens to first, for
         wherever the device is being used right now.
       </p>
       <ul class="profiles-tab__list">

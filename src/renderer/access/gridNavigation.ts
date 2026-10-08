@@ -1,5 +1,5 @@
 // External keyboard navigation: arrows plus enter through the grid
-// (PLAN.md Phase 7). Pure — moves a row/column cursor spatially, skipping
+// (docs/build-plan.md Phase 7). Pure, moves a row/column cursor spatially, skipping
 // empty or hidden cells in a straight line, clamping at the edge rather
 // than wrapping (predictable for a first-time keyboard user).
 

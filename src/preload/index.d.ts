@@ -10,6 +10,13 @@ export interface MyWordsBridge {
     save: (data: string) => Promise<{ ok: true } | { ok: false }>;
     restore: () => Promise<{ ok: true; data: string } | { ok: false }>;
   };
+  files: {
+    save: (
+      data: string,
+      options: { suggestedName: string; filterName: string; extensions: string[] },
+    ) => Promise<{ ok: true } | { ok: false }>;
+    open: (options: { filterName: string; extensions: string[] }) => Promise<{ ok: true; data: string } | { ok: false }>;
+  };
   startup: {
     getOpenAtLogin: () => Promise<boolean>;
     setOpenAtLogin: (value: boolean) => Promise<void>;

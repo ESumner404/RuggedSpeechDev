@@ -1,6 +1,6 @@
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
-import { getPhraseBank, setPhraseBankSlot } from '../store/db';
+import { customPhrasesSetting, getPhraseBank, setPhraseBankSlot } from '../store/db';
 import { announceText } from '../speech/announce';
 import type { PhraseBank, PhraseBankSlotId } from '../store/types';
 
@@ -33,6 +33,23 @@ export function PhraseBankTab() {
     announceText(text);
   }
 
+  // Phrases beyond the four fixed ones (docs/build-plan.md Phase 3 started with four
+  // slots): whatever this person finds hard to say, as many as they need.
+  const extra = customPhrasesSetting.signal.value;
+  const draft = useSignal('');
+
+  function addPhrase(event: Event): void {
+    event.preventDefault();
+    const text = draft.value.trim();
+    if (!text) return;
+    draft.value = '';
+    void customPhrasesSetting.set([...customPhrasesSetting.signal.value, text]);
+  }
+
+  function removePhrase(index: number): void {
+    void customPhrasesSetting.set(customPhrasesSetting.signal.value.filter((_, i) => i !== index));
+  }
+
   return (
     <div class="phrase-bank-tab">
       {SLOTS.map((slot) => (
@@ -57,6 +74,37 @@ export function PhraseBankTab() {
           </button>
         </div>
       ))}
+
+      <h2 class="phrase-bank-tab__heading">More phrases</h2>
+      {extra.map((phrase, index) => (
+        <div class="phrase-bank-tab__row phrase-bank-tab__row--custom" key={`${index}-${phrase}`}>
+          <span class="phrase-bank-tab__phrase">{phrase}</span>
+          <button type="button" class="phrase-bank-tab__speak" onClick={() => announceText(phrase)}>
+            Speak
+          </button>
+          <button
+            type="button"
+            class="phrase-bank-tab__remove"
+            aria-label={`Remove "${phrase}"`}
+            onClick={() => removePhrase(index)}
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+      <form class="phrase-bank-tab__row" onSubmit={addPhrase}>
+        <input
+          class="phrase-bank-tab__input"
+          type="text"
+          placeholder="Add a phrase"
+          aria-label="Add a phrase"
+          value={draft.value}
+          onInput={(event) => (draft.value = (event.target as HTMLInputElement).value)}
+        />
+        <button type="submit" class="phrase-bank-tab__speak" disabled={!draft.value.trim()}>
+          Add
+        </button>
+      </form>
     </div>
   );
 }

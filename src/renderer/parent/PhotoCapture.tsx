@@ -6,7 +6,7 @@ type Props = {
   onCapture: (blob: Blob) => void;
 };
 
-/** Camera where one exists, file import otherwise (PLAN.md Phase 4) — both
+/** Camera where one exists, file import otherwise (docs/build-plan.md Phase 4), both
  * are offered here rather than picking one, since only the adult knows
  * which the machine actually has. */
 export function PhotoCapture({ onCapture }: Props) {
@@ -14,7 +14,7 @@ export function PhotoCapture({ onCapture }: Props) {
   // react to it. Assigning videoRef.current.srcObject directly in the same
   // synchronous flow that turns the camera on doesn't work: the signal
   // write only schedules a re-render, so the <video> element doesn't exist
-  // in the DOM yet on the very next line — the effect runs after commit,
+  // in the DOM yet on the very next line, the effect runs after commit,
   // once it does.
   const stream = useSignal<MediaStream | null>(null);
   const error = useSignal<string | null>(null);
@@ -46,14 +46,14 @@ export function PhotoCapture({ onCapture }: Props) {
     const video = videoRef.current;
     if (!video) return;
     // A tap right as the preview appears can land before the stream's
-    // metadata has loaded — wait briefly for real dimensions rather than
+    // metadata has loaded, wait briefly for real dimensions rather than
     // capturing an empty 0×0 frame.
     const start = Date.now();
     while (video.videoWidth === 0 && Date.now() - start < 2000) {
       await new Promise((resolve) => setTimeout(resolve, 30));
     }
     if (video.videoWidth === 0) {
-      error.value = 'Camera not ready yet — try again.';
+      error.value = 'Camera not ready yet. Try again.';
       return;
     }
     try {

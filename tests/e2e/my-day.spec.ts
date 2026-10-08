@@ -15,15 +15,18 @@ async function setUpPin(page: Page, pin: string): Promise<void> {
   await page.locator('.pin-gate__key--submit').click();
 }
 
-/** The first-run wizard (PLAN.md Phase 8) is mandatory and blocks
- * everything else — it sets the Parent PIN as its own third screen, so a
+/** The first-run wizard (docs/build-plan.md Phase 8) is mandatory and blocks
+ * everything else, it sets the Parent PIN as its own third screen, so a
  * fresh profile already has a PIN by the time Home is reachable at all. */
 async function completeFirstRun(page: Page, pin: string): Promise<void> {
-  await page.locator('.first-run-wizard__button--primary').click();
-  await page.locator('.first-run-wizard__button--primary').click();
+  // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+  for (let step = 0; step < 7; step += 1) {
+    await page.locator('.first-run-wizard__button--primary').click();
+  }
   await setUpPin(page, pin);
   await setUpPin(page, pin);
   await page.locator('.pin-gate__button').click();
+  await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
   await expect(page.locator('.home-screen__tile').first()).toBeVisible();
 }
 
@@ -49,7 +52,7 @@ async function allSpoken(page: Page): Promise<string[]> {
 }
 
 // The activity name lives inside an <input value="...">, which doesn't
-// contribute to an element's textContent — hasText can't find a row by
+// contribute to an element's textContent, hasText can't find a row by
 // name. The Remove button's aria-label does stay in sync with the live
 // name, so rows are found through that instead.
 function builderRow(page: Page, name: string) {
@@ -64,7 +67,7 @@ async function addActivity(page: Page, name: string): Promise<void> {
   await expect(builderRow(page, name)).toBeVisible();
 }
 
-test.describe('Phase 5 — My Day', () => {
+test.describe('Phase 5. My Day', () => {
   let userDataDir: string;
 
   test.beforeEach(() => {
@@ -152,7 +155,7 @@ test.describe('Phase 5 — My Day', () => {
     await expect(page.locator('.day-activity', { hasText: 'Lunch' })).toBeVisible();
 
     // The adult edits the plan from Parent Mode while the child's screen
-    // (still open, in the background) is showing the old plan — the whole
+    // (still open, in the background) is showing the old plan, the whole
     // point of "change of plan" is that this reaches the child immediately.
     await page.locator('.parent-mode-button').click();
     await setUpPin(page, '1111');

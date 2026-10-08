@@ -47,7 +47,7 @@ describe('MyDayScreen', () => {
 
   afterEach(() => {
     // MyDayScreen reacts to the module-level dayPlanVersion signal for
-    // live "change of plan" updates — an un-unmounted instance left over
+    // live "change of plan" updates, an un-unmounted instance left over
     // from a previous test keeps reacting to later tests' saves too
     // (found the hard way: duplicate announcements that scaled with how
     // many earlier tests had run). Unmounting clears its effects.

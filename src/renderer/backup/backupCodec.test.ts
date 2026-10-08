@@ -60,7 +60,7 @@ describe('backupCodec', () => {
     await expect(decodeBackup(encoded, 'wrong guess')).rejects.toBeInstanceOf(BackupPassphraseError);
   });
 
-  it('rejects a file that is not a My Speech 2 backup', async () => {
+  it('rejects a file that is not a Rugged Speech Test backup', async () => {
     await expect(decodeBackup('{"some": "other json"}')).rejects.toBeInstanceOf(BackupFormatError);
     await expect(decodeBackup('not even json')).rejects.toBeInstanceOf(BackupFormatError);
     expect(() => backupNeedsPassphrase('not even json')).toThrow(BackupFormatError);

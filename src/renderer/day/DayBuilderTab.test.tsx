@@ -93,4 +93,41 @@ describe('DayBuilderTab', () => {
 
     expect((await getDaySettings()).countdownEnabled).toBe(true);
   });
+
+  it('gives an activity a picture, and takes it off again', async () => {
+    const input = container.querySelector<HTMLInputElement>(
+      '.day-builder-tab__add-form input[placeholder="New activity name"]',
+    )!;
+    act(() => {
+      input.value = 'Swimming';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    act(() => {
+      container
+        .querySelector('.day-builder-tab__add-form')!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+    await waitFor(() => container.querySelectorAll('.day-builder-tab__activity').length > 0);
+
+    const emoji = container.querySelector<HTMLInputElement>('input[aria-label="Emoji for Swimming"]')!;
+    act(() => {
+      emoji.value = '🏊';
+      emoji.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await waitFor(() => container.querySelector('.day-builder-tab__picture summary')?.textContent === '🏊');
+    let plan = await getDayPlan(today);
+    expect(plan.activities[0]?.image).toEqual({ kind: 'emoji', char: '🏊' });
+
+    const removeButton = () =>
+      Array.from(container.querySelectorAll<HTMLButtonElement>('.day-builder-tab__picture button')).find(
+        (b) => b.textContent === 'Take the picture off',
+      );
+    // The button appears a render after the summary changes.
+    await waitFor(() => removeButton() !== undefined);
+    act(() => removeButton()!.click());
+    await waitFor(() => container.querySelector('.day-builder-tab__picture summary')?.textContent === 'Picture');
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    plan = await getDayPlan(today);
+    expect(plan.activities[0]?.image).toBeUndefined();
+  });
 });

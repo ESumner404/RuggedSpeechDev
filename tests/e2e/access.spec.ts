@@ -15,15 +15,18 @@ async function setUpPin(page: Page, pin: string): Promise<void> {
   await page.locator('.pin-gate__key--submit').click();
 }
 
-/** The first-run wizard (PLAN.md Phase 8) is mandatory and blocks
- * everything else — it sets the Parent PIN as its own third screen, so a
+/** The first-run wizard (docs/build-plan.md Phase 8) is mandatory and blocks
+ * everything else, it sets the Parent PIN as its own third screen, so a
  * fresh profile already has a PIN by the time Home is reachable at all. */
 async function completeFirstRun(page: Page, pin: string): Promise<void> {
-  await page.locator('.first-run-wizard__button--primary').click();
-  await page.locator('.first-run-wizard__button--primary').click();
+  // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+  for (let step = 0; step < 7; step += 1) {
+    await page.locator('.first-run-wizard__button--primary').click();
+  }
   await setUpPin(page, pin);
   await setUpPin(page, pin);
   await page.locator('.pin-gate__button').click();
+  await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
   await expect(page.locator('.home-screen__tile').first()).toBeVisible();
 }
 
@@ -46,7 +49,7 @@ async function allSpoken(page: Page): Promise<string[]> {
   return page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken);
 }
 
-/** Presses the app-level Space-as-focus-advance fallback (PLAN.md Phase
+/** Presses the app-level Space-as-focus-advance fallback (docs/build-plan.md Phase
  * 7's "operable with two switches and nothing else") until the focused
  * element's own text is the one wanted, rather than hardcoding a press
  * count tied to the exact DOM order. */
@@ -67,7 +70,7 @@ function boardButton(page: Page, label: string) {
 }
 
 /** Presses a key and waits for the scan-status live region to actually
- * reach the expected text, rather than a fixed sleep — self-verifying
+ * reach the expected text, rather than a fixed sleep, self-verifying
  * (a real logic bug shows up as a clear mismatch) and immune to however
  * slow a heavily-loaded CI run happens to be. */
 async function pressKeyExpectStatus(page: Page, key: string, expectedStatus: string): Promise<void> {
@@ -82,10 +85,10 @@ function launch(userDataDir: string) {
   });
 }
 
-test.describe('Phase 7 — Access', () => {
+test.describe('Phase 7. Access', () => {
   test('the whole app is operable with two switches (Space, Enter) and nothing else: Home to a spoken sentence', async () => {
-    // This is the longest, most step-heavy journey in the whole suite —
-    // full wizard, Parent Mode, then a real scanning sweep — and cold
+    // This is the longest, most step-heavy journey in the whole suite,
+    // full wizard, Parent Mode, then a real scanning sweep, and cold
     // start occasionally runs well past the default 30s budget under this
     // environment's repeated-rebuild load, for reasons that didn't
     // reproduce in isolation. Generous, not indefinite.
@@ -97,7 +100,7 @@ test.describe('Phase 7 — Access', () => {
       await completeFirstRun(page, '2580');
       await spyOnSpeech(page);
 
-      // An adult turns on two-switch scanning — the only mouse/touch use
+      // An adult turns on two-switch scanning, the only mouse/touch use
       // in this whole test, since setting it up is itself a Parent Mode
       // action, not part of the "two switches" journey being tested.
       await enterParentModeExisting(page, '2580');
@@ -107,14 +110,18 @@ test.describe('Phase 7 — Access', () => {
       await page.locator('.parent-mode-screen__exit').click();
 
       // Home screen: Space advances focus (the app-level fallback, since no
-      // Grid is mounted here), Enter activates — reach and open Talk.
+      // Grid is mounted here), Enter activates, reach and open Talk.
       await pressSpaceUntilFocused(page, 'Talk');
       await page.keyboard.press('Enter');
       await expect(page.locator('.board-grid__scan-status')).toBeVisible();
+      // Let the board's key handler attach before the first scanning press;
+      // under a full-suite load Enter can otherwise land a moment too early.
+      await expect(page.locator('.board-grid__scan-status')).toHaveText('Scanning row 1');
+      await page.waitForTimeout(300);
 
       // Talk screen: the board grid's own dedicated row/column scan now
       // owns Space (advance) and Enter (select). Root board row 0 is
-      // I / want / like / more — pick "I" then "want".
+      // I / want / like / more, pick "I" then "want".
       await pressKeyExpectStatus(page, 'Enter', 'Scanning: I'); // lock row 0
       await pressKeyExpectStatus(page, 'Enter', 'Scanning row 1'); // select "I" (already the first cell)
       await pressKeyExpectStatus(page, 'Enter', 'Scanning: I'); // lock row 0 again
@@ -124,7 +131,7 @@ test.describe('Phase 7 — Access', () => {
       await expect(page.locator('.sentence-strip')).toContainText('want');
 
       // Sweep past the remaining board rows to the auxiliary row (Clear
-      // all, then Speak) and select Speak — still only Space and Enter.
+      // all, then Speak) and select Speak, still only Space and Enter.
       await pressKeyExpectStatus(page, 'Space', 'Scanning row 2');
       await pressKeyExpectStatus(page, 'Space', 'Scanning row 3');
       await pressKeyExpectStatus(page, 'Space', 'Scanning row 4');

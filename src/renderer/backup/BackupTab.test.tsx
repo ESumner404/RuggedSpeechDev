@@ -5,7 +5,7 @@ import { act } from 'preact/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BackupTab } from './BackupTab';
 import { encodeBackup } from './backupCodec';
-import { ensureSeeded, getPeople, resetDBConnectionForTests, savePerson } from '../store/db';
+import { ensureSeeded, getPeople, lastBackupSetting, resetDBConnectionForTests, savePerson } from '../store/db';
 
 async function waitFor(check: () => boolean, timeoutMs = 2000): Promise<void> {
   const start = Date.now();
@@ -48,6 +48,27 @@ describe('BackupTab', () => {
     const envelope = JSON.parse(data as string);
     expect(envelope.encrypted).toBe(false);
     await waitFor(() => container.textContent?.includes('Backup saved.') ?? false);
+  });
+
+  it('says when the last backup was, and notes the moment a new one is saved', async () => {
+    expect(container.textContent).toContain('Last backup: never on this computer.');
+
+    const button = Array.from(container.querySelectorAll('button')).find((b) => b.textContent === 'Save backup…')!;
+    act(() => button.click());
+    await waitFor(() => lastBackupSetting.signal.value !== null);
+
+    expect(Date.now() - lastBackupSetting.signal.value!).toBeLessThan(10_000);
+    await waitFor(() => !container.textContent?.includes('never on this computer'));
+    expect(container.textContent).toMatch(/Last backup: \d{1,2} \w+ \d{4}\./);
+  });
+
+  it('does not note a backup that was cancelled', async () => {
+    saveMock.mockResolvedValueOnce({ ok: false as const });
+    const button = Array.from(container.querySelectorAll('button')).find((b) => b.textContent === 'Save backup…')!;
+    act(() => button.click());
+    await waitFor(() => saveMock.mock.calls.length > 0);
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    expect(lastBackupSetting.signal.value).toBeNull();
   });
 
   it('refuses to save when passphrase protection is on but the passphrase is empty', async () => {
@@ -133,7 +154,7 @@ describe('BackupTab', () => {
     act(() => chooseButton.click());
     await waitFor(() => container.textContent?.includes('Replace everything on this device') ?? false);
 
-    // Not yet imported — the confirmation step must be a real gate.
+    // Not yet imported, the confirmation step must be a real gate.
     expect(await getPeople()).toHaveLength(1);
     expect((await getPeople())[0]?.id).toBe('existing');
 

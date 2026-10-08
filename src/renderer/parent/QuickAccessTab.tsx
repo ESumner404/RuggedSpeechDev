@@ -4,9 +4,9 @@ import { getQuickAccess, setQuickAccess } from '../store/db';
 import { DEFAULT_QUICK_ACCESS, QUICK_ACCESS_LABELS, setQuickAccessSlot } from '../store/quickAccess';
 import { QUICK_ACCESS_IDS, type QuickAccessId } from '../store/types';
 
-// The six buttons along the top of every screen (PLAN.md Phase 2). Changing
+// The six buttons along the top of every screen (docs/build-plan.md Phase 2). Changing
 // them is a deliberate adult action here, never something that happens on
-// its own (invariant I3) — and Help can move but never leave, so it stays
+// its own (invariant I3), and Help can move but never leave, so it stays
 // one press away from every screen.
 export function QuickAccessTab() {
   const buttons = useSignal<QuickAccessId[]>(DEFAULT_QUICK_ACCESS);
