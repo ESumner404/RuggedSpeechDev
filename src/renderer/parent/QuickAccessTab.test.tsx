@@ -15,7 +15,7 @@ async function waitFor(check: () => boolean | Promise<boolean>, timeoutMs = 2000
   }
 }
 
-describe('QuickAccessTab (PLAN.md Phase 2)', () => {
+describe('QuickAccessTab (docs/build-plan.md Phase 2)', () => {
   let container: HTMLElement;
 
   const selects = () => Array.from(container.querySelectorAll<HTMLSelectElement>('.quick-access-tab__slot select'));

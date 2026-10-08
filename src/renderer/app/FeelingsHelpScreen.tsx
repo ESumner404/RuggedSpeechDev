@@ -2,13 +2,16 @@ import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { FEELINGS_ITEMS, HELP_ITEMS, INTENSITIES, type Intensity } from '../vocab/feelingsHelp';
 import { announceItem, announceText } from '../speech/announce';
+import { recordPress } from '../store/usage';
 import { CalmTab } from '../calm/CalmTab';
+import { MyBodyScreen } from '../body/MyBodyScreen';
 import type { Item } from '../store/types';
+import { Pic } from '../symbols/Pic';
 
-export type FeelingsHelpTab = 'feelings' | 'help' | 'calm';
+export type FeelingsHelpTab = 'feelings' | 'help' | 'calm' | 'body';
 
 type Props = {
-  // Controlled by App, not owned here — the route ("feelings") doesn't
+  // Controlled by App, not owned here, the route ("feelings") doesn't
   // change when Quick Access's Help button switches the tab, so an
   // internal signal seeded once from an initial prop would go stale.
   tab: FeelingsHelpTab;
@@ -24,6 +27,7 @@ export function FeelingsHelpScreen({ tab, onTabChange }: Props) {
 
   function pressFeeling(item: Item): void {
     chosenFeeling.value = item;
+    void recordPress(item.label);
     announceText(`I feel ${item.label}`);
   }
 
@@ -33,6 +37,7 @@ export function FeelingsHelpScreen({ tab, onTabChange }: Props) {
   }
 
   function pressHelp(item: Item): void {
+    void recordPress(item.label);
     void announceItem(item);
   }
 
@@ -63,6 +68,14 @@ export function FeelingsHelpScreen({ tab, onTabChange }: Props) {
         >
           Calm
         </button>
+        <button
+          type="button"
+          class="page-tabs__tab"
+          aria-pressed={tab === 'body'}
+          onClick={() => onTabChange('body')}
+        >
+          My body
+        </button>
       </div>
 
       {tab === 'feelings' && (
@@ -78,9 +91,7 @@ export function FeelingsHelpScreen({ tab, onTabChange }: Props) {
                 aria-pressed={chosenFeeling.value?.id === item.id}
               >
                 {item.image?.kind === 'emoji' && (
-                  <span class="board-button__emoji" aria-hidden="true">
-                    {item.image.char}
-                  </span>
+                  <Pic class="board-button__emoji" char={item.image.char} />
                 )}
                 <span class="board-button__label">{item.label}</span>
               </button>
@@ -113,9 +124,7 @@ export function FeelingsHelpScreen({ tab, onTabChange }: Props) {
               onClick={() => pressHelp(item)}
             >
               {item.image?.kind === 'emoji' && (
-                <span class="board-button__emoji" aria-hidden="true">
-                  {item.image.char}
-                </span>
+                <Pic class="board-button__emoji" char={item.image.char} />
               )}
               <span class="board-button__label">{item.label}</span>
             </button>
@@ -124,6 +133,8 @@ export function FeelingsHelpScreen({ tab, onTabChange }: Props) {
       )}
 
       {tab === 'calm' && <CalmTab />}
+
+      {tab === 'body' && <MyBodyScreen />}
     </div>
   );
 }

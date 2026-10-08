@@ -27,7 +27,7 @@ beforeEach(() => {
   resetDBConnectionForTests();
 });
 
-describe('voice pitch (PLAN.md Phase 1)', () => {
+describe('voice pitch (docs/build-plan.md Phase 1)', () => {
   it('defaults to 1x, and persists a deliberate choice into the cached signal too', async () => {
     expect(await getPreferredSpeechPitch()).toBe(1);
     await setPreferredSpeechPitch(0.8);
@@ -37,7 +37,7 @@ describe('voice pitch (PLAN.md Phase 1)', () => {
   });
 });
 
-describe('press mode (PLAN.md Phase 1)', () => {
+describe('press mode (docs/build-plan.md Phase 1)', () => {
   it('defaults to building a sentence, so nothing speaks until Speak is pressed', async () => {
     expect(await getPressMode()).toBe('sentence');
     expect(pressMode.value).toBe('sentence');
@@ -51,7 +51,7 @@ describe('press mode (PLAN.md Phase 1)', () => {
   });
 });
 
-describe('Quick Access configuration (PLAN.md Phase 2)', () => {
+describe('Quick Access configuration (docs/build-plan.md Phase 2)', () => {
   it('defaults to Home · Help · Yes · No · Favourites · Keyboard', async () => {
     expect(await getQuickAccess()).toEqual(DEFAULT_QUICK_ACCESS);
   });

@@ -6,7 +6,7 @@ type Props = {
 };
 
 /** Records a short clip so a button can speak in a familiar person's own
- * voice instead of the synthesiser (PLAN.md Phase 4). */
+ * voice instead of the synthesiser (docs/build-plan.md Phase 4). */
 export function VoiceClipRecorder({ onRecorded }: Props) {
   const recording = useSignal(false);
   const error = useSignal<string | null>(null);

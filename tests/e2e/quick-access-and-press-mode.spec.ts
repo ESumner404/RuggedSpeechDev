@@ -12,11 +12,14 @@ async function setUpPin(page: Page, pin: string): Promise<void> {
 }
 
 async function completeFirstRun(page: Page, pin: string): Promise<void> {
-  await page.locator('.first-run-wizard__button--primary').click();
-  await page.locator('.first-run-wizard__button--primary').click();
+  // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+  for (let step = 0; step < 7; step += 1) {
+    await page.locator('.first-run-wizard__button--primary').click();
+  }
   await setUpPin(page, pin);
   await setUpPin(page, pin);
   await page.locator('.pin-gate__button').click();
+  await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
   await expect(page.locator('.home-screen__tile').first()).toBeVisible();
 }
 
@@ -55,7 +58,7 @@ async function spyOnSpeech(page: Page): Promise<void> {
 
 const allSpoken = (page: Page) => page.evaluate(() => (window as unknown as { __spoken: Spoken[] }).__spoken);
 
-test.describe('Quick Access, press mode and pitch (PLAN.md Phases 1-2)', () => {
+test.describe('Quick Access, press mode and pitch (docs/build-plan.md Phases 1-2)', () => {
   let userDataDir: string;
 
   test.beforeEach(() => {

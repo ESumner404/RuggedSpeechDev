@@ -21,7 +21,7 @@ async function setUpPin(page: Page, pin: string): Promise<void> {
   await page.locator('.pin-gate__key--submit').click();
 }
 
-test.describe('Phase 8 — first run and crash recovery', () => {
+test.describe('Phase 8, first run and crash recovery', () => {
   let userDataDir: string;
 
   test.beforeEach(() => {
@@ -39,28 +39,45 @@ test.describe('Phase 8 — first run and crash recovery', () => {
     });
   }
 
-  test('the first-run wizard walks voice, grid size, then PIN, and only then shows Home', async () => {
+  test('the first-run wizard walks welcome, whose device, voice, grid size, pictures, what a press does, colours, then PIN, and only then shows Home', async () => {
     const app = await launch();
     const page = await app.firstWindow();
+    const title = page.locator('.first-run-wizard__title');
+    const next = page.locator('.first-run-wizard__button--primary');
 
     await expect(page.locator('.home-screen__tile')).toHaveCount(0);
-    await expect(page.locator('.first-run-wizard__title')).toHaveText('Choose a voice');
+    await expect(title).toHaveText('Welcome to Rugged Speech Test');
+    await next.click();
 
-    await page.locator('.first-run-wizard__button--primary').click();
-    await expect(page.locator('.first-run-wizard__title')).toHaveText('Choose a grid size');
+    await expect(title).toHaveText('Whose device is this?');
+    await page.locator('.first-run-wizard__field input').first().fill('Lucy');
+    await next.click();
 
-    await page.locator('.first-run-wizard__button--primary').click();
-    await expect(page.locator('.first-run-wizard__title')).toHaveText('Set a Parent PIN');
+    await expect(title).toHaveText('Choose a voice');
+    await next.click();
+    await expect(title).toHaveText('Choose a grid size');
+    await next.click();
+    await expect(title).toHaveText('Pictures and words');
+    await next.click();
+    await expect(title).toHaveText('What should pressing a word do?');
+    await next.click();
+    await expect(title).toHaveText('Choose the colours');
+    await next.click();
+    await expect(title).toHaveText('Set a Parent PIN');
     await expect(page.locator('.pin-gate__prompt')).toContainText('Set up Parent Mode');
 
     await setUpPin(page, '2468');
     await setUpPin(page, '2468');
     await expect(page.locator('.pin-gate__recovery-code')).toBeVisible();
     await page.locator('.pin-gate__button').click();
+    await expect(title).toHaveText("Lucy's device is ready");
+    await next.click(); // the "you are ready" tour
 
     await expect(page.locator('.home-screen__tile')).toHaveCount(6);
+    await expect(page.locator('.app-shell__device-name')).toHaveText("Lucy's device");
+    expect(await page.title()).toBe("Lucy's device");
 
-    // A PIN now exists — the Parent Mode button leads straight to entry, not setup.
+    // A PIN now exists, the Parent Mode button leads straight to entry, not setup.
     await page.locator('.parent-mode-button').click();
     await expect(page.locator('.pin-gate__prompt')).toHaveText('Enter the Parent Mode PIN');
 
@@ -71,13 +88,16 @@ test.describe('Phase 8 — first run and crash recovery', () => {
     let app = await launch();
     let page = await app.firstWindow();
 
-    // Clear the wizard with defaults — this test cares about Talk state,
+    // Clear the wizard with defaults, this test cares about Talk state,
     // not the wizard's own choices.
-    await page.locator('.first-run-wizard__button--primary').click();
-    await page.locator('.first-run-wizard__button--primary').click();
+    // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+    for (let step = 0; step < 7; step += 1) {
+      await page.locator('.first-run-wizard__button--primary').click();
+    }
     await setUpPin(page, '1234');
     await setUpPin(page, '1234');
     await page.locator('.pin-gate__button').click();
+    await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
     await expect(page.locator('.home-screen__tile')).toHaveCount(6);
 
     await page.locator('.home-screen__tile', { hasText: 'Talk' }).click();
@@ -86,7 +106,7 @@ test.describe('Phase 8 — first run and crash recovery', () => {
     await boardButton(page, 'Food').click();
     await expect(boardButton(page, 'apple')).toBeVisible();
 
-    // No Home/Back press, no app.close() — kill the process outright, the
+    // No Home/Back press, no app.close(), kill the process outright, the
     // closest a test harness can get to "pulling the power".
     const pid = app.process().pid;
     expect(pid).toBeDefined();
@@ -96,7 +116,7 @@ test.describe('Phase 8 — first run and crash recovery', () => {
     app = await launch();
     page = await app.firstWindow();
 
-    // First run already completed — straight to Home, then Talk restores
+    // First run already completed, straight to Home, then Talk restores
     // exactly where the sentence and the page were left.
     await expect(page.locator('.home-screen__tile')).toHaveCount(6);
     await page.locator('.home-screen__tile', { hasText: 'Talk' }).click();
@@ -111,11 +131,14 @@ test.describe('Phase 8 — first run and crash recovery', () => {
     let app = await launch();
     let page = await app.firstWindow();
 
-    await page.locator('.first-run-wizard__button--primary').click();
-    await page.locator('.first-run-wizard__button--primary').click();
+    // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+    for (let step = 0; step < 7; step += 1) {
+      await page.locator('.first-run-wizard__button--primary').click();
+    }
     await setUpPin(page, '5555');
     await setUpPin(page, '5555');
     await page.locator('.pin-gate__button').click();
+    await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
 
     await page.locator('.home-screen__tile', { hasText: 'Talk' }).click();
     await boardButton(page, 'I').click();

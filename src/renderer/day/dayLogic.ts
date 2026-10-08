@@ -5,8 +5,8 @@ function pad2(n: number): string {
 }
 
 /**
- * "YYYY-MM-DD" in LOCAL time, not UTC — the day plan must roll over at
- * local midnight, not somewhere else in the world (PLAN.md Phase 5
+ * "YYYY-MM-DD" in LOCAL time, not UTC, the day plan must roll over at
+ * local midnight, not somewhere else in the world (docs/build-plan.md Phase 5
  * acceptance: "rolls over correctly at midnight").
  */
 export function getDateString(now: Date): string {
@@ -29,7 +29,7 @@ export type NowNextLater = {
 };
 
 /**
- * Sequential, not clock-driven — matches how a physical Now/Next board
+ * Sequential, not clock-driven, matches how a physical Now/Next board
  * actually gets used: it advances when something is marked finished, not
  * by comparing to a clock (which would need every activity to carry an
  * exact time, and drifts messily around real life).

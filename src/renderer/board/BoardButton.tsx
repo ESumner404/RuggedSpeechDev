@@ -3,14 +3,22 @@ import { useEffect, useRef } from 'preact/hooks';
 import type { Item } from '../store/types';
 import { PhotoThumbnail } from '../ui/PhotoThumbnail';
 import { resolveBackgroundColor } from '../ui/fitzgerald';
-import { preferredSpeechPitch, preferredSpeechRate, preferredVoiceURI, saveFavourite } from '../store/db';
+import { readableOn } from '../ui/theme';
+import {
+  preferredSpeechPitch,
+  preferredSpeechRate,
+  preferredVoiceURI,
+  saveFavourite,
+  speechVolumeSetting,
+} from '../store/db';
 import { speak } from '../speech/speak';
+import { Pic } from '../symbols/Pic';
 
 type ScanHighlight = 'row' | 'cell' | null;
 
 // Feature review, Aug 2026: "add a long-press action on any button to add
 // to Favourites so it works from anywhere in the app". Deliberately a
-// separate gesture from hold-to-select dwell (Phase 7) — dwell activates
+// separate gesture from hold-to-select dwell (Phase 7), dwell activates
 // on hover for switch/gaze input, this activates on a held pointer-down
 // for touch/mouse, and the two never fire from the same event pair.
 const LONG_PRESS_MS = 700;
@@ -18,9 +26,9 @@ const LONG_PRESS_MS = 700;
 type Props = {
   item: Item;
   onPress: (item: Item) => void;
-  // Hold-to-select (PLAN.md Phase 7): 0 means off, activating immediately
+  // Hold-to-select (docs/build-plan.md Phase 7): 0 means off, activating immediately
   // on click as before. Above 0, click is ignored and activation happens
-  // only once the pointer or keyboard focus has dwelled here this long —
+  // only once the pointer or keyboard focus has dwelled here this long,
   // dwell replaces click rather than racing it, since a touch tap would
   // otherwise fire click before the timer ever gets a chance to complete.
   dwellMs?: number;
@@ -80,13 +88,14 @@ export function BoardButton({
       speak('Added to Favourites', {
         rate: preferredSpeechRate.value,
         pitch: preferredSpeechPitch.value,
+        volume: speechVolumeSetting.signal.value,
         ...(preferredVoiceURI.value ? { voiceURI: preferredVoiceURI.value } : {}),
       });
     }, LONG_PRESS_MS);
   }
 
   function handleClick(): void {
-    // The long press already handled this press — a held-then-released
+    // The long press already handled this press, a held-then-released
     // pointer still fires a native click, which must not also add the
     // word to the sentence on top of favouriting it.
     if (longPressFiredRef.current) {
@@ -97,7 +106,7 @@ export function BoardButton({
     onPress(item);
   }
 
-  // A pending timer must not fire after this button is gone — navigating
+  // A pending timer must not fire after this button is gone, navigating
   // to a different board mid-gesture should not act on whatever used to
   // be under the pointer.
   useEffect(() => {
@@ -113,16 +122,20 @@ export function BoardButton({
     scanHighlight === 'cell' && 'board-button--scan-cell',
     dwelling.value && 'board-button--dwelling',
     longPressing.value && 'board-button--long-pressing',
+    item.target && 'board-button--target',
   ]
     .filter(Boolean)
     .join(' ');
 
+  // Writing is chosen to be readable on whatever colour the button is, so a
+  // pale button stays legible on a dark theme and a dark one on a light theme.
+  const background = resolveBackgroundColor(item.background_color, lowArousal);
   return (
     <button
       type="button"
       id={`board-button-${item.id}`}
       class={classes}
-      style={{ backgroundColor: resolveBackgroundColor(item.background_color, lowArousal) }}
+      style={background ? { backgroundColor: background, color: readableOn(background) } : undefined}
       onClick={handleClick}
       onPointerEnter={startDwell}
       onPointerLeave={() => {
@@ -133,13 +146,15 @@ export function BoardButton({
       onPointerUp={clearLongPress}
       onFocus={startDwell}
       onBlur={clearDwell}
-      {...(item.load_board ? { 'aria-label': `${item.label}, opens more` } : {})}
+      {...(item.load_board
+        ? { 'aria-label': `${item.label}, opens more` }
+        : item.target
+          ? { 'aria-label': `${item.label}, focus word` }
+          : {})}
       {...(tabIndex !== undefined ? { tabIndex } : {})}
     >
       {item.image?.kind === 'emoji' && (
-        <span class="board-button__emoji" aria-hidden="true">
-          {item.image.char}
-        </span>
+        <Pic class="board-button__emoji" char={item.image.char} />
       )}
       {item.image?.kind === 'photo' && (
         <PhotoThumbnail class="board-button__photo" blobId={item.image.blobId} alt="" />

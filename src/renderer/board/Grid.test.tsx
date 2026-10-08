@@ -4,7 +4,7 @@ import { render } from 'preact';
 import { act } from 'preact/test-utils';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Grid } from './Grid';
-import { resetDBConnectionForTests, setAccessSettings } from '../store/db';
+import { resetDBConnectionForTests, setAccessSettings, wordStageSetting } from '../store/db';
 import type { AccessSettings, Board } from '../store/types';
 
 const board: Board = {
@@ -62,7 +62,7 @@ async function waitFor(check: () => boolean, timeoutMs = 2000): Promise<void> {
 }
 
 // A signal-driven re-render commits on a microtask, not synchronously
-// within act() — a real timer tick reliably lands after that.
+// within act(), a real timer tick reliably lands after that.
 async function tick(): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, 50));
 }
@@ -75,7 +75,7 @@ describe('Grid', () => {
     resetDBConnectionForTests();
     container = document.createElement('div');
     // Real focus (document.activeElement) only tracks elements connected
-    // to the document — the external-keyboard-navigation tests need this.
+    // to the document, the external-keyboard-navigation tests need this.
     document.body.appendChild(container);
   });
 
@@ -89,17 +89,66 @@ describe('Grid', () => {
     expect(container.textContent).toContain('Apple');
   });
 
+  describe('word stages and focus words', () => {
+    const staged: Board = {
+      id: 'staged',
+      name: 'Staged',
+      grid: { rows: 2, columns: 2, order: [['a', 'b'], ['c', null]] },
+      buttons: [
+        { id: 'a', label: 'Apple' },
+        { id: 'b', label: 'Banana', stage: 2 },
+        { id: 'c', label: 'Carrot', stage: 3, target: true },
+      ],
+    };
+    const labels = () => Array.from(container.querySelectorAll('.board-button__label')).map((el) => el.textContent);
+
+    it('shows every word when the stage is "all"', () => {
+      render(<Grid board={staged} onPress={() => {}} />, container);
+      expect(labels()).toEqual(['Apple', 'Banana', 'Carrot']);
+    });
+
+    it('holds back words above the active stage but keeps every slot, so nothing moves', async () => {
+      wordStageSetting.signal.value = 2;
+      render(<Grid board={staged} onPress={() => {}} />, container);
+      expect(labels()).toEqual(['Apple', 'Banana']);
+      expect(container.querySelectorAll('.board-button, .board-grid__empty')).toHaveLength(4);
+
+      // Carrot returns in the very same place once its stage is reached.
+      act(() => {
+        wordStageSetting.signal.value = 3;
+      });
+      await tick();
+      expect(labels()).toEqual(['Apple', 'Banana', 'Carrot']);
+    });
+
+    it('cannot be pressed while held back', () => {
+      wordStageSetting.signal.value = 1;
+      const pressed: string[] = [];
+      render(<Grid board={staged} onPress={(item) => pressed.push(item.id)} />, container);
+      expect(container.querySelector('#board-button-b')).toBeNull();
+      expect(pressed).toEqual([]);
+    });
+
+    it('marks a focus word without changing its colour or position', () => {
+      render(<Grid board={staged} onPress={() => {}} />, container);
+      const carrot = container.querySelector<HTMLButtonElement>('#board-button-c')!;
+      expect(carrot.className).toContain('board-button--target');
+      expect(carrot.getAttribute('aria-label')).toBe('Carrot, focus word');
+      expect(container.querySelector('#board-button-a')!.className).not.toContain('board-button--target');
+    });
+  });
+
   it("leaves a hidden button's slot empty rather than closing the gap", () => {
     render(<Grid board={board} onPress={() => {}} />, container);
 
     expect(container.textContent).not.toContain('Banana');
-    // Still four cells — the hidden button's slot is an empty cell, not
+    // Still four cells, the hidden button's slot is an empty cell, not
     // removed, so every other button keeps its position (invariant I3).
     const cells = container.querySelectorAll('.board-button, .board-grid__empty');
     expect(cells).toHaveLength(4);
   });
 
-  describe('hold-to-select (PLAN.md Phase 7)', () => {
+  describe('hold-to-select (docs/build-plan.md Phase 7)', () => {
     it('activates immediately on click when dwell is off (default)', () => {
       const presses: string[] = [];
       render(<Grid board={board} onPress={(item) => presses.push(item.id)} />, container);
@@ -109,7 +158,7 @@ describe('Grid', () => {
     });
 
     // jsdom doesn't implement PointerEvent, so onPointerEnter/onPointerLeave
-    // silently don't fire here the way they do in a real browser — these
+    // silently don't fire here the way they do in a real browser, these
     // exercise the equivalent onFocus/onBlur dwell trigger instead; the
     // pointer path is covered in tests/e2e/access.spec.ts.
     it('ignores click and activates only after the dwell time when dwell is on', async () => {
@@ -124,7 +173,7 @@ describe('Grid', () => {
 
       // Grid's own arrow-nav-on-mount effect already focused this cell, so
       // a bare focus() here would be a no-op (already the active element,
-      // no new 'focus' event) — blur first to force a genuine transition.
+      // no new 'focus' event), blur first to force a genuine transition.
       act(() => button.blur());
       act(() => button.focus());
       await waitFor(() => presses.length > 0, 500);
@@ -146,7 +195,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('repeat-press suppression (PLAN.md Phase 7)', () => {
+  describe('repeat-press suppression (docs/build-plan.md Phase 7)', () => {
     it('ignores a second press of the same button within the suppression window', async () => {
       await setAccessSettings({ ...DEFAULT, repeatSuppressMs: 300 });
       const presses: string[] = [];
@@ -160,7 +209,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('external keyboard navigation (PLAN.md Phase 7)', () => {
+  describe('external keyboard navigation (docs/build-plan.md Phase 7)', () => {
     it('starts focus on the first selectable cell', async () => {
       render(<Grid board={board} onPress={() => {}} />, container);
       await waitFor(() => document.activeElement?.id === 'board-button-a');
@@ -194,14 +243,14 @@ describe('Grid', () => {
           .getElementById('board-button-c')!
           .dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
       });
-      // The only cell to the right of c is empty, and below b is empty —
+      // The only cell to the right of c is empty, and below b is empty,
       // nothing selectable that direction, so focus stays on c.
       await tick();
       expect(document.activeElement?.id).toBe('board-button-c');
     });
   });
 
-  describe('switch scanning (PLAN.md Phase 7)', () => {
+  describe('switch scanning (docs/build-plan.md Phase 7)', () => {
     it('two-switch stepped: Space advances the highlight, Enter selects, and every button is out of tab order', async () => {
       await setAccessSettings({ ...DEFAULT, scanningMode: 'twoSwitchStepped', scanIntervalMs: 100_000 });
       const presses: string[] = [];
@@ -234,7 +283,7 @@ describe('Grid', () => {
 
     it('one-switch timed: Space alone locks a row, then selects the highlighted cell', async () => {
       // A long interval keeps the auto-advance timer from interfering with
-      // this specific sequence — the timer itself is covered separately.
+      // this specific sequence, the timer itself is covered separately.
       await setAccessSettings({ ...DEFAULT, scanningMode: 'oneSwitchTimed', scanIntervalMs: 100_000 });
       const presses: string[] = [];
       render(<Grid board={scanBoard} onPress={(item) => presses.push(item.id)} />, container);

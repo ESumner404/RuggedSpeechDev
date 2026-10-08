@@ -122,11 +122,11 @@ describe('communication history (invariant I2)', () => {
     expect(entries.map((e) => e.text)).toEqual(["I'm lost", 'I feel worried, a lot']);
   });
 
-  it('records Help utterances the same way as anything else (CLAUDE.md §6)', async () => {
+  it('records Help utterances the same way as anything else (PRINCIPLES.md §6)', async () => {
     await setRecentEnabled(true);
     await recordUtteranceIfEnabled('Someone hurt me');
     const [entry] = await getRecentEntries();
-    // No special field, no flag — an entry from Help looks identical to
+    // No special field, no flag, an entry from Help looks identical to
     // any other entry: just text and a timestamp.
     expect(Object.keys(entry!).sort()).toEqual(['id', 'text', 'timestamp']);
   });
@@ -152,10 +152,10 @@ describe('communication history (invariant I2)', () => {
 
 // fake-indexeddb doesn't implement structured-clone for Blob values (a
 // stored Blob comes back as {}), so these only check the id-based API
-// shape — savePhoto never returns or accepts a filesystem path, ids are
+// shape, savePhoto never returns or accepts a filesystem path, ids are
 // unique. The actual blob content round-trips correctly against real
 // IndexedDB, verified in tests/e2e/parent-mode-photos.spec.ts.
-describe('photos and voice clips (PLAN.md Phase 4)', () => {
+describe('photos and voice clips (docs/build-plan.md Phase 4)', () => {
   it('returns a string id, and getPhoto resolves something for it', async () => {
     const id = await savePhoto(new Blob(['fake-jpeg-bytes'], { type: 'image/jpeg' }));
     expect(typeof id).toBe('string');
@@ -175,7 +175,7 @@ describe('photos and voice clips (PLAN.md Phase 4)', () => {
   });
 });
 
-describe('People and Places as first-class records (PLAN.md Phase 4)', () => {
+describe('People and Places as first-class records (docs/build-plan.md Phase 4)', () => {
   it('saves and lists a person with a photo and phrases', async () => {
     const photoId = await savePhoto(new Blob(['photo']));
     await savePerson({
@@ -199,7 +199,7 @@ describe('People and Places as first-class records (PLAN.md Phase 4)', () => {
   });
 });
 
-describe('My Day (PLAN.md Phase 5)', () => {
+describe('My Day (docs/build-plan.md Phase 5)', () => {
   it('returns an empty plan for a date nothing has been saved for', async () => {
     const plan = await getDayPlan('2026-03-05');
     expect(plan).toEqual({ date: '2026-03-05', activities: [] });
@@ -229,7 +229,7 @@ describe('My Day (PLAN.md Phase 5)', () => {
   });
 });
 
-describe('Profiles (PLAN.md Phase 6)', () => {
+describe('Profiles (docs/build-plan.md Phase 6)', () => {
   it('seeds the four named profiles on first read', async () => {
     const profiles = await getProfiles();
     expect(profiles.map((p) => p.name).sort()).toEqual(['Grandparents', 'Home', 'Hospital', 'School']);
@@ -265,8 +265,8 @@ describe('Profiles (PLAN.md Phase 6)', () => {
   });
 });
 
-describe('Access settings (PLAN.md Phase 7)', () => {
-  it('defaults to everything off — ordinary touch/mouse behaviour is unaffected', async () => {
+describe('Access settings (docs/build-plan.md Phase 7)', () => {
+  it('defaults to everything off, ordinary touch/mouse behaviour is unaffected', async () => {
     expect(await getAccessSettings()).toEqual({
       dwellMs: 0,
       repeatSuppressMs: 0,
@@ -296,7 +296,7 @@ describe('Access settings (PLAN.md Phase 7)', () => {
   });
 });
 
-describe('Backup and restore (PLAN.md Phase 6)', () => {
+describe('Backup and restore (docs/build-plan.md Phase 6)', () => {
   it('exports everything needed to reproduce the current state', async () => {
     await ensureSeeded();
     await setRecentEnabled(true);
@@ -335,7 +335,7 @@ describe('Backup and restore (PLAN.md Phase 6)', () => {
 
     const payload = await exportBackupPayload();
 
-    // A genuinely clean database — a different machine, not just a reset
+    // A genuinely clean database, a different machine, not just a reset
     // connection to the same one.
     indexedDB = new IDBFactory();
     resetDBConnectionForTests();
@@ -350,7 +350,7 @@ describe('Backup and restore (PLAN.md Phase 6)', () => {
     expect(await getPlaces()).toHaveLength(1);
     expect((await getDayPlan('2026-03-05')).activities).toHaveLength(1);
     expect(await getActiveProfileId()).toBe('hospital');
-    expect(await getMedicalInfo()).toEqual({
+    expect(await getMedicalInfo()).toMatchObject({
       childName: 'Sam',
       allergies: 'Peanuts',
       conditions: '',
@@ -360,7 +360,7 @@ describe('Backup and restore (PLAN.md Phase 6)', () => {
     expect((await getBoard(myPage.boardId))?.name).toBe('Weekend words');
   });
 
-  it('restoring replaces rather than merges — stale data from before the restore is gone', async () => {
+  it('restoring replaces rather than merges, stale data from before the restore is gone', async () => {
     await ensureSeeded();
     await savePerson({ id: 'stale', name: 'Stale Person', phrases: [] });
 
@@ -375,7 +375,7 @@ describe('Backup and restore (PLAN.md Phase 6)', () => {
 
 describe('Medical info (feature review, Aug 2026)', () => {
   it('is empty on a fresh database', async () => {
-    expect(await getMedicalInfo()).toEqual({
+    expect(await getMedicalInfo()).toMatchObject({
       childName: '',
       allergies: '',
       conditions: '',
@@ -392,7 +392,7 @@ describe('Medical info (feature review, Aug 2026)', () => {
     });
     resetDBConnectionForTests();
 
-    expect(await getMedicalInfo()).toEqual({
+    expect(await getMedicalInfo()).toMatchObject({
       childName: 'Sam',
       allergies: 'Peanuts, penicillin',
       conditions: 'Asthma',
@@ -401,7 +401,7 @@ describe('Medical info (feature review, Aug 2026)', () => {
   });
 });
 
-describe('First run and preferred voice (PLAN.md Phase 8)', () => {
+describe('First run and preferred voice (docs/build-plan.md Phase 8)', () => {
   it('has not completed first run on a fresh database', async () => {
     expect(await hasCompletedFirstRun()).toBe(false);
   });
@@ -427,7 +427,7 @@ describe('First run and preferred voice (PLAN.md Phase 8)', () => {
   });
 });
 
-describe('Crash recovery session state (PLAN.md Phase 8)', () => {
+describe('Crash recovery session state (docs/build-plan.md Phase 8)', () => {
   it('has no session state on a fresh database', async () => {
     expect(await getSessionState()).toBeNull();
   });

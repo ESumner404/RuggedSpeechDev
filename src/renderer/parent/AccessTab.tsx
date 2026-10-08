@@ -9,15 +9,21 @@ import {
   getPreferredSpeechPitch,
   getPreferredSpeechRate,
   getPressMode,
+  pronunciationsSetting,
   setAccessSettings,
+  speechVolumeSetting,
+  keyboardLayoutSetting,
+  sentencePicturesSetting,
   setPreferredSpeechPitch,
   setPreferredSpeechRate,
   setPressMode,
 } from '../store/db';
-import type { AccessSettings, ContrastMode, PressMode, ScanningMode } from '../store/types';
+import type { AccessSettings, ContrastMode, KeyboardLayout, PressMode, ScanningMode } from '../store/types';
+import { announceText } from '../speech/announce';
+import { VoiceSettings } from './VoiceSettings';
 
-// Access (PLAN.md Phase 7): everything here defaults off, and stays off
-// for a family that never opens this tab — ordinary touch/mouse behaviour
+// Access (docs/build-plan.md Phase 7): everything here defaults off, and stays off
+// for a family that never opens this tab, ordinary touch/mouse behaviour
 // is unaffected until an adult deliberately turns something on.
 export function AccessTab() {
   const settings = useSignal<AccessSettings>(DEFAULT_ACCESS_SETTINGS);
@@ -56,6 +62,19 @@ export function AccessTab() {
     await setPreferredSpeechPitch(pitch);
   }
 
+  function updatePronunciation(index: number, changes: Partial<{ written: string; spoken: string }>): void {
+    const next = pronunciationsSetting.signal.value.map((entry, i) => (i === index ? { ...entry, ...changes } : entry));
+    void pronunciationsSetting.set(next);
+  }
+
+  function addPronunciation(): void {
+    void pronunciationsSetting.set([...pronunciationsSetting.signal.value, { written: '', spoken: '' }]);
+  }
+
+  function removePronunciation(index: number): void {
+    void pronunciationsSetting.set(pronunciationsSetting.signal.value.filter((_, i) => i !== index));
+  }
+
   async function updatePressMode(mode: PressMode): Promise<void> {
     press.value = mode;
     await setPressMode(mode);
@@ -65,6 +84,8 @@ export function AccessTab() {
 
   return (
     <div class="parent-mode-screen__body access-tab">
+      <VoiceSettings />
+
       <section class="access-tab__section">
         <h2 class="access-tab__heading">Speech rate</h2>
         <p class="access-tab__hint">
@@ -102,10 +123,74 @@ export function AccessTab() {
       </section>
 
       <section class="access-tab__section">
+        <h2 class="access-tab__heading">Voice volume</h2>
+        <p class="access-tab__hint">
+          How loud the app speaks, on top of the computer's own volume. Turn it down for a quiet room.
+        </p>
+        <label class="access-tab__slider-row">
+          Volume {Math.round(speechVolumeSetting.signal.value * 100)}%
+          <input
+            type="range"
+            min={0.1}
+            max={1}
+            step={0.05}
+            value={speechVolumeSetting.signal.value}
+            onInput={(event) => void speechVolumeSetting.set(Number((event.target as HTMLInputElement).value))}
+          />
+        </label>
+      </section>
+
+      <section class="access-tab__section">
+        <h2 class="access-tab__heading">Say it like this</h2>
+        <p class="access-tab__hint">
+          For a name or word the voice gets wrong. Write it as it appears, and as it should sound. Only the
+          sound changes: the words on screen stay as written.
+        </p>
+        {pronunciationsSetting.signal.value.map((entry, index) => (
+          <div class="access-tab__pronunciation" key={index}>
+            <input
+              type="text"
+              aria-label="Written as"
+              placeholder="Written as"
+              value={entry.written}
+              onInput={(event) => updatePronunciation(index, { written: (event.target as HTMLInputElement).value })}
+            />
+            <span aria-hidden="true">→</span>
+            <input
+              type="text"
+              aria-label="Say it as"
+              placeholder="Say it as"
+              value={entry.spoken}
+              onInput={(event) => updatePronunciation(index, { spoken: (event.target as HTMLInputElement).value })}
+            />
+            <button
+              type="button"
+              class="parent-mode-screen__button"
+              disabled={!entry.written.trim() || !entry.spoken.trim()}
+              onClick={() => announceText(entry.written)}
+            >
+              Hear it
+            </button>
+            <button
+              type="button"
+              class="parent-mode-screen__button"
+              aria-label={`Remove ${entry.written || 'this entry'}`}
+              onClick={() => removePronunciation(index)}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+        <button type="button" class="parent-mode-screen__button access-tab__add" onClick={addPronunciation}>
+          Add a word
+        </button>
+      </section>
+
+      <section class="access-tab__section">
         <h2 class="access-tab__heading">When a button is pressed</h2>
         <p class="access-tab__hint">
           On the Talk board and My Pages. Words are only ever spoken because someone pressed
-          something — this just chooses what that press does.
+          something. This just chooses what that press does.
         </p>
         <label class="access-tab__select-row">
           A press
@@ -123,7 +208,7 @@ export function AccessTab() {
       <section class="access-tab__section">
         <h2 class="access-tab__heading">Hold-to-select</h2>
         <p class="access-tab__hint">
-          For eye gaze or a head pointer — a button activates once the pointer or focus has
+          For eye gaze or a head pointer: a button activates once the pointer or focus has
           rested on it this long, instead of on tap. 0 turns this off.
         </p>
         <label class="access-tab__slider-row">
@@ -144,7 +229,7 @@ export function AccessTab() {
       <section class="access-tab__section">
         <h2 class="access-tab__heading">Repeat-press suppression</h2>
         <p class="access-tab__hint">
-          Ignores a second press of the same button within this long of the first — for a
+          Ignores a second press of the same button within this long of the first, for a
           switch or finger that sometimes double-fires. 0 turns this off.
         </p>
         <label class="access-tab__slider-row">
@@ -206,6 +291,30 @@ export function AccessTab() {
             />
           </label>
         )}
+      </section>
+
+      <section class="access-tab__section">
+        <h2 class="access-tab__heading">Keyboard and sentence</h2>
+        <label class="access-tab__select-row">
+          Keyboard letters
+          <select
+            value={keyboardLayoutSetting.signal.value}
+            onChange={(event) =>
+              void keyboardLayoutSetting.set((event.target as HTMLSelectElement).value as KeyboardLayout)
+            }
+          >
+            <option value="qwerty">Usual keyboard order (QWERTY)</option>
+            <option value="alphabetical">Alphabetical order (A, B, C…)</option>
+          </select>
+        </label>
+        <label class="access-tab__checkbox">
+          <input
+            type="checkbox"
+            checked={sentencePicturesSetting.signal.value}
+            onChange={(event) => void sentencePicturesSetting.set((event.target as HTMLInputElement).checked)}
+          />
+          Show each word's picture in the sentence
+        </label>
       </section>
 
       <section class="access-tab__section">

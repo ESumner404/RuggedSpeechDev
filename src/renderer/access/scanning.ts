@@ -1,14 +1,14 @@
-// Switch access: row/column scanning (PLAN.md Phase 7). Pure state machine
-// over a grid shape — no DOM, no timers — so the whole sweep sequence is
+// Switch access: row/column scanning (docs/build-plan.md Phase 7). Pure state machine
+// over a grid shape, no DOM, no timers, so the whole sweep sequence is
 // unit-testable. A UI layer drives it with two inputs: "advance" and
 // "select", mapped to Space and Enter so any keyboard-emulating switch
 // interface works.
 
 // How many mounted Grids currently own Space/Enter for their own row/
 // column scan. The app-level Space-as-focus-advance fallback (for
-// everything outside a grid — Home, nav buttons, Parent Mode) checks this
+// everything outside a grid. Home, nav buttons, Parent Mode) checks this
 // so the two mechanisms never both act on the same keypress. A plain
-// mutable counter, not a signal — nothing ever renders from this, it's
+// mutable counter, not a signal, nothing ever renders from this, it's
 // only read inside an imperative keydown handler, and writing a signal
 // from inside an unmounting effect's own cleanup is enough to trip a real
 // Preact/signals interaction bug (confirmed by removing it).
@@ -43,7 +43,7 @@ export function initialScanPhase(shape: GridShape): ScanPhase {
   return { kind: 'row', row: rows[0] ?? 0 };
 }
 
-/** "Advance" input — Space. Moves the highlight to the next row, or the
+/** "Advance" input. Space. Moves the highlight to the next row, or the
  * next cell (including a trailing "back to rows" stop) within a locked row. */
 export function advanceScan(phase: ScanPhase, shape: GridShape): ScanPhase {
   if (phase.kind === 'row') {
@@ -66,7 +66,7 @@ export type ScanSelectResult =
   | { kind: 'backToRows'; phase: ScanPhase }
   | { kind: 'activate'; row: number; column: number };
 
-/** "Select" input — Enter (or the single switch, in one-switch timed mode). */
+/** "Select" input. Enter (or the single switch, in one-switch timed mode). */
 export function selectScan(phase: ScanPhase, shape: GridShape): ScanSelectResult {
   if (phase.kind === 'row') {
     const columns = selectableColumnsInRow(shape, phase.row);

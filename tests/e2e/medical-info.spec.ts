@@ -16,11 +16,14 @@ async function setUpPin(page: Page, pin: string): Promise<void> {
 }
 
 async function completeFirstRun(page: Page, pin: string): Promise<void> {
-  await page.locator('.first-run-wizard__button--primary').click();
-  await page.locator('.first-run-wizard__button--primary').click();
+  // welcome, whose device, voice, grid size, pictures, what a press does and colours: each is optional, so just go on
+  for (let step = 0; step < 7; step += 1) {
+    await page.locator('.first-run-wizard__button--primary').click();
+  }
   await setUpPin(page, pin);
   await setUpPin(page, pin);
   await page.locator('.pin-gate__button').click();
+  await page.locator('.first-run-wizard__button--primary').click(); // the "you are ready" tour
   await expect(page.locator('.home-screen__tile').first()).toBeVisible();
 }
 
@@ -37,7 +40,7 @@ function launch(userDataDir: string) {
   });
 }
 
-test.describe('Feature review — Medical Info', () => {
+test.describe('Feature review. Medical Info', () => {
   test('is reachable from the Home screen with no PIN, before and after being set up', async () => {
     const userDataDir = mkdtempSync(join(tmpdir(), 'mywords-e2e-medical-'));
     try {
@@ -45,7 +48,7 @@ test.describe('Feature review — Medical Info', () => {
       const page = await app.firstWindow();
       await completeFirstRun(page, '1234');
 
-      // Nothing set up yet — no PIN prompt, just a plain "not set up" message.
+      // Nothing set up yet, no PIN prompt, just a plain "not set up" message.
       await page.locator('.medical-info-button').click();
       await expect(page.locator('.medical-info-overlay__empty')).toContainText('No medical information');
       await page.locator('.medical-info-overlay__close').click();
@@ -63,7 +66,7 @@ test.describe('Feature review — Medical Info', () => {
       await expect(page.locator('.medical-info-tab__qr svg')).toBeVisible();
       await page.locator('.parent-mode-screen__exit').click();
 
-      // Reachable again from wherever we ended up, still no PIN — the same
+      // Reachable again from wherever we ended up, still no PIN, the same
       // press that worked before setup works after it too.
       await page.locator('.medical-info-button').click();
       await expect(page.locator('.medical-info-overlay__qr svg')).toBeVisible();
@@ -92,7 +95,7 @@ test.describe('Feature review — Medical Info', () => {
       await page.locator('.medical-info-tab__field input[type="text"]').fill('Alex');
       await page.locator('.medical-info-tab__field textarea').nth(1).fill('Epilepsy');
 
-      // Relaunch first — confirm the setting itself survives a restart.
+      // Relaunch first, confirm the setting itself survives a restart.
       await app.close();
       app = await launch(sourceDataDir);
       page = await app.firstWindow();

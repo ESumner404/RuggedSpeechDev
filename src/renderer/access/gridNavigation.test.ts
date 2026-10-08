@@ -10,7 +10,7 @@ function shape() {
   };
 }
 
-describe('gridNavigation (PLAN.md Phase 7)', () => {
+describe('gridNavigation (docs/build-plan.md Phase 7)', () => {
   it('moves one step in the given direction when the neighbour is selectable', () => {
     expect(moveFocus({ row: 0, column: 0 }, 'right', shape())).toEqual({ row: 0, column: 1 });
     expect(moveFocus({ row: 0, column: 0 }, 'down', shape())).toEqual({ row: 1, column: 0 });

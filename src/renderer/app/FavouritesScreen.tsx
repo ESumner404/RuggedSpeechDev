@@ -9,12 +9,14 @@ import {
   setRecentEnabled,
 } from '../store/db';
 import { announceItem, announceText } from '../speech/announce';
+import { recordPress } from '../store/usage';
 import type { Item, RecentEntry } from '../store/types';
+import { Pic } from '../symbols/Pic';
 
 export type FavouritesTab = 'favourites' | 'recent';
 
 type Props = {
-  // Controlled by App, not owned here — see FeelingsHelpScreen for why an
+  // Controlled by App, not owned here, see FeelingsHelpScreen for why an
   // internal signal seeded from an initial prop isn't safe when the route
   // name can stay the same across a tab change.
   tab: FavouritesTab;
@@ -38,8 +40,8 @@ export function FavouritesScreen({ tab, onTabChange }: Props) {
   }
 
   // Reading .value here (not just inside the effect below) is what makes
-  // this component re-render when a Recent entry is recorded elsewhere —
-  // e.g. Quick Access's Yes/No — while this tab is already on screen.
+  // this component re-render when a Recent entry is recorded elsewhere,
+  // e.g. Quick Access's Yes/No, while this tab is already on screen.
   const version = recentVersion.value;
 
   useEffect(() => {
@@ -85,12 +87,13 @@ export function FavouritesScreen({ tab, onTabChange }: Props) {
               class="board-button"
               key={item.id}
               style={{ backgroundColor: item.background_color }}
-              onClick={() => void announceItem(item)}
+              onClick={() => {
+                void recordPress(item.label);
+                void announceItem(item);
+              }}
             >
               {item.image?.kind === 'emoji' && (
-                <span class="board-button__emoji" aria-hidden="true">
-                  {item.image.char}
-                </span>
+                <Pic class="board-button__emoji" char={item.image.char} />
               )}
               <span class="board-button__label">{item.label}</span>
             </button>

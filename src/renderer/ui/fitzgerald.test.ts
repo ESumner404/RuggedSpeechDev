@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FITZGERALD_COLORS, LOW_AROUSAL_COLORS, resolveBackgroundColor } from './fitzgerald';
 
-describe('resolveBackgroundColor (PLAN.md Phase 7)', () => {
+describe('resolveBackgroundColor (docs/build-plan.md Phase 7)', () => {
   it('returns the stored colour unchanged when low-arousal is off', () => {
     expect(resolveBackgroundColor(FITZGERALD_COLORS.people, false)).toBe(FITZGERALD_COLORS.people);
   });

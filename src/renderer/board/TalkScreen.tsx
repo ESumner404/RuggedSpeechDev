@@ -5,12 +5,14 @@ import {
   getActiveProfile,
   getBoard,
   getSessionState,
+  clearAfterSpeakSetting,
   pressMode,
   setSessionState,
 } from '../store/db';
 import { ROOT_BOARD_ID } from '../vocab/starter';
 import type { Board, Item } from '../store/types';
-import { announceItem, announceText } from '../speech/announce';
+import { announceItem, announceSentence } from '../speech/announce';
+import { recordPress } from '../store/usage';
 import { Grid } from './Grid';
 import { SentenceStrip, type SentenceChip } from './SentenceStrip';
 
@@ -20,8 +22,9 @@ type Props = {
 
 export function TalkScreen({ onExit }: Props) {
   // Starts at the app's own root and is corrected once the active profile
-  // loads — a profile (PLAN.md Phase 6) changes which board Talk opens to
-  // by default without ever moving a Home screen button (CLAUDE.md I3).
+  // loads, a profile (docs/build-plan.md Phase 6) changes which board Talk opens to
+  // by default without ever moving a Home screen button (PRINCIPLES.md I3).
+  const speakingChipId = useSignal<string | null>(null);
   const rootBoardId = useSignal<string>(ROOT_BOARD_ID);
   const boardStack = useSignal<string[]>([ROOT_BOARD_ID]);
   const currentBoard = useSignal<Board | null>(null);
@@ -29,7 +32,7 @@ export function TalkScreen({ onExit }: Props) {
   const seeded = useSignal(false);
   // Set the instant a deliberate exit begins (Home/Back-out-of-Talk) so the
   // persistence effect below clears rather than re-saves the state that
-  // exit is also producing (PLAN.md Phase 8: crash recovery restores the
+  // exit is also producing (docs/build-plan.md Phase 8: crash recovery restores the
   // sentence and page only after an unclean shutdown, never after the
   // child simply pressed Home).
   const exiting = useSignal(false);
@@ -59,7 +62,7 @@ export function TalkScreen({ onExit }: Props) {
 
   useEffect(() => {
     // Once a deliberate exit has started, the clear already happened
-    // imperatively in handleHome/handleBack — this effect racing an
+    // imperatively in handleHome/handleBack, this effect racing an
     // unmount (both triggered from the same click) is not reliable enough
     // to be the only thing clearing crash-recovery state, so it just stops
     // persisting rather than trying to also clear.
@@ -72,10 +75,11 @@ export function TalkScreen({ onExit }: Props) {
       boardStack.value = [...boardStack.value, item.load_board.id];
       return;
     }
-    // What a press does is an adult's choice (PLAN.md Phase 1 press mode).
-    // By default it only adds to the sentence — nothing speaks until Speak
+    // What a press does is an adult's choice (docs/build-plan.md Phase 1 press mode).
+    // By default it only adds to the sentence, nothing speaks until Speak
     // is pressed. Either way, speech only ever follows a person's press
     // (invariant I5).
+    void recordPress(item.label);
     const mode = pressMode.value;
     if (mode !== 'speak') {
       sentence.value = [...sentence.value, { chipId: crypto.randomUUID(), item }];
@@ -87,7 +91,7 @@ export function TalkScreen({ onExit }: Props) {
     if (boardStack.value.length > 1) {
       boardStack.value = boardStack.value.slice(0, -1);
     } else {
-      // Already at Talk's own root — there's nowhere shallower within Talk,
+      // Already at Talk's own root, there's nowhere shallower within Talk,
       // so Back falls through to the app Home screen rather than doing
       // nothing. Cleared imperatively, right here, rather than left to the
       // persistence effect: that effect and the unmount this triggers are
@@ -115,9 +119,11 @@ export function TalkScreen({ onExit }: Props) {
   }
 
   function handleSpeak(): void {
-    const text = sentence.value.map((chip) => chip.item.vocalization ?? chip.item.label).join(' ');
-    if (!text) return;
-    announceText(text);
+    const words = sentence.value.map((chip) => chip.item.vocalization ?? chip.item.label);
+    if (words.length === 0) return;
+    const chipIds = sentence.value.map((chip) => chip.chipId);
+    announceSentence(words, (index) => (speakingChipId.value = index === null ? null : (chipIds[index] ?? null)));
+    if (clearAfterSpeakSetting.signal.value) sentence.value = [];
   }
 
   return (
@@ -127,6 +133,7 @@ export function TalkScreen({ onExit }: Props) {
         onRemove={handleRemoveChip}
         onClear={handleClearSentence}
         onSpeak={handleSpeak}
+        speakingChipId={speakingChipId.value}
       />
       <div class="talk-screen__grid">
         {currentBoard.value ? (

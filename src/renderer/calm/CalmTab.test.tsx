@@ -99,7 +99,7 @@ describe('CalmTab (feature review, Aug 2026)', () => {
     act(() => Array.from(container.querySelectorAll('button')).find((b) => b.textContent === '2 min')!.click());
     advance(5000);
 
-    // Both sections have their own "Stop" once active — Breathing hasn't
+    // Both sections have their own "Stop" once active. Breathing hasn't
     // been started here, so this is unambiguously Quiet Time's.
     act(() => Array.from(container.querySelectorAll('button')).find((b) => b.textContent === 'Stop')!.click());
     expect(container.querySelector('.calm-tab__countdown')).toBeNull();

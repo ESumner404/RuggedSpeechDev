@@ -4,7 +4,17 @@ import { render } from 'preact';
 import { act } from 'preact/test-utils';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { App } from './App';
-import { resetDBConnectionForTests, setFirstRunCompleted, setQuickAccess } from '../store/db';
+import { resetPinLockoutForTests } from '../store/pinSecurity';
+import {
+  EMPTY_USER_PROFILE,
+  resetDBConnectionForTests,
+  schoolModeSetting,
+  setFirstRunCompleted,
+  setParentPinState,
+  setQuickAccess,
+  setSchoolPin,
+  userProfileSetting,
+} from '../store/db';
 
 async function waitFor(check: () => boolean, timeoutMs = 2000): Promise<void> {
   const start = Date.now();
@@ -36,7 +46,8 @@ describe('App', () => {
   beforeEach(async () => {
     indexedDB = new IDBFactory();
     resetDBConnectionForTests();
-    // First run (PLAN.md Phase 8) is a separate, dedicated flow — its own
+    resetPinLockoutForTests();
+    // First run (docs/build-plan.md Phase 8) is a separate, dedicated flow, its own
     // wizard is covered in setup/FirstRunWizard.test.tsx. These tests are
     // about ordinary routing once that's already behind you.
     await setFirstRunCompleted();
@@ -70,7 +81,7 @@ describe('App', () => {
     }
   });
 
-  it('reaches Help in exactly one press from every screen (PLAN.md: ≤ 2)', () => {
+  it('reaches Help in exactly one press from every screen (docs/build-plan.md: ≤ 2)', () => {
     const routes = ['Talk', 'Keyboard', 'My Day', 'Favourites', 'My Pages', 'Feelings & Help'];
     for (const route of routes) {
       act(() => tileLabelled(container, route).click());
@@ -138,6 +149,153 @@ describe('App', () => {
     expect(container.querySelector('.talk-screen')).toBeNull();
     act(() => quickAccessButton(container, 'Help').click());
     expect(container.querySelector('.page-tabs__tab[aria-pressed="true"]')?.textContent).toBe('Help');
+  });
+
+  it('the spoken Quick Access buttons say their phrase and stay on the current screen', async () => {
+    const spoken: string[] = [];
+    (window as unknown as { speechSynthesis: SpeechSynthesisSurrogate }).speechSynthesis = {
+      getVoices: () => [],
+      cancel: () => {},
+      speak: (utterance: { text: string }) => spoken.push(utterance.text),
+    };
+    (globalThis as unknown as { SpeechSynthesisUtterance: unknown }).SpeechSynthesisUtterance = class {
+      text: string;
+      rate = 1;
+      pitch = 1;
+      voice = null;
+      constructor(text: string) {
+        this.text = text;
+      }
+    };
+    await setQuickAccess(['help', 'break', 'question', 'toilet', 'finished', 'again']);
+    render(null, container);
+    container = document.createElement('div');
+    render(<App />, container);
+    await waitFor(
+      () => Array.from(container.querySelectorAll('.quick-access-bar__button')).map((b) => b.textContent)[1] === 'Break',
+    );
+
+    act(() => tileLabelled(container, 'Talk').click());
+    for (const label of ['Break', 'Question', 'Toilet', 'Finished', 'Say again']) {
+      act(() => quickAccessButton(container, label).click());
+    }
+    expect(spoken).toEqual([
+      'I need a break',
+      'I have a question',
+      'I need the toilet',
+      "I've finished",
+      'Can you say that again, please?',
+    ]);
+    expect(container.querySelector('.talk-screen')).not.toBeNull();
+  });
+
+  it('First / Then can sit on the Quick Access bar and opens its screen from anywhere', async () => {
+    await setQuickAccess(['help', 'firstthen', 'yes', 'no', 'home', 'talk']);
+    render(null, container);
+    container = document.createElement('div');
+    render(<App />, container);
+    await waitFor(
+      () => Array.from(container.querySelectorAll('.quick-access-bar__button')).map((b) => b.textContent)[1] === 'First / Then',
+    );
+
+    act(() => tileLabelled(container, 'Keyboard').click());
+    act(() => quickAccessButton(container, 'First / Then').click());
+    expect(container.querySelector('.first-then-screen')).not.toBeNull();
+    expect(container.querySelector('.keyboard-screen')).toBeNull();
+  });
+
+  it('the game can sit on the Quick Access bar, and the Home screen keeps its six tiles', async () => {
+    await setQuickAccess(['help', 'game', 'yes', 'no', 'home', 'talk']);
+    render(null, container);
+    container = document.createElement('div');
+    render(<App />, container);
+    await waitFor(
+      () => Array.from(container.querySelectorAll('.quick-access-bar__button')).map((b) => b.textContent)[1] === 'Games',
+    );
+    expect(container.querySelectorAll('.home-screen__tile')).toHaveLength(6);
+
+    act(() => quickAccessButton(container, 'Games').click());
+    await waitFor(() => container.querySelector('.games-menu') !== null);
+  });
+
+  it('shows whose device it is along the top, names the window after them, and can be hidden', async () => {
+    expect(container.querySelector('.app-shell__device-name')).toBeNull();
+    expect(document.title).toBe('Rugged Speech Test');
+
+    await userProfileSetting.set({ ...EMPTY_USER_PROFILE, name: 'Lucy', emoji: '🦁' });
+    await waitFor(() => container.querySelector('.app-shell__device-name') !== null);
+    expect(container.querySelector('.app-shell__device-name')!.textContent).toContain("Lucy's device");
+    await waitFor(() => document.title === "Lucy's device");
+
+    await userProfileSetting.set({ ...userProfileSetting.signal.value, showOnScreen: false });
+    await waitFor(() => container.querySelector('.app-shell__device-name') === null);
+    expect(document.title).toBe("Lucy's device");
+  });
+
+  it('has a Home button on every screen but Home, in the same place, that always goes back', () => {
+    const homeButton = () => container.querySelector<HTMLButtonElement>('.home-button');
+    expect(homeButton()).toBeNull();
+    for (const tile of ['Talk', 'Keyboard', 'My Day', 'Favourites', 'My Pages', 'Feelings & Help']) {
+      act(() => tileLabelled(container, tile).click());
+      expect(homeButton(), tile).not.toBeNull();
+      expect(container.querySelector('.app-shell__toolbar')!.firstElementChild).toBe(homeButton());
+      act(() => homeButton()!.click());
+      expect(container.querySelector('.home-screen'), tile).not.toBeNull();
+      expect(homeButton()).toBeNull();
+    }
+  });
+
+  describe('School Mode', () => {
+    const toolbarButtons = () => Array.from(container.querySelectorAll('.app-shell__toolbar button')).map((b) => b.textContent);
+    const enter = (pin: string) => {
+      for (const digit of pin) act(() => Array.from(container.querySelectorAll<HTMLButtonElement>('.pin-gate__key')).find((k) => k.textContent === digit)!.click());
+      act(() => container.querySelector<HTMLButtonElement>('.pin-gate__key--submit')!.click());
+    };
+
+    it('has no button until an adult turns it on in Parent Mode', () => {
+      expect(container.querySelector('.school-mode-button')).toBeNull();
+      expect(toolbarButtons()).not.toContain('School Mode');
+    });
+
+    it('once on, has its own button right next to Parent Mode', async () => {
+      await setSchoolPin('2468');
+      await schoolModeSetting.set(true);
+      await waitFor(() => container.querySelector('.school-mode-button') !== null);
+      const names = toolbarButtons();
+      expect(names[names.indexOf('Parent Mode') + 1]).toBe('School Mode');
+    });
+
+    it('asks for the School PIN, not the Parent PIN, and opens School Mode with the right one', async () => {
+      await setParentPinState({ pin: '1357', recoveryCode: 'anchor-meadow-violet-cobalt' });
+      await setSchoolPin('2468');
+      await schoolModeSetting.set(true);
+      await waitFor(() => container.querySelector('.school-mode-button') !== null);
+
+      act(() => container.querySelector<HTMLButtonElement>('.school-mode-button')!.click());
+      await waitFor(() => container.querySelector('.pin-gate__prompt')?.textContent === 'Enter the School Mode PIN');
+
+      enter('1357'); // the Parent PIN does not open it
+      await waitFor(() => container.querySelector('.pin-gate__error') !== null);
+      expect(container.querySelector('.school-mode-screen')).toBeNull();
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      enter('2468');
+      await waitFor(() => container.querySelector('.school-mode-screen') !== null);
+      expect(container.querySelector('.parent-mode-screen__title')!.textContent).toBe('School Mode');
+
+      act(() => container.querySelector<HTMLButtonElement>('.parent-mode-screen__exit')!.click());
+      await waitFor(() => container.querySelector('.app-shell') !== null);
+    });
+
+    it('Parent Mode takes the Parent PIN and School Mode does not open it', async () => {
+      await setParentPinState({ pin: '1357', recoveryCode: 'anchor-meadow-violet-cobalt' });
+      await setSchoolPin('2468');
+      act(() => Array.from(container.querySelectorAll<HTMLButtonElement>('button')).find((b) => b.textContent === 'Parent Mode')!.click());
+      await waitFor(() => container.querySelector('.pin-gate__prompt')?.textContent === 'Enter the Parent Mode PIN');
+      enter('2468');
+      await waitFor(() => container.querySelector('.pin-gate__error') !== null);
+      expect(container.querySelector('.parent-mode-screen')).toBeNull();
+    });
   });
 
   it('a single press of the Parent Mode button opens the PIN gate', () => {

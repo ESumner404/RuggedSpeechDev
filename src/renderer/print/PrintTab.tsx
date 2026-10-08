@@ -1,22 +1,36 @@
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
-import { getAllBoards } from '../store/db';
+import { getAllBoards, getEffectiveDayPlan, wordStageSetting } from '../store/db';
+import { formatTime, getDateString } from '../day/dayLogic';
+import { isItemShown } from '../board/visibility';
 import { ROOT_BOARD_ID } from '../vocab/starter';
-import type { Board } from '../store/types';
+import type { Board, DayActivity } from '../store/types';
 import { PhotoThumbnail } from '../ui/PhotoThumbnail';
+import { Pic } from '../symbols/Pic';
 
 // Laminated cards are what get used when the machine is broken, charging or
-// elsewhere (PLAN.md Phase 6) — physical backups of the same vocabulary.
+// elsewhere (docs/build-plan.md Phase 6), physical backups of the same vocabulary.
 // The print dialog Electron opens already shows its own preview before
 // anything reaches the printer, so this tab doesn't build a second one.
 const CARD_SIZES_MM = [20, 30, 50, 70] as const;
-type Mode = 'cards' | 'strip';
+type Mode = 'cards' | 'strip' | 'schedule';
 
 export function PrintTab() {
   const boards = useSignal<Board[]>([]);
   const selectedBoardId = useSignal<string | null>(null);
   const cardSize = useSignal<number>(50);
   const mode = useSignal<Mode>('cards');
+  const scheduleDate = useSignal(getDateString(new Date()));
+  const scheduleActivities = useSignal<DayActivity[]>([]);
+
+  // The day's plan, in order, as large picture cards to put on a wall or a
+  // fridge: a visual schedule that works when the screen is not to hand.
+  useEffect(() => {
+    if (mode.value !== 'schedule') return;
+    void getEffectiveDayPlan(scheduleDate.value).then(({ plan }) => {
+      scheduleActivities.value = plan.activities;
+    });
+  }, [mode.value, scheduleDate.value]);
 
   useEffect(() => {
     void getAllBoards().then((loaded) => {
@@ -41,8 +55,20 @@ export function PrintTab() {
           >
             <option value="cards">Board cards</option>
             <option value="strip">Sentence strip template</option>
+            <option value="schedule">Visual schedule for a day</option>
           </select>
         </label>
+
+        {mode.value === 'schedule' && (
+          <label>
+            Day
+            <input
+              type="date"
+              value={scheduleDate.value}
+              onInput={(event) => (scheduleDate.value = (event.target as HTMLInputElement).value)}
+            />
+          </label>
+        )}
 
         {mode.value === 'cards' && (
           <label>
@@ -88,20 +114,43 @@ export function PrintTab() {
         {mode.value === 'cards' && selectedBoard && (
           <div class="print-card-grid">
             {selectedBoard.buttons
-              .filter((button) => !button.hidden)
+              .filter((button) => isItemShown(button, wordStageSetting.signal.value))
               .map((button) => (
                 <div
                   class="print-card"
                   style={{ width: `${cardSize.value}mm`, height: `${cardSize.value}mm` }}
                   key={button.id}
                 >
-                  {button.image?.kind === 'emoji' && <span class="print-card__emoji">{button.image.char}</span>}
+                  {button.image?.kind === 'emoji' && <Pic class="print-card__emoji" char={button.image.char} />}
                   {button.image?.kind === 'photo' && (
                     <PhotoThumbnail class="print-card__photo" blobId={button.image.blobId} alt="" />
                   )}
                   <span class="print-card__label">{button.label}</span>
                 </div>
               ))}
+          </div>
+        )}
+
+        {mode.value === 'schedule' && (
+          <div class="print-schedule">
+            {scheduleActivities.value.length === 0 && (
+              <p class="print-schedule__empty">Nothing is planned for this day.</p>
+            )}
+            {scheduleActivities.value.map((activity, index) => (
+              <div
+                class="print-card print-schedule__card"
+                style={{ width: `${cardSize.value}mm`, minHeight: `${cardSize.value}mm` }}
+                key={activity.id}
+              >
+                <span class="print-schedule__step">{index + 1}</span>
+                {activity.image?.kind === 'emoji' && <Pic class="print-card__emoji" char={activity.image.char} />}
+                {activity.image?.kind === 'photo' && (
+                  <PhotoThumbnail class="print-card__photo" blobId={activity.image.blobId} alt="" />
+                )}
+                <span class="print-card__label">{activity.name}</span>
+                {activity.time && <span class="print-schedule__time">{formatTime(activity.time)}</span>}
+              </div>
+            ))}
           </div>
         )}
 

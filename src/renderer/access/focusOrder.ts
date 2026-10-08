@@ -1,11 +1,11 @@
-// A minimal "what's focusable, in order" query — used to let Space act as
-// a Tab-equivalent outside the board grid (PLAN.md Phase 7's "operable
+// A minimal "what's focusable, in order" query, used to let Space act as
+// a Tab-equivalent outside the board grid (docs/build-plan.md Phase 7's "operable
 // with two switches and nothing else": Space advances, Enter activates,
 // everywhere in the app, not only inside a scanning grid). Deliberately
 // excludes anything the grid has already taken out of tab order itself
 // (tabindex="-1"), so this and the grid's own scanning never fight over
 // the same button.
-// a[href], not the bare [href] one might reach for — a stylesheet <link
+// a[href], not the bare [href] one might reach for, a stylesheet <link
 // href="..."> in <head> matches that too and isn't focusable, which
 // silently stalls the whole chain on the very first press.
 const FOCUSABLE_SELECTOR =

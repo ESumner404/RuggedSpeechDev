@@ -8,7 +8,7 @@ import { ensureSeeded, getBoard, resetDBConnectionForTests } from '../store/db';
 import { ROOT_BOARD_ID } from '../vocab/starter';
 
 // fake-indexeddb resolves via IDBRequest 'success' events, not plain
-// microtasks — poll for the DOM to reflect it, same as TalkScreen.test.tsx.
+// microtasks, poll for the DOM to reflect it, same as TalkScreen.test.tsx.
 async function waitFor(check: () => boolean, timeoutMs = 2000): Promise<void> {
   const start = Date.now();
   while (!check()) {
@@ -79,7 +79,7 @@ describe('ParentModeScreen', () => {
     const before = await getBoard(ROOT_BOARD_ID);
     const firstCellBefore = before!.grid.order[0]![0];
 
-    // The very first button can't move up (nothing before it) — move the
+    // The very first button can't move up (nothing before it), move the
     // second one instead, which swaps with the first. The first
     // `.parent-mode-screen__move-button` in a row is "move up" (▲).
     const secondId = before!.grid.order[0]![1]!;
@@ -95,7 +95,7 @@ describe('ParentModeScreen', () => {
     expect(after!.grid.order[0]![1]).toBe(firstCellBefore);
   });
 
-  it('dragging one button onto another swaps just those two, and persists (PLAN.md Phase 4)', async () => {
+  it('dragging one button onto another swaps just those two, and persists (docs/build-plan.md Phase 4)', async () => {
     const before = await getBoard(ROOT_BOARD_ID);
     const [firstId, secondId] = [before!.grid.order[0]![0]!, before!.grid.order[0]![1]!];
     const label = (id: string) => before!.buttons.find((b) => b.id === id)!.label;
@@ -126,10 +126,10 @@ describe('ParentModeScreen', () => {
   it('adding a folder creates a new board and a button on this one that opens it', async () => {
     const select = container.querySelector<HTMLSelectElement>('.parent-mode-screen__board-picker select')!;
     act(() => {
-      select.value = 'food';
+      select.value = 'school';
       select.dispatchEvent(new Event('change', { bubbles: true }));
     });
-    await waitFor(() => rowFor(container, 'apple') !== undefined);
+    await waitFor(() => rowFor(container, 'pencil') !== undefined);
 
     const form = container.querySelector<HTMLFormElement>('.parent-mode-screen__add-folder')!;
     const nameInput = form.querySelector<HTMLInputElement>('.parent-mode-screen__label-input')!;
@@ -143,27 +143,55 @@ describe('ParentModeScreen', () => {
 
     // waitFor above is synchronous, so poll the store directly.
     for (let attempt = 0; attempt < 100; attempt += 1) {
-      const current = await getBoard('food');
+      const current = await getBoard('school');
       if (current?.buttons.some((b) => b.label === 'Sweets' && b.load_board)) break;
       await new Promise((resolve) => setTimeout(resolve, 20));
     }
-    const food = await getBoard('food');
-    const folderButton = food!.buttons.find((b) => b.label === 'Sweets')!;
+    const school = await getBoard('school');
+    const folderButton = school!.buttons.find((b) => b.label === 'Sweets')!;
     const folder = await getBoard(folderButton.load_board!.id);
     expect(folder).toMatchObject({ name: 'Sweets', buttons: [] });
     // The new board shows up in the picker straight away.
     expect(Array.from(select.options).map((o) => o.textContent)).toContain('Sweets');
   });
 
+  it('puts a starter board back as it came, but only after asking', async () => {
+    const original = (await getBoard(ROOT_BOARD_ID))!;
+    const firstButton = original.buttons[0]!;
+
+    // Change a label and a position.
+    const row = rowFor(container, firstButton.label);
+    const input = row.querySelector<HTMLInputElement>('.parent-mode-screen__label-input')!;
+    act(() => {
+      input.value = 'changed';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    expect((await getBoard(ROOT_BOARD_ID))!.buttons[0]!.label).toBe('changed');
+
+    const restore = () =>
+      Array.from(container.querySelectorAll<HTMLButtonElement>('.parent-mode-screen__restore button'));
+    act(() => restore()[0]!.click()); // "Put this board back to the starter version"
+    expect((await getBoard(ROOT_BOARD_ID))!.buttons[0]!.label).toBe('changed'); // asked first
+
+    act(() => restore()[1]!.click()); // "Keep my changes"
+    expect((await getBoard(ROOT_BOARD_ID))!.buttons[0]!.label).toBe('changed');
+
+    act(() => restore()[0]!.click());
+    act(() => restore()[0]!.click()); // "Yes, put it back"
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    expect(await getBoard(ROOT_BOARD_ID)).toEqual(original);
+  });
+
   it('adding a button places it in the next empty slot and persists', async () => {
-    // The root board is a full 4×4 with no empty slot; "food" (3×3, 5
-    // buttons) has room.
+    // The root board and Food are full 4×4s with no empty slot; "school"
+    // (14 of 16) has room.
     const select = container.querySelector<HTMLSelectElement>('.parent-mode-screen__board-picker select')!;
     act(() => {
-      select.value = 'food';
+      select.value = 'school';
       select.dispatchEvent(new Event('change', { bubbles: true }));
     });
-    await waitFor(() => rowFor(container, 'apple') !== undefined);
+    await waitFor(() => rowFor(container, 'pencil') !== undefined);
 
     const addForm = container.querySelector<HTMLFormElement>('.parent-mode-screen__add-form')!;
     const formLabelInput = addForm.querySelector<HTMLInputElement>('.parent-mode-screen__label-input')!;
@@ -177,7 +205,7 @@ describe('ParentModeScreen', () => {
     });
     await new Promise((resolve) => setTimeout(resolve, 60));
 
-    const board = await getBoard('food');
+    const board = await getBoard('school');
     expect(board?.buttons.some((b) => b.label === 'brand new button')).toBe(true);
   });
 });

@@ -3,10 +3,11 @@ import { useEffect, useRef } from 'preact/hooks';
 import { classifyNowNextLater, formatTime, getDateString, markFinished } from './dayLogic';
 import { acknowledgeChange } from './dayEditing';
 import { getDueWarning, type CountdownWarningLevel } from './countdown';
-import { dayPlanVersion, getDayPlan, getDaySettings, saveDayPlan } from '../store/db';
+import { dayPlanVersion, getDaySettings, getEffectiveDayPlan, saveDayPlan } from '../store/db';
 import { announceText } from '../speech/announce';
 import type { DayActivity, DaySettings } from '../store/types';
 import { PhotoThumbnail } from '../ui/PhotoThumbnail';
+import { Pic } from '../symbols/Pic';
 
 const DEFAULT_SETTINGS: DaySettings = { view: 'today', countdownEnabled: false };
 
@@ -18,13 +19,13 @@ export function MyDayScreen() {
   // Shown independently of activities.value.changedFrom: the acknowledging
   // save clears that field in storage almost immediately (needed so a
   // *future* load doesn't re-announce), which left the struck-through
-  // display on screen for well under a second — not something a child
+  // display on screen for well under a second, not something a child
   // reliably has time to read. This keeps it visible for a fixed window
   // regardless of how fast the underlying write settles.
   const recentChange = useSignal<{ id: string; oldName: string } | null>(null);
   const warnedRef = useRef<Set<string>>(new Set());
   // acknowledgeChange's own save bumps dayPlanVersion, which re-triggers
-  // the effect below before that write has necessarily settled — without
+  // the effect below before that write has necessarily settled, without
   // this guard, the same change could get re-detected and re-announced
   // several times in a row. Tracked per activity id, once per screen
   // lifetime, since "announce once" is the actual requirement regardless
@@ -33,17 +34,17 @@ export function MyDayScreen() {
   // Two or more load() calls can otherwise run concurrently (each version
   // bump re-triggers the effect before the previous load()'s own save has
   // resolved) and all read the same not-yet-acknowledged data before any
-  // of them writes the acknowledgement — serializing closes that window.
+  // of them writes the acknowledgement, serializing closes that window.
   const loadingRef = useRef(false);
   const pendingDateRef = useRef<string | null>(null);
 
-  // Reading .value here subscribes this component to Parent Mode's edits —
+  // Reading .value here subscribes this component to Parent Mode's edits,
   // "change of plan" needs the announcement to fire the moment an edit is
   // saved, not the next time this screen happens to remount.
   const version = dayPlanVersion.value;
 
   async function load(forDate: string): Promise<void> {
-    const [plan, daySettings] = await Promise.all([getDayPlan(forDate), getDaySettings()]);
+    const [{ plan }, daySettings] = await Promise.all([getEffectiveDayPlan(forDate), getDaySettings()]);
     settings.value = daySettings;
     activities.value = plan.activities;
 
@@ -54,9 +55,9 @@ export function MyDayScreen() {
       announcedRef.current.add(changed.id);
       recentChange.value = { id: changed.id, oldName: changed.changedFrom! };
       // The one intentional exception to "speech is never automatic"
-      // (CLAUDE.md I5): PLAN.md Phase 5 asks for this specifically, and the
-      // root cause is still a person's press — an adult saving an edit in
-      // Parent Mode — not the app deciding on its own to speak.
+      // (PRINCIPLES.md I5): docs/build-plan.md Phase 5 asks for this specifically, and the
+      // root cause is still a person's press, an adult saving an edit in
+      // Parent Mode, not the app deciding on its own to speak.
       announceText(`The plan has changed. We are going to ${changed.name} instead.`);
       void saveDayPlan({ date: forDate, activities: acknowledgeChange(plan.activities, changed.id) });
       setTimeout(() => {
@@ -88,7 +89,7 @@ export function MyDayScreen() {
   }, [dateString.value, version]);
 
   // Rolls the displayed day over at local midnight without needing the
-  // screen to be closed and reopened (PLAN.md Phase 5 acceptance).
+  // screen to be closed and reopened (docs/build-plan.md Phase 5 acceptance).
   useEffect(() => {
     const interval = setInterval(() => {
       const today = getDateString(new Date());
@@ -97,7 +98,7 @@ export function MyDayScreen() {
     return () => clearInterval(interval);
   }, []);
 
-  // Off by default (PLAN.md Phase 5) — only polls at all once an adult has
+  // Off by default (docs/build-plan.md Phase 5), only polls at all once an adult has
   // deliberately turned this on.
   useEffect(() => {
     if (!settings.value.countdownEnabled) return;
@@ -160,9 +161,7 @@ export function MyDayScreen() {
         onClick={() => (askingActivity.value = activity)}
       >
         {activity.image?.kind === 'emoji' && (
-          <span class="day-activity__emoji" aria-hidden="true">
-            {activity.image.char}
-          </span>
+          <Pic class="day-activity__emoji" char={activity.image.char} />
         )}
         {activity.image?.kind === 'photo' && (
           <PhotoThumbnail class="day-activity__photo" blobId={activity.image.blobId} alt="" />

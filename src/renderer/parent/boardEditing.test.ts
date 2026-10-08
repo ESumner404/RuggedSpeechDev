@@ -3,9 +3,11 @@ import {
   addButton,
   hasEmptySlot,
   moveButton,
+  removeButton,
   resizeGrid,
   swapButtons,
   toggleButtonHidden,
+  updateButton,
   updateButtonLabel,
 } from './boardEditing';
 import type { Board } from '../store/types';
@@ -64,7 +66,7 @@ describe('moveButton', () => {
 
   it('is a no-op at the end of the board when moving down', () => {
     const board = makeBoard();
-    // "b" is at the last occupied slot but not the last cell overall —
+    // "b" is at the last occupied slot but not the last cell overall,
     // moving into a null cell is allowed (it's still a valid position).
     const next = moveButton(board, 'b', 'down');
     expect(next.grid.order).toEqual([
@@ -151,7 +153,7 @@ describe('resizeGrid', () => {
   });
 
   it('refuses to shrink below the number of placed buttons', () => {
-    // 5 placed buttons — doesn't fit in the smallest valid grid, 2×2 (4 cells).
+    // 5 placed buttons, doesn't fit in the smallest valid grid, 2×2 (4 cells).
     const crowded: Board = {
       ...makeBoard(),
       grid: {
@@ -172,5 +174,48 @@ describe('resizeGrid', () => {
       ],
     };
     expect(() => resizeGrid(crowded, 2, 2)).toThrow();
+  });
+});
+
+describe('updateButton', () => {
+  it('changes only the fields given, on only that button, and never its position', () => {
+    const board = makeBoard();
+    const next = updateButton(board, 'a', { vocalization: 'an apple please', stage: 2, target: true });
+    expect(next.buttons.find((b) => b.id === 'a')).toMatchObject({
+      label: 'Apple',
+      vocalization: 'an apple please',
+      stage: 2,
+      target: true,
+    });
+    expect(next.buttons.find((b) => b.id === 'b')).toEqual({ id: 'b', label: 'Banana' });
+    expect(next.grid).toEqual(board.grid);
+  });
+
+  it('removes a field when it is set to null', () => {
+    const withExtras = updateButton(makeBoard(), 'a', { vocalization: 'x', target: true, stage: 3 });
+    const cleared = updateButton(withExtras, 'a', { vocalization: null, target: null, stage: null });
+    expect(cleared.buttons.find((b) => b.id === 'a')).toEqual({ id: 'a', label: 'Apple' });
+  });
+
+  it('can swap an emoji for a photo and back', () => {
+    const photo = updateButton(makeBoard(), 'a', { image: { kind: 'photo', blobId: 'p1' } });
+    expect(photo.buttons[0]?.image).toEqual({ kind: 'photo', blobId: 'p1' });
+    const emoji = updateButton(photo, 'a', { image: { kind: 'emoji', char: '🍎' } });
+    expect(emoji.buttons[0]?.image).toEqual({ kind: 'emoji', char: '🍎' });
+  });
+});
+
+describe('removeButton', () => {
+  it('removes the button and leaves its slot empty, so nothing else moves', () => {
+    const next = removeButton(makeBoard(), 'a');
+    expect(next.buttons.map((b) => b.id)).toEqual(['b']);
+    expect(next.grid.order).toEqual([
+      [null, 'b'],
+      [null, null],
+    ]);
+  });
+
+  it('does nothing for a button that is not on the board', () => {
+    expect(removeButton(makeBoard(), 'nope')).toEqual(makeBoard());
   });
 });

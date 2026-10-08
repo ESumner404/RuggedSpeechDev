@@ -1,14 +1,14 @@
 import { useSignal } from '@preact/signals';
 import { getMedicalInfo } from '../store/db';
-import { formatMedicalInfoText, hasMedicalInfo } from './medicalInfo';
+import { formatMedicalInfoText, formatMedicalQrText, hasMedicalInfo } from './medicalInfo';
 import { QRCode } from '../ui/QRCode';
 import type { MedicalInfo } from '../store/types';
 
 const EMPTY: MedicalInfo = { childName: '', allergies: '', conditions: '', contacts: [] };
 
 // Always reachable, on every screen, without the Parent PIN (feature
-// review, Aug 2026) — a first responder who's found a lost child needs
-// this immediately, not after guessing a 4-digit code. CLAUDE.md §6's
+// review, Aug 2026), a first responder who's found a lost child needs
+// this immediately, not after guessing a 4-digit code. PRINCIPLES.md §6's
 // "shown only on an explicit press, never on an idle screen a stranger
 // could read" is about idle visibility, not authentication: pressing this
 // button IS the explicit press.
@@ -34,7 +34,7 @@ export function MedicalInfoButton() {
           <div class="medical-info-overlay__panel">
             {hasMedicalInfo(info.value) ? (
               <>
-                <QRCode class="medical-info-overlay__qr" text={formatMedicalInfoText(info.value)} />
+                <QRCode class="medical-info-overlay__qr" text={formatMedicalQrText(info.value)} />
                 <pre class="medical-info-overlay__text">{formatMedicalInfoText(info.value)}</pre>
               </>
             ) : (

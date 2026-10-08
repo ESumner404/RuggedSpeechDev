@@ -4,7 +4,7 @@ export type StarterCategory = {
   phrases: string[];
 };
 
-// Static placeholder phrases (PLAN.md Phase 3). Like the rest of the
+// Static placeholder phrases (docs/build-plan.md Phase 3). Like the rest of the
 // starter vocabulary, this wants an SLT's eyes before a real child relies
 // on it.
 export const CONVERSATION_STARTERS: StarterCategory[] = [

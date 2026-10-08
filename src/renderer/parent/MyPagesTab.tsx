@@ -1,35 +1,32 @@
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { createMyPage, deleteMyPage, getBoard, getMyPages, renameMyPage, updateBoard } from '../store/db';
+import { resizeGrid } from './boardEditing';
 import {
-  addButton,
-  moveButton,
-  resizeGrid,
-  slugify,
-  swapButtons,
-  toggleButtonHidden,
-  updateButtonLabel,
-} from './boardEditing';
-import { useRowDragDrop } from './useRowDragDrop';
-import { FITZGERALD_COLORS, type FitzgeraldClass } from '../ui/fitzgerald';
-import type { Board, GridSize, Item, MyPage } from '../store/types';
+  createPageWithButtons,
+  exportMyPageText,
+  importMyPageFromText,
+  suggestedPageFileName,
+} from '../store/pages';
+import { PAGE_TEMPLATES } from '../vocab/pageTemplates';
+import { AddButtonForm } from './AddButtonForm';
+import { ButtonList } from './ButtonList';
+import type { Board, GridSize, MyPage } from '../store/types';
 import { VALID_GRID_SIZES } from '../store/types';
 
 // Fully custom pages an adult builds from scratch (feature review follow-up,
 // Sep 2026), separate from the Talk board tree. Page lifecycle (add, rename,
-// delete) lives here; the per-page button editor reuses the same pure
-// boardEditing.ts transforms BoardsTab uses, since a page's content is just
-// an ordinary Board.
+// delete) lives here; the button editor is the same one the Boards tab uses,
+// since a page's content is just an ordinary Board.
 export function MyPagesTab() {
   const pages = useSignal<MyPage[]>([]);
   const selectedPageId = useSignal<string | null>(null);
   const board = useSignal<Board | null>(null);
   const newPageName = useSignal('');
   const renameValue = useSignal('');
-  const newLabel = useSignal('');
-  const newEmoji = useSignal('⭐');
-  const newClass = useSignal<FitzgeraldClass>('things');
   const error = useSignal<string | null>(null);
+  const shareMessage = useSignal<string | null>(null);
+  const templateId = useSignal(PAGE_TEMPLATES[0]!.id);
 
   useEffect(() => {
     void getMyPages().then((loaded) => {
@@ -76,36 +73,61 @@ export function MyPagesTab() {
     }
   }
 
+  // Sharing a page is an explicit file the adult saves and hands over (the
+  // same rule as backup, invariant I2): nothing is sent anywhere.
+  async function handleShare(page: MyPage): Promise<void> {
+    shareMessage.value = null;
+    const text = await exportMyPageText(page);
+    if (text === null) return;
+    const result = await window.myWords.files.save(text, {
+      suggestedName: suggestedPageFileName(page),
+      filterName: 'Shared page (Open Board Format)',
+      extensions: ['obf'],
+    });
+    shareMessage.value = result.ok ? `Saved “${page.name}” as a file you can give to another device.` : null;
+  }
+
+  async function handleUseTemplate(): Promise<void> {
+    const template = PAGE_TEMPLATES.find((candidate) => candidate.id === templateId.value);
+    if (!template) return;
+    error.value = null;
+    const page = await createPageWithButtons(template.name, template.buttons);
+    pages.value = [...pages.value, page];
+    selectedPageId.value = page.id;
+    shareMessage.value = `Made the page “${template.name}”. Change anything to suit.`;
+  }
+
+  async function handleAddShared(): Promise<void> {
+    shareMessage.value = null;
+    error.value = null;
+    const file = await window.myWords.files.open({
+      filterName: 'Shared page (Open Board Format)',
+      extensions: ['obf'],
+    });
+    if (!file.ok) return;
+    const result = await importMyPageFromText(file.data);
+    if (!result.ok) {
+      error.value = result.error;
+      return;
+    }
+    pages.value = [...pages.value, result.page];
+    selectedPageId.value = result.page.id;
+    shareMessage.value = `Added “${result.page.name}” as a new page.${result.notes.length ? ' ' + result.notes.join(' ') : ''}`;
+  }
+
   async function persistBoard(next: Board): Promise<void> {
     error.value = null;
     board.value = next;
     await updateBoard(next);
   }
 
-  function withErrorHandling(fn: (current: Board) => Board): void {
+  function resize(rows: GridSize, columns: GridSize): void {
     if (!board.value) return;
     try {
-      void persistBoard(fn(board.value));
+      void persistBoard(resizeGrid(board.value, rows, columns));
     } catch (err) {
       error.value = err instanceof Error ? err.message : String(err);
     }
-  }
-
-  const drag = useRowDragDrop((draggedId, targetId) => {
-    withErrorHandling((current) => swapButtons(current, draggedId, targetId));
-  });
-
-  function handleAddButton(event: Event): void {
-    event.preventDefault();
-    if (!board.value || !newLabel.value.trim()) return;
-    const item: Item = {
-      id: slugify(newLabel.value),
-      label: newLabel.value.trim(),
-      image: { kind: 'emoji', char: newEmoji.value || '⭐' },
-      background_color: FITZGERALD_COLORS[newClass.value],
-    };
-    withErrorHandling((current) => addButton(current, item));
-    newLabel.value = '';
   }
 
   return (
@@ -123,8 +145,46 @@ export function MyPagesTab() {
         </button>
       </form>
 
+      <div class="my-pages-tab__template">
+        <label>
+          Start from a ready-made page
+          <select
+            value={templateId.value}
+            onChange={(event) => (templateId.value = (event.target as HTMLSelectElement).value)}
+          >
+            {PAGE_TEMPLATES.map((template) => (
+              <option value={template.id} key={template.id}>
+                {template.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button type="button" class="parent-mode-screen__button" onClick={() => void handleUseTemplate()}>
+          Make this page
+        </button>
+        <span class="my-pages-tab__share-hint">
+          {PAGE_TEMPLATES.find((template) => template.id === templateId.value)?.description} It becomes an
+          ordinary page you can change.
+        </span>
+      </div>
+
+      <div class="my-pages-tab__share">
+        <button type="button" class="parent-mode-screen__button" onClick={() => void handleAddShared()}>
+          Add a shared page…
+        </button>
+        <span class="my-pages-tab__share-hint">
+          Opens a page someone saved from this app or another that uses Open Board Format. It is always added as
+          a new page.
+        </span>
+      </div>
+      {shareMessage.value && (
+        <p class="my-pages-tab__share-message" role="status">
+          {shareMessage.value}
+        </p>
+      )}
+
       {pages.value.length === 0 ? (
-        <p class="my-pages-tab__empty">No pages yet — add one above to get started.</p>
+        <p class="my-pages-tab__empty">No pages yet. Add one above to get started.</p>
       ) : (
         <ul class="my-pages-tab__list">
           {pages.value.map((page) => (
@@ -167,6 +227,9 @@ export function MyPagesTab() {
             <button type="submit" class="parent-mode-screen__button">
               Rename
             </button>
+            <button type="button" class="parent-mode-screen__button" onClick={() => void handleShare(selectedPage)}>
+              Share this page…
+            </button>
           </form>
 
           <div class="parent-mode-screen__grid-size">
@@ -176,13 +239,7 @@ export function MyPagesTab() {
               <select
                 value={board.value.grid.rows}
                 onChange={(event) =>
-                  withErrorHandling((current) =>
-                    resizeGrid(
-                      current,
-                      Number((event.target as HTMLSelectElement).value) as GridSize,
-                      current.grid.columns,
-                    ),
-                  )
+                  resize(Number((event.target as HTMLSelectElement).value) as GridSize, board.value!.grid.columns)
                 }
               >
                 {VALID_GRID_SIZES.map((size) => (
@@ -197,13 +254,7 @@ export function MyPagesTab() {
               <select
                 value={board.value.grid.columns}
                 onChange={(event) =>
-                  withErrorHandling((current) =>
-                    resizeGrid(
-                      current,
-                      current.grid.rows,
-                      Number((event.target as HTMLSelectElement).value) as GridSize,
-                    ),
-                  )
+                  resize(board.value!.grid.rows, Number((event.target as HTMLSelectElement).value) as GridSize)
                 }
               >
                 {VALID_GRID_SIZES.map((size) => (
@@ -215,91 +266,13 @@ export function MyPagesTab() {
             </label>
           </div>
 
-          <ul class="parent-mode-screen__button-list">
-            {board.value.buttons.map((button) => (
-              <li
-                class={`parent-mode-screen__button-row${drag.overId.value === button.id ? ' parent-mode-screen__button-row--drop-target' : ''}`}
-                key={button.id}
-                onDragOver={(event) => drag.over(event, button.id)}
-                onDrop={(event) => drag.drop(event, button.id)}
-              >
-                <span
-                  class="parent-mode-screen__drag-handle"
-                  draggable
-                  role="img"
-                  aria-label={`Drag ${button.label} to swap places with another button`}
-                  onDragStart={(event) => drag.start(event, button.id)}
-                  onDragEnd={() => drag.end()}
-                >
-                  ⠿
-                </span>
-                <input
-                  class="parent-mode-screen__label-input"
-                  type="text"
-                  value={button.label}
-                  onInput={(event) =>
-                    withErrorHandling((current) =>
-                      updateButtonLabel(current, button.id, (event.target as HTMLInputElement).value),
-                    )
-                  }
-                />
-                <label class="parent-mode-screen__hidden-toggle">
-                  <input
-                    type="checkbox"
-                    checked={Boolean(button.hidden)}
-                    onChange={() => withErrorHandling((current) => toggleButtonHidden(current, button.id))}
-                  />
-                  Hidden
-                </label>
-                <button
-                  type="button"
-                  class="parent-mode-screen__move-button"
-                  onClick={() => withErrorHandling((current) => moveButton(current, button.id, 'up'))}
-                  aria-label={`Move ${button.label} earlier`}
-                >
-                  ▲
-                </button>
-                <button
-                  type="button"
-                  class="parent-mode-screen__move-button"
-                  onClick={() => withErrorHandling((current) => moveButton(current, button.id, 'down'))}
-                  aria-label={`Move ${button.label} later`}
-                >
-                  ▼
-                </button>
-              </li>
-            ))}
-          </ul>
+          <ButtonList board={board.value} onChange={(next) => void persistBoard(next)} />
 
-          <form class="parent-mode-screen__add-form" onSubmit={handleAddButton}>
-            <input
-              class="parent-mode-screen__label-input"
-              type="text"
-              placeholder="New button label"
-              value={newLabel.value}
-              onInput={(event) => (newLabel.value = (event.target as HTMLInputElement).value)}
-            />
-            <input
-              class="parent-mode-screen__emoji-input"
-              type="text"
-              value={newEmoji.value}
-              onInput={(event) => (newEmoji.value = (event.target as HTMLInputElement).value)}
-              aria-label="Emoji"
-            />
-            <select
-              value={newClass.value}
-              onChange={(event) => (newClass.value = (event.target as HTMLSelectElement).value as FitzgeraldClass)}
-            >
-              {Object.keys(FITZGERALD_COLORS).map((cls) => (
-                <option value={cls} key={cls}>
-                  {cls}
-                </option>
-              ))}
-            </select>
-            <button type="submit" class="parent-mode-screen__button">
-              Add button
-            </button>
-          </form>
+          <AddButtonForm
+            board={board.value}
+            onChange={(next) => void persistBoard(next)}
+            onError={(message) => (error.value = message)}
+          />
         </>
       )}
     </div>

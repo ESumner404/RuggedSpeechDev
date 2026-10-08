@@ -1,14 +1,14 @@
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { DEFAULT_MEDICAL_INFO, getMedicalInfo, setMedicalInfo } from '../store/db';
-import { formatMedicalInfoText, hasMedicalInfo } from '../safety/medicalInfo';
+import { MEDICAL_FIELDS, formatMedicalInfoText, formatMedicalQrText, hasMedicalInfo, QR_TEXT_LIMIT } from '../safety/medicalInfo';
 import { QRCode } from '../ui/QRCode';
 import type { MedicalInfo } from '../store/types';
 
-// Feature review, Aug 2026: "for children who wander off or get lost — a
+// Feature review, Aug 2026: "for children who wander off or get lost, a
 // first responder could scan a code to access key medical/contact
 // information." Edited here, in Parent Mode; shown to anyone via the
-// always-available Medical Info button, no PIN needed to view it — see
+// always-available Medical Info button, no PIN needed to view it, see
 // MedicalInfoButton.tsx for why.
 export function MedicalInfoTab() {
   const info = useSignal<MedicalInfo>(DEFAULT_MEDICAL_INFO);
@@ -46,7 +46,7 @@ export function MedicalInfoTab() {
   return (
     <div class="parent-mode-screen__body medical-info-tab">
       <p class="medical-info-tab__hint">
-        Shown to anyone who presses the Medical Info button — not gated behind the PIN, so a
+        Shown to anyone who presses the Medical Info button. It is not gated behind the PIN, so a
         stranger who's found the child can read it straight away.
       </p>
 
@@ -78,6 +78,23 @@ export function MedicalInfoTab() {
           }
         />
       </label>
+
+      <h2 class="medical-info-tab__heading">More about my health</h2>
+      <p class="medical-info-tab__hint">
+        All optional. Add what someone helping in an emergency, or a new doctor, would want to know. It is shown on the
+        screen to anyone who presses Medical Info, so only add what you are happy for a stranger who has found the
+        child to read.
+      </p>
+      {MEDICAL_FIELDS.map((field) => (
+        <label class="medical-info-tab__field" key={field.id}>
+          {field.label}
+          <textarea
+            placeholder={field.hint}
+            value={info.value[field.id] ?? ''}
+            onInput={(event) => void update({ ...info.value, [field.id]: (event.target as HTMLTextAreaElement).value })}
+          />
+        </label>
+      ))}
 
       <div class="medical-info-tab__contacts">
         <h2 class="medical-info-tab__heading">Emergency contacts</h2>
@@ -111,14 +128,19 @@ export function MedicalInfoTab() {
       </div>
 
       <div class="medical-info-tab__preview">
-        <h2 class="medical-info-tab__heading">Preview — what a scan or press shows</h2>
+        <h2 class="medical-info-tab__heading">Preview: what a scan or press shows</h2>
         {hasMedicalInfo(info.value) ? (
           <>
-            <QRCode class="medical-info-tab__qr" text={formatMedicalInfoText(info.value)} />
+            <QRCode class="medical-info-tab__qr" text={formatMedicalQrText(info.value)} />
+            {formatMedicalInfoText(info.value).length > QR_TEXT_LIMIT && (
+              <p class="medical-info-tab__hint">
+                This is a long record, so the code holds the most important parts and the screen shows all of it.
+              </p>
+            )}
             <pre class="medical-info-tab__text">{formatMedicalInfoText(info.value)}</pre>
           </>
         ) : (
-          <p class="medical-info-tab__empty">Nothing entered yet — the Medical Info button will say so.</p>
+          <p class="medical-info-tab__empty">Nothing entered yet. The Medical Info button will say so.</p>
         )}
       </div>
     </div>

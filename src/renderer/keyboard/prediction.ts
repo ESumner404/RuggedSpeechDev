@@ -1,5 +1,5 @@
-// Hand-built bigram table for the core words (PLAN.md Phase 3), used to
-// suggest a likely next word right after one is finished — prefix
+// Hand-built bigram table for the core words (docs/build-plan.md Phase 3), used to
+// suggest a likely next word right after one is finished, prefix
 // matching alone has nothing to go on at the start of a fresh word.
 export const CORE_WORD_BIGRAMS: Record<string, string[]> = {
   i: ['want', 'like', 'feel', 'am', 'need'],
@@ -19,7 +19,7 @@ function splitWords(text: string): string[] {
 }
 
 /**
- * Suggestions only — nothing here mutates any text. Prefix-matches the
+ * Suggestions only, nothing here mutates any text. Prefix-matches the
  * word currently being typed against the loaded vocabulary; at the start
  * of a fresh word (just typed a space, or nothing yet) falls back to the
  * bigram table keyed on the word before it. Ranked by how often a person

@@ -15,9 +15,35 @@ export const QUICK_ACCESS_LABELS: Record<QuickAccessId, string> = {
   myday: 'My Day',
   mypages: 'My Pages',
   feelings: 'Feelings',
+  firstthen: 'First / Then',
+  game: 'Games',
+  draw: 'Draw',
+  body: 'My body',
+  music: 'Music',
+  traffic: 'Traffic light',
+  break: 'Break',
+  question: 'Question',
+  toilet: 'Toilet',
+  finished: 'Finished',
+  again: 'Say again',
 };
 
-/** Help must stay reachable in one press from every screen (PLAN.md Phase 2
+/** Buttons that speak when pressed, rather than going to a screen. */
+export const QUICK_ACCESS_SPEECH: Partial<Record<QuickAccessId, string>> = {
+  yes: 'yes',
+  no: 'no',
+  break: 'I need a break',
+  question: 'I have a question',
+  toilet: 'I need the toilet',
+  finished: "I've finished",
+  again: 'Can you say that again, please?',
+};
+
+/** What school mode puts along the top: the usual essentials, with a break
+ * and a question in place of Favourites and Keyboard. */
+export const SCHOOL_QUICK_ACCESS: QuickAccessId[] = ['home', 'help', 'yes', 'no', 'break', 'question'];
+
+/** Help must stay reachable in one press from every screen (docs/build-plan.md Phase 2
  * acceptance), so a configuration without it is never valid. */
 export function isValidQuickAccess(value: unknown): value is QuickAccessId[] {
   return (
@@ -34,7 +60,7 @@ export type SetSlotResult = { ok: true; buttons: QuickAccessId[] } | { ok: false
 /**
  * Puts `id` in `slot`. Choosing a button that's already elsewhere on the bar
  * swaps the two, so every button appears at most once and nothing is lost;
- * choosing a new one replaces what was there — except Help, which can only
+ * choosing a new one replaces what was there, except Help, which can only
  * ever move, never leave.
  */
 export function setQuickAccessSlot(current: QuickAccessId[], slot: number, id: QuickAccessId): SetSlotResult {
