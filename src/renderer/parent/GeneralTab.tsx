@@ -37,7 +37,7 @@ export function GeneralTab() {
     <div class="parent-mode-screen__body general-tab">
       <label class="general-tab__checkbox">
         <input type="checkbox" checked={openAtLogin.value} onChange={() => void toggle()} />
-        Start when Windows starts
+        Start when the computer starts
       </label>
       <p class="general-tab__hint">Off by default. On, the app opens automatically after login.</p>
 

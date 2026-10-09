@@ -6,6 +6,7 @@
 export type Figure = 'boy' | 'girl' | 'neutral';
 export type HairStyle = 'short' | 'long' | 'tied' | 'curly' | 'none';
 export type Outfit = 'shorts' | 'skirt' | 'trousers' | 'dress';
+export type Headwear = 'none' | 'hijab' | 'turban' | 'kippah';
 
 /** Equipment and aids that can be shown on the figure, and pointed to when they hurt or are not working. */
 export type EquipmentId =
@@ -46,6 +47,9 @@ export type BodyLook = {
   skin: string;
   hair: string;
   hairStyle: HairStyle;
+  /** A head covering worn for faith or culture. A hijab or a turban covers the hair. */
+  headwear: Headwear;
+  headwearColour: string;
   outfit: Outfit;
   top: string;
   bottom: string;
@@ -59,6 +63,8 @@ export const DEFAULT_BODY_LOOK: BodyLook = {
   skin: '#e0ac69',
   hair: '#4a2c17',
   hairStyle: 'short',
+  headwear: 'none',
+  headwearColour: '#7c3aed',
   outfit: 'trousers',
   top: '#38bdf8',
   bottom: '#2563eb',
@@ -86,6 +92,16 @@ export const HAIR_STYLES: { id: HairStyle; label: string }[] = [
   { id: 'none', label: 'No hair' },
 ];
 
+export const HEADWEAR: { id: Headwear; label: string; hint: string }[] = [
+  { id: 'none', label: 'None', hint: '' },
+  { id: 'hijab', label: 'Hijab', hint: 'A headscarf worn by many Muslim women and girls. It covers the hair and neck.' },
+  { id: 'turban', label: 'Turban', hint: 'Worn by many Sikh men and boys, and by others. It covers the hair.' },
+  { id: 'kippah', label: 'Kippah', hint: 'A small cap worn by many Jewish men and boys, also called a yarmulke. It sits on top of the hair.' },
+];
+
+/** A hijab or a turban covers all of the hair. */
+export const coversHair = (headwear: Headwear): boolean => headwear === 'hijab' || headwear === 'turban';
+
 export const OUTFITS: { id: Outfit; label: string }[] = [
   { id: 'trousers', label: 'Trousers' },
   { id: 'shorts', label: 'Shorts' },
@@ -109,6 +125,8 @@ export function isBodyLook(value: unknown): value is BodyLook {
     ['skin', 'hair', 'top', 'bottom'].every((key) => typeof v[key] === 'string' && HEX.test(v[key] as string)) &&
     HAIR_STYLES.some((style) => style.id === v['hairStyle']) &&
     OUTFITS.some((outfit) => outfit.id === v['outfit']) &&
+    (v['headwear'] === undefined || HEADWEAR.some((item) => item.id === v['headwear'])) &&
+    (v['headwearColour'] === undefined || (typeof v['headwearColour'] === 'string' && HEX.test(v['headwearColour']))) &&
     typeof v['wheelchair'] === 'boolean' &&
     typeof v['glasses'] === 'boolean' &&
     (v['figure'] === undefined || FIGURES.includes(v['figure'] as Figure)) &&

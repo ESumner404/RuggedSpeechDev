@@ -1,0 +1,1323 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rugged Speech</title>
+<meta name="description" content="Rugged Speech is free AAC (augmentative and alternative communication) for children and young people, built for rugged tablets, on Windows and Mac. It works without wifi, and nothing about your child leaves the device.">
+<meta name="theme-color" content="#0F1E2E">
+<link rel="icon" href="brand/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="brand/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rugged Speech">
+<meta property="og:title" content="Rugged Speech: an AAC device built to be dropped">
+<meta property="og:description" content="Free AAC for children and young people, on rugged Windows tablets and on Mac. Works without wifi. Part of Community Stack.">
+<meta property="og:image" content="https://rugged-speech.vercel.app/brand/og-image.jpg">
+<meta property="og:url" content="https://rugged-speech.vercel.app/">
+<link rel="canonical" href="https://rugged-speech.vercel.app/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Poppins:wght@600;700;800&display=swap">
+<style>
+/* Layout: a story told in bands (problem, a day, three audiences). The logo's viewfinder brackets frame key photos; yellow is the one loud colour. */
+:root {
+  color-scheme: light;
+  --navy: #0F1E2E;
+  --navy-2: #172a3e;
+  --navy-3: #22384f;
+  --yellow: #FFC72C;
+  --orange: #FF6B1A;
+  --stone: #F2F0EB;
+  --stone-2: #E7E3DA;
+  --slate: #5A6672;
+  --white: #FFFFFF;
+  --ink: #0F1E2E;
+  --ink-soft: #3d4a57;
+  --on-navy: #F2F0EB;
+  --on-navy-soft: #a9b4bf;
+
+  /* Fitzgerald Key, as the app uses it */
+  --fk-people: #FFE7A0;
+  --fk-doing: #C9EBC4;
+  --fk-describe: #C6DDF5;
+  --fk-things: #FFD3B0;
+  --fk-places: #BFE8E2;
+  --fk-social: #F8CFE0;
+  --fk-little: #DCD3F5;
+  --fk-no: #F6C1BD;
+
+  --display: "Poppins", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --step--1: clamp(0.84rem, 0.8rem + 0.2vw, 0.92rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.45rem);
+  --step-2: clamp(1.5rem, 1.25rem + 1.1vw, 2.1rem);
+  --step-3: clamp(2rem, 1.5rem + 2.2vw, 3.2rem);
+  --step-4: clamp(2.6rem, 1.6rem + 4.4vw, 5.4rem);
+
+  --radius: 18px;
+  --wrap: 1180px;
+  --gutter: clamp(16px, 4vw, 40px);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
+body {
+  margin: 0;
+  background: var(--stone);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3, h4 { font-family: var(--display); line-height: 1.08; margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+p { margin: 0; }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+.eyebrow { font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+.band { padding-block: clamp(64px, 9vw, 120px); }
+.band--navy { background: var(--navy); color: var(--on-navy); }
+.band--white { background: var(--white); }
+.band--yellow { background: var(--yellow); color: var(--navy); }
+.section-head { display: grid; gap: 16px; max-width: 720px; margin-bottom: clamp(36px, 5vw, 56px); }
+.section-head h2 { font-size: var(--step-3); font-weight: 800; }
+.section-head p { font-size: var(--step-1); color: var(--ink-soft); max-width: 60ch; }
+.band--navy .section-head p { color: var(--on-navy-soft); }
+.band--navy .eyebrow { color: var(--yellow); }
+.eyebrow { color: var(--orange); }
+.band--yellow .eyebrow { color: var(--navy); }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 1rem; text-decoration: none; padding: 14px 22px; border-radius: 12px; border: 2px solid transparent; cursor: pointer; transition: transform .15s ease, background .15s ease; }
+.btn:hover { transform: translateY(-2px); }
+.btn--yellow { background: var(--yellow); color: var(--navy); }
+.btn--navy { background: var(--navy); color: var(--white); }
+.btn--ghost { border-color: currentColor; background: transparent; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+
+/* Brackets: the logo's viewfinder, used to frame things */
+.framed { position: relative; }
+.framed::before, .framed::after, .framed > .br-b::before, .framed > .br-b::after {
+  content: ""; position: absolute; width: clamp(28px, 5vw, 52px); height: clamp(28px, 5vw, 52px);
+  border: clamp(5px, 0.8vw, 8px) solid var(--yellow); pointer-events: none; z-index: 2;
+}
+.framed::before { top: -14px; left: -14px; border-right: 0; border-bottom: 0; border-top-left-radius: 10px; }
+.framed::after { top: -14px; right: -14px; border-left: 0; border-bottom: 0; border-top-right-radius: 10px; }
+.framed > .br-b { position: absolute; inset: 0; pointer-events: none; }
+.framed > .br-b::before { bottom: -14px; left: -14px; border-right: 0; border-top: 0; border-bottom-left-radius: 10px; }
+.framed > .br-b::after { bottom: -14px; right: -14px; border-left: 0; border-top: 0; border-bottom-right-radius: 10px; }
+
+/* Nav */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: rgba(15, 30, 46, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--white); border-bottom: 1px solid rgba(255,255,255,0.06); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 68px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand svg { width: 38px; height: 38px; flex: none; }
+.brand span { font-family: var(--display); font-weight: 800; letter-spacing: -0.01em; font-size: 1.12rem; text-transform: uppercase; }
+.nav-links { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.nav-links a { text-decoration: none; font-weight: 700; font-size: 0.96rem; padding: 10px 12px; border-radius: 10px; color: var(--on-navy); }
+.nav-links a:hover { background: rgba(255,255,255,0.08); }
+.nav-links .btn { padding: 10px 16px; margin-left: 8px; color: var(--navy); }
+.nav-links .btn:hover { background: var(--yellow); }
+.nav-toggle { display: none; background: none; border: 2px solid rgba(255,255,255,0.3); color: var(--white); border-radius: 10px; padding: 8px 12px; font: 700 0.95rem var(--display); cursor: pointer; }
+@media (max-width: 900px) {
+  .nav-toggle { display: inline-flex; }
+  .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--navy); padding: 12px var(--gutter) 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 14px 12px; }
+  .nav-links .btn { margin: 8px 0 0; justify-content: center; }
+}
+
+/* Hero */
+.hero { background: var(--navy); color: var(--on-navy); padding-block: clamp(48px, 7vw, 96px) clamp(72px, 9vw, 120px); position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; right: -8%; top: -30%; width: 60%; aspect-ratio: 1; background: radial-gradient(circle, rgba(255,199,44,0.13), transparent 62%); pointer-events: none; }
+.hero .wrap { display: grid; grid-template-columns: 1.2fr 0.9fr; gap: clamp(40px, 6vw, 80px); align-items: center; position: relative; z-index: 1; }
+.hero-copy { display: grid; gap: 26px; min-width: 0; }
+.hero h1 { font-size: clamp(2.6rem, 1.3rem + 3.4vw, 4.4rem); font-weight: 800; letter-spacing: -0.035em; }
+.hero h1 .hl { color: var(--yellow); }
+.hero .lede { font-size: var(--step-1); color: var(--on-navy-soft); max-width: 34ch; }
+.hero .lede strong { color: var(--white); font-weight: 700; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero .btn--ghost { color: var(--white); }
+.trust { display: flex; flex-wrap: wrap; gap: 8px 20px; list-style: none; padding: 0; margin: 4px 0 0; font-family: var(--mono); font-size: var(--step--1); color: var(--on-navy-soft); }
+.trust li { display: flex; align-items: center; gap: 8px; }
+.trust li::before { content: ""; width: 8px; height: 8px; border-radius: 2px; background: var(--yellow); }
+.hero-visual { position: relative; min-width: 0; padding: 14px; }
+.hero-visual .photo { border-radius: 14px; overflow: hidden; aspect-ratio: 4 / 3.4; }
+.hero-visual .photo img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; }
+.say-chip { position: absolute; z-index: 3; left: clamp(-8px, -2vw, -28px); bottom: 34px; background: var(--white); color: var(--navy); border-radius: 16px 16px 16px 4px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 18px 40px rgba(0,0,0,0.35); font-family: var(--display); font-weight: 700; font-size: clamp(0.95rem, 0.9rem + 0.4vw, 1.2rem); max-width: 80%; }
+.say-chip .spk { width: 36px; height: 36px; border-radius: 10px; background: var(--yellow); display: grid; place-items: center; flex: none; }
+.say-chip .spk svg { width: 20px; height: 20px; }
+.say-chip small { display: block; font-family: var(--mono); font-weight: 400; font-size: 0.72rem; color: var(--slate); letter-spacing: 0.04em; text-transform: uppercase; }
+@media (max-width: 860px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .hero-visual { order: -1; max-width: 560px; }
+  .say-chip { left: 8px; }
+}
+
+/* Promises */
+.promises { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border-top: 3px solid var(--navy); }
+.promise { padding: 26px 22px 8px 0; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.promise + .promise { padding-left: 22px; border-left: 1px solid var(--stone-2); }
+.promise h3 { font-size: 1.22rem; font-weight: 700; }
+.promise p { color: var(--ink-soft); font-size: 0.98rem; }
+@media (max-width: 1000px) { .promises { grid-template-columns: repeat(2, 1fr); } .promise, .promise + .promise { padding: 24px 20px 20px 0; border-left: 0; border-bottom: 1px solid var(--stone-2); } .promise:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--stone-2); } }
+@media (max-width: 560px) { .promises { grid-template-columns: 1fr; } .promise:nth-child(even) { padding-left: 0; border-left: 0; } }
+
+/* Try it: live board */
+.try { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+.try-copy { display: grid; gap: 20px; min-width: 0; }
+.try-copy .section-head { margin: 0; }
+.fk-key { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; list-style: none; padding: 0; margin: 0; font-size: 0.95rem; color: var(--on-navy-soft); }
+.fk-key li { display: flex; align-items: center; gap: 10px; }
+.fk-key i { width: 18px; height: 18px; border-radius: 5px; flex: none; }
+.device { background: #10161c; border-radius: 34px; padding: clamp(14px, 2.2vw, 26px) clamp(14px, 2.6vw, 30px) clamp(30px, 4vw, 46px); box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 0 0 2px #2a333c; position: relative; min-width: 0; }
+.device::before { content: ""; position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; border-radius: 50%; background: #2b3540; box-shadow: 0 0 0 3px #1a2129; }
+.device-keys { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+.device-keys span { font-family: var(--mono); font-size: 0.6rem; color: #6f7c88; border: 1px solid #2d3741; border-radius: 4px; padding: 1px 7px; }
+.screen { background: #E7F4F1; border-radius: 10px; overflow: hidden; color: #20323f; }
+.board { padding: clamp(8px, 1.4vw, 14px); display: grid; gap: 10px; }
+.strip { display: flex; gap: 8px; align-items: stretch; }
+.strip-text { flex: 1; min-width: 0; min-height: 54px; background: var(--white); border-radius: 10px; padding: 8px 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--display); font-weight: 700; font-size: 1.05rem; }
+.strip-text .ph { color: #8a97a3; font-family: var(--body); font-weight: 400; font-size: 0.95rem; }
+.strip-text .w { background: #f1f4f6; border-radius: 8px; padding: 2px 10px; }
+.strip-text .w.lit { background: var(--yellow); }
+.strip button, .board-foot button { font-family: var(--display); font-weight: 700; border: 0; border-radius: 10px; cursor: pointer; color: #20323f; }
+.strip .speak { background: var(--navy); color: var(--white); padding: 0 18px; font-size: 1rem; }
+.strip .clear { background: #d5e6e2; padding: 0 12px; font-size: 0.85rem; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(6px, 1vw, 10px); }
+.tile { border: 0; border-radius: 12px; padding: clamp(8px, 1.4vw, 14px) 4px clamp(6px, 1vw, 10px); display: grid; justify-items: center; gap: 2px; cursor: pointer; font-family: var(--body); font-weight: 700; font-size: clamp(0.8rem, 0.7rem + 0.4vw, 1rem); color: #20323f; box-shadow: inset 0 -3px 0 rgba(15,30,46,0.08); transition: transform .08s ease; min-width: 0; }
+.tile .sym { width: clamp(30px, 2rem + 2.4vw, 56px); height: auto; aspect-ratio: 1; }
+.tile:active, .tile.pressed { transform: scale(0.96); }
+.board-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.board-foot button { background: #d5e6e2; padding: 10px; font-size: 0.95rem; }
+.board-foot .gmt { background: var(--yellow); }
+.try-note { font-size: 0.9rem; color: var(--on-navy-soft); font-family: var(--mono); }
+@media (max-width: 900px) { .try { grid-template-columns: 1fr; } }
+
+/* Tour */
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+.tab { font-family: var(--display); font-weight: 700; font-size: 0.98rem; padding: 10px 18px; border-radius: 999px; border: 2px solid var(--stone-2); background: var(--white); color: var(--navy); cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--navy); border-color: var(--navy); color: var(--white); }
+.tab:hover:not([aria-selected="true"]) { border-color: var(--navy); }
+.panel { display: grid; grid-template-columns: 1.35fr 1fr; gap: clamp(28px, 4vw, 56px); align-items: center; }
+.panel-copy { display: grid; gap: 16px; min-width: 0; }
+.panel-copy h3 { font-size: var(--step-2); font-weight: 800; }
+.panel-copy p { color: var(--ink-soft); }
+.ticks { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.ticks li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; }
+.ticks li::before { content: ""; width: 14px; height: 14px; margin-top: 6px; border: 3px solid var(--orange); border-radius: 3px; border-right: 0; border-bottom: 0; }
+.band--navy .ticks li::before { border-color: var(--yellow); }
+.shot { border-radius: 14px; overflow: hidden; background: var(--white); box-shadow: 0 1px 0 var(--stone-2), 0 24px 50px rgba(15,30,46,0.14); border: 1px solid var(--stone-2); }
+.shot img { width: 100%; height: auto; }
+.shot-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+@media (max-width: 860px) { .panel { grid-template-columns: 1fr; } }
+
+
+/* Story */
+.story { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: end; }
+.story > * { min-width: 0; }
+.story blockquote { margin: 0; font-family: var(--display); font-weight: 800; font-size: var(--step-3); line-height: 1.1; letter-spacing: -0.025em; text-wrap: balance; }
+.story blockquote em { font-style: normal; background: linear-gradient(transparent 62%, var(--yellow) 62%); }
+.story-body { display: grid; gap: 20px; font-size: var(--step-1); color: var(--ink-soft); line-height: 1.55; }
+.story-body strong { color: var(--ink); }
+.story-lead { display: grid; gap: 18px; }
+.story-sub { font-size: var(--step-1); color: var(--ink-soft); line-height: 1.55; max-width: 44ch; }
+.tough { list-style: none; padding: 0; margin: clamp(40px, 5vw, 64px) 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.tough li { background: var(--white); border-radius: 16px; padding: 22px 20px; display: grid; gap: 6px; align-content: start; min-width: 0; border-bottom: 5px solid var(--yellow); }
+.tough li:nth-child(2) { transform: rotate(-1.2deg); }
+.tough li:nth-child(4) { transform: rotate(1deg); }
+.tough b { font-family: var(--display); font-weight: 800; font-size: 1.25rem; }
+.tough span { color: var(--ink-soft); font-size: 0.98rem; }
+@media (max-width: 900px) { .tough { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .tough { grid-template-columns: 1fr; } .tough li { transform: none !important; } }
+@media (max-width: 860px) { .story { grid-template-columns: 1fr; } }
+
+/* Doors */
+.doors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: clamp(48px, 6vw, 80px); }
+.door { background: var(--white); border-radius: var(--radius); padding: 28px 26px 24px; display: grid; gap: 12px; align-content: start; text-decoration: none; border: 2px solid transparent; transition: border-color .15s ease, transform .15s ease; min-width: 0; }
+.door:hover { border-color: var(--navy); transform: translateY(-3px); }
+.door .eyebrow { color: var(--slate); }
+.door h3 { font-size: 1.5rem; font-weight: 800; }
+.door p { color: var(--ink-soft); }
+.door .go { font-family: var(--display); font-weight: 700; display: inline-flex; gap: 8px; align-items: center; margin-top: 6px; }
+.door .go svg { width: 18px; height: 18px; }
+.door--yellow { background: var(--yellow); }
+.door--yellow .eyebrow, .door--yellow p { color: var(--navy); }
+.door--navy { background: var(--navy); color: var(--white); }
+.door--navy .eyebrow { color: var(--yellow); }
+.door--navy p { color: var(--on-navy-soft); }
+.door--navy:hover { border-color: var(--yellow); }
+@media (max-width: 860px) { .doors { grid-template-columns: 1fr; } }
+
+/* A day */
+.day { display: grid; gap: clamp(40px, 6vw, 72px); }
+.moment { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+.moment > * { min-width: 0; }
+.moment:nth-child(even) .moment-photo { order: 2; }
+.moment-photo { border-radius: 16px; overflow: hidden; aspect-ratio: 3 / 2; }
+.moment-photo img { width: 100%; height: 100%; object-fit: cover; }
+.moment-copy { display: grid; gap: 14px; }
+.moment-copy .when { font-family: var(--mono); font-weight: 600; color: var(--yellow); font-size: 0.95rem; letter-spacing: 0.04em; }
+.moment-copy h3 { font-size: var(--step-2); font-weight: 800; }
+.moment-copy p { color: var(--on-navy-soft); font-size: 1.05rem; }
+.said { display: inline-flex; align-items: center; gap: 10px; background: var(--white); color: var(--navy); border-radius: 14px 14px 14px 4px; padding: 10px 16px; font-family: var(--display); font-weight: 700; width: fit-content; max-width: 100%; }
+.said svg { width: 18px; height: 18px; flex: none; color: var(--orange); }
+@media (max-width: 860px) { .moment { grid-template-columns: 1fr; } .moment:nth-child(even) .moment-photo { order: 0; } }
+
+/* SLT */
+.slt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 3px solid var(--navy); }
+.slt-item { padding: 26px 24px 26px 0; display: grid; gap: 8px; align-content: start; border-bottom: 1px solid var(--stone-2); min-width: 0; }
+.slt-item:not(:nth-child(3n+1)) { padding-left: 24px; border-left: 1px solid var(--stone-2); }
+.slt-item h3 { font-size: 1.2rem; font-weight: 700; }
+.slt-item p { color: var(--ink-soft); font-size: 0.98rem; }
+.slt-item .term { font-family: var(--mono); font-size: 0.78rem; color: var(--orange); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+@media (max-width: 900px) { .slt-grid { grid-template-columns: 1fr 1fr; } .slt-item, .slt-item:not(:nth-child(3n+1)) { padding: 24px 20px 24px 0; border-left: 0; } .slt-item:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--stone-2); } }
+@media (max-width: 560px) { .slt-grid { grid-template-columns: 1fr; } .slt-item:nth-child(even) { padding-left: 0; border-left: 0; } }
+.core-words { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.core-words span { font-family: var(--display); font-weight: 600; font-size: 0.85rem; padding: 3px 10px; border-radius: 8px; color: var(--navy); }
+.invite { margin-top: clamp(40px, 5vw, 64px); background: var(--navy); color: var(--on-navy); border-radius: 20px; padding: clamp(24px, 4vw, 44px); display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(24px, 4vw, 48px); align-items: center; }
+.invite > * { min-width: 0; }
+.invite h3 { font-size: var(--step-2); font-weight: 800; color: var(--white); margin-bottom: 12px; }
+.invite p { color: var(--on-navy-soft); }
+.invite .cta-row { justify-content: flex-start; }
+.invite .btn--ghost { color: var(--white); }
+@media (max-width: 860px) { .invite { grid-template-columns: 1fr; } }
+
+/* School extras */
+.senco-points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: clamp(40px, 5vw, 64px); }
+.senco-points div { background: var(--navy-2); border-radius: 14px; padding: 22px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.senco-points b { font-family: var(--display); color: var(--white); font-size: 1.1rem; }
+.senco-points span { color: var(--on-navy-soft); font-size: 0.98rem; }
+@media (max-width: 860px) { .senco-points { grid-template-columns: 1fr; } }
+
+
+/* Audience bands */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+.split > * { min-width: 0; }
+@media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; counter-reset: s; }
+.step { display: grid; grid-template-columns: 56px 1fr; gap: 18px; padding: 22px 0; border-top: 1px solid var(--stone-2); counter-increment: s; }
+.band--navy .step { border-color: var(--navy-3); }
+.step::before { content: counter(s); width: 44px; height: 44px; border-radius: 12px; background: var(--navy); color: var(--yellow); font-family: var(--display); font-weight: 800; font-size: 1.2rem; display: grid; place-items: center; }
+.band--navy .step::before { background: var(--yellow); color: var(--navy); }
+.step h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 6px; }
+.step p { color: var(--ink-soft); }
+.band--navy .step p { color: var(--on-navy-soft); }
+.step .time { font-family: var(--mono); font-size: 0.8rem; color: var(--slate); margin-left: 8px; font-weight: 400; letter-spacing: 0; }
+.band--navy .step .time { color: var(--on-navy-soft); }
+.stick { position: sticky; top: 96px; display: grid; gap: 14px; }
+.callout { background: var(--white); border-radius: 14px; padding: 20px 22px; border-left: 6px solid var(--yellow); display: grid; gap: 6px; }
+.callout b { font-family: var(--display); }
+.band--white .callout { background: var(--stone); }
+.band--navy .callout { background: var(--navy-2); color: var(--on-navy); }
+.link-arrow { font-family: var(--display); font-weight: 700; text-decoration: none; display: inline-flex; gap: 8px; align-items: center; border-bottom: 3px solid var(--yellow); padding-bottom: 2px; }
+.school-photo { padding: 14px; }
+.school-photo img { border-radius: 14px; aspect-ratio: 3 / 2; object-fit: cover; width: 100%; }
+.mini-shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.mini-shots figure { margin: 0; display: grid; gap: 8px; }
+.mini-shots img { border-radius: 10px; border: 1px solid var(--navy-3); }
+.mini-shots figcaption { font-family: var(--mono); font-size: 0.78rem; color: var(--on-navy-soft); }
+@media (max-width: 560px) { .mini-shots { grid-template-columns: 1fr 1fr; } }
+.school-list { columns: 2; column-gap: 32px; list-style: none; padding: 0; margin: 0; }
+.school-list li { break-inside: avoid; padding: 12px 0; border-top: 1px solid var(--navy-3); display: grid; gap: 2px; }
+.school-list b { font-family: var(--display); color: var(--white); }
+.school-list span { color: var(--on-navy-soft); font-size: 0.95rem; }
+@media (max-width: 560px) { .school-list { columns: 1; } }
+
+/* Docs */
+.docs { display: grid; grid-template-columns: 260px 1fr; gap: clamp(24px, 4vw, 56px); align-items: start; }
+.docs-nav { display: grid; gap: 6px; position: sticky; top: 96px; }
+.docs-nav button { text-align: left; font-family: var(--display); font-weight: 700; font-size: 1rem; padding: 14px 16px; border-radius: 12px; border: 2px solid transparent; background: transparent; color: var(--navy); cursor: pointer; display: grid; gap: 2px; }
+.docs-nav button small { font-family: var(--body); font-weight: 400; font-size: 0.85rem; color: var(--slate); }
+.docs-nav button[aria-selected="true"] { background: var(--stone); border-color: var(--navy); }
+.docs-nav button:hover:not([aria-selected="true"]) { background: var(--stone); }
+.doc { min-width: 0; display: grid; gap: 22px; }
+.doc h3 { font-size: var(--step-2); font-weight: 800; }
+.doc h4 { font-size: 1.2rem; font-weight: 700; margin-top: 8px; }
+.doc p, .doc li { color: var(--ink-soft); max-width: 68ch; }
+.doc ol, .doc ul { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; }
+.doc strong { color: var(--ink); }
+.doc .shot { max-width: 720px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--stone-2); border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 0.97rem; }
+th, td { text-align: left; padding: 12px 16px; vertical-align: top; border-bottom: 1px solid var(--stone-2); }
+th { font-family: var(--display); font-weight: 700; background: var(--stone); }
+tr:last-child td { border-bottom: 0; }
+.all-docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.doc-card { text-decoration: none; background: var(--stone); border-radius: 12px; padding: 16px 18px; display: grid; gap: 4px; border: 2px solid transparent; }
+.doc-card:hover { border-color: var(--navy); }
+.doc-card b { font-family: var(--display); }
+.doc-card span { font-size: 0.9rem; color: var(--slate); }
+details { border-top: 1px solid var(--stone-2); padding: 4px 0; }
+details:last-of-type { border-bottom: 1px solid var(--stone-2); }
+summary { cursor: pointer; font-family: var(--display); font-weight: 700; padding: 14px 0; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-size: 1.4rem; line-height: 1; color: var(--orange); }
+details[open] summary::after { content: "&ndash;"; }
+details p { padding-bottom: 16px; }
+@media (max-width: 860px) { .docs { grid-template-columns: 1fr; } .docs-nav { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Status */
+.status { display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(28px, 5vw, 64px); }
+.status > * { min-width: 0; }
+.status-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; }
+.status-list li { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding: 16px 0; border-top: 1px solid var(--stone-2); }
+.pill { font-family: var(--mono); font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 6px; height: fit-content; text-align: center; }
+.pill--done { background: #d6eed3; color: #1f5a1a; }
+.pill--todo { background: #ffe0cc; color: #8a3300; }
+@media (max-width: 860px) { .status { grid-template-columns: 1fr; } }
+@media (max-width: 460px) { .status-list li { grid-template-columns: 1fr; gap: 6px; } .pill { width: fit-content; } }
+
+/* Install */
+.install { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+.install > * { min-width: 0; }
+.install h2 { font-size: var(--step-4); font-weight: 800; letter-spacing: -0.035em; }
+.install-card { background: var(--navy); color: var(--on-navy); border-radius: 20px; padding: clamp(22px, 3vw, 34px); display: grid; gap: 18px; }
+.install-card ol { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; color: var(--on-navy-soft); }
+.install-card ol strong { color: var(--white); }
+.install-card code { font-family: var(--mono); font-size: 0.85rem; background: var(--navy-3); padding: 2px 6px; border-radius: 6px; color: var(--yellow); word-break: break-all; }
+.need { display: flex; flex-wrap: wrap; gap: 8px; }
+.need span { font-family: var(--mono); font-size: 0.8rem; border: 1px solid var(--navy-3); border-radius: 8px; padding: 4px 10px; }
+@media (max-width: 860px) { .install { grid-template-columns: 1fr; } }
+
+/* Devices */
+.dev-hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.dev-hero > * { min-width: 0; }
+.dev-photo { padding: 14px; }
+.dev-photo img { border-radius: 14px; aspect-ratio: 3 / 2; object-fit: cover; width: 100%; }
+.spec { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+.spec li { padding: 12px 0; border-top: 1px solid var(--navy-3); display: grid; gap: 2px; min-width: 0; }
+.spec b { font-family: var(--display); color: var(--white); }
+.spec span { color: var(--on-navy-soft); font-size: 0.95rem; }
+@media (max-width: 900px) { .dev-hero { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .spec { grid-template-columns: 1fr; } }
+.dev-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: clamp(48px, 6vw, 80px); }
+.dev-card { background: var(--navy-2); border-radius: 16px; padding: 24px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.dev-card .tag { font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--navy); background: var(--yellow); border-radius: 6px; padding: 3px 8px; width: fit-content; font-weight: 600; }
+.dev-card .tag--soft { background: var(--navy-3); color: var(--on-navy); }
+.dev-card h3 { font-size: 1.3rem; font-weight: 800; color: var(--white); }
+.dev-card p { color: var(--on-navy-soft); font-size: 0.98rem; }
+@media (max-width: 900px) { .dev-options { grid-template-columns: 1fr; } }
+.checklist { margin-top: clamp(40px, 5vw, 64px); display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(24px, 4vw, 56px); }
+.checklist > * { min-width: 0; }
+.checklist h3 { font-size: var(--step-2); font-weight: 800; color: var(--white); }
+.checklist .ticks li span { color: var(--on-navy-soft); }
+.checklist .ticks b { color: var(--white); }
+@media (max-width: 860px) { .checklist { grid-template-columns: 1fr; } }
+
+/* Team */
+.team { display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+.team > * { min-width: 0; }
+.people { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.person { margin: 0; display: grid; gap: 12px; min-width: 0; }
+.person .pic { border-radius: 16px; overflow: hidden; aspect-ratio: 4 / 5; background: var(--stone-2); }
+.person img { width: 100%; height: 100%; object-fit: cover; }
+.person b { font-family: var(--display); font-weight: 800; font-size: 1.2rem; display: block; }
+.person span { color: var(--ink-soft); font-size: 0.95rem; }
+.cs-badge { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; background: var(--navy); color: var(--white); border-radius: 12px; padding: 10px 16px; font-family: var(--display); font-weight: 700; width: fit-content; }
+.cs-badge img, .cs-foot img { width: 28px; height: 28px; border-radius: 7px; flex: none; }
+.cs-foot { display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; text-decoration: none; color: var(--on-navy); font-family: var(--display); font-weight: 700; font-size: 0.95rem; }
+.cs-foot:hover span { text-decoration: underline; }
+.foot-blurb { margin-top: 8px; max-width: 36ch; }
+.soon { display: flex; flex-wrap: wrap; gap: 8px; }
+.soon span { font-family: var(--mono); font-size: 0.82rem; border: 2px dashed var(--slate); border-radius: 10px; padding: 6px 12px; color: var(--ink); }
+@media (max-width: 900px) { .team { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .people { grid-template-columns: 1fr; } }
+
+/* Feedback */
+.feedback { margin-top: clamp(48px, 6vw, 80px); background: var(--navy); color: var(--on-navy); border-radius: 20px; padding: clamp(24px, 4vw, 44px); display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(24px, 4vw, 48px); align-items: center; }
+.feedback > * { min-width: 0; }
+.feedback .eyebrow { color: var(--yellow); }
+.feedback h3 { font-size: var(--step-2); font-weight: 800; color: var(--white); margin: 10px 0 12px; }
+.feedback p { color: var(--on-navy-soft); }
+.email-box { display: grid; gap: 12px; justify-items: start; }
+.email-label { font-family: var(--mono); font-size: 0.85rem; color: var(--on-navy-soft); }
+.email { font-family: var(--display); font-weight: 800; font-size: clamp(1.2rem, 1rem + 1vw, 1.7rem); color: var(--white); text-decoration: none; border-bottom: 3px solid var(--yellow); user-select: all; overflow-wrap: anywhere; }
+.copy-msg { font-size: 0.9rem; color: var(--yellow); min-height: 1.4em; }
+@media (max-width: 860px) { .feedback { grid-template-columns: 1fr; } }
+
+/* Footer */
+footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56px 40px; }
+.foot { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px; }
+.foot > * { min-width: 0; }
+.foot h4 { font-family: var(--mono); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--yellow); margin-bottom: 12px; font-weight: 600; }
+.foot ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.foot a { text-decoration: none; color: var(--on-navy); }
+.foot a:hover { text-decoration: underline; }
+.foot .tag { font-family: var(--display); font-weight: 700; color: var(--yellow); font-size: 1.1rem; margin-top: 10px; }
+.fineprint { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--navy-3); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 0.88rem; }
+@media (max-width: 860px) { .foot { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .foot { grid-template-columns: 1fr; } }
+.install-os{margin:18px 0 6px;font-size:var(--step-0);font-family:inherit}
+.install-card .install-os:first-of-type{margin-top:0}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="logo" viewBox="0 0 100 100">
+      <g fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 32V14a4 4 0 0 1 4-4h18"/><path d="M68 10h18a4 4 0 0 1 4 4v18"/>
+        <path d="M10 68v18a4 4 0 0 0 4 4h18"/><path d="M68 90h18a4 4 0 0 0 4-4V68"/>
+      </g>
+      <rect x="26" y="30" width="48" height="32" rx="8" class="bubble"/>
+      <path d="M34 60h12l-12 14z" class="bubble"/>
+    </symbol>
+    <symbol id="i-speaker" viewBox="0 0 24 24"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></symbol>
+  </defs>
+</svg>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Rugged Speech, back to top">
+      <svg style="color:var(--yellow)"><use href="#logo" style="fill:var(--white)"/></svg>
+      <span>Rugged Speech</span>
+    </a>
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#families">Parents</a></li>
+      <li><a href="#schools">Schools</a></li>
+      <li><a href="#slts">Therapists</a></li>
+      <li><a href="#devices">Devices</a></li>
+      <li><a href="#docs">Guides</a></li>
+      <li><a href="#install" class="btn btn--yellow">Download</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <p class="eyebrow" style="color:var(--yellow)">AAC for children and young people</p>
+      <h1>An AAC device built to be <span class="hl">dropped.</span></h1>
+      <p class="lede">Rugged Speech is AAC (augmentative and alternative communication) that children can take <strong>everywhere</strong>: big picture buttons on a tough tablet that can go to school, to the park and to bed. It's free, and it works without wifi.</p>
+      <div class="cta-row">
+        <a class="btn btn--yellow" href="https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Setup-Windows.exe">Download for Windows <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--yellow" href="#install">Download for Mac <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost" href="#try">Try a board</a>
+      </div>
+      <ul class="trust"><li>Free</li><li>No wifi needed</li><li>No account</li><li>Windows and Mac</li></ul>
+    </div>
+    <div class="hero-visual">
+      <div class="framed">
+        <span class="br-b"></span>
+        <div class="photo"><img src="photos/feelings-held.jpg" alt="A child's hands holding a rugged tablet in the garden, showing the Feelings page: happy, sad, angry, worried, need quiet, need space and more" fetchpriority="high"></div>
+      </div>
+      <div class="say-chip" aria-hidden="true">
+        <span class="spk"><svg><use href="#i-speaker"/></svg></span>
+        <span><small>Feelings</small>I need quiet.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="band" id="story">
+  <div class="wrap">
+    <div class="story">
+      <div class="story-lead">
+        <p class="eyebrow">Made for everyday life</p>
+        <blockquote>Go on. Take it to the park, <em>drop it in the grass.</em></blockquote>
+        <p class="story-sub">Rugged Speech is a communication aid made for real childhoods: muddy knees, car journeys, wobbly tables and the odd drop. It's designed to be used all day, every day, wherever your child is, so it never needs to be kept on a shelf for best.</p>
+      </div>
+      <div class="story-body">
+        <p>It runs on rugged Windows tablets, the chunky kind with rubber corners that are made to take a knock. That means your child's communication can come along to breakfast, to school, to Grandma's and to bed, with nobody worrying about breakages. It works on any Windows 10 or 11 device, and on Macs too, and every new feature arrives on both at the same time.</p>
+        <p>It's for children and young people who are non-speaking or minimally speaking, and for those whose speech comes and goes or takes a lot of effort. That includes autistic children, children with speech, language and communication needs (SLCN), and children and young people who stammer. Speech is always welcome alongside it: AAC supports talking, it doesn't replace it.</p>
+      </div>
+    </div>
+
+    <ul class="tough">
+      <li><b>Drop it</b><span>Runs on rugged tablets made for knocks, spills and sandpits.</span></li>
+      <li><b>Take it anywhere</b><span>No wifi needed. It talks in the car, the field and the waiting room.</span></li>
+      <li><b>Pass it round</b><span>Family, school staff and speech and language therapists all support the same device, each with their own area.</span></li>
+      <li><b>Back up in a minute</b><span>Save one file to a USB stick. If a tablet ever goes missing, everything goes straight onto another.</span></li>
+    </ul>
+
+    <div class="doors">
+      <a class="door door--yellow" href="#families">
+        <p class="eyebrow">For parents and carers</p>
+        <h3>Set it up at home in 20 minutes.</h3>
+        <p>Add the people and places your child loves, with real photos and your own voice. No account, no subscription.</p>
+        <span class="go">For families <svg><use href="#i-arrow"/></svg></span>
+      </a>
+      <a class="door door--navy" href="#schools">
+        <p class="eyebrow">For SENCos and school staff</p>
+        <h3>The same device, ready for the classroom.</h3>
+        <p>School Mode gives staff their own PIN for timetables, lesson pages, targets, notes and handover sheets.</p>
+        <span class="go">For schools <svg><use href="#i-arrow"/></svg></span>
+      </a>
+      <a class="door" href="#slts">
+        <p class="eyebrow">For speech and language therapists</p>
+        <h3>Built on the practice you already use.</h3>
+        <p>Stable motor plans, a small core vocabulary, a Modified Fitzgerald Key, word stages and switch access. The words are yours to choose.</p>
+        <span class="go">For therapists <svg><use href="#i-arrow"/></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- A DAY -->
+<section class="band band--navy" id="day">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">A day with Rugged Speech</p>
+      <h2>One device, from breakfast to bedtime.</h2>
+      <p>The buttons are in the same place at home, at school and in the garden, so a child only has to learn them once.</p>
+    </div>
+    <div class="day">
+      <div class="moment">
+        <div class="moment-photo"><img src="photos/feelings-table.jpg" alt="The Feelings page on a tablet on the kitchen table, with a mug and a stylus nearby" loading="lazy"></div>
+        <div class="moment-copy">
+          <p class="when">7:45am &middot; Breakfast</p>
+          <h3>Saying how the morning feels.</h3>
+          <p>Before the school run, Feelings lets a child say they're tired or worried, and how much: a little, medium or a lot. My Day shows what's coming next, and Now and Next help the move to school feel more predictable.</p>
+          <span class="said"><svg><use href="#i-speaker"/></svg>I'm worried. A lot.</span>
+        </div>
+      </div>
+      <div class="moment">
+        <div class="moment-photo"><img src="photos/school-mode.jpg" alt="School Mode on the tablet, showing the guide for teachers and the staff menu" loading="lazy"></div>
+        <div class="moment-copy">
+          <p class="when">10:30am &middot; In class</p>
+          <h3>School picks up where home left off.</h3>
+          <p>The teaching assistant opens School Mode with the school's own PIN to bring up the maths lesson page. Nothing on the child's screen moves. At the end of the day, a quick note goes in for home.</p>
+          <span class="said"><svg><use href="#i-speaker"/></svg>I need a break.</span>
+        </div>
+      </div>
+      <div class="moment">
+        <div class="moment-photo"><img src="photos/piano-held.jpg" alt="Playing the Piano game on the tablet in the garden, pressing a coloured key" loading="lazy"></div>
+        <div class="moment-copy">
+          <p class="when">4pm &middot; In the garden</p>
+          <h3>Playing, and telling you when it hurts.</h3>
+          <p>Piano, Draw and Snap have no clocks and no scores, just play. If there's a tumble, My body lets your child point to where it hurts on a figure that looks like them, then say it.</p>
+          <span class="said"><svg><use href="#i-speaker"/></svg>My knee hurts a lot.</span>
+        </div>
+      </div>
+      <div class="moment">
+        <div class="moment-photo"><img src="photos/feelings-night.jpg" alt="The Feelings page on a tablet resting on the arm of a sofa in a dim room" loading="lazy"></div>
+        <div class="moment-copy">
+          <p class="when">7:30pm &middot; Winding down</p>
+          <h3>Room to say the big things.</h3>
+          <p>Calm has a breathing guide and a quiet-time timer. The traffic light lets a child show how much they want to be talked to, without a word. And Give me time says "I know what I want to say. Please give me a moment."</p>
+          <span class="said"><svg><use href="#i-speaker"/></svg>I feel scared.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOUR -->
+<section class="band band--white" id="tour">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Inside the app</p>
+      <h2>Everything your child reaches for, one or two presses away.</h2>
+      <p>Six buttons along the top are always there, and Help is always one of them. Everything else is big, colourful and in the same place every day.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Parts of the app" id="tour-tabs"></div>
+    <div id="tour-panel" role="tabpanel"></div>
+  </div>
+</section>
+
+<!-- TRY IT -->
+<section class="band band--navy" id="try">
+  <div class="wrap try">
+    <div class="try-copy">
+      <div class="section-head">
+        <p class="eyebrow" style="color:var(--yellow)">Have a go</p>
+        <h2>Press a word. Hear it.</h2>
+        <p style="color:var(--on-navy-soft)">This is a small version of the Talk page. Press words to build a sentence, then press Speak. Each word lights up as it's said, so a child can see what they hear.</p>
+      </div>
+      <p style="color:var(--on-navy-soft)">Each kind of word has its own colour, on every page, so children start to find words by colour as well as by picture:</p>
+      <ul class="fk-key">
+        <li><i style="background:var(--fk-people)"></i>People</li>
+        <li><i style="background:var(--fk-doing)"></i>Doing words</li>
+        <li><i style="background:var(--fk-describe)"></i>Describing</li>
+        <li><i style="background:var(--fk-things)"></i>Things</li>
+        <li><i style="background:var(--fk-places)"></i>Places</li>
+        <li><i style="background:var(--fk-social)"></i>Social words</li>
+        <li><i style="background:var(--fk-little)"></i>Little words</li>
+        <li><i style="background:var(--fk-no)"></i>No and stop</li>
+      </ul>
+    </div>
+    <div>
+      <div class="device">
+        <div class="screen">
+          <div class="board">
+            <div class="strip">
+              <div class="strip-text" id="strip" aria-live="polite"><span class="ph">Press the words to build a sentence</span></div>
+              <button class="clear" id="clear" type="button">Clear</button>
+              <button class="speak" id="speak" type="button">Speak</button>
+            </div>
+            <div class="grid4" id="grid"></div>
+            <div class="board-foot">
+              <button type="button" class="gmt" id="gmt">Give me time</button>
+              <button type="button" id="undo">Back a word</button>
+            </div>
+          </div>
+        </div>
+        <div class="device-keys" aria-hidden="true"><span>P1</span><span>P2</span><span>P3</span></div>
+      </div>
+      <p class="try-note" id="try-note" style="margin-top:16px">This uses your browser's voice. In the app, Rugged Speech uses the voices already on your Windows computer or Mac, so it talks even with the wifi off.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROMISES -->
+<section class="band" style="padding-block: clamp(56px,7vw,96px);">
+  <div class="wrap">
+    <div class="section-head" style="margin-bottom:28px">
+      <p class="eyebrow">What you can count on</p>
+      <h2>Five things that will never change.</h2>
+    </div>
+    <div class="promises">
+      <div class="promise"><h3>It works without wifi</h3><p>On a coach trip, in a field, in a hospital waiting room. It never needs the internet.</p></div>
+      <div class="promise"><h3>Your child's information stays put</h3><p>Photos, medical details and what they say stay on the tablet. No accounts, no cloud.</p></div>
+      <div class="promise"><h3>Buttons stay where your child learnt them</h3><p>Nothing reshuffles. Once "more" is learnt, it's there tomorrow, and next year.</p></div>
+      <div class="promise"><h3>Your child's screen stays simple</h3><p>Big buttons for them. Settings live behind your PIN, out of reach.</p></div>
+      <div class="promise"><h3>It never talks over your child</h3><p>It only speaks when someone presses. Suggestions never speak on their own.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAMILIES -->
+<section class="band band--white" id="families">
+  <div class="wrap split">
+    <div>
+      <div class="section-head">
+        <p class="eyebrow">For parents and carers</p>
+        <h2>From the box to your child's first words in 20 minutes.</h2>
+        <p>You don't need to be good with computers. Every choice can be changed later, and there's a Back button on every step.</p>
+      </div>
+      <ol class="steps">
+        <li class="step"><div><h3>Install it <span class="time">2 minutes</span></h3><p>On Windows, double-click the file. If it says <strong>Windows protected your PC</strong>, press <strong>More info</strong>, then <strong>Run anyway</strong>. On a Mac, open the disk image and drag the app to <strong>Applications</strong>, then allow it once in <strong>System Settings, Privacy &amp; Security</strong>. You won't need an administrator password on Windows.</p></div></li>
+        <li class="step"><div><h3>Answer a few questions <span class="time">8 minutes</span></h3><p>Your child's name, a voice they like, how big the buttons are, and pictures or emoji. Then choose a four-number Parent PIN.</p></div></li>
+        <li class="step"><div><h3>Write down your recovery code</h3><p>It's four words, shown once. It's the only way back in if you forget your PIN, so keep it somewhere safe.</p></div></li>
+        <li class="step"><div><h3>Make it theirs <span class="time">10 minutes</span></h3><p>Add Mum, Grandad, nursery and the park with real photos, and record your voice saying their names. For many children, this is the part they love most.</p></div></li>
+        <li class="step"><div><h3>Keep it safe</h3><p>Fill in Medical Info and the Lost mode details, then save a backup to a USB stick. The app reminds you once a month.</p></div></li>
+      </ol>
+      <p style="margin-top:24px"><a class="link-arrow" href="#docs" data-doc="parents">Read the guide for parents <svg width="18" height="18"><use href="#i-arrow"/></svg></a></p>
+    </div>
+    <div class="stick">
+      <div class="shot"><img src="screens/setup-3-voice.png" alt="The set-up step for choosing a voice, with a Try it button beside each voice" loading="lazy"></div>
+      <div class="shot-pair">
+        <div class="shot"><img src="screens/setup-4-grid.png" alt="Choosing how big the buttons are during set-up" loading="lazy"></div>
+        <div class="shot"><img src="screens/parent-my-body.png" alt="Making the My body figure look like your child" loading="lazy"></div>
+      </div>
+      <div class="callout"><b>The best thing you can do: use it yourself.</b><span>Press the buttons as you talk: "Do you <strong>want</strong> a <strong>drink</strong>?" Your child sees how it works without being asked to do anything. Therapists call this modelling.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHOOLS -->
+<section class="band band--navy" id="schools">
+  <div class="wrap">
+    <div class="split" style="align-items:center">
+      <div class="section-head" style="margin:0">
+        <p class="eyebrow">For SENCos, teachers and teaching assistants</p>
+        <h2>The child's own voice, in your classroom.</h2>
+        <p>The device comes into school with the child, already set up the way the family and therapist agreed. School Mode gives staff their own side of it, with its own School PIN. Parents keep the Parent PIN, and you never need it.</p>
+        <div class="cta-row" style="margin-top:8px">
+          <a class="btn btn--yellow" href="#docs" data-doc="staff">Read the guide for staff <svg><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+      <div class="school-photo framed"><span class="br-b"></span><img src="screens/school-today.png" alt="The Today page in School Mode: the timetable, targets due, the traffic light and the latest notes" loading="lazy" style="aspect-ratio:auto"></div>
+    </div>
+
+    <div class="split" style="margin-top:clamp(48px,6vw,80px)">
+      <ul class="school-list">
+        <li><b>Today</b><span>The timetable, targets due, the traffic light and the latest notes on one page.</span></li>
+        <li><b>Pupil and school</b><span>Class teacher, key adult, SENCo and therapist. Never shown to the child.</span></li>
+        <li><b>Safeguarding</b><span>Your designated safeguarding lead (DSL), and what the device does and doesn't do.</span></li>
+        <li><b>Classroom set-up</b><span>A school top bar and a typical school day, if you want them. Each one asks first, because it moves buttons.</span></li>
+        <li><b>Timetable</b><span>Enter it once and it repeats each week. Countdowns stay off unless you choose.</span></li>
+        <li><b>Lesson pages</b><span>Ready-made pages for maths, story time, PE, lunchtime, assembly and more.</span></li>
+        <li><b>Vocabulary</b><span>Word stages and focus words, agreed with the child's therapist.</span></li>
+        <li><b>Targets</b><span>Written in plain words, with a review date and a status.</span></li>
+        <li><b>Notes</b><span>A few kind, factual lines after a session, shared with home.</span></li>
+        <li><b>Activity</b><span>An optional record of use. Off until you turn it on.</span></li>
+        <li><b>Reports</b><span>A one-page handover sheet for supply staff, and a report for review meetings.</span></li>
+      </ul>
+      <div class="mini-shots">
+        <figure><img src="screens/school-button.png" alt="The School Mode button next to Parent Mode" loading="lazy"><figcaption>School Mode button</figcaption></figure>
+        <figure><img src="screens/school-timetable.png" alt="School Mode timetable" loading="lazy"><figcaption>Timetable</figcaption></figure>
+        <figure><img src="screens/school-lessons.png" alt="Ready-made lesson pages" loading="lazy"><figcaption>Lesson pages</figcaption></figure>
+        <figure><img src="screens/staff-targets.png" alt="Targets with review dates" loading="lazy"><figcaption>Targets</figcaption></figure>
+        <figure><img src="screens/staff-activity.png" alt="Optional activity record with bars by hour, day, week and month" loading="lazy"><figcaption>Activity</figcaption></figure>
+        <figure><img src="screens/staff-handover.png" alt="The printable handover sheet" loading="lazy"><figcaption>Handover sheet</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="senco-points">
+      <div><b>Easy on your IT team</b><span>Installs for one user with no administrator password. Nothing to unblock on the network, because it never connects to it.</span></div>
+      <div><b>Easier data protection</b><span>No pupil accounts and nothing stored in the cloud. You'll still want a data protection impact assessment (DPIA), and the security notes are written to help with it.</span></div>
+      <div><b>No cost to the budget</b><span>The app is free. You can run it on rugged tablets you already have, or any Windows 10 or 11 device or Mac.</span></div>
+    </div>
+
+    <div class="callout" style="margin-top:14px">
+      <b>The device is not a safeguarding record.</b>
+      <span>The Help section has phrases such as "Someone hurt me" because a child needs those words. The app says the phrase and stops. It doesn't flag it or tell anyone, so if a child says something that worries you, follow your setting's usual procedure.</span>
+    </div>
+  </div>
+</section>
+
+<!-- SLTs -->
+<section class="band" id="slts">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">For speech and language therapists</p>
+      <h2>Designed around good AAC practice. The clinical choices are left to you.</h2>
+      <p>Rugged Speech doesn't try to decide what a child should say. It gives you a stable, flexible system, and leaves the vocabulary, staging and settings to you and the family.</p>
+    </div>
+    <div class="slt-grid">
+      <div class="slt-item"><span class="term">Motor planning</span><h3>Buttons never move</h3><p>Grids never rearrange themselves. Hiding a word leaves an empty space, and making a page bigger only adds empty spaces. The grid size only changes when an adult changes it.</p></div>
+      <div class="slt-item"><span class="term">Core and fringe</span><h3>A small core, personal folders</h3><p>A stable first set, with folders of nine or fewer. Families add the fringe with photos and recorded voices.</p>
+        <div class="core-words"><span style="background:var(--fk-people)">I</span><span style="background:var(--fk-doing)">want</span><span style="background:var(--fk-doing)">like</span><span style="background:var(--fk-little)">more</span><span style="background:var(--fk-no)">no</span><span style="background:var(--fk-social)">yes</span><span style="background:var(--fk-social)">help</span><span style="background:var(--fk-doing)">go</span><span style="background:var(--fk-no)">stop</span><span style="background:var(--fk-doing)">look</span><span style="background:var(--fk-little)">again</span><span style="background:var(--fk-little)">that</span></div></div>
+      <div class="slt-item"><span class="term">Aided language input</span><h3>Made for modelling</h3><p>Pressing a word speaks it, so partners can model as they talk. Sentences can be read one word at a time, with each word lit.</p></div>
+      <div class="slt-item"><span class="term">Colour coding</span><h3>A Modified Fitzgerald Key</h3><p>Colour follows word class on every page. You can adjust it, and the app warns you if two classes look too alike.</p></div>
+      <div class="slt-item"><span class="term">Staged vocabulary</span><h3>Word stages and focus words</h3><p>Bring words in gradually without moving anything, and outline the words being practised. No word comes with a stage set.</p></div>
+      <div class="slt-item"><span class="term">Expectant delay</span><h3>Time to answer</h3><p>Give me time is always one press away. Prediction only suggests, and nothing speaks unless the child presses.</p></div>
+      <div class="slt-item"><span class="term">Access</span><h3>More than one way to press</h3><p>One- and two-switch scanning, hold-to-select, ignoring accidental double presses, keyboard access, high contrast and text size.</p></div>
+      <div class="slt-item"><span class="term">Speech output</span><h3>A voice that fits</h3><p>Choose the voice, speed and pitch. "Say it like this" teaches it to pronounce names, and recorded clips can replace the synthetic voice.</p></div>
+      <div class="slt-item"><span class="term">Evidence</span><h3>Data you can use, if you want it</h3><p>Optional word counts and an activity record, both off by default, export to a spreadsheet. Pages share as Open Board Format files.</p></div>
+    </div>
+
+    <div class="invite">
+      <div>
+        <h3>The starter words need a therapist's eye.</h3>
+        <p>The starter vocabulary is a sensible beginning, but no speech and language therapist has reviewed it yet. It hasn't been tested with children either. The clinical review lists the decisions we think belong to a clinician. If you'd be willing to look at it, please email us at <strong>aac@communitystack.io</strong>.</p>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn--yellow" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/clinical-review.md">Read the clinical review <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost" href="#feedback">Get in touch</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEVICES -->
+<section class="band band--navy" id="devices">
+  <div class="wrap">
+    <div class="dev-hero">
+      <div class="section-head" style="margin:0">
+        <p class="eyebrow">Choosing a device</p>
+        <h2>The tablet we use: the Dell Latitude 7212 Rugged Extreme.</h2>
+        <p>All the photos of Rugged Speech on this page were taken on a Dell Latitude 7212. It's a tough 11.6-inch Windows tablet, built for building sites and field work, so it copes well with busy family and school life.</p>
+        <ul class="spec">
+          <li><b>Built to be dropped</b><span>Rubber corners, tested to the US military MIL-STD-810G standard</span></li>
+          <li><b>Dust and water</b><span>IP65 rated, so rain, juice and the sandpit are fine</span></li>
+          <li><b>11.6-inch touchscreen</b><span>Full HD, readable outdoors, and works with gloves on</span></li>
+          <li><b>Two batteries</b><span>Enough for a long day out, with a spare that swaps in</span></li>
+          <li><b>P1, P2 and P3 buttons</b><span>Programmable buttons along the bottom edge</span></li>
+          <li><b>Windows 10 Pro or 11 Pro</b><span>Rugged Speech installs just like any other program. It runs on a Mac too.</span></li>
+        </ul>
+      </div>
+      <div class="dev-photo framed"><span class="br-b"></span><img src="photos/piano-garden.jpg" alt="A Dell Latitude 7212 rugged tablet propped up in a flower bed, running the Piano game, with its P1, P2 and P3 buttons visible below the screen" loading="lazy"></div>
+    </div>
+
+    <div class="checklist" style="grid-template-columns:1fr 1fr">
+      <div>
+        <h3>Recommended models</h3>
+        <div class="dev-options" style="grid-template-columns:1fr;margin-top:20px">
+          <div class="dev-card"><span class="tag">What we use</span><h3>Dell Latitude 7212 Rugged Extreme</h3><p>The tablet Rugged Speech is built and tested on.</p></div>
+          <div class="dev-card"><span class="tag tag--soft">Also suitable</span><h3>Other rugged Windows tablets</h3><p>Such as Panasonic Toughbook and Getac tablets that meet the requirements.</p></div>
+          <div class="dev-card"><span class="tag tag--soft">Also suitable</span><h3>Any Windows tablet or laptop</h3><p>With a touchscreen, in a sturdy, child-proof case with a handle or strap.</p></div>
+          <div class="dev-card"><span class="tag tag--soft">Also suitable</span><h3>A Mac</h3><p>Apple silicon or Intel. A MacBook in a sturdy case works well at home or in school.</p></div>
+        </div>
+      </div>
+      <div>
+        <h3>System requirements</h3>
+        <ul class="spec" style="grid-template-columns:1fr;margin-top:20px">
+          <li><b>Operating system</b><span>Windows 10 or 11, 64-bit (not in S mode), or a recent version of macOS</span></li>
+          <li><b>Processor</b><span>Intel or AMD (x64), or an Apple silicon or Intel Mac</span></li>
+          <li><b>Memory</b><span>4 GB or more</span></li>
+          <li><b>Storage</b><span>500 MB free, plus room for photos and music</span></li>
+          <li><b>Screen</b><span>Touchscreen, 10 inches or larger. A mouse also works.</span></li>
+          <li><b>Sound</b><span>Speakers loud enough for a classroom</span></li>
+          <li><b>Voices</b><span>English voices installed for offline use (Windows: Settings &rarr; Time and language &rarr; Speech. Mac: System Settings &rarr; Accessibility &rarr; Spoken Content)</span></li>
+          <li><b>Internet</b><span>Not needed</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOCS -->
+<section class="band band--white" id="docs">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Guides</p>
+      <h2>Help in plain English, whenever you need it.</h2>
+      <p>The short guides are below. The full guide is also built into the app, in Parent Mode under <strong>User guide</strong>, so you can look things up without the internet.</p>
+    </div>
+    <div class="docs">
+      <div class="docs-nav" role="tablist" aria-label="Guides" id="docs-nav">
+        <button role="tab" id="dt-parents" aria-controls="doc-parents" aria-selected="true" data-doc="parents">Parents and carers<small>Install, set up, make it theirs</small></button>
+        <button role="tab" id="dt-staff" aria-controls="doc-staff" aria-selected="false" data-doc="staff" tabindex="-1">Teachers and staff<small>School Mode in 10 minutes</small></button>
+        <button role="tab" id="dt-slt" aria-controls="doc-slt" aria-selected="false" data-doc="slt" tabindex="-1">Therapists<small>Where the settings live</small></button>
+        <button role="tab" id="dt-device" aria-controls="doc-device" aria-selected="false" data-doc="device" tabindex="-1">Choosing a device<small>The Dell 7212, and alternatives</small></button>
+        <button role="tab" id="dt-sheet" aria-controls="doc-sheet" aria-selected="false" data-doc="sheet" tabindex="-1">One-page set-up sheet<small>To print and keep by the device</small></button>
+        <button role="tab" id="dt-help" aria-controls="doc-help" aria-selected="false" data-doc="help" tabindex="-1">If something goes wrong<small>PINs, sound, buttons, questions</small></button>
+        <button role="tab" id="dt-all" aria-controls="doc-all" aria-selected="false" data-doc="all" tabindex="-1">All the guides<small>The full guide, security, clinical review</small></button>
+      </div>
+
+      <div>
+        <article class="doc" id="doc-parents" role="tabpanel" aria-labelledby="dt-parents">
+          <h3>Getting started: parents and carers</h3>
+          <p>Rugged Speech has big buttons with pictures and words. When your child presses them, the tablet says the words out loud. It works just the same with the wifi off.</p>
+          <h4>What you need</h4>
+          <ul>
+            <li>A <strong>Windows 10 or 11</strong> tablet or computer, or a <strong>Mac</strong>. A touchscreen is best, but a mouse works.</li>
+            <li>The installer: <strong>Rugged Speech Test Setup 0.0.1.exe</strong> on Windows, or the disk image for your Mac (Apple silicon or Intel).</li>
+            <li>About 10 minutes, and a quiet moment to choose a voice with your child.</li>
+          </ul>
+          <h4>The first set-up</h4>
+          <ol>
+            <li><strong>Whose device is this?</strong> A name makes it "Lucy's device", shown along the top, so anyone who finds it knows whose it is.</li>
+            <li><strong>Choose a voice.</strong> Press <strong>Try it</strong> and pick the one your child likes best.</li>
+            <li><strong>Choose how big the buttons are.</strong> Fewer, bigger buttons are easier. Once it's set, try not to change it.</li>
+            <li><strong>Pictures and words.</strong> Drawn pictures or emoji; pictures and words, pictures only, or words only.</li>
+            <li><strong>What pressing does.</strong> For a child just starting, <em>Say the word straight away</em> is usually best.</li>
+            <li><strong>Colours,</strong> then a <strong>Parent PIN</strong>. Write down the four-word recovery code.</li>
+          </ol>
+          <div class="shot"><img src="screens/setup-8-pin-and-code.png" alt="Setting the Parent PIN, then the four-word recovery code" loading="lazy"></div>
+          <h4>10 minutes in Parent Mode</h4>
+          <ol>
+            <li><strong>People and Places</strong>: add the people and places your child talks about, with a photo and your voice.</li>
+            <li><strong>My body</strong>: make the figure look like your child, including hair, a head covering such as a hijab, turban or kippah, a wheelchair or other equipment.</li>
+            <li><strong>About me and Medical</strong>: anyone can read these with one press, so only write what you're happy to share.</li>
+            <li><strong>Quick Access</strong>: choose the six top buttons, such as Break, Toilet, Games or Traffic light.</li>
+            <li><strong>Look and Seasons</strong>: pick a favourite colour, and choose which celebrations your child sees in Games.</li>
+            <li><strong>School</strong>: only if a school will use it. Turn on School Mode and give staff a School PIN.</li>
+          </ol>
+          <div class="shot"><img src="screens/parent-quick-access.png" alt="Choosing the Quick Access buttons along the top" loading="lazy"></div>
+          <h4>A few good habits</h4>
+          <ul>
+            <li><strong>Wait.</strong> After you ask something, give plenty of time before asking again.</li>
+            <li><strong>Keep buttons where they are.</strong> Knowing where a button is, is how a child gets quick.</li>
+            <li><strong>Start small.</strong> A few words your child really wants (more, drink, help, stop) beat a page full.</li>
+            <li><strong>Ask your speech and language therapist</strong> to look at the words and settings with you.</li>
+          </ul>
+          <p><a class="link-arrow" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/getting-started-parents.md">The full guide for parents <svg width="18" height="18"><use href="#i-arrow"/></svg></a></p>
+        </article>
+
+        <article class="doc" id="doc-staff" role="tabpanel" aria-labelledby="dt-staff" hidden>
+          <h3>Getting started: teachers and staff</h3>
+          <p>For teachers, teaching assistants, key workers and SENCos. Each child has their own device, with their own words, pictures, voice and settings. There are no pupil accounts or class lists.</p>
+          <div class="shot"><img src="screens/school-button.png" alt="The School Mode button, next to Parent Mode on the child's screen" loading="lazy"></div>
+          <h4>Turning School Mode on (once)</h4>
+          <ol>
+            <li>Whoever has the Parent PIN opens <strong>Parent Mode</strong>, then <strong>School</strong>, then <strong>Turn School Mode on&hellip;</strong></li>
+            <li>They choose a four-number <strong>School PIN</strong>, to share only with the staff who need it.</li>
+            <li>A <strong>School Mode</strong> button appears next to Parent Mode. Nothing on the child's screen moves.</li>
+          </ol>
+          <p>School Mode closes itself after 10 minutes without use. If the School PIN is forgotten, the parent can choose a new one, so nobody gets locked out.</p>
+          <h4>Your first 10 minutes</h4>
+          <ol>
+            <li>Look at <strong>Today</strong>.</li>
+            <li>Fill in <strong>Pupil and school</strong>.</li>
+            <li>Read <strong>Safeguarding</strong> and add your designated safeguarding lead (DSL).</li>
+            <li>Choose any <strong>Classroom set-up</strong> options you want.</li>
+            <li>Build the <strong>Timetable</strong>.</li>
+            <li>Add <strong>Lesson pages</strong> from the ready-made ones.</li>
+            <li>Agree the <strong>Vocabulary</strong> with the child's therapist.</li>
+            <li>Set a first <strong>Target</strong>.</li>
+            <li>Agree who writes <strong>Notes</strong>.</li>
+            <li>Print a <strong>Handover sheet</strong> for supply staff.</li>
+          </ol>
+          <div class="shot"><img src="screens/school-today.png" alt="The Today page in School Mode" loading="lazy"></div>
+          <h4>Supporting communication</h4>
+          <ul>
+            <li><strong>Model it.</strong> Press the buttons yourself as you talk ("Let's get your <strong>coat</strong> on"). You don't need to ask the child to press anything.</li>
+            <li><strong>Wait.</strong> Count to ten in your head. <strong>Give me time</strong> lets the child tell you they're thinking.</li>
+            <li><strong>Respect the traffic light.</strong> Red: please leave me. Amber: talk gently and wait. Green: happy to talk.</li>
+            <li><strong>Treat a break request as communication,</strong> and give the break.</li>
+          </ul>
+          <p><a class="link-arrow" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/getting-started-staff.md">The full guide for staff <svg width="18" height="18"><use href="#i-arrow"/></svg></a></p>
+        </article>
+
+        <article class="doc" id="doc-slt" role="tabpanel" aria-labelledby="dt-slt" hidden>
+          <h3>For speech and language therapists</h3>
+          <p>Most of what you'll want to adjust is in Parent Mode, so set it up alongside the family, or ask them for the Parent PIN during a session. School Mode has the same vocabulary tools for working with school staff.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>You want to</th><th>Where it is</th></tr></thead>
+              <tbody>
+                <tr><td>Change, hide or add words</td><td>Parent Mode &rarr; <strong>Boards</strong>. Hidden words leave an empty space.</td></tr>
+                <tr><td>Bring words in gradually</td><td>Parent Mode &rarr; <strong>Learning</strong> &rarr; Word stages</td></tr>
+                <tr><td>Highlight target words</td><td>Parent Mode &rarr; <strong>Learning</strong> &rarr; Focus words</td></tr>
+                <tr><td>Change what a press does</td><td>Parent Mode &rarr; <strong>Access</strong> &rarr; When a button is pressed</td></tr>
+                <tr><td>Read sentences word by word</td><td>Parent Mode &rarr; <strong>Access</strong> &rarr; How a sentence is read out</td></tr>
+                <tr><td>Set up switch scanning</td><td>Parent Mode &rarr; <strong>Access</strong> &rarr; Scanning (one or two switches)</td></tr>
+                <tr><td>Fix how a name is said</td><td>Parent Mode &rarr; <strong>Access</strong> &rarr; Say it like this</td></tr>
+                <tr><td>Adjust the colour key</td><td>Parent Mode &rarr; <strong>Look</strong></td></tr>
+                <tr><td>See which words are used</td><td>Parent Mode &rarr; <strong>Learning</strong> &rarr; Word counts (off by default)</td></tr>
+                <tr><td>Share a page with another device</td><td>Parent Mode &rarr; <strong>My Pages</strong> &rarr; Share this page (.obf)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="shot"><img src="screens/talk.png" alt="The Talk page with core words and folders" loading="lazy"></div>
+          <p><a class="link-arrow" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/clinical-review.md">Read the clinical review <svg width="18" height="18"><use href="#i-arrow"/></svg></a></p>
+        </article>
+
+        <article class="doc" id="doc-device" role="tabpanel" aria-labelledby="dt-device" hidden>
+          <h3>Choosing a device</h3>
+          <p>We build and photograph Rugged Speech on the <strong>Dell Latitude 7212 Rugged Extreme</strong>, a tough 11.6-inch Windows tablet. Other Windows 10 and 11 tablets and laptops work too, and so do Macs.</p>
+          <h4>Recommended models</h4>
+          <ul>
+            <li><strong>Dell Latitude 7212 Rugged Extreme</strong> (what we use)</li>
+            <li>Other rugged Windows tablets, such as Panasonic Toughbook and Getac</li>
+            <li>Any Windows touchscreen tablet or laptop in a sturdy, child-proof case</li>
+            <li>A Mac (Apple silicon or Intel) in a sturdy case</li>
+          </ul>
+          <h4>System requirements</h4>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr><th>Operating system</th><td>Windows 10 or 11, 64-bit (not in S mode), or a recent version of macOS</td></tr>
+                <tr><th>Processor</th><td>Intel or AMD (x64)</td></tr>
+                <tr><th>Memory</th><td>4 GB or more</td></tr>
+                <tr><th>Storage</th><td>500 MB free, plus room for photos and music</td></tr>
+                <tr><th>Screen</th><td>Touchscreen, 10 inches or larger. A mouse also works.</td></tr>
+                <tr><th>Internet</th><td>Not needed</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h4>Getting the tablet ready</h4>
+          <ol>
+            <li>Install the English (UK) voices in <strong>Settings &rarr; Time and language &rarr; Speech</strong>, while you have wifi. After that, no internet is needed.</li>
+            <li>Turn the volume up, and try the voices during Rugged Speech's first set-up.</li>
+            <li>Set a <strong>Windows sign-in</strong> (or a Mac login), and turn on device encryption if it's available (BitLocker, or FileVault on a Mac). The Parent PIN protects the settings, not the device itself.</li>
+            <li>Label the tablet with your child's name, and fill in <strong>Lost mode</strong> in Parent Mode.</li>
+          </ol>
+                  </article>
+
+        <article class="doc" id="doc-sheet" role="tabpanel" aria-labelledby="dt-sheet" hidden>
+          <h3>Setting up Rugged Speech</h3>
+          <p>Keep this by the tablet, or inside the front cover of the child's communication folder.</p>
+          <h4>Everyday use</h4>
+          <ul>
+            <li>The six buttons along the top (to begin with: Home, Help, Yes, No, Favourites, Keyboard) are always there. <strong>Help</strong> can never be removed.</li>
+            <li>Every screen except Home has a <strong>Home</strong> button at the top left.</li>
+            <li><strong>Give me time</strong> says "I know what I want to say. Please give me a moment."</li>
+            <li><strong>Parent Mode</strong> (top right) opens the settings: one press, then your PIN.</li>
+            <li>Nothing is ever said unless somebody presses something.</li>
+          </ul>
+          <h4>The three best things to do in the first week</h4>
+          <ol>
+            <li><strong>Press the buttons yourself as you talk,</strong> so your child sees how it works. Then wait.</li>
+            <li><strong>Add the people and places that matter,</strong> with real photos and your own voice.</li>
+            <li><strong>Fill in About me and Medical,</strong> and save a backup.</li>
+          </ol>
+          <div class="shot"><img src="screens/home.png" alt="The Home screen, with Talk, Keyboard, My Day, Favourites, My Pages and Feelings and Help" loading="lazy"></div>
+          <p><a class="link-arrow" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/setup-sheet.md">The printable sheet <svg width="18" height="18"><use href="#i-arrow"/></svg></a></p>
+        </article>
+
+        <article class="doc" id="doc-help" role="tabpanel" aria-labelledby="dt-help" hidden>
+          <h3>If something goes wrong</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>What happened</th><th>What to do</th></tr></thead>
+              <tbody>
+                <tr><td>I forgot the Parent PIN</td><td>On the PIN screen, press <strong>Forgotten your PIN?</strong> and type the recovery code you wrote down.</td></tr>
+                <tr><td>My Mac says the app can't be opened</td><td>It's not signed with an Apple Developer ID yet. Go to <strong>System Settings &rarr; Privacy &amp; Security</strong> and press <strong>Open Anyway</strong>. You only need to do this once.</td></tr>
+                <tr><td>I forgot the School PIN</td><td>Ask whoever has the Parent PIN to choose a new one in Parent Mode, under <strong>School</strong>.</td></tr>
+                <tr><td>Too many wrong PINs</td><td>The keypad makes you wait a little. This also stops a child pressing numbers for ever.</td></tr>
+                <tr><td>The app closed by itself</td><td>Open it again. The sentence and the page you were on come back.</td></tr>
+                <tr><td>There's no sound</td><td>Turn up the tablet's volume, then check <strong>Access &rarr; Voice volume</strong> and press <strong>Hear this voice</strong>.</td></tr>
+                <tr><td>A button is in the wrong place</td><td>In Parent Mode, <strong>Boards</strong>, drag it back, or use the up and down arrows.</td></tr>
+                <tr><td>The tablet is lost</td><td>If Lost mode was set up, the screen shows who to return it to. Set it up <em>before</em> you need it.</td></tr>
+                <tr><td>I want to remove it</td><td>On Windows, use <strong>Add or remove programs</strong>. It asks whether to keep or delete your child's pages, photos and settings. On a Mac, drag the app to the Bin.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h4>Questions people often ask</h4>
+          <div>
+            <details><summary>Does it need wifi?</summary><p>No. It never uses the internet. New versions come as a new installer that you choose to run.</p></details>
+            <details><summary>Where is my child's information kept?</summary><p>On the tablet only. The only way anything leaves it is a file an adult chooses to save, such as a backup.</p></details>
+            <details><summary>Does it cost anything?</summary><p>No. Rugged Speech is free, with no subscription and no in-app purchases.</p></details>
+            <details><summary>Can school staff see what my child said?</summary><p>Only if the activity record or Recent is turned on. Both are off to begin with, and both have a Clear button and an off switch.</p></details>
+            <details><summary>Can a school set it up for a whole class?</summary><p>No. It's one device for one child. A good set-up can be saved as a backup, and single pages can be shared as files.</p></details>
+            <details><summary>Does the Parent PIN lock the tablet?</summary><p>No. It keeps the settings safe. Your child can still switch to other programs. Use your Windows or Mac sign-in to protect the device itself.</p></details>
+          </div>
+        </article>
+
+        <article class="doc" id="doc-all" role="tabpanel" aria-labelledby="dt-all" hidden>
+          <h3>All the guides</h3>
+          <p>Each one opens in a new tab. The full guide is also inside the app.</p>
+          <div class="all-docs">
+            <a class="doc-card" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/user-guide.md"><b>The full guide</b><span>Every screen and setting, explained</span></a>
+            <a class="doc-card" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/getting-started-parents.md"><b>Parents and carers</b><span>From the box to first words</span></a>
+            <a class="doc-card" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/getting-started-staff.md"><b>Teachers and staff</b><span>School Mode, step by step</span></a>
+            <a class="doc-card" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/setup-sheet.md"><b>Setup sheet</b><span>One page, to print</span></a>
+            <a class="doc-card" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/clinical-review.md"><b>Clinical review</b><span>For speech and language therapists</span></a>
+            <a class="doc-card" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/features.md"><b>Everything it can do</b><span>The full list of features</span></a>
+            <a class="doc-card" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/security.md"><b>Privacy and security</b><span>For data protection leads and IT</span></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="band" id="team">
+  <div class="wrap team">
+    <div class="section-head" style="margin:0">
+      <p class="eyebrow">Behind the project</p>
+      <h2>Made in Barnsley, as part of Community Stack.</h2>
+      <p>Rugged Speech is a Community Stack project. Community Stack builds shared tools for communities across the North of England and beyond, with a simple approach: build it, prove it, share it. That's why Rugged Speech is free and open for anyone to use.</p>
+      <ul class="status-list" id="status" aria-label="Where we are">
+        <li><span class="pill pill--done">Ready</span><span>The Windows and Mac apps work and have been carefully tested. Every new feature goes to both at once.</span></li>
+        <li><span class="pill pill--todo">Next</span><span>A speech and language therapist review of the starter words, and trying it with children.</span></li>
+        <li><span class="pill pill--todo">Coming soon</span><span>iPad and iPhone, and Android, with the same promises: no wifi needed, and nothing about your child leaving the device.</span></li>
+      </ul>
+      <a class="cs-badge" href="https://www.communitystack.io/"><img src="brand/community-stack-icon.png" alt="" width="28" height="28">Part of Community Stack</a>
+    </div>
+    <div class="people">
+      <figure class="person">
+        <div class="pic"><img src="team/ethan-sumner.jpg" alt="Ethan Sumner, smiling outdoors in a Community Stack polo shirt" style="object-position:50% 30%" loading="lazy"></div>
+        <figcaption><b>Ethan Sumner</b><span>Founder and CEO, Community Stack</span></figcaption>
+      </figure>
+      <figure class="person">
+        <div class="pic"><img src="team/melissa-dunmore.jpg" alt="Melissa Dunmore, smiling indoors" style="object-position:50% 40%" loading="lazy"></div>
+        <figcaption><b>Melissa Dunmore</b><span>Data Engineer, Community Stack</span></figcaption>
+      </figure>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="feedback" id="feedback">
+      <div>
+        <p class="eyebrow">Feedback and suggestions</p>
+        <h3>We'd love to hear from you.</h3>
+        <p>Tell us what works, what doesn't, and what you'd like to see next. Ideas for new words, games, devices or features are all welcome, from families, school staff, therapists and young people who use AAC.</p>
+      </div>
+      <div class="email-box">
+        <span class="email-label">Email us at</span>
+        <a class="email" id="email" href="mailto:aac@communitystack.io?subject=Rugged%20Speech%20feedback">aac@communitystack.io</a>
+        <button type="button" class="btn btn--yellow" id="copy-email">Copy email address</button>
+        <span class="copy-msg" id="copy-msg" aria-live="polite"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section class="band band--yellow" id="install">
+  <div class="wrap install">
+    <div style="display:grid;gap:22px">
+      <p class="eyebrow">Free for every family and school</p>
+      <h2>Get Rugged Speech.</h2>
+      <p style="font-size:var(--step-1);max-width:40ch">No subscription, no account, nothing to pay. If you can double-click, you can install it.</p>
+      <div class="soon" aria-label="Where it runs"><span>Windows: available now</span><span>Mac: available now</span><span>iPad and iPhone: coming soon</span><span>Android: coming soon</span></div>
+      <div class="cta-row">
+        <a class="btn btn--navy" href="https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Setup-Windows.exe">Download for Windows <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--navy" href="https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Mac-AppleSilicon.dmg">Download for Mac (Apple silicon) <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost" href="https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Mac-Intel.dmg">Mac with an Intel chip</a>
+        <a class="btn btn--ghost" href="#docs" data-doc="parents">How to set it up</a>
+      </div>
+    </div>
+    <div class="install-card">
+      <div class="need"><span>Windows 10 or 11, or a Mac</span><span>Touchscreen or mouse</span><span>No wifi needed</span><span>No administrator password</span></div>
+      <h3 class="install-os">On Windows</h3>
+      <ol>
+        <li>Copy <strong>Rugged Speech Test Setup</strong> onto the tablet.</li>
+        <li>Double-click it. If Windows warns you, press <strong>More info</strong>, then <strong>Run anyway</strong>.</li>
+        <li>Follow the steps. It opens by itself when it's finished.</li>
+        <li>Answer the short set-up, and <strong>write down your recovery code</strong>.</li>
+      </ol>
+      <h3 class="install-os">On a Mac</h3>
+      <ol>
+        <li>Choose the download for your Mac: Apple silicon (M1 or later), or Intel. The Apple menu, then <strong>About This Mac</strong>, says which you have.</li>
+        <li>Open the disk image and drag <strong>Rugged Speech Test</strong> onto <strong>Applications</strong>.</li>
+        <li>The first time, the Mac says it can't be opened. Go to <strong>System Settings, Privacy &amp; Security</strong> and press <strong>Open Anyway</strong>. You only need to do this once.</li>
+        <li>Answer the short set-up, and <strong>write down your recovery code</strong>.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#top" style="color:var(--white)"><svg style="color:var(--yellow)"><use href="#logo" style="fill:var(--white)"/></svg><span>Rugged Speech</span></a>
+        <p class="tag">Built to be dropped.</p>
+        <p class="foot-blurb">Everyday AAC that goes wherever your child goes: home, school, the park and back again.</p>
+        <a class="cs-foot" href="https://www.communitystack.io/"><img src="brand/community-stack-icon.png" alt="" width="28" height="28"><span>Part of Community Stack</span></a>
+      </div>
+      <div><h4>Who it's for</h4><ul><li><a href="#families">Parents and carers</a></li><li><a href="#schools">SENCos and schools</a></li><li><a href="#slts">Speech and language therapists</a></li><li><a href="#try">Try a board</a></li></ul></div>
+      <div><h4>Guides</h4><ul><li><a href="#docs" data-doc="parents">Parents and carers</a></li><li><a href="#docs" data-doc="staff">Teachers and staff</a></li><li><a href="#docs" data-doc="slt">Therapists</a></li><li><a href="#devices">Choosing a device</a></li><li><a href="#docs" data-doc="help">If something goes wrong</a></li></ul></div>
+      <div><h4>About</h4><ul><li><a href="#team">Behind the project</a></li><li><a href="#status">Where we are</a></li><li><a href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/security.md">Privacy and security</a></li><li><a href="https://github.com/ESumner404/RuggedSpeechDev">For developers</a></li><li><a href="#feedback">Feedback and suggestions</a></li></ul></div>
+    </div>
+    <div class="fineprint">
+      <span>Community Stack is a trading name of Sumner Development Operations Group LTD. Company No: 14730903 | VAT: GB502578695</span>
+      <span>Rugged Speech is free and open source. It is a communication aid, not a medical device.</span>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+(function () {
+  // Mobile nav
+  var toggle = document.getElementById('nav-toggle');
+  var links = document.getElementById('nav-links');
+  toggle.addEventListener('click', function () {
+    var open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  links.addEventListener('click', function (e) { if (e.target.closest('a')) { links.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); } });
+
+  // Live board
+  var FK = { people: 'var(--fk-people)', doing: 'var(--fk-doing)', describe: 'var(--fk-describe)', things: 'var(--fk-things)', places: 'var(--fk-places)', social: 'var(--fk-social)', little: 'var(--fk-little)', no: 'var(--fk-no)' };
+  // Pictures are the app's own drawn symbols (src/renderer/symbols/library.ts)
+  var WORDS = [
+    ["I", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Crect%20x%3D%2224%22%20y%3D%2248%22%20width%3D%226%22%20height%3D%2212%22%20rx%3D%222%22%20fill%3D%22%234b5563%22%2F%3E%3Crect%20x%3D%2234%22%20y%3D%2248%22%20width%3D%226%22%20height%3D%2212%22%20rx%3D%222%22%20fill%3D%22%234b5563%22%2F%3E%3Crect%20x%3D%2223%22%20y%3D%2230%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%226%22%20fill%3D%22%233b82f6%22%2F%3E%3Cpath%20d%3D%22M23%2034L14%2020%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M41%2034L50%2020%22%20fill%3D%22none%22%2F%3E%3Cellipse%20cx%3D%2213%22%20cy%3D%2218%22%20rx%3D%225%22%20ry%3D%225.5%22%20fill%3D%22%23f4b98c%22%2F%3E%3Cellipse%20cx%3D%2251%22%20cy%3D%2218%22%20rx%3D%225%22%20ry%3D%225.5%22%20fill%3D%22%23f4b98c%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2220%22%20r%3D%2210%22%20fill%3D%22%23f4b98c%22%2F%3E%3Cpath%20d%3D%22M21%2019%20q11%20-14%2022%200%20l-2%20-2%20h-16%20z%22%20fill%3D%22%23a16207%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "people"],
+    ["want", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M6%2052%20q4%20-8%2014%20-8%20h14%20q4%200%204%204%20t-4%204%20h-12%20M34%2048%20h8%20q6%200%2010%20-6%20l4%20-6%22%20fill%3D%22%23f4b98c%22%2F%3E%3Cpath%20d%3D%22M44%2026%20l3%206%20l7%201%20l-5%205%20l1%207%20l-6%20-4%20l-6%204%20l1%20-7%20l-5%20-5%20l7%20-1%20z%22%20fill%3D%22%23facc15%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "doing"],
+    ["like", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Crect%20x%3D%2210%22%20y%3D%2228%22%20width%3D%2212%22%20height%3D%2226%22%20rx%3D%223%22%20fill%3D%22%233b82f6%22%2F%3E%3Cpath%20d%3D%22M26%2054%20h20%20q8%200%208%20-8%20l-2%20-14%20q-1%20-6%20-8%20-6%20h-8%20l2%20-10%20q1%20-8%20-6%20-8%20l-6%2018%20v28%20z%22%20fill%3D%22%23facc15%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "doing"],
+    ["more", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2224%22%20fill%3D%22%2322c55e%22%2F%3E%3Cpath%20d%3D%22M32%2018%20v28%20M18%2032%20h28%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%227%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "little"],
+    ["no", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2224%22%20fill%3D%22%23ef4444%22%2F%3E%3Cpath%20d%3D%22M18%2018%20L46%2046%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%227%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M46%2018%20L18%2046%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%227%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "no"],
+    ["yes", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2224%22%20fill%3D%22%2322c55e%22%2F%3E%3Cpath%20d%3D%22M19%2033%20l9%209%20l18%20-20%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%227%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "social"],
+    ["help", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2225%22%20fill%3D%22%23ef4444%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2211%22%20fill%3D%22%23ffffff%22%2F%3E%3Cpath%20d%3D%22M15%2015%20L24%2024%20M49%2015%20L40%2024%20M15%2049%20L24%2040%20M49%2049%20L40%2040%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M14%2014%20l10%2010%20M50%2014%20l-10%2010%20M14%2050%20l10%20-10%20M50%2050%20l-10%20-10%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%226%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2211%22%20fill%3D%22%23fee2e2%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "social"],
+    ["go", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Crect%20x%3D%2224%22%20y%3D%2248%22%20width%3D%226%22%20height%3D%2212%22%20rx%3D%222%22%20fill%3D%22%234b5563%22%2F%3E%3Crect%20x%3D%2234%22%20y%3D%2248%22%20width%3D%226%22%20height%3D%2212%22%20rx%3D%222%22%20fill%3D%22%234b5563%22%2F%3E%3Crect%20x%3D%2223%22%20y%3D%2230%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%226%22%20fill%3D%22%2322c55e%22%2F%3E%3Cpath%20d%3D%22M23%2034L18%2046%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M41%2034L46%2046%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2220%22%20r%3D%2210%22%20fill%3D%22%23f4b98c%22%2F%3E%3Cpath%20d%3D%22M21%2019%20q11%20-14%2022%200%20l-2%20-2%20h-16%20z%22%20fill%3D%22%23a16207%22%2F%3E%3Cpath%20d%3D%22M46%2052%20h12%20m-4%20-4%20l4%204%20l-4%204%22%20fill%3D%22none%22%20stroke-width%3D%223%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "doing"],
+    ["drink", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M14%2014%20h36%20l-5%2042%20h-26%20z%22%20fill%3D%22%2393c5fd%22%2F%3E%3Cpath%20d%3D%22M34%204L38%2014%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M16%2026%20h32%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "things"],
+    ["apple", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M32%2020%20C22%2012%208%2020%2010%2036%20C12%2052%2024%2058%2032%2054%20C40%2058%2052%2052%2054%2036%20C56%2020%2042%2012%2032%2020%20z%22%20fill%3D%22%23ef4444%22%2F%3E%3Cpath%20d%3D%22M32%2020%20q0%20-8%206%20-12%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M36%2012%20q8%20-4%2010%202%20q-8%204%20-10%20-2%20z%22%20fill%3D%22%2322c55e%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "things"],
+    ["park", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Crect%20x%3D%2228%22%20y%3D%2234%22%20width%3D%228%22%20height%3D%2222%22%20rx%3D%222%22%20fill%3D%22%23a16207%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2224%22%20r%3D%2218%22%20fill%3D%22%2322c55e%22%2F%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2232%22%20r%3D%2211%22%20fill%3D%22%2322c55e%22%2F%3E%3Ccircle%20cx%3D%2244%22%20cy%3D%2232%22%20r%3D%2211%22%20fill%3D%22%2322c55e%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "places"],
+    ["home", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M6%2030%20L32%208%20L58%2030%20z%22%20fill%3D%22%23ef4444%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2230%22%20width%3D%2240%22%20height%3D%2226%22%20rx%3D%222%22%20fill%3D%22%23fde68a%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2238%22%20width%3D%2212%22%20height%3D%2218%22%20rx%3D%222%22%20fill%3D%22%23a16207%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2234%22%20width%3D%228%22%20height%3D%228%22%20rx%3D%221%22%20fill%3D%22%2393c5fd%22%2F%3E%3Crect%20x%3D%2242%22%20y%3D%2234%22%20width%3D%226%22%20height%3D%228%22%20rx%3D%221%22%20fill%3D%22%2393c5fd%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "places"],
+    ["look", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cellipse%20cx%3D%2232%22%20cy%3D%2232%22%20rx%3D%2226%22%20ry%3D%2216%22%20fill%3D%22%23ffffff%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2211%22%20fill%3D%22%233b82f6%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%225%22%20fill%3D%22%231f2937%22%2F%3E%3Ccircle%20cx%3D%2235%22%20cy%3D%2229%22%20r%3D%222%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "doing"],
+    ["happy", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2225%22%20fill%3D%22%23facc15%22%2F%3E%3Ccircle%20cx%3D%2226%22%20cy%3D%2230%22%20r%3D%221.8%22%20fill%3D%22%231f2937%22%2F%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2230%22%20r%3D%221.8%22%20fill%3D%22%231f2937%22%2F%3E%3Cpath%20d%3D%22M26%2037q6%207%2012%200%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "describe"],
+    ["stop", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M22%206%20h20%20l16%2016%20v20%20l-16%2016%20h-20%20l-16%20-16%20v-20%20z%22%20fill%3D%22%23ef4444%22%2F%3E%3Cpath%20d%3D%22M19%2032%20h26%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%227%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "no"],
+    ["please", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M32%2056%20C22%2048%2014%2042%2014%2032%20L22%2014%20L32%2026%20L42%2014%20L50%2032%20C50%2042%2042%2048%2032%2056%20z%22%20fill%3D%22%23f4b98c%22%2F%3E%3Cpath%20d%3D%22M32%2026L32%2050%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "social"]
+  ];
+  var grid = document.getElementById('grid');
+  var strip = document.getElementById('strip');
+  var note = document.getElementById('try-note');
+  var sentence = [];
+  var synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
+
+  function say(text, onWord) {
+    if (!synth) { note.textContent = 'Your browser has no voice, so the words just show here. On the tablet, Rugged Speech says them out loud.'; return; }
+    try {
+      synth.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-GB'; u.rate = 0.95;
+      if (onWord) {
+        u.onboundary = function (ev) { if (ev.name === 'word' || ev.name === undefined) onWord(text.slice(0, ev.charIndex).split(/\s+/).filter(Boolean).length); };
+        u.onend = function () { onWord(-1); };
+      }
+      synth.speak(u);
+    } catch (e) { /* no voice available */ }
+  }
+  function render(lit) {
+    if (!sentence.length) { strip.innerHTML = '<span class="ph">Press the words to build a sentence</span>'; return; }
+    strip.innerHTML = '';
+    sentence.forEach(function (w, i) {
+      var s = document.createElement('span');
+      s.className = 'w' + (i === lit ? ' lit' : '');
+      s.textContent = w;
+      strip.appendChild(s);
+    });
+  }
+  WORDS.forEach(function (w) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'tile'; b.style.background = FK[w[2]];
+    b.innerHTML = '<img class="sym" src="' + w[1] + '" alt="" aria-hidden="true" draggable="false"><span>' + w[0] + '</span>';
+    b.addEventListener('click', function () {
+      if (sentence.length < 8) sentence.push(w[0]);
+      render(); say(w[0]);
+    });
+    grid.appendChild(b);
+  });
+  document.getElementById('speak').addEventListener('click', function () {
+    if (!sentence.length) return;
+    say(sentence.join(' '), function (i) { render(i); });
+  });
+  document.getElementById('clear').addEventListener('click', function () { sentence = []; render(); if (synth) synth.cancel(); });
+  document.getElementById('undo').addEventListener('click', function () { sentence.pop(); render(); });
+  document.getElementById('gmt').addEventListener('click', function () { say('I know what I want to say. Please give me a moment.'); });
+
+  // Tour
+  var TOUR = [
+    { id: 'talk', label: 'Talk', title: 'Talk', body: 'Big word buttons, with folders for Food, Feelings, Play, People, Places and Doing. Your child can press one word at a time, or build a sentence along the top and press Speak.',
+      ticks: ['A small set of first words to start with, which you can add to', 'Home and Back are always in the same place', 'Simple drawn pictures, emoji, or your own photos'], img: 'talk-sentence', alt: 'The Talk page with a sentence being built along the top', extra: ['talk', 'parent-look-pink'], extraAlt: ['The Talk page', 'The Talk page in pink, a favourite colour'] },
+    { id: 'feel', label: 'Feelings & My body', title: 'Feelings, Help and My body', body: 'Your child can say how they feel and how much: a little, medium or a lot. They can point to where it hurts on a figure that looks like them, and say it: "My tummy hurts a lot."',
+      ticks: ['The figure can have a wheelchair, a hijab, turban or kippah, hearing aids, a feeding tube or a pump', 'Always dressed. The private area is only ever called "under my pants"', 'Calm has a breathing guide and a quiet-time timer'], img: 'body-pointing', alt: 'My body, pointing to where it hurts', extra: ['feelings', 'calm'], extraAlt: ['Feelings with a little, medium and a lot', 'The Calm breathing guide'] },
+    { id: 'kb', label: 'Keyboard', title: 'Keyboard', body: 'For children who can spell, a full-screen keyboard. It suggests words to save effort, but your child always chooses.',
+      ticks: ['Show puts words on the screen without saying them out loud', 'No-pressure mode clears everything else away', 'Saved phrases and conversation starters'], img: 'keyboard', alt: 'The full-screen keyboard with word suggestions' },
+    { id: 'games', label: 'Games', title: 'Games', body: 'Find the word, Snap, a sentence-building Rollercoaster, Draw, Jokes, Music with playlists, a Piano with tunes to follow, Seasons, and a Christmas tree to decorate. Practice that feels like play.',
+      ticks: ['No clocks, no scores and nothing flashing', 'After two wrong tries, the right answer is pointed to', 'Nothing plays until your child presses something'], img: 'games', alt: 'The Games page', extra: ['game-piano', 'game-draw'], extraAlt: ['The Piano game', 'Draw'] },
+    { id: 'seasons', label: 'Colours & seasons', title: 'Colours, seasons and celebrations', body: 'Pick a favourite colour, such as pink or orange, and the whole app takes it on. Seasons has words and games for spring to winter, and for Christmas, Easter, Halloween, Bonfire Night, Diwali, Eid and Hanukkah.',
+      ticks: ['Parents choose which celebrations show, change the words, and add their own', 'Make a tree: hang baubles, lights and presents on a Christmas tree', 'Larger text scrolls, so nothing is ever hidden'], img: 'parent-look-pink', alt: 'The Look page in Parent Mode with the favourite colour pink chosen', extra: ['game-seasons', 'game-tree'], extraAlt: ['Seasons, with words for Christmas', 'Make a tree, a Christmas tree to decorate'] },
+    { id: 'safe', label: 'Medical Info & Lost mode', title: 'Medical Info, About me and Lost mode', body: 'Anyone can press Medical Info, with no PIN, to see allergies, medicines, an emergency plan and who to call. A phone camera can read it too.',
+      ticks: ['About me: a one-page communication passport for anyone new', 'Lost mode: "This is a critical communication device. Please return it to \u2026"', 'Only the Parent PIN can turn Lost mode off'], img: 'medical-info', alt: 'Medical Info, with a code a phone can read', extra: ['lost-mode', 'traffic-light'], extraAlt: ['Lost mode', 'The traffic light'] }
+  ];
+  var tabsEl = document.getElementById('tour-tabs');
+  var panelEl = document.getElementById('tour-panel');
+  function showTour(i) {
+    var t = TOUR[i];
+    Array.prototype.forEach.call(tabsEl.children, function (b, j) { b.setAttribute('aria-selected', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
+    panelEl.setAttribute('aria-labelledby', 'tt-' + t.id);
+    var extra = '';
+    if (t.extra) extra = '<div class="shot-pair">' + t.extra.map(function (e, k) { return '<div class="shot"><img src="screens/' + e + '.png" alt="' + t.extraAlt[k] + '" loading="lazy"></div>'; }).join('') + '</div>';
+    panelEl.innerHTML = '<div class="panel"><div><div class="shot"><img src="screens/' + t.img + '.png" alt="' + t.alt + '"></div>' + extra + '</div>' +
+      '<div class="panel-copy"><h3>' + t.title + '</h3><p>' + t.body + '</p><ul class="ticks">' + t.ticks.map(function (x) { return '<li><span>' + x + '</span></li>'; }).join('') + '</ul></div></div>';
+  }
+  TOUR.forEach(function (t, i) {
+    var b = document.createElement('button');
+    b.className = 'tab'; b.type = 'button'; b.setAttribute('role', 'tab'); b.id = 'tt-' + t.id; b.textContent = t.label;
+    b.addEventListener('click', function () { showTour(i); });
+    tabsEl.appendChild(b);
+  });
+  tabsEl.addEventListener('keydown', function (e) {
+    var cur = Array.prototype.indexOf.call(tabsEl.children, document.activeElement);
+    if (cur < 0) return;
+    var next = e.key === 'ArrowRight' ? (cur + 1) % TOUR.length : e.key === 'ArrowLeft' ? (cur - 1 + TOUR.length) % TOUR.length : -1;
+    if (next >= 0) { e.preventDefault(); showTour(next); tabsEl.children[next].focus(); }
+  });
+  showTour(0);
+
+  // Copy email
+  var copyBtn = document.getElementById('copy-email');
+  var copyMsg = document.getElementById('copy-msg');
+  copyBtn.addEventListener('click', function () {
+    var addr = document.getElementById('email').textContent;
+    function selectIt() { var r = document.createRange(); r.selectNodeContents(document.getElementById('email')); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); copyMsg.textContent = 'Selected. Press Ctrl+C or Cmd+C to copy.'; }
+    try {
+      navigator.clipboard.writeText(addr).then(function () { copyMsg.textContent = 'Copied to your clipboard.'; }, selectIt);
+    } catch (e) { selectIt(); }
+  });
+
+  // Docs tabs
+  var docsNav = document.getElementById('docs-nav');
+  function showDoc(key) {
+    Array.prototype.forEach.call(docsNav.children, function (b) {
+      var on = b.dataset.doc === key;
+      b.setAttribute('aria-selected', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1;
+      document.getElementById('doc-' + b.dataset.doc).hidden = !on;
+    });
+  }
+  docsNav.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) showDoc(b.dataset.doc); });
+  document.querySelectorAll('a[data-doc]').forEach(function (a) { a.addEventListener('click', function () { showDoc(a.dataset.doc); }); });
+})();
+</script>
+</body>
+</html>

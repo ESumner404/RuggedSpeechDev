@@ -317,7 +317,7 @@ test.describe('newer features, in the real app', () => {
     await exitParentMode(page);
     await spyOnSpeech(page);
     await page.locator('.quick-access-bar__button', { hasText: 'Games' }).click();
-    await expect(page.locator('.games-menu__label')).toHaveText(['Find the word', 'Snap', 'Rollercoaster', 'Draw', 'Jokes', 'Music', 'Piano']);
+    await expect(page.locator('.games-menu__label')).toHaveText(['Find the word', 'Snap', 'Rollercoaster', 'Draw', 'Jokes', 'Music', 'Piano', 'Seasons', 'Make a tree']);
     expect(await allSpoken(page)).toEqual([]);
 
     // Snap

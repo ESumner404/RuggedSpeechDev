@@ -1,3 +1,4 @@
+import { buildMenuTemplate } from './menu';
 import { join } from 'node:path';
 import { readFile, stat, writeFile } from 'node:fs/promises';
 import {
@@ -113,7 +114,8 @@ function createWindow(): BrowserWindow {
     },
   });
 
-  Menu.setApplicationMenu(null);
+  const menuTemplate = buildMenuTemplate(app.name, process.platform);
+  Menu.setApplicationMenu(menuTemplate ? Menu.buildFromTemplate(menuTemplate) : null);
 
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
 

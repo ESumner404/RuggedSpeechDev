@@ -1,18 +1,25 @@
 import { useSignal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
-import { getVoiceClip, musicVolumeSetting, songsSetting } from '../store/db';
-import type { Song } from './songs';
+import { getVoiceClip, musicVolumeSetting, playlistsSetting, songsSetting } from '../store/db';
+import { songsInPlaylist, type Song } from './songs';
 
 // Music: a big tile for each song. A song plays when its tile is pressed, and
-// never by itself. Pause and Stop are always in the same place, and leaving
-// the screen stops the music.
+// never by itself. If an adult has made playlists, they are choices along the
+// top (Everything first), and "Play all" plays that list through, once, from the
+// press. Pause and Stop are always in the same place, and leaving the screen
+// stops the music.
 export function MusicScreen() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const urlRef = useRef<string | null>(null);
   const playing = useSignal<Song | null>(null);
   const paused = useSignal(false);
   const problem = useSignal('');
-  const songs = songsSetting.signal.value;
+  const queue = useRef<Song[]>([]);
+  const listId = useSignal('all');
+  const allSongs = songsSetting.signal.value;
+  const playlists = playlistsSetting.signal.value;
+  const chosenList = playlists.find((list) => list.id === listId.value);
+  const songs = chosenList ? songsInPlaylist(chosenList, allSongs) : allSongs;
 
   function release(): void {
     audioRef.current?.pause();
@@ -42,6 +49,11 @@ export function MusicScreen() {
     const audio = new Audio(url);
     audio.volume = musicVolumeSetting.signal.value;
     audio.addEventListener('ended', () => {
+      const next = queue.current.shift();
+      if (next) {
+        void play(next);
+        return;
+      }
       playing.value = null;
       paused.value = false;
     });
@@ -70,13 +82,28 @@ export function MusicScreen() {
     }
   }
 
+  /** A press on one song plays just that song. */
+  function playOne(song: Song): void {
+    queue.current = [];
+    void play(song);
+  }
+
+  /** A press on "Play all" plays the list through once, in order. */
+  function playAll(): void {
+    const [first, ...rest] = songs;
+    if (!first) return;
+    queue.current = rest;
+    void play(first);
+  }
+
   function stop(): void {
+    queue.current = [];
     release();
     playing.value = null;
     paused.value = false;
   }
 
-  if (songs.length === 0) {
+  if (allSongs.length === 0) {
     return (
       <div class="game-screen game-screen--empty">
         <p class="game-screen__empty-title">No songs yet</p>
@@ -87,14 +114,33 @@ export function MusicScreen() {
 
   return (
     <div class="music-screen">
+      {playlists.length > 0 && (
+        <div class="music-screen__lists" role="group" aria-label="Playlists">
+          {[{ id: 'all', name: 'Everything', emoji: '🎵' }, ...playlists].map((list) => (
+            <button
+              type="button"
+              key={list.id}
+              class={`music-screen__list${listId.value === list.id ? ' music-screen__list--chosen' : ''}`}
+              aria-pressed={listId.value === list.id}
+              onClick={() => (listId.value = list.id)}
+            >
+              <span aria-hidden="true">{list.emoji || '🎵'}</span> {list.name}
+            </button>
+          ))}
+          <button type="button" class="music-screen__list music-screen__play-all" disabled={songs.length === 0} onClick={playAll}>
+            Play all
+          </button>
+        </div>
+      )}
       <div class="music-screen__songs">
+        {songs.length === 0 && <p class="music-screen__none">No songs in this playlist yet.</p>}
         {songs.map((song) => (
           <button
             type="button"
             key={song.id}
             class={`music-screen__song${playing.value?.id === song.id ? ' music-screen__song--playing' : ''}`}
             aria-pressed={playing.value?.id === song.id}
-            onClick={() => void play(song)}
+            onClick={() => playOne(song)}
           >
             <span class="music-screen__emoji" aria-hidden="true">
               {song.emoji || '🎵'}

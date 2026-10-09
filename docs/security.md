@@ -23,7 +23,7 @@ Please read this part. It matters more than the list above.
 - **The PIN does not lock the computer.** A child can still switch to other programs. (There is no supported way to change that on Windows 10 Pro without a different edition.)
 - **Lost mode is a note on the screen, not a tracker.** With no network, nothing can find, lock or wipe a device from afar.
 - **About me and Medical Info are shown without the PIN, on purpose**, so a stranger who has found a child can read them. Only enter what you are comfortable with that.
-- **The installer is not code-signed yet**, so Windows warns on first run. Signing is the next step before wide distribution.
+- **The installer and the Mac disk images are not code-signed yet**, so Windows warns on first run, and a Mac will not open the app by double-click the first time. Signing (and, on a Mac, notarising) is the next step before wide distribution.
 - **It has not been tested on real Windows hardware yet**, and has not had an independent penetration test.
 
 ## What the program does

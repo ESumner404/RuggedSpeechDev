@@ -14,6 +14,36 @@ export type Song = {
   bytes: number;
 };
 
+/** A named list of songs, in the order they play. */
+export type Playlist = {
+  id: string;
+  name: string;
+  emoji: string;
+  songIds: string[];
+};
+
+export const MAX_PLAYLISTS = 12;
+
+export const isPlaylistList = (value: unknown): value is Playlist[] =>
+  Array.isArray(value) &&
+  value.length <= MAX_PLAYLISTS &&
+  value.every((p) => {
+    if (typeof p !== 'object' || p === null) return false;
+    const list = p as Record<string, unknown>;
+    return (
+      typeof list['id'] === 'string' &&
+      typeof list['name'] === 'string' &&
+      typeof list['emoji'] === 'string' &&
+      Array.isArray(list['songIds']) &&
+      list['songIds'].every((id) => typeof id === 'string')
+    );
+  });
+
+/** The songs of a playlist, in its order. A song that has since been removed is left out. */
+export function songsInPlaylist(playlist: Playlist, songs: Song[]): Song[] {
+  return playlist.songIds.map((id) => songs.find((song) => song.id === id)).filter((song): song is Song => Boolean(song));
+}
+
 export const MAX_SONG_BYTES = 30 * 1024 * 1024;
 export const MAX_SONGS = 60;
 /** A reminder, not a limit: a backup holds every song, so a large library makes a large backup. */

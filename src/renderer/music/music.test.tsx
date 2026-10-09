@@ -5,8 +5,8 @@ import { act } from 'preact/test-utils';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MusicScreen } from './MusicScreen';
 import { MusicTab } from '../parent/MusicTab';
-import { MAX_SONG_BYTES, formatSize, isAudioFile, isSongList, titleFromFile } from './songs';
-import { resetDBConnectionForTests, songsSetting } from '../store/db';
+import { MAX_SONG_BYTES, formatSize, isAudioFile, isPlaylistList, isSongList, songsInPlaylist, titleFromFile } from './songs';
+import { playlistsSetting, resetDBConnectionForTests, songsSetting } from '../store/db';
 
 async function waitFor(check: () => boolean, timeoutMs = 2000): Promise<void> {
   const start = Date.now();
@@ -131,6 +131,68 @@ describe('Music', () => {
 
     it('is clear that there is no streaming', () => {
       expect(container.textContent).toContain('There is no Spotify or Apple Music');
+    });
+  });
+
+  describe('playlists', () => {
+    const songs = [
+      { id: 'a', title: 'One', emoji: '🎵', blobId: 'x', bytes: 1 },
+      { id: 'b', title: 'Two', emoji: '🎵', blobId: 'y', bytes: 1 },
+      { id: 'c', title: 'Three', emoji: '🎵', blobId: 'z', bytes: 1 },
+    ];
+
+    it('checks a saved playlist before using it, and leaves out a song that has gone', () => {
+      expect(isPlaylistList([{ id: 'p', name: 'Bed', emoji: '🌙', songIds: ['a'] }])).toBe(true);
+      expect(isPlaylistList([{ id: 'p', name: 'Bed', emoji: '🌙', songIds: [3] }])).toBe(false);
+      expect(isPlaylistList({})).toBe(false);
+      expect(songsInPlaylist({ id: 'p', name: 'Bed', emoji: '🌙', songIds: ['c', 'gone', 'a'] }, songs).map((s) => s.title)).toEqual(['Three', 'One']);
+    });
+
+    it('the child sees no choices until an adult has made a playlist, then Everything comes first', async () => {
+      await songsSetting.set(songs);
+      render(<MusicScreen />, container);
+      expect(container.querySelector('.music-screen__lists')).toBeNull();
+      await playlistsSetting.set([{ id: 'p', name: 'Bedtime', emoji: '🌙', songIds: ['c', 'a'] }]);
+      await waitFor(() => container.querySelector('.music-screen__lists') !== null);
+      const names = Array.from(container.querySelectorAll('.music-screen__list')).map((b) => b.textContent?.trim());
+      expect(names).toEqual(['🎵 Everything', '🌙 Bedtime', 'Play all']);
+      // Everything shows every song in the usual order
+      expect(Array.from(container.querySelectorAll('.music-screen__title')).map((t) => t.textContent)).toEqual(['One', 'Two', 'Three']);
+      act(() => container.querySelectorAll<HTMLButtonElement>('.music-screen__list')[1]!.click());
+      expect(Array.from(container.querySelectorAll('.music-screen__title')).map((t) => t.textContent)).toEqual(['Three', 'One']);
+      expect(container.querySelector('.music-screen__now')!.textContent).toBe('Press a song to play it.');
+    });
+
+    it('an adult makes a playlist, adds songs in order, and removing a song takes it out of every list', async () => {
+      await songsSetting.set(songs);
+      render(<MusicTab />, container);
+      await waitFor(() => container.querySelectorAll('.music-tab__song').length === 3);
+      const input = container.querySelector<HTMLInputElement>('input[aria-label="Name of the new playlist"]')!;
+      act(() => {
+        input.value = 'Car journey';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      act(() => {
+        container.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      });
+      await waitFor(() => playlistsSetting.signal.value.length === 1);
+      for (const title of ['Two', 'One']) {
+        await waitFor(() => container.querySelector('select[aria-label="Add a song to Car journey"]') !== null);
+        const select = container.querySelector<HTMLSelectElement>('select[aria-label="Add a song to Car journey"]')!;
+        const option = Array.from(select.options).find((o) => o.textContent === title)!;
+        act(() => {
+          select.value = option.value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+        await waitFor(() => playlistsSetting.signal.value[0]!.songIds.length === (title === 'Two' ? 1 : 2));
+      }
+      expect(playlistsSetting.signal.value[0]!.songIds).toEqual(['b', 'a']);
+      act(() => container.querySelector<HTMLButtonElement>('button[aria-label="Move One up in Car journey"]')!.click());
+      await waitFor(() => playlistsSetting.signal.value[0]!.songIds[0] === 'a');
+      act(() => container.querySelector<HTMLButtonElement>('button[aria-label="Remove Two"]')!.click());
+      await waitFor(() => songsSetting.signal.value.length === 2);
+      await waitFor(() => playlistsSetting.signal.value[0]!.songIds.length === 1);
+      expect(playlistsSetting.signal.value[0]!.songIds).toEqual(['a']);
     });
   });
 });

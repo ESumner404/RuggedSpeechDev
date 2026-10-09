@@ -1,4 +1,5 @@
 import type { FitzgeraldClass } from '../ui/fitzgerald';
+import { SEASONS, seasonTemplate } from './seasons';
 
 export type PageButtonSpec = {
   label: string;
@@ -309,4 +310,5 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       { label: 'ready now', emoji: '✅', colour: 'social', says: 'I am ready now' },
     ],
   },
+  ...SEASONS.map(seasonTemplate),
 ];

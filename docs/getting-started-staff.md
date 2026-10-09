@@ -175,7 +175,7 @@ The device is **not a safeguarding record**. The Help section has phrases such a
 - **Backup.** Ask the family, or whoever has the Parent PIN, to save a backup file regularly, to somewhere the school controls. It holds the child's photos, pages, settings and the School Mode details, but not the activity log.
 - **Sharing a page.** In **Lesson pages**, **Share this page…** saves a page as a file you can give to another device. It is never uploaded anywhere.
 - **Two people, one device.** If more than one adult uses it, agree who changes the words, so buttons do not move without warning.
-- **The PINs are not a lock.** A child can switch to other programs on a Windows computer. If you need the computer locked down, that is a separate arrangement with your IT team.
+- **The PINs are not a lock.** A child can switch to other programs on a Windows computer or a Mac. If you need the computer locked down, that is a separate arrangement with your IT team.
 
 ## Questions staff often ask
 

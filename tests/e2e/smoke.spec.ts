@@ -41,8 +41,10 @@ test.describe('Skeleton', () => {
     );
     expect(isMaximized).toBe(true);
 
-    const menu = await app.evaluate(({ Menu }) => Menu.getApplicationMenu());
-    expect(menu).toBeNull();
+    // Windows has no menu at all. A Mac cannot, so it has only Hide, Quit and the editing shortcuts.
+    const menuLabels = await app.evaluate(({ Menu }) => Menu.getApplicationMenu()?.items.map((item) => item.label) ?? null);
+    if (process.platform === 'darwin') expect(menuLabels).toEqual(['Rugged Speech Test', 'Edit']);
+    else expect(menuLabels).toBeNull();
 
     const devToolsOpened = await app.evaluate(
       ({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.webContents.isDevToolsOpened() ?? false,

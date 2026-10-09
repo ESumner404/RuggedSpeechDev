@@ -10,6 +10,7 @@ import { LookTab } from './LookTab';
 import { BodyTab } from './BodyTab';
 import { MusicTab } from './MusicTab';
 import { JokesTab } from './JokesTab';
+import { SeasonsTab } from './SeasonsTab';
 import { LostModeTab } from './LostModeTab';
 import { GuideTab } from '../guide/GuideTab';
 import { ActivityTab } from './ActivityTab';
@@ -62,6 +63,7 @@ const GROUPS = [
       { id: 'myday', label: 'My Day' },
       { id: 'music', label: 'Music' },
       { id: 'jokes', label: 'Jokes' },
+      { id: 'seasons', label: 'Seasons' },
     ],
   },
   {
@@ -216,6 +218,7 @@ export function ParentModeScreen({ onExit }: Props) {
       {tab.value === 'body' && <BodyTab />}
       {tab.value === 'music' && <MusicTab />}
       {tab.value === 'jokes' && <JokesTab />}
+      {tab.value === 'seasons' && <SeasonsTab />}
       {tab.value === 'lost' && <LostModeTab />}
       {tab.value === 'learning' && <LearningTab />}
       {tab.value === 'targets' && <TargetsTab />}

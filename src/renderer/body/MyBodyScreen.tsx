@@ -79,6 +79,7 @@ export function MyBodyScreen() {
       </div>
 
       <div class="my-body__panel">
+        <p class="my-body__step">Where?</p>
         <div class="my-body__parts" role="group" aria-label="Parts of the body">
           {groups.map((group) => {
             const on = group.parts.some((part) => selected.value.has(part));
@@ -96,6 +97,7 @@ export function MyBodyScreen() {
           })}
         </div>
 
+        <p class="my-body__step">What is it like?</p>
         <div class="my-body__feelings" role="group" aria-label="How it feels">
           {FEELINGS.map((entry) => (
             <button
@@ -110,6 +112,7 @@ export function MyBodyScreen() {
           ))}
         </div>
 
+        <p class="my-body__step">How much?</p>
         <div class="my-body__amounts" role="group" aria-label="How much">
           {AMOUNTS.map((entry) => (
             <button

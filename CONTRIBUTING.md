@@ -36,6 +36,8 @@ npm run dev
 | `npm run pack` | An unpacked Electron build, for quick testing |
 | `npm run test:e2e` | Playwright against the packaged app (run `npm run pack` first) |
 | `npm run dist` | The Windows installer, into `release/` |
+| `npm run dist:mac` | The two Mac disk images (Apple silicon and Intel), into `release/` |
+| `npm run dist:all` | All three |
 
 ## Making a change
 
@@ -44,6 +46,10 @@ npm run dev
 - **Say why you are adding a dependency** in the commit message. Every dependency is a liability on a machine that will never be updated.
 - Keep pull requests small and about one thing. Describe what a person using the app will notice.
 - If you change what the app does, update [the guide](docs/user-guide.md) and [the feature list](docs/features.md) in the same pull request.
+
+## Releasing
+
+A new version goes to Windows and Mac together. Change `version` in `package.json`, commit, then tag and push (`git tag v0.2.0 && git push origin v0.2.0`). The release workflow builds the Windows installer and both Mac disk images and makes a draft release with checksums; publish it once you have tried the files. Run `npm run pack` again before the end-to-end tests if you have just built a release locally, because a release build switches the debug port off, and the tests need it.
 
 ## Please do not
 
