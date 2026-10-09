@@ -1,8 +1,9 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron } from './cleanup';
 
 function parentModeButton(page: Page) {
   return page.locator('.parent-mode-button');
@@ -34,7 +35,7 @@ async function enterParentModeExisting(page: Page, pin: string): Promise<void> {
 }
 
 function launch(userDataDir: string) {
-  return electron.launch({
+  return launchElectron({
     executablePath: resolveExecutablePath(),
     args: [`--user-data-dir=${userDataDir}`],
   });
@@ -76,7 +77,7 @@ test.describe('Feature review. Medical Info', () => {
 
       await app.close();
     } finally {
-      rmSync(userDataDir, { recursive: true, force: true });
+      removeDir(userDataDir);
     }
   });
 
@@ -136,9 +137,9 @@ test.describe('Feature review. Medical Info', () => {
 
       await cleanApp.close();
     } finally {
-      rmSync(sourceDataDir, { recursive: true, force: true });
-      rmSync(cleanDataDir, { recursive: true, force: true });
-      rmSync(backupDir, { recursive: true, force: true });
+      removeDir(sourceDataDir);
+      removeDir(cleanDataDir);
+      removeDir(backupDir);
     }
   });
 });

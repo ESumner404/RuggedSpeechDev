@@ -1,8 +1,9 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron } from './cleanup';
 
 function parentModeButton(page: Page) {
   return page.locator('.parent-mode-button');
@@ -79,7 +80,7 @@ async function pressKeyExpectStatus(page: Page, key: string, expectedStatus: str
 }
 
 function launch(userDataDir: string) {
-  return electron.launch({
+  return launchElectron({
     executablePath: resolveExecutablePath(),
     args: [`--user-data-dir=${userDataDir}`],
   });
@@ -144,7 +145,7 @@ test.describe('Phase 7. Access', () => {
 
       await app.close();
     } finally {
-      rmSync(userDataDir, { recursive: true, force: true });
+      removeDir(userDataDir);
     }
   });
 
@@ -186,7 +187,7 @@ test.describe('Phase 7. Access', () => {
 
       await app.close();
     } finally {
-      rmSync(userDataDir, { recursive: true, force: true });
+      removeDir(userDataDir);
     }
   });
 
@@ -216,7 +217,7 @@ test.describe('Phase 7. Access', () => {
 
       await app.close();
     } finally {
-      rmSync(userDataDir, { recursive: true, force: true });
+      removeDir(userDataDir);
     }
   });
 
@@ -258,7 +259,7 @@ test.describe('Phase 7. Access', () => {
 
       await app.close();
     } finally {
-      rmSync(userDataDir, { recursive: true, force: true });
+      removeDir(userDataDir);
     }
   });
 });

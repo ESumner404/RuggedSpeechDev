@@ -51,6 +51,8 @@ npm run dev
 
 The page in `website/` is plain HTML. Its "Have a go" board uses the app's own starter words, folders and drawn symbols, in `website/board-data.js`. That file is generated: if you change the starter words or the symbols, run `npm run website:board` and commit the result. A unit test fails if the two drift apart.
 
+The download buttons point at `/download/windows`, `/download/mac` and `/download/mac-intel`. `website/vercel.json` redirects those to the latest GitHub release's `RuggedSpeech-Setup-Windows.exe`, `RuggedSpeech-Mac-AppleSilicon.dmg` and `RuggedSpeech-Mac-Intel.dmg`, which the release workflow uploads under those names, so they only work once a release has been published. The page's search-engine set-up (title, description, structured data, `robots.txt`, `sitemap.xml`) is in `website/`; if you move the site to its own domain, change the address in `index.html`, `robots.txt` and `sitemap.xml`.
+
 ## Releasing
 
 A new version goes to Windows and Mac together. Change `version` in `package.json`, commit, then tag and push (`git tag v0.2.0 && git push origin v0.2.0`). The release workflow builds the Windows installer and both Mac disk images and makes a draft release with checksums; publish it once you have tried the files. Run `npm run pack` again before the end-to-end tests if you have just built a release locally, because a release build switches the debug port off, and the tests need it.

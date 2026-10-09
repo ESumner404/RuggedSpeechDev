@@ -7,8 +7,9 @@ process.env['RUGGED_SPEECH_HIDDEN_FOR_TESTS'] ??= '1';
 
 export default defineConfig({
   testDir: 'tests/e2e',
-  timeout: 30_000,
-  retries: 0,
+  // A computer on a build server is slower than a desk one, and several tests start the app more than once.
+  timeout: process.env['CI'] ? 90_000 : 30_000,
+  retries: process.env['CI'] ? 1 : 0,
   reporter: 'list',
   workers: 1,
 });

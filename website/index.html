@@ -3,21 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Rugged Speech</title>
-<meta name="description" content="Rugged Speech is free AAC (augmentative and alternative communication) for children and young people, built for rugged tablets, on Windows and Mac. It works without wifi, and nothing about your child leaves the device.">
+<title>Free AAC app for children that works offline | Rugged Speech</title>
+<meta name="description" content="Rugged Speech is a free AAC app for children and young people who find speaking hard. Big picture buttons, no wifi or account needed, on Windows and Mac.">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Community Stack">
+<meta name="application-name" content="Rugged Speech">
+<meta name="apple-mobile-web-app-title" content="Rugged Speech">
+<meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#0F1E2E">
+<link rel="canonical" href="https://rugged-speech.vercel.app/">
+<link rel="alternate" hreflang="en-GB" href="https://rugged-speech.vercel.app/">
+<link rel="alternate" hreflang="x-default" href="https://rugged-speech.vercel.app/">
 <link rel="icon" href="brand/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="brand/apple-touch-icon.png">
+<link rel="sitemap" type="application/xml" href="sitemap.xml">
+<link rel="preload" as="image" href="photos/feelings-held.jpg" fetchpriority="high">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Rugged Speech">
-<meta property="og:title" content="Rugged Speech: an AAC device built to be dropped">
-<meta property="og:description" content="Free AAC for children and young people, on rugged Windows tablets and on Mac. Works without wifi. Part of Community Stack.">
-<meta property="og:image" content="https://rugged-speech.vercel.app/brand/og-image.jpg">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="Rugged Speech: free AAC for children, built to be dropped">
+<meta property="og:description" content="Big picture buttons that speak, for children and young people who find speaking hard. Free, works without wifi, and nothing about your child leaves the device. Windows and Mac.">
 <meta property="og:url" content="https://rugged-speech.vercel.app/">
-<link rel="canonical" href="https://rugged-speech.vercel.app/">
+<meta property="og:image" content="https://rugged-speech.vercel.app/brand/og-image.jpg">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A child's hands holding a rugged tablet showing the Rugged Speech Feelings page">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rugged Speech: free AAC for children, built to be dropped">
+<meta name="twitter:description" content="Big picture buttons that speak. Free, no wifi, no account. Windows and Mac.">
+<meta name="twitter:image" content="https://rugged-speech.vercel.app/brand/og-image.jpg">
+<meta name="twitter:image:alt" content="A child's hands holding a rugged tablet showing the Rugged Speech Feelings page">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Poppins:wght@600;700;800&display=swap">
@@ -487,7 +503,188 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
 .soon-note a, .soon a { color: inherit; }
 .soon a { text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 800px) { .soon-grid { grid-template-columns: 1fr; } }
+.dl-hint { margin: 2px 0 0; font-size: 0.9rem; color: var(--on-navy-soft); max-width: 52ch; }
+.dl-hint a { color: var(--yellow); text-underline-offset: 3px; }
+.faq { display: grid; gap: 10px; max-width: 78ch; }
+.faq details { background: var(--white); border: 2px solid var(--stone-2); border-radius: 12px; padding: 14px 18px; }
+.faq summary { cursor: pointer; font-family: var(--display); font-weight: 700; font-size: 1.1rem; }
+.faq details[open] summary { margin-bottom: 8px; }
+.faq p { margin: 0; color: var(--ink-soft); }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 </style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://rugged-speech.vercel.app/#org",
+   "name": "Community Stack",
+   "legalName": "Sumner Development Operations Group LTD",
+   "url": "https://www.communitystack.io/",
+   "logo": "https://rugged-speech.vercel.app/brand/community-stack-icon.png",
+   "email": "aac@communitystack.io",
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Barnsley",
+    "addressCountry": "GB"
+   }
+  },
+  {
+   "@type": "WebSite",
+   "@id": "https://rugged-speech.vercel.app/#website",
+   "url": "https://rugged-speech.vercel.app/",
+   "name": "Rugged Speech",
+   "description": "Free AAC for children and young people. Works without wifi.",
+   "inLanguage": "en-GB",
+   "publisher": {
+    "@id": "https://rugged-speech.vercel.app/#org"
+   }
+  },
+  {
+   "@type": "WebPage",
+   "@id": "https://rugged-speech.vercel.app/#webpage",
+   "url": "https://rugged-speech.vercel.app/",
+   "name": "Free AAC app for children that works offline | Rugged Speech",
+   "isPartOf": {
+    "@id": "https://rugged-speech.vercel.app/#website"
+   },
+   "about": {
+    "@id": "https://rugged-speech.vercel.app/#app"
+   },
+   "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "https://rugged-speech.vercel.app/brand/og-image.jpg",
+    "width": 1200,
+    "height": 630
+   },
+   "inLanguage": "en-GB"
+  },
+  {
+   "@type": "SoftwareApplication",
+   "@id": "https://rugged-speech.vercel.app/#app",
+   "name": "Rugged Speech",
+   "alternateName": "Rugged Speech Test",
+   "description": "A free AAC (augmentative and alternative communication) app for children and young people who find speaking hard. Big picture buttons that speak, a keyboard, a day planner, feelings and My body, games, and School Mode for staff. It works without wifi, and nothing about the child leaves the device.",
+   "applicationCategory": "EducationalApplication",
+   "applicationSubCategory": "Augmentative and alternative communication (AAC)",
+   "operatingSystem": "Windows 10, Windows 11, macOS",
+   "softwareVersion": "0.0.1",
+   "inLanguage": "en-GB",
+   "isAccessibleForFree": true,
+   "license": "https://opensource.org/licenses/MIT",
+   "codeRepository": "https://github.com/ESumner404/RuggedSpeechDev",
+   "url": "https://rugged-speech.vercel.app/",
+   "downloadUrl": "https://rugged-speech.vercel.app/#install",
+   "installUrl": "https://rugged-speech.vercel.app/#install",
+   "screenshot": [
+    "https://rugged-speech.vercel.app/screens/talk-sentence.png",
+    "https://rugged-speech.vercel.app/screens/body-pointing.png",
+    "https://rugged-speech.vercel.app/screens/games.png",
+    "https://rugged-speech.vercel.app/screens/school-today.png",
+    "https://rugged-speech.vercel.app/screens/parent-look-pink.png",
+    "https://rugged-speech.vercel.app/screens/game-seasons.png"
+   ],
+   "featureList": [
+    "Works without wifi or an internet connection",
+    "Nothing about the child leaves the device",
+    "Big picture buttons in the same place every day",
+    "Drawn symbols or emoji, and your own photos",
+    "A keyboard with word suggestions that never speak on their own",
+    "My Day planner, First and Then, and a weekly routine",
+    "Feelings, Help, Calm, and My body for pointing to where it hurts",
+    "Games, music with playlists, a piano, seasons and celebrations",
+    "Traffic light to show whether the child wants to be spoken to",
+    "School Mode for staff, with its own PIN",
+    "Medical Info and Lost mode",
+    "Switch scanning and other ways of pressing"
+   ],
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "GBP"
+   },
+   "publisher": {
+    "@id": "https://rugged-speech.vercel.app/#org"
+   },
+   "audience": {
+    "@type": "Audience",
+    "audienceType": "Parents, carers, teachers, SENCos and speech and language therapists"
+   }
+  },
+  {
+   "@type": "FAQPage",
+   "@id": "https://rugged-speech.vercel.app/#faq",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "Is Rugged Speech really free?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. There is no subscription, no account and no in-app purchase. It is free and open source, and always will be for families and schools."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does it need wifi or the internet?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. It never uses the internet, so it works on a coach, in a field or in a hospital waiting room. New versions arrive as a new installer that you choose to run."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Where is my child's information kept?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "On your device only. Photos, medical details and what your child says never leave it. The only way anything leaves is a file an adult chooses to save, such as a backup."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "What does it run on?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Windows 10 and 11 (64-bit), and Mac (Apple silicon and Intel). iPad and iPhone, Android and Amazon Fire tablets are coming soon."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Who is it for?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Children and young people whose speech is difficult, unreliable or tiring, including autistic children, children with speech, language and communication needs, and children who stammer. It supports talking and does not replace it."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Can a school set it up for a whole class?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. It is one device for one child, with no pupil accounts. School Mode gives staff their own side of the app with its own PIN, and a good set-up can be saved as a backup."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does the PIN lock the device?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. The Parent PIN keeps the settings safe. A child can still switch to other programs, so use your Windows or Mac sign-in to protect the device itself."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is it a medical device?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Rugged Speech is a communication aid, not a medical device. The starter words are a sensible beginning, and choosing words for a child is a decision to make with a speech and language therapist."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
 </head>
 <body>
 
@@ -520,12 +717,20 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <li><a href="#slts">Therapists</a></li>
       <li><a href="#devices">Devices</a></li>
       <li><a href="#docs">Guides</a></li>
-      <li><a href="#install" class="btn btn--yellow">Download</a></li>
+      <li><a href="#install" class="btn btn--yellow" id="nav-download">Download</a></li>
     </ul>
   </div>
 </header>
 
 <main id="top">
+<noscript>
+  <div class="wrap" style="padding:24px 0">
+    <h2>What Rugged Speech does</h2>
+    <p>Rugged Speech is a free AAC app for children and young people who find speaking hard. It has big picture buttons that speak, a keyboard with word suggestions, a day planner, feelings and pointing to where it hurts, games and music, and School Mode for staff. It works without wifi, and nothing about your child leaves the device. It runs on Windows 10 and 11 and on Mac.</p>
+    <p><a href="/download/windows">Download for Windows</a>, <a href="/download/mac">Download for Mac (Apple silicon)</a> or <a href="/download/mac-intel">Download for Mac (Intel)</a>. The guides are on <a href="https://github.com/ESumner404/RuggedSpeechDev/tree/main/docs">GitHub</a>. The try-a-board demo and the app tour need JavaScript.</p>
+  </div>
+</noscript>
+
 
 <!-- HERO -->
 <section class="hero">
@@ -535,16 +740,17 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <h1>An AAC device built to be <span class="hl">dropped.</span></h1>
       <p class="lede">Rugged Speech is AAC (augmentative and alternative communication) that children can take <strong>everywhere</strong>: big picture buttons on a tough tablet that can go to school, to the park and to bed. It's free, and it works without wifi.</p>
       <div class="cta-row">
-        <a class="btn btn--yellow" href="https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Setup-Windows.exe">Download for Windows <svg><use href="#i-arrow"/></svg></a>
-        <a class="btn btn--yellow" href="#install">Download for Mac <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--yellow" href="/download/windows" data-dl="windows" rel="nofollow">Download for Windows <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--yellow" href="/download/mac" data-dl="mac" rel="nofollow">Download for Mac <svg><use href="#i-arrow"/></svg></a>
         <a class="btn btn--ghost" href="#try">Try a board</a>
       </div>
+      <p class="dl-hint">Intel Mac? <a href="/download/mac-intel" data-dl="mac-intel" rel="nofollow">Get the Intel version</a>. Not sure which you have? Apple menu, then About This Mac. Free, about 130 MB.</p>
       <ul class="trust"><li>Free</li><li>No wifi needed</li><li>No account</li><li>Windows and Mac</li></ul>
     </div>
     <div class="hero-visual">
       <div class="framed">
         <span class="br-b"></span>
-        <div class="photo"><img src="photos/feelings-held.jpg" alt="A child's hands holding a rugged tablet in the garden, showing the Feelings page: happy, sad, angry, worried, need quiet, need space and more" fetchpriority="high"></div>
+        <div class="photo"><img width="1400" height="933" src="photos/feelings-held.jpg" alt="A child's hands holding a rugged tablet in the garden, showing the Feelings page: happy, sad, angry, worried, need quiet, need space and more" fetchpriority="high"></div>
       </div>
       <div class="say-chip" aria-hidden="true">
         <span class="spk"><svg><use href="#i-speaker"/></svg></span>
@@ -576,6 +782,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <li><b>Back up in a minute</b><span>Save one file to a USB stick. If a tablet ever goes missing, everything goes straight onto another.</span></li>
     </ul>
 
+    <h2 class="sr-only">Where to start</h2>
     <div class="doors">
       <a class="door door--yellow" href="#families">
         <p class="eyebrow">For parents and carers</p>
@@ -609,7 +816,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
     </div>
     <div class="day">
       <div class="moment">
-        <div class="moment-photo"><img src="photos/feelings-table.jpg" alt="The Feelings page on a tablet on the kitchen table, with a mug and a stylus nearby" loading="lazy"></div>
+        <div class="moment-photo"><img width="1400" height="933" src="photos/feelings-table.jpg" alt="The Feelings page on a tablet on the kitchen table, with a mug and a stylus nearby" loading="lazy"></div>
         <div class="moment-copy">
           <p class="when">7:45am &middot; Breakfast</p>
           <h3>Saying how the morning feels.</h3>
@@ -618,7 +825,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         </div>
       </div>
       <div class="moment">
-        <div class="moment-photo"><img src="photos/school-mode.jpg" alt="School Mode on the tablet, showing the guide for teachers and the staff menu" loading="lazy"></div>
+        <div class="moment-photo"><img width="1400" height="933" src="photos/school-mode.jpg" alt="School Mode on the tablet, showing the guide for teachers and the staff menu" loading="lazy"></div>
         <div class="moment-copy">
           <p class="when">10:30am &middot; In class</p>
           <h3>School picks up where home left off.</h3>
@@ -627,7 +834,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         </div>
       </div>
       <div class="moment">
-        <div class="moment-photo"><img src="photos/piano-held.jpg" alt="Playing the Piano game on the tablet in the garden, pressing a coloured key" loading="lazy"></div>
+        <div class="moment-photo"><img width="1400" height="933" src="photos/piano-held.jpg" alt="Playing the Piano game on the tablet in the garden, pressing a coloured key" loading="lazy"></div>
         <div class="moment-copy">
           <p class="when">4pm &middot; In the garden</p>
           <h3>Playing, and telling you when it hurts.</h3>
@@ -636,7 +843,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         </div>
       </div>
       <div class="moment">
-        <div class="moment-photo"><img src="photos/feelings-night.jpg" alt="The Feelings page on a tablet resting on the arm of a sofa in a dim room" loading="lazy"></div>
+        <div class="moment-photo"><img width="1400" height="933" src="photos/feelings-night.jpg" alt="The Feelings page on a tablet resting on the arm of a sofa in a dim room" loading="lazy"></div>
         <div class="moment-copy">
           <p class="when">7:30pm &middot; Winding down</p>
           <h3>Room to say the big things.</h3>
@@ -778,10 +985,10 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <p style="margin-top:24px"><a class="link-arrow" href="#docs" data-doc="parents">Read the guide for parents <svg width="18" height="18"><use href="#i-arrow"/></svg></a></p>
     </div>
     <div class="stick">
-      <div class="shot"><img src="screens/setup-3-voice.png" alt="The set-up step for choosing a voice, with a Try it button beside each voice" loading="lazy"></div>
+      <div class="shot"><img width="1280" height="800" src="screens/setup-3-voice.png" alt="The set-up step for choosing a voice, with a Try it button beside each voice" loading="lazy"></div>
       <div class="shot-pair">
-        <div class="shot"><img src="screens/setup-4-grid.png" alt="Choosing how big the buttons are during set-up" loading="lazy"></div>
-        <div class="shot"><img src="screens/parent-my-body.png" alt="Making the My body figure look like your child" loading="lazy"></div>
+        <div class="shot"><img width="1280" height="800" src="screens/setup-4-grid.png" alt="Choosing how big the buttons are during set-up" loading="lazy"></div>
+        <div class="shot"><img width="1280" height="800" src="screens/parent-my-body.png" alt="Making the My body figure look like your child" loading="lazy"></div>
       </div>
       <div class="callout"><b>The best thing you can do: use it yourself.</b><span>Press the buttons as you talk: "Do you <strong>want</strong> a <strong>drink</strong>?" Your child sees how it works without being asked to do anything. Therapists call this modelling.</span></div>
     </div>
@@ -800,7 +1007,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
           <a class="btn btn--yellow" href="#docs" data-doc="staff">Read the guide for staff <svg><use href="#i-arrow"/></svg></a>
         </div>
       </div>
-      <div class="school-photo framed"><span class="br-b"></span><img src="screens/school-today.png" alt="The Today page in School Mode: the timetable, targets due, the traffic light and the latest notes" loading="lazy" style="aspect-ratio:auto"></div>
+      <div class="school-photo framed"><span class="br-b"></span><img width="1280" height="800" src="screens/school-today.png" alt="The Today page in School Mode: the timetable, targets due, the traffic light and the latest notes" loading="lazy" style="aspect-ratio:auto"></div>
     </div>
 
     <div class="split" style="margin-top:clamp(48px,6vw,80px)">
@@ -818,12 +1025,12 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         <li><b>Reports</b><span>A one-page handover sheet for supply staff, and a report for review meetings.</span></li>
       </ul>
       <div class="mini-shots">
-        <figure><img src="screens/school-button.png" alt="The School Mode button next to Parent Mode" loading="lazy"><figcaption>School Mode button</figcaption></figure>
-        <figure><img src="screens/school-timetable.png" alt="School Mode timetable" loading="lazy"><figcaption>Timetable</figcaption></figure>
-        <figure><img src="screens/school-lessons.png" alt="Ready-made lesson pages" loading="lazy"><figcaption>Lesson pages</figcaption></figure>
-        <figure><img src="screens/staff-targets.png" alt="Targets with review dates" loading="lazy"><figcaption>Targets</figcaption></figure>
-        <figure><img src="screens/staff-activity.png" alt="Optional activity record with bars by hour, day, week and month" loading="lazy"><figcaption>Activity</figcaption></figure>
-        <figure><img src="screens/staff-handover.png" alt="The printable handover sheet" loading="lazy"><figcaption>Handover sheet</figcaption></figure>
+        <figure><img width="1280" height="800" src="screens/school-button.png" alt="The School Mode button next to Parent Mode" loading="lazy"><figcaption>School Mode button</figcaption></figure>
+        <figure><img width="1280" height="800" src="screens/school-timetable.png" alt="School Mode timetable" loading="lazy"><figcaption>Timetable</figcaption></figure>
+        <figure><img width="1280" height="800" src="screens/school-lessons.png" alt="Ready-made lesson pages" loading="lazy"><figcaption>Lesson pages</figcaption></figure>
+        <figure><img width="1280" height="800" src="screens/staff-targets.png" alt="Targets with review dates" loading="lazy"><figcaption>Targets</figcaption></figure>
+        <figure><img width="1280" height="800" src="screens/staff-activity.png" alt="Optional activity record with bars by hour, day, week and month" loading="lazy"><figcaption>Activity</figcaption></figure>
+        <figure><img width="1280" height="800" src="screens/staff-handover.png" alt="The printable handover sheet" loading="lazy"><figcaption>Handover sheet</figcaption></figure>
       </div>
     </div>
 
@@ -891,7 +1098,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
           <li><b>Windows 10 Pro or 11 Pro</b><span>Rugged Speech installs just like any other program. It runs on a Mac too.</span></li>
         </ul>
       </div>
-      <div class="dev-photo framed"><span class="br-b"></span><img src="photos/piano-garden.jpg" alt="A Dell Latitude 7212 rugged tablet propped up in a flower bed, running the Piano game, with its P1, P2 and P3 buttons visible below the screen" loading="lazy"></div>
+      <div class="dev-photo framed"><span class="br-b"></span><img width="1400" height="933" src="photos/piano-garden.jpg" alt="A Dell Latitude 7212 rugged tablet propped up in a flower bed, running the Piano game, with its P1, P2 and P3 buttons visible below the screen" loading="lazy"></div>
     </div>
 
     <div class="checklist" style="grid-template-columns:1fr 1fr">
@@ -917,6 +1124,26 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
           <li><b>Internet</b><span>Not needed</span></li>
         </ul>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="band" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Questions people ask</p>
+      <h2>Quick answers.</h2>
+    </div>
+    <div class="faq">
+      <details><summary>Is Rugged Speech really free?</summary><p>Yes. There is no subscription, no account and no in-app purchase. It is free and open source, and always will be for families and schools.</p></details>
+      <details><summary>Does it need wifi or the internet?</summary><p>No. It never uses the internet, so it works on a coach, in a field or in a hospital waiting room. New versions arrive as a new installer that you choose to run.</p></details>
+      <details><summary>Where is my child's information kept?</summary><p>On your device only. Photos, medical details and what your child says never leave it. The only way anything leaves is a file an adult chooses to save, such as a backup.</p></details>
+      <details><summary>What does it run on?</summary><p>Windows 10 and 11 (64-bit), and Mac (Apple silicon and Intel). iPad and iPhone, Android and Amazon Fire tablets are coming soon.</p></details>
+      <details><summary>Who is it for?</summary><p>Children and young people whose speech is difficult, unreliable or tiring, including autistic children, children with speech, language and communication needs, and children who stammer. It supports talking and does not replace it.</p></details>
+      <details><summary>Can a school set it up for a whole class?</summary><p>No. It is one device for one child, with no pupil accounts. School Mode gives staff their own side of the app with its own PIN, and a good set-up can be saved as a backup.</p></details>
+      <details><summary>Does the PIN lock the device?</summary><p>No. The Parent PIN keeps the settings safe. A child can still switch to other programs, so use your Windows or Mac sign-in to protect the device itself.</p></details>
+      <details><summary>Is it a medical device?</summary><p>No. Rugged Speech is a communication aid, not a medical device. The starter words are a sensible beginning, and choosing words for a child is a decision to make with a speech and language therapist.</p></details>
     </div>
   </div>
 </section>
@@ -959,7 +1186,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
             <li><strong>What pressing does.</strong> For a child just starting, <em>Say the word straight away</em> is usually best.</li>
             <li><strong>Colours,</strong> then a <strong>Parent PIN</strong>. Write down the four-word recovery code.</li>
           </ol>
-          <div class="shot"><img src="screens/setup-8-pin-and-code.png" alt="Setting the Parent PIN, then the four-word recovery code" loading="lazy"></div>
+          <div class="shot"><img width="1280" height="800" src="screens/setup-8-pin-and-code.png" alt="Setting the Parent PIN, then the four-word recovery code" loading="lazy"></div>
           <h4>10 minutes in Parent Mode</h4>
           <ol>
             <li><strong>People and Places</strong>: add the people and places your child talks about, with a photo and your voice.</li>
@@ -969,7 +1196,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
             <li><strong>Look and Seasons</strong>: pick a favourite colour, and choose which celebrations your child sees in Games.</li>
             <li><strong>School</strong>: only if a school will use it. Turn on School Mode and give staff a School PIN.</li>
           </ol>
-          <div class="shot"><img src="screens/parent-quick-access.png" alt="Choosing the Quick Access buttons along the top" loading="lazy"></div>
+          <div class="shot"><img width="1280" height="800" src="screens/parent-quick-access.png" alt="Choosing the Quick Access buttons along the top" loading="lazy"></div>
           <h4>A few good habits</h4>
           <ul>
             <li><strong>Wait.</strong> After you ask something, give plenty of time before asking again.</li>
@@ -983,7 +1210,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         <article class="doc" id="doc-staff" role="tabpanel" aria-labelledby="dt-staff" hidden>
           <h3>Getting started: teachers and staff</h3>
           <p>For teachers, teaching assistants, key workers and SENCos. Each child has their own device, with their own words, pictures, voice and settings. There are no pupil accounts or class lists.</p>
-          <div class="shot"><img src="screens/school-button.png" alt="The School Mode button, next to Parent Mode on the child's screen" loading="lazy"></div>
+          <div class="shot"><img width="1280" height="800" src="screens/school-button.png" alt="The School Mode button, next to Parent Mode on the child's screen" loading="lazy"></div>
           <h4>Turning School Mode on (once)</h4>
           <ol>
             <li>Whoever has the Parent PIN opens <strong>Parent Mode</strong>, then <strong>School</strong>, then <strong>Turn School Mode on&hellip;</strong></li>
@@ -1004,7 +1231,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
             <li>Agree who writes <strong>Notes</strong>.</li>
             <li>Print a <strong>Handover sheet</strong> for supply staff.</li>
           </ol>
-          <div class="shot"><img src="screens/school-today.png" alt="The Today page in School Mode" loading="lazy"></div>
+          <div class="shot"><img width="1280" height="800" src="screens/school-today.png" alt="The Today page in School Mode" loading="lazy"></div>
           <h4>Supporting communication</h4>
           <ul>
             <li><strong>Model it.</strong> Press the buttons yourself as you talk ("Let's get your <strong>coat</strong> on"). You don't need to ask the child to press anything.</li>
@@ -1035,7 +1262,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
               </tbody>
             </table>
           </div>
-          <div class="shot"><img src="screens/talk.png" alt="The Talk page with core words and folders" loading="lazy"></div>
+          <div class="shot"><img width="1280" height="800" src="screens/talk.png" alt="The Talk page with core words and folders" loading="lazy"></div>
           <p><a class="link-arrow" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/clinical-review.md">Read the clinical review <svg width="18" height="18"><use href="#i-arrow"/></svg></a></p>
         </article>
 
@@ -1088,7 +1315,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
             <li><strong>Add the people and places that matter,</strong> with real photos and your own voice.</li>
             <li><strong>Fill in About me and Medical,</strong> and save a backup.</li>
           </ol>
-          <div class="shot"><img src="screens/home.png" alt="The Home screen, with Talk, Keyboard, My Day, Favourites, My Pages and Feelings and Help" loading="lazy"></div>
+          <div class="shot"><img width="1280" height="800" src="screens/home.png" alt="The Home screen, with Talk, Keyboard, My Day, Favourites, My Pages and Feelings and Help" loading="lazy"></div>
           <p><a class="link-arrow" href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/setup-sheet.md">The printable sheet <svg width="18" height="18"><use href="#i-arrow"/></svg></a></p>
         </article>
 
@@ -1155,11 +1382,11 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
     </div>
     <div class="people">
       <figure class="person">
-        <div class="pic"><img src="team/ethan-sumner.jpg" alt="Ethan Sumner, smiling outdoors in a Community Stack polo shirt" style="object-position:50% 30%" loading="lazy"></div>
+        <div class="pic"><img width="825" height="1100" src="team/ethan-sumner.jpg" alt="Ethan Sumner, smiling outdoors in a Community Stack polo shirt" style="object-position:50% 30%" loading="lazy"></div>
         <figcaption><b>Ethan Sumner</b><span>Founder and CEO, Community Stack</span></figcaption>
       </figure>
       <figure class="person">
-        <div class="pic"><img src="team/melissa-dunmore.jpg" alt="Melissa Dunmore, smiling indoors" style="object-position:50% 40%" loading="lazy"></div>
+        <div class="pic"><img width="900" height="671" src="team/melissa-dunmore.jpg" alt="Melissa Dunmore, smiling indoors" style="object-position:50% 40%" loading="lazy"></div>
         <figcaption><b>Melissa Dunmore</b><span>Data Engineer, Community Stack</span></figcaption>
       </figure>
     </div>
@@ -1228,9 +1455,9 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <p style="font-size:var(--step-1);max-width:40ch">No subscription, no account, nothing to pay. If you can double-click, you can install it.</p>
       <div class="soon" aria-label="Where it runs"><span>Windows: available now</span><span>Mac: available now</span><a href="#coming-soon">iPad and iPhone: coming soon</a><a href="#coming-soon">Android: coming soon</a><a href="#coming-soon">Fire tablets: coming soon</a></div>
       <div class="cta-row">
-        <a class="btn btn--navy" href="https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Setup-Windows.exe">Download for Windows <svg><use href="#i-arrow"/></svg></a>
-        <a class="btn btn--navy" href="https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Mac-AppleSilicon.dmg">Download for Mac (Apple silicon) <svg><use href="#i-arrow"/></svg></a>
-        <a class="btn btn--ghost" href="https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Mac-Intel.dmg">Mac with an Intel chip</a>
+        <a class="btn btn--navy" href="/download/windows" data-dl="windows" rel="nofollow">Download for Windows <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--navy" href="/download/mac" data-dl="mac" rel="nofollow">Download for Mac (Apple silicon) <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost" href="/download/mac-intel" data-dl="mac-intel" rel="nofollow">Mac with an Intel chip</a>
         <a class="btn btn--ghost" href="#docs" data-doc="parents">How to set it up</a>
       </div>
     </div>
@@ -1307,6 +1534,33 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
     }, 1500);
   }, true);
 
+  // Download buttons: the top one is for the visitor's own computer. An Intel Mac is told
+  // apart where the browser says so; otherwise the Apple silicon one is offered, and the
+  // Intel link is always shown next to it.
+  (function () {
+    var nav = document.getElementById('nav-download');
+    if (!nav) return;
+    var uad = navigator.userAgentData;
+    var platform = (uad && uad.platform) || navigator.platform || '';
+    var ua = navigator.userAgent || '';
+    var isIPad = /Mac/i.test(platform) && navigator.maxTouchPoints > 1;
+    var isWin = /Win/i.test(platform);
+    var isMac = /Mac/i.test(platform) && !isIPad && !/iPhone|iPod/i.test(ua);
+    function set(label, href, key) { nav.textContent = label; nav.setAttribute('href', href); nav.setAttribute('data-dl', key); nav.setAttribute('rel', 'nofollow'); }
+    if (isWin) set('Download for Windows', '/download/windows', 'windows');
+    else if (isMac) {
+      set('Download for Mac', '/download/mac', 'mac');
+      if (uad && uad.getHighEntropyValues) {
+        uad.getHighEntropyValues(['architecture']).then(function (v) {
+          if (v.architecture === 'x86') {
+            set('Download for Mac (Intel)', '/download/mac-intel', 'mac-intel');
+            document.querySelectorAll('a[data-dl="mac"]').forEach(function (a) { a.setAttribute('href', '/download/mac-intel'); a.setAttribute('data-dl', 'mac-intel'); a.firstChild.textContent = 'Download for Mac (Intel) '; });
+          }
+        }).catch(function () { /* the browser would not say; keep Apple silicon */ });
+      }
+    }
+  })();
+
   // Tour
   var TOUR = [
     { id: 'talk', label: 'Talk', title: 'Talk', body: 'Big word buttons, with folders for Food, Feelings, Play, People, Places and Doing. Your child can press one word at a time, or build a sentence along the top and press Speak.',
@@ -1329,8 +1583,8 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
     Array.prototype.forEach.call(tabsEl.children, function (b, j) { b.setAttribute('aria-selected', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
     panelEl.setAttribute('aria-labelledby', 'tt-' + t.id);
     var extra = '';
-    if (t.extra) extra = '<div class="shot-pair">' + t.extra.map(function (e, k) { return '<div class="shot"><img src="screens/' + e + '.png" alt="' + t.extraAlt[k] + '"></div>'; }).join('') + '</div>';
-    panelEl.innerHTML = '<div class="panel"><div><div class="shot"><img src="screens/' + t.img + '.png" alt="' + t.alt + '"></div>' + extra + '</div>' +
+    if (t.extra) extra = '<div class="shot-pair">' + t.extra.map(function (e, k) { return '<div class="shot"><img src="screens/' + e + '.png" width="1280" height="800" alt="' + t.extraAlt[k] + '"></div>'; }).join('') + '</div>';
+    panelEl.innerHTML = '<div class="panel"><div><div class="shot"><img src="screens/' + t.img + '.png" width="1280" height="800" alt="' + t.alt + '"></div>' + extra + '</div>' +
       '<div class="panel-copy"><h3>' + t.title + '</h3><p>' + t.body + '</p><ul class="ticks">' + t.ticks.map(function (x) { return '<li><span>' + x + '</span></li>'; }).join('') + '</ul></div></div>';
   }
   TOUR.forEach(function (t, i) {

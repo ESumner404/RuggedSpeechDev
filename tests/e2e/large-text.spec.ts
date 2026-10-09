@@ -1,21 +1,8 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { completeFirstRun, launchApp, makeUserDataDir } from './helpers';
 
 // With the text size turned right up, the buttons grow and the screen has less
 // room. Nothing may be hidden with no way to reach it: the grids scroll.
-
-async function reachesBottom(page: Page, scroller: string, lastItem: string): Promise<boolean> {
-  return page.evaluate(
-    ([scrollerSelector, itemSelector]) => {
-      const box = document.querySelector<HTMLElement>(scrollerSelector!)!;
-      const items = Array.from(box.querySelectorAll<HTMLElement>(itemSelector!));
-      const last = items[items.length - 1]!;
-      box.scrollTop = box.scrollHeight;
-      return last.getBoundingClientRect().bottom <= box.getBoundingClientRect().bottom + 1;
-    },
-    [scroller, lastItem],
-  );
-}
 
 test.describe('Large text', () => {
   let user: ReturnType<typeof makeUserDataDir>;
@@ -44,14 +31,17 @@ test.describe('Large text', () => {
     const grid = page.locator('.talk-screen__grid');
     await expect(grid.locator('.board-button').first()).toBeVisible();
     expect(await grid.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
-    expect(await reachesBottom(page, '.talk-screen__grid', '.board-button')).toBe(true);
+    // Pictures can finish loading after the first look and change the heights, so scroll to the
+    // last button the way a person would, and check that it can be reached.
+    await grid.locator('.board-button').last().scrollIntoViewIfNeeded();
+    await expect(grid.locator('.board-button').last()).toBeInViewport();
     await expect(page.locator('.talk-screen__nav-button').first()).toBeInViewport();
     await page.locator('.home-button').click();
 
     // Feelings: the three "how much" buttons are reachable below the words
     await page.locator('.home-screen__tile', { hasText: 'Feelings' }).click();
     await expect(page.locator('.feelings-help-screen__grid .board-button').first()).toBeVisible();
-    await page.locator('.feelings-help-screen__body').evaluate((el) => (el.scrollTop = el.scrollHeight));
+    await page.locator('.intensity-row__button').last().scrollIntoViewIfNeeded();
     await expect(page.locator('.intensity-row__button').last()).toBeInViewport();
     await page.locator('.home-button').click();
 
@@ -59,7 +49,7 @@ test.describe('Large text', () => {
     await page.locator('.home-screen__tile', { hasText: 'Keyboard' }).click();
     await expect(page.locator('.on-screen-keyboard')).toBeVisible();
     await expect(page.locator('.keyboard-screen__actions .sentence-strip__speak')).toBeInViewport();
-    await page.locator('.keyboard-screen__body').evaluate((el) => (el.scrollTop = el.scrollHeight));
+    await page.locator('.on-screen-keyboard__key--backspace').scrollIntoViewIfNeeded();
     await expect(page.locator('.on-screen-keyboard__key--backspace')).toBeInViewport();
 
     await app.close();
