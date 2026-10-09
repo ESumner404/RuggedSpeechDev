@@ -1290,6 +1290,23 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
   });
   links.addEventListener('click', function (e) { if (e.target.closest('a')) { links.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); } });
 
+  // Screenshots start lazy so the page opens quickly. Once it has loaded, fetch
+  // the rest, including the ones inside guides that are not showing yet, so no
+  // picture is ever left empty. If one fails (a flaky connection), try it again once.
+  function loadAllPictures() {
+    document.querySelectorAll('img[loading="lazy"]').forEach(function (img) { img.loading = 'eager'; });
+  }
+  if (document.readyState === 'complete') loadAllPictures(); else window.addEventListener('load', loadAllPictures);
+  document.addEventListener('error', function (e) {
+    var img = e.target;
+    if (!img || img.tagName !== 'IMG' || img.dataset.retried) return;
+    img.dataset.retried = '1';
+    setTimeout(function () {
+      var src = img.getAttribute('src');
+      if (src && src.indexOf('data:') !== 0) img.src = src + (src.indexOf('?') > -1 ? '&' : '?') + 'retry=1';
+    }, 1500);
+  }, true);
+
   // Tour
   var TOUR = [
     { id: 'talk', label: 'Talk', title: 'Talk', body: 'Big word buttons, with folders for Food, Feelings, Play, People, Places and Doing. Your child can press one word at a time, or build a sentence along the top and press Speak.',
@@ -1312,7 +1329,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
     Array.prototype.forEach.call(tabsEl.children, function (b, j) { b.setAttribute('aria-selected', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
     panelEl.setAttribute('aria-labelledby', 'tt-' + t.id);
     var extra = '';
-    if (t.extra) extra = '<div class="shot-pair">' + t.extra.map(function (e, k) { return '<div class="shot"><img src="screens/' + e + '.png" alt="' + t.extraAlt[k] + '" loading="lazy"></div>'; }).join('') + '</div>';
+    if (t.extra) extra = '<div class="shot-pair">' + t.extra.map(function (e, k) { return '<div class="shot"><img src="screens/' + e + '.png" alt="' + t.extraAlt[k] + '"></div>'; }).join('') + '</div>';
     panelEl.innerHTML = '<div class="panel"><div><div class="shot"><img src="screens/' + t.img + '.png" alt="' + t.alt + '"></div>' + extra + '</div>' +
       '<div class="panel-copy"><h3>' + t.title + '</h3><p>' + t.body + '</p><ul class="ticks">' + t.ticks.map(function (x) { return '<li><span>' + x + '</span></li>'; }).join('') + '</ul></div></div>';
   }
