@@ -8,8 +8,10 @@ const PNG_BYTES = Uint8Array.from(
   (c) => c.charCodeAt(0),
 );
 
-// jsdom's Blob has no arrayBuffer(); FileReader does the same job.
-function bytesOf(blob: Blob): Promise<Uint8Array> {
+// Which kind of Blob comes back depends on the version of Node: a native one has
+// arrayBuffer(), and jsdom's has not and needs FileReader (which refuses a native one).
+async function bytesOf(blob: Blob): Promise<Uint8Array> {
+  if (typeof blob.arrayBuffer === 'function') return new Uint8Array(await blob.arrayBuffer());
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(reader.error);
