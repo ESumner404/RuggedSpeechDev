@@ -186,23 +186,41 @@ p { margin: 0; }
 .device-keys { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
 .device-keys span { font-family: var(--mono); font-size: 0.6rem; color: #6f7c88; border: 1px solid #2d3741; border-radius: 4px; padding: 1px 7px; }
 .screen { background: #E7F4F1; border-radius: 10px; overflow: hidden; color: #20323f; }
-.board { padding: clamp(8px, 1.4vw, 14px); display: grid; gap: 10px; }
+.board { padding: clamp(8px, 1.4vw, 14px); display: grid; gap: 8px; }
+.board button { font-family: var(--display); font-weight: 700; border: 0; border-radius: 10px; cursor: pointer; color: #20323f; }
+.board button:focus-visible, .try-controls :is(select, input):focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+.board button:disabled { opacity: 0.45; cursor: default; }
+.qbar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.5fr); gap: 6px; }
+.qbar button { background: var(--white); padding: 9px 4px; font-size: clamp(0.78rem, 0.7rem + 0.3vw, 0.95rem); box-shadow: inset 0 0 0 2px #cfe3de; }
+.qbar .gmt { background: var(--yellow); box-shadow: none; }
 .strip { display: flex; gap: 8px; align-items: stretch; }
-.strip-text { flex: 1; min-width: 0; min-height: 54px; background: var(--white); border-radius: 10px; padding: 8px 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--display); font-weight: 700; font-size: 1.05rem; }
-.strip-text .ph { color: #8a97a3; font-family: var(--body); font-weight: 400; font-size: 0.95rem; }
-.strip-text .w { background: #f1f4f6; border-radius: 8px; padding: 2px 10px; }
+.strip-text { flex: 1; min-width: 0; min-height: 54px; background: var(--white); border-radius: 10px; padding: 6px 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--display); font-weight: 700; font-size: 1.05rem; }
+.strip-text .ph { color: #6c7a86; font-family: var(--body); font-weight: 400; font-size: 0.95rem; }
+.strip-text .w { background: #eef2f4; padding: 3px 10px; font-size: 1.02rem; }
 .strip-text .w.lit { background: var(--yellow); }
-.strip button, .board-foot button { font-family: var(--display); font-weight: 700; border: 0; border-radius: 10px; cursor: pointer; color: #20323f; }
 .strip .speak { background: var(--navy); color: var(--white); padding: 0 18px; font-size: 1rem; }
 .strip .clear { background: #d5e6e2; padding: 0 12px; font-size: 0.85rem; }
-.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(6px, 1vw, 10px); }
-.tile { border: 0; border-radius: 12px; padding: clamp(8px, 1.4vw, 14px) 4px clamp(6px, 1vw, 10px); display: grid; justify-items: center; gap: 2px; cursor: pointer; font-family: var(--body); font-weight: 700; font-size: clamp(0.8rem, 0.7rem + 0.4vw, 1rem); color: #20323f; box-shadow: inset 0 -3px 0 rgba(15,30,46,0.08); transition: transform .08s ease; min-width: 0; }
-.tile .sym { width: clamp(30px, 2rem + 2.4vw, 56px); height: auto; aspect-ratio: 1; }
-.tile:active, .tile.pressed { transform: scale(0.96); }
-.board-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.page-title { margin: 0; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #4e6270; }
+.grid { display: grid; gap: clamp(5px, 0.9vw, 9px); aspect-ratio: 1 / 0.78; }
+.tile { position: relative; border: 0; border-radius: 12px; padding: 4px 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; font-family: var(--body); font-weight: 700; font-size: clamp(0.72rem, 0.62rem + 0.4vw, 1rem); color: #20323f; box-shadow: inset 0 -3px 0 rgba(15,30,46,0.08); min-width: 0; min-height: 0; overflow: hidden; }
+.tile-label { line-height: 1.1; text-align: center; overflow-wrap: anywhere; }
+.tile .pic { display: grid; place-items: center; min-height: 0; }
+.tile .sym { width: clamp(26px, 1.5rem + 2vw, 54px); height: auto; aspect-ratio: 1; }
+.tile .pic--emoji { font-size: clamp(1.4rem, 1rem + 1.6vw, 2.4rem); line-height: 1; }
+.tile--folder::after { content: ""; position: absolute; top: 0; right: 0; width: 0; height: 0; border-style: solid; border-width: 0 clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) 0; border-color: transparent rgba(15,30,46,0.28) transparent transparent; border-top-right-radius: 12px; }
+.tile--empty { background: rgba(255,255,255,0.35); border: 2px dashed #cfe3de; border-radius: 12px; }
+.tile:active { transform: scale(0.97); }
+.board-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .board-foot button { background: #d5e6e2; padding: 10px; font-size: 0.95rem; }
-.board-foot .gmt { background: var(--yellow); }
+.try-controls { margin-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; color: var(--on-navy-soft); }
+.try-controls-head { grid-column: 1 / -1; margin: 0; font-size: 0.95rem; }
+.try-controls label { display: grid; gap: 4px; font-size: 0.85rem; font-family: var(--mono); }
+.try-controls select { font: inherit; font-family: var(--body); font-size: 0.95rem; padding: 8px 10px; border-radius: 8px; border: 0; background: var(--white); color: #20323f; width: 100%; min-width: 0; }
+.try-controls input[type=range] { width: 100%; accent-color: var(--yellow); }
+.try-controls output { color: var(--yellow); }
 .try-note { font-size: 0.9rem; color: var(--on-navy-soft); font-family: var(--mono); }
+@media (max-width: 560px) { .try-controls { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .tile:active { transform: none; } }
 @media (max-width: 900px) { .try { grid-template-columns: 1fr; } }
 
 /* Tour */
@@ -431,7 +449,7 @@ details p { padding-bottom: 16px; }
 .cs-foot:hover span { text-decoration: underline; }
 .foot-blurb { margin-top: 8px; max-width: 36ch; }
 .soon { display: flex; flex-wrap: wrap; gap: 8px; }
-.soon span { font-family: var(--mono); font-size: 0.82rem; border: 2px dashed var(--slate); border-radius: 10px; padding: 6px 12px; color: var(--ink); }
+.soon span, .soon a { font-family: var(--mono); font-size: 0.82rem; border: 2px dashed var(--slate); border-radius: 10px; padding: 6px 12px; color: var(--ink); }
 @media (max-width: 900px) { .team { grid-template-columns: 1fr; } }
 @media (max-width: 420px) { .people { grid-template-columns: 1fr; } }
 
@@ -461,6 +479,14 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
 @media (max-width: 480px) { .foot { grid-template-columns: 1fr; } }
 .install-os{margin:18px 0 6px;font-size:var(--step-0);font-family:inherit}
 .install-card .install-os:first-of-type{margin-top:0}
+.soon-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 8px; }
+.soon-icon { width: 44px; height: 44px; color: var(--yellow); }
+.promises-strip { margin-top: 28px; display: grid; gap: 16px; max-width: 70ch; color: var(--on-navy-soft); }
+.promises-strip b { color: var(--white); }
+.soon-note { font-size: 0.95rem; margin: 0; }
+.soon-note a, .soon a { color: inherit; }
+.soon a { text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 800px) { .soon-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -642,39 +668,76 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <div class="section-head">
         <p class="eyebrow" style="color:var(--yellow)">Have a go</p>
         <h2>Press a word. Hear it.</h2>
-        <p style="color:var(--on-navy-soft)">This is a small version of the Talk page. Press words to build a sentence, then press Speak. Each word lights up as it's said, so a child can see what they hear.</p>
+        <p style="color:var(--on-navy-soft)">This is the real Talk page, with the app's own words and pictures. Press a word to hear it and add it to the sentence, open a folder such as Food or Feelings, then press Speak. Each word lights up as it's said, so a child can see what they hear. Try Help and Give me time too, and change how it behaves with the settings underneath.</p>
       </div>
       <p style="color:var(--on-navy-soft)">Each kind of word has its own colour, on every page, so children start to find words by colour as well as by picture:</p>
       <ul class="fk-key">
-        <li><i style="background:var(--fk-people)"></i>People</li>
-        <li><i style="background:var(--fk-doing)"></i>Doing words</li>
-        <li><i style="background:var(--fk-describe)"></i>Describing</li>
-        <li><i style="background:var(--fk-things)"></i>Things</li>
-        <li><i style="background:var(--fk-places)"></i>Places</li>
-        <li><i style="background:var(--fk-social)"></i>Social words</li>
-        <li><i style="background:var(--fk-little)"></i>Little words</li>
-        <li><i style="background:var(--fk-no)"></i>No and stop</li>
+        <li><i style="background:#fef08a"></i>People</li>
+        <li><i style="background:#bbf7d0"></i>Doing words</li>
+        <li><i style="background:#bfdbfe"></i>Describing</li>
+        <li><i style="background:#fed7aa"></i>Things</li>
+        <li><i style="background:#99f6e4"></i>Places</li>
+        <li><i style="background:#fbcfe8"></i>Social words</li>
+        <li><i style="background:#e9d5ff"></i>Little words</li>
+        <li><i style="background:#fecaca"></i>No and stop</li>
       </ul>
     </div>
     <div>
       <div class="device">
         <div class="screen">
-          <div class="board">
+          <div class="board" id="board">
+            <div class="qbar" role="toolbar" aria-label="Always along the top">
+              <button type="button" id="q-home">Home</button>
+              <button type="button" id="q-help">Help</button>
+              <button type="button" id="q-yes">Yes</button>
+              <button type="button" id="q-no">No</button>
+              <button type="button" class="gmt" id="gmt">Give me time</button>
+            </div>
             <div class="strip">
-              <div class="strip-text" id="strip" aria-live="polite"><span class="ph">Press the words to build a sentence</span></div>
+              <div class="strip-text" id="strip" aria-live="polite"></div>
               <button class="clear" id="clear" type="button">Clear</button>
               <button class="speak" id="speak" type="button">Speak</button>
             </div>
-            <div class="grid4" id="grid"></div>
+            <p class="page-title" id="page-title">Talk</p>
+            <div class="grid" id="grid"></div>
             <div class="board-foot">
-              <button type="button" class="gmt" id="gmt">Give me time</button>
-              <button type="button" id="undo">Back a word</button>
+              <button type="button" id="nav-home">Home</button>
+              <button type="button" id="nav-back">Back</button>
             </div>
           </div>
         </div>
         <div class="device-keys" aria-hidden="true"><span>P1</span><span>P2</span><span>P3</span></div>
       </div>
-      <p class="try-note" id="try-note" style="margin-top:16px">This uses your browser's voice. In the app, Rugged Speech uses the voices already on your Windows computer or Mac, so it talks even with the wifi off.</p>
+      <form class="try-controls" onsubmit="return false" aria-label="Settings for this board">
+        <p class="try-controls-head">In the app, an adult chooses these in Parent Mode. Try them here.</p>
+        <label>When a button is pressed
+          <select id="opt-press">
+            <option value="both">Say the word and add it to the sentence</option>
+            <option value="say">Say the word straight away</option>
+            <option value="add">Only add it to the sentence</option>
+          </select>
+        </label>
+        <label>Reading a sentence out
+          <select id="opt-read">
+            <option value="lit">One word at a time, lighting each word</option>
+            <option value="gaps">With small gaps, a little slower</option>
+            <option value="all">All together</option>
+          </select>
+        </label>
+        <label>Pictures
+          <select id="opt-pics">
+            <option value="drawn">Drawn symbols</option>
+            <option value="emoji">Emoji</option>
+          </select>
+        </label>
+        <label>Voice
+          <select id="opt-voice"><option value="">Automatic (English)</option></select>
+        </label>
+        <label>Speed <output id="opt-rate-out">0.95×</output>
+          <input type="range" id="opt-rate" min="0.6" max="1.3" step="0.05" value="0.95">
+        </label>
+      </form>
+      <p class="try-note" id="try-note" style="margin-top:16px">This uses your browser's voice, and nothing you press is saved or sent anywhere. In the app, Rugged Speech uses the voices already on your Windows computer or Mac, so it talks even with the wifi off. The folders, words and pictures here are the app's own.</p>
     </div>
   </div>
 </section>
@@ -1086,7 +1149,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <ul class="status-list" id="status" aria-label="Where we are">
         <li><span class="pill pill--done">Ready</span><span>The Windows and Mac apps work and have been carefully tested. Every new feature goes to both at once.</span></li>
         <li><span class="pill pill--todo">Next</span><span>A speech and language therapist review of the starter words, and trying it with children.</span></li>
-        <li><span class="pill pill--todo">Coming soon</span><span>iPad and iPhone, and Android, with the same promises: no wifi needed, and nothing about your child leaving the device.</span></li>
+        <li><span class="pill pill--todo">Coming soon</span><span>iPad and iPhone (iOS), Android, and Amazon Fire tablets (Fire OS), with the same promises: no wifi needed, and nothing about your child leaving the device. <a href="#coming-soon">More about what's coming</a>.</span></li>
       </ul>
       <a class="cs-badge" href="https://www.communitystack.io/"><img src="brand/community-stack-icon.png" alt="" width="28" height="28">Part of Community Stack</a>
     </div>
@@ -1118,6 +1181,44 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
   </div>
 </section>
 
+<!-- COMING SOON -->
+<section class="band band--navy" id="coming-soon">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Coming soon</p>
+      <h2>iPad, iPhone, Android and Fire tablets.</h2>
+      <p>Rugged Speech is on Windows and Mac now. We want it on the tablets and phones families already have, so we're bringing it to Apple's iPad and iPhone, to Android, and to Amazon's Fire tablets. There are no dates yet, and we won't promise one until we have it right.</p>
+    </div>
+    <div class="soon-grid">
+      <div class="dev-card">
+        <span class="tag tag--soft">Coming soon</span>
+        <svg class="soon-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="5" width="30" height="38" rx="5" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="37" r="2.2" fill="currentColor"/></svg>
+        <h3>iPad and iPhone</h3>
+        <p>Apple's iOS and iPadOS. A good fit for children who already use an iPad at home or at school.</p>
+      </div>
+      <div class="dev-card">
+        <span class="tag tag--soft">Coming soon</span>
+        <svg class="soon-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="16" y="8" width="26" height="32" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><rect x="5" y="20" width="14" height="22" rx="3" fill="#1c2c3d" stroke="currentColor" stroke-width="3"/><circle cx="12" cy="37" r="1.6" fill="currentColor"/></svg>
+        <h3>Android</h3>
+        <p>Phones and tablets that run Android, including many rugged tablets.</p>
+      </div>
+      <div class="dev-card">
+        <span class="tag tag--soft">Coming soon</span>
+        <svg class="soon-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="12" width="38" height="24" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M14 30c4 3 16 3 20 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        <h3>Amazon Fire tablets</h3>
+        <p>Fire tablets, which run Amazon's Fire OS. They cost little and are widely used in homes and schools.</p>
+      </div>
+    </div>
+    <div class="promises-strip">
+      <p><b>The promises will be the same everywhere.</b> It will work without wifi. Nothing about your child will leave the device. Buttons will stay where your child learnt them. There will be no accounts and no subscription.</p>
+      <div class="cta-row">
+        <a class="btn btn--yellow" id="soon-mail" href="mailto:aac@communitystack.io?subject=Tell%20me%20when%20Rugged%20Speech%20is%20ready%20for%20my%20device">Tell us which one you need <svg><use href="#i-arrow"/></svg></a>
+      </div>
+      <p class="soon-note">We'll only use your email to answer you. Until then, Windows and Mac are <a href="#install">ready to download</a>.</p>
+    </div>
+  </div>
+</section>
+
 <!-- INSTALL -->
 <section class="band band--yellow" id="install">
   <div class="wrap install">
@@ -1125,7 +1226,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <p class="eyebrow">Free for every family and school</p>
       <h2>Get Rugged Speech.</h2>
       <p style="font-size:var(--step-1);max-width:40ch">No subscription, no account, nothing to pay. If you can double-click, you can install it.</p>
-      <div class="soon" aria-label="Where it runs"><span>Windows: available now</span><span>Mac: available now</span><span>iPad and iPhone: coming soon</span><span>Android: coming soon</span></div>
+      <div class="soon" aria-label="Where it runs"><span>Windows: available now</span><span>Mac: available now</span><a href="#coming-soon">iPad and iPhone: coming soon</a><a href="#coming-soon">Android: coming soon</a><a href="#coming-soon">Fire tablets: coming soon</a></div>
       <div class="cta-row">
         <a class="btn btn--navy" href="https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Setup-Windows.exe">Download for Windows <svg><use href="#i-arrow"/></svg></a>
         <a class="btn btn--navy" href="https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Mac-AppleSilicon.dmg">Download for Mac (Apple silicon) <svg><use href="#i-arrow"/></svg></a>
@@ -1164,7 +1265,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         <p class="foot-blurb">Everyday AAC that goes wherever your child goes: home, school, the park and back again.</p>
         <a class="cs-foot" href="https://www.communitystack.io/"><img src="brand/community-stack-icon.png" alt="" width="28" height="28"><span>Part of Community Stack</span></a>
       </div>
-      <div><h4>Who it's for</h4><ul><li><a href="#families">Parents and carers</a></li><li><a href="#schools">SENCos and schools</a></li><li><a href="#slts">Speech and language therapists</a></li><li><a href="#try">Try a board</a></li></ul></div>
+      <div><h4>Who it's for</h4><ul><li><a href="#families">Parents and carers</a></li><li><a href="#schools">SENCos and schools</a></li><li><a href="#slts">Speech and language therapists</a></li><li><a href="#try">Try a board</a></li><li><a href="#coming-soon">Coming soon</a></li></ul></div>
       <div><h4>Guides</h4><ul><li><a href="#docs" data-doc="parents">Parents and carers</a></li><li><a href="#docs" data-doc="staff">Teachers and staff</a></li><li><a href="#docs" data-doc="slt">Therapists</a></li><li><a href="#devices">Choosing a device</a></li><li><a href="#docs" data-doc="help">If something goes wrong</a></li></ul></div>
       <div><h4>About</h4><ul><li><a href="#team">Behind the project</a></li><li><a href="#status">Where we are</a></li><li><a href="https://github.com/ESumner404/RuggedSpeechDev/blob/main/docs/security.md">Privacy and security</a></li><li><a href="https://github.com/ESumner404/RuggedSpeechDev">For developers</a></li><li><a href="#feedback">Feedback and suggestions</a></li></ul></div>
     </div>
@@ -1176,6 +1277,8 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
 </footer>
 
 
+<script src="board-data.js"></script>
+<script src="board.js"></script>
 <script>
 (function () {
   // Mobile nav
@@ -1186,74 +1289,6 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
   links.addEventListener('click', function (e) { if (e.target.closest('a')) { links.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); } });
-
-  // Live board
-  var FK = { people: 'var(--fk-people)', doing: 'var(--fk-doing)', describe: 'var(--fk-describe)', things: 'var(--fk-things)', places: 'var(--fk-places)', social: 'var(--fk-social)', little: 'var(--fk-little)', no: 'var(--fk-no)' };
-  // Pictures are the app's own drawn symbols (src/renderer/symbols/library.ts)
-  var WORDS = [
-    ["I", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Crect%20x%3D%2224%22%20y%3D%2248%22%20width%3D%226%22%20height%3D%2212%22%20rx%3D%222%22%20fill%3D%22%234b5563%22%2F%3E%3Crect%20x%3D%2234%22%20y%3D%2248%22%20width%3D%226%22%20height%3D%2212%22%20rx%3D%222%22%20fill%3D%22%234b5563%22%2F%3E%3Crect%20x%3D%2223%22%20y%3D%2230%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%226%22%20fill%3D%22%233b82f6%22%2F%3E%3Cpath%20d%3D%22M23%2034L14%2020%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M41%2034L50%2020%22%20fill%3D%22none%22%2F%3E%3Cellipse%20cx%3D%2213%22%20cy%3D%2218%22%20rx%3D%225%22%20ry%3D%225.5%22%20fill%3D%22%23f4b98c%22%2F%3E%3Cellipse%20cx%3D%2251%22%20cy%3D%2218%22%20rx%3D%225%22%20ry%3D%225.5%22%20fill%3D%22%23f4b98c%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2220%22%20r%3D%2210%22%20fill%3D%22%23f4b98c%22%2F%3E%3Cpath%20d%3D%22M21%2019%20q11%20-14%2022%200%20l-2%20-2%20h-16%20z%22%20fill%3D%22%23a16207%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "people"],
-    ["want", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M6%2052%20q4%20-8%2014%20-8%20h14%20q4%200%204%204%20t-4%204%20h-12%20M34%2048%20h8%20q6%200%2010%20-6%20l4%20-6%22%20fill%3D%22%23f4b98c%22%2F%3E%3Cpath%20d%3D%22M44%2026%20l3%206%20l7%201%20l-5%205%20l1%207%20l-6%20-4%20l-6%204%20l1%20-7%20l-5%20-5%20l7%20-1%20z%22%20fill%3D%22%23facc15%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "doing"],
-    ["like", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Crect%20x%3D%2210%22%20y%3D%2228%22%20width%3D%2212%22%20height%3D%2226%22%20rx%3D%223%22%20fill%3D%22%233b82f6%22%2F%3E%3Cpath%20d%3D%22M26%2054%20h20%20q8%200%208%20-8%20l-2%20-14%20q-1%20-6%20-8%20-6%20h-8%20l2%20-10%20q1%20-8%20-6%20-8%20l-6%2018%20v28%20z%22%20fill%3D%22%23facc15%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "doing"],
-    ["more", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2224%22%20fill%3D%22%2322c55e%22%2F%3E%3Cpath%20d%3D%22M32%2018%20v28%20M18%2032%20h28%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%227%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "little"],
-    ["no", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2224%22%20fill%3D%22%23ef4444%22%2F%3E%3Cpath%20d%3D%22M18%2018%20L46%2046%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%227%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M46%2018%20L18%2046%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%227%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "no"],
-    ["yes", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2224%22%20fill%3D%22%2322c55e%22%2F%3E%3Cpath%20d%3D%22M19%2033%20l9%209%20l18%20-20%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%227%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "social"],
-    ["help", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2225%22%20fill%3D%22%23ef4444%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2211%22%20fill%3D%22%23ffffff%22%2F%3E%3Cpath%20d%3D%22M15%2015%20L24%2024%20M49%2015%20L40%2024%20M15%2049%20L24%2040%20M49%2049%20L40%2040%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M14%2014%20l10%2010%20M50%2014%20l-10%2010%20M14%2050%20l10%20-10%20M50%2050%20l-10%20-10%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%226%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2211%22%20fill%3D%22%23fee2e2%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "social"],
-    ["go", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Crect%20x%3D%2224%22%20y%3D%2248%22%20width%3D%226%22%20height%3D%2212%22%20rx%3D%222%22%20fill%3D%22%234b5563%22%2F%3E%3Crect%20x%3D%2234%22%20y%3D%2248%22%20width%3D%226%22%20height%3D%2212%22%20rx%3D%222%22%20fill%3D%22%234b5563%22%2F%3E%3Crect%20x%3D%2223%22%20y%3D%2230%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%226%22%20fill%3D%22%2322c55e%22%2F%3E%3Cpath%20d%3D%22M23%2034L18%2046%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M41%2034L46%2046%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2220%22%20r%3D%2210%22%20fill%3D%22%23f4b98c%22%2F%3E%3Cpath%20d%3D%22M21%2019%20q11%20-14%2022%200%20l-2%20-2%20h-16%20z%22%20fill%3D%22%23a16207%22%2F%3E%3Cpath%20d%3D%22M46%2052%20h12%20m-4%20-4%20l4%204%20l-4%204%22%20fill%3D%22none%22%20stroke-width%3D%223%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "doing"],
-    ["drink", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M14%2014%20h36%20l-5%2042%20h-26%20z%22%20fill%3D%22%2393c5fd%22%2F%3E%3Cpath%20d%3D%22M34%204L38%2014%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M16%2026%20h32%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "things"],
-    ["apple", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M32%2020%20C22%2012%208%2020%2010%2036%20C12%2052%2024%2058%2032%2054%20C40%2058%2052%2052%2054%2036%20C56%2020%2042%2012%2032%2020%20z%22%20fill%3D%22%23ef4444%22%2F%3E%3Cpath%20d%3D%22M32%2020%20q0%20-8%206%20-12%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M36%2012%20q8%20-4%2010%202%20q-8%204%20-10%20-2%20z%22%20fill%3D%22%2322c55e%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "things"],
-    ["park", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Crect%20x%3D%2228%22%20y%3D%2234%22%20width%3D%228%22%20height%3D%2222%22%20rx%3D%222%22%20fill%3D%22%23a16207%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2224%22%20r%3D%2218%22%20fill%3D%22%2322c55e%22%2F%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2232%22%20r%3D%2211%22%20fill%3D%22%2322c55e%22%2F%3E%3Ccircle%20cx%3D%2244%22%20cy%3D%2232%22%20r%3D%2211%22%20fill%3D%22%2322c55e%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "places"],
-    ["home", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M6%2030%20L32%208%20L58%2030%20z%22%20fill%3D%22%23ef4444%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2230%22%20width%3D%2240%22%20height%3D%2226%22%20rx%3D%222%22%20fill%3D%22%23fde68a%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2238%22%20width%3D%2212%22%20height%3D%2218%22%20rx%3D%222%22%20fill%3D%22%23a16207%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2234%22%20width%3D%228%22%20height%3D%228%22%20rx%3D%221%22%20fill%3D%22%2393c5fd%22%2F%3E%3Crect%20x%3D%2242%22%20y%3D%2234%22%20width%3D%226%22%20height%3D%228%22%20rx%3D%221%22%20fill%3D%22%2393c5fd%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "places"],
-    ["look", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cellipse%20cx%3D%2232%22%20cy%3D%2232%22%20rx%3D%2226%22%20ry%3D%2216%22%20fill%3D%22%23ffffff%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2211%22%20fill%3D%22%233b82f6%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%225%22%20fill%3D%22%231f2937%22%2F%3E%3Ccircle%20cx%3D%2235%22%20cy%3D%2229%22%20r%3D%222%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "doing"],
-    ["happy", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2225%22%20fill%3D%22%23facc15%22%2F%3E%3Ccircle%20cx%3D%2226%22%20cy%3D%2230%22%20r%3D%221.8%22%20fill%3D%22%231f2937%22%2F%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2230%22%20r%3D%221.8%22%20fill%3D%22%231f2937%22%2F%3E%3Cpath%20d%3D%22M26%2037q6%207%2012%200%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "describe"],
-    ["stop", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M22%206%20h20%20l16%2016%20v20%20l-16%2016%20h-20%20l-16%20-16%20v-20%20z%22%20fill%3D%22%23ef4444%22%2F%3E%3Cpath%20d%3D%22M19%2032%20h26%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%227%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "no"],
-    ["please", "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cg%20stroke%3D%22%231f2937%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M32%2056%20C22%2048%2014%2042%2014%2032%20L22%2014%20L32%2026%20L42%2014%20L50%2032%20C50%2042%2042%2048%2032%2056%20z%22%20fill%3D%22%23f4b98c%22%2F%3E%3Cpath%20d%3D%22M32%2026L32%2050%22%20fill%3D%22none%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E", "social"]
-  ];
-  var grid = document.getElementById('grid');
-  var strip = document.getElementById('strip');
-  var note = document.getElementById('try-note');
-  var sentence = [];
-  var synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
-
-  function say(text, onWord) {
-    if (!synth) { note.textContent = 'Your browser has no voice, so the words just show here. On the tablet, Rugged Speech says them out loud.'; return; }
-    try {
-      synth.cancel();
-      var u = new SpeechSynthesisUtterance(text);
-      u.lang = 'en-GB'; u.rate = 0.95;
-      if (onWord) {
-        u.onboundary = function (ev) { if (ev.name === 'word' || ev.name === undefined) onWord(text.slice(0, ev.charIndex).split(/\s+/).filter(Boolean).length); };
-        u.onend = function () { onWord(-1); };
-      }
-      synth.speak(u);
-    } catch (e) { /* no voice available */ }
-  }
-  function render(lit) {
-    if (!sentence.length) { strip.innerHTML = '<span class="ph">Press the words to build a sentence</span>'; return; }
-    strip.innerHTML = '';
-    sentence.forEach(function (w, i) {
-      var s = document.createElement('span');
-      s.className = 'w' + (i === lit ? ' lit' : '');
-      s.textContent = w;
-      strip.appendChild(s);
-    });
-  }
-  WORDS.forEach(function (w) {
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'tile'; b.style.background = FK[w[2]];
-    b.innerHTML = '<img class="sym" src="' + w[1] + '" alt="" aria-hidden="true" draggable="false"><span>' + w[0] + '</span>';
-    b.addEventListener('click', function () {
-      if (sentence.length < 8) sentence.push(w[0]);
-      render(); say(w[0]);
-    });
-    grid.appendChild(b);
-  });
-  document.getElementById('speak').addEventListener('click', function () {
-    if (!sentence.length) return;
-    say(sentence.join(' '), function (i) { render(i); });
-  });
-  document.getElementById('clear').addEventListener('click', function () { sentence = []; render(); if (synth) synth.cancel(); });
-  document.getElementById('undo').addEventListener('click', function () { sentence.pop(); render(); });
-  document.getElementById('gmt').addEventListener('click', function () { say('I know what I want to say. Please give me a moment.'); });
 
   // Tour
   var TOUR = [
@@ -1316,6 +1351,17 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
     });
   }
   docsNav.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) showDoc(b.dataset.doc); });
+  // Arrow keys, Home and End move between the guides, as they do for any set of tabs.
+  docsNav.addEventListener('keydown', function (e) {
+    var tabs = Array.prototype.slice.call(docsNav.children);
+    var cur = tabs.indexOf(document.activeElement);
+    if (cur < 0) return;
+    var next = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? (cur + 1) % tabs.length : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? (cur - 1 + tabs.length) % tabs.length : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : -1;
+    if (next < 0) return;
+    e.preventDefault();
+    showDoc(tabs[next].dataset.doc);
+    tabs[next].focus();
+  });
   document.querySelectorAll('a[data-doc]').forEach(function (a) { a.addEventListener('click', function () { showDoc(a.dataset.doc); }); });
 })();
 </script>

@@ -47,6 +47,10 @@ npm run dev
 - Keep pull requests small and about one thing. Describe what a person using the app will notice.
 - If you change what the app does, update [the guide](docs/user-guide.md) and [the feature list](docs/features.md) in the same pull request.
 
+## The website
+
+The page in `website/` is plain HTML. Its "Have a go" board uses the app's own starter words, folders and drawn symbols, in `website/board-data.js`. That file is generated: if you change the starter words or the symbols, run `npm run website:board` and commit the result. A unit test fails if the two drift apart.
+
 ## Releasing
 
 A new version goes to Windows and Mac together. Change `version` in `package.json`, commit, then tag and push (`git tag v0.2.0 && git push origin v0.2.0`). The release workflow builds the Windows installer and both Mac disk images and makes a draft release with checksums; publish it once you have tried the files. Run `npm run pack` again before the end-to-end tests if you have just built a release locally, because a release build switches the debug port off, and the tests need it.
