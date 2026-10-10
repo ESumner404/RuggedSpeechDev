@@ -9,7 +9,7 @@ export default defineConfig({
   globalSetup: './tests/e2e/global-setup.ts',
   testDir: 'tests/e2e',
   // A computer on a build server is slower than a desk one, and several tests start the app more than once.
-  timeout: process.env['CI'] ? 60_000 : 30_000,
+  timeout: process.env['CI'] ? (process.platform === 'win32' ? 150_000 : 60_000) : 30_000,
   retries: 0,
   reporter: 'list',
   workers: 1,

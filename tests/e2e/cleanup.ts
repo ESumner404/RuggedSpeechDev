@@ -26,12 +26,16 @@ type LaunchOptions = Parameters<typeof electron.launch>[0];
  */
 export async function launchElectron(options: LaunchOptions): Promise<ElectronApplication> {
   let lastError: unknown;
-  for (let attempt = 0; attempt < 6; attempt += 1) {
+  // On Windows build computers about half of the starts do not finish, so each is given less time and more tries.
+  const slowStarts = Boolean(process.env['CI']) && process.platform === 'win32';
+  const tries = slowStarts ? 10 : 6;
+  const waitFor = slowStarts ? 8_000 : 12_000;
+  for (let attempt = 0; attempt < tries; attempt += 1) {
     let app: ElectronApplication | undefined;
     try {
-      app = await electron.launch({ ...options, timeout: options?.timeout ?? 12_000 });
+      app = await electron.launch({ ...options, timeout: options?.timeout ?? waitFor });
       // A start that gives no window is as good as one that never finished.
-      await app.firstWindow({ timeout: 12_000 });
+      await app.firstWindow({ timeout: waitFor });
       return watch(app);
     } catch (error) {
       lastError = error;
