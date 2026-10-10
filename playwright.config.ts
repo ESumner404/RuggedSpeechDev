@@ -6,8 +6,10 @@ import { defineConfig } from '@playwright/test';
 process.env['RUGGED_SPEECH_HIDDEN_FOR_TESTS'] ??= '1';
 
 export default defineConfig({
+  globalSetup: './tests/e2e/global-setup.ts',
   testDir: 'tests/e2e',
-  timeout: 30_000,
+  // A computer on a build server is slower than a desk one, and several tests start the app more than once.
+  timeout: process.env['CI'] ? (process.platform === 'win32' ? 150_000 : 60_000) : 30_000,
   retries: 0,
   reporter: 'list',
   workers: 1,

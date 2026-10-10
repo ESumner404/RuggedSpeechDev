@@ -250,10 +250,11 @@ button {
 .home-screen {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(2, minmax(min-content, 1fr));
   gap: 1rem;
   height: 100%;
   padding: 1.5rem;
+  overflow-y: auto;
 }
 
 .home-screen__tile {
@@ -276,6 +277,9 @@ button {
   flex: 1;
   min-height: 0;
   padding: 0.75rem;
+  /* A larger text size makes buttons taller than the screen has room for.
+     The grid then scrolls, rather than hiding the bottom rows. */
+  overflow-y: auto;
 }
 
 .talk-screen__loading {
@@ -308,8 +312,12 @@ button {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  height: 100%;
-  min-height: 0;
+  min-height: 100%;
+}
+
+.board-grid-wrapper > .board-grid {
+  flex: 1 0 auto;
+  height: auto;
 }
 
 /* Switch scanning (docs/build-plan.md Phase 7), a visible, announced status of where
@@ -544,6 +552,7 @@ button {
 .feelings-help-screen__body {
   flex: 1;
   min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding: 0.75rem;
@@ -551,17 +560,17 @@ button {
 }
 
 .feelings-help-screen__grid {
-  flex: 1;
-  min-height: 0;
+  flex: 1 0 auto;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-rows: repeat(4, minmax(min-content, 1fr));
 }
 
 .feelings-help-screen__grid--help {
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(3, minmax(min-content, 1fr));
   padding: 0.75rem;
   height: 100%;
+  overflow-y: auto;
 }
 
 .board-button[aria-pressed='true'] {
@@ -593,8 +602,9 @@ button {
   flex: 1;
   min-height: 0;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(2, minmax(min-content, 1fr));
   padding: 0.75rem;
+  overflow-y: auto;
 }
 
 .recent-screen {
@@ -663,6 +673,7 @@ button {
 .keyboard-screen__body {
   flex: 1;
   min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -718,8 +729,7 @@ button {
 }
 
 .on-screen-keyboard {
-  flex: 1;
-  min-height: 0;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -733,6 +743,7 @@ button {
 
 .on-screen-keyboard__key {
   flex: 1;
+  min-height: calc(var(--tap-target-min) * 0.6);
   border: 2px solid var(--color-border);
   border-radius: 8px;
   background: var(--color-background);
@@ -752,6 +763,12 @@ button {
 .keyboard-screen__actions {
   display: flex;
   gap: 0.75rem;
+  /* Speak stays in reach however far the keys have to scroll. */
+  position: sticky;
+  bottom: 0;
+  padding: 0.4rem 0 0.75rem;
+  margin-bottom: -0.75rem;
+  background: var(--color-background);
 }
 
 .keyboard-screen__actions .sentence-strip__speak {
@@ -3432,6 +3449,7 @@ button {
   align-items: center;
   gap: 0.5rem;
   min-height: 0;
+  overflow-y: auto;
 }
 
 .body-figure {
@@ -3508,9 +3526,20 @@ button {
   gap: 0.4rem;
 }
 
+.my-body__step {
+  margin: 0.2rem 0 -0.2rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #555;
+}
+
 .my-body__sentence {
-  margin: 0;
+  margin: 0.2rem 0 0;
+  padding: 0.5rem 0.9rem;
   min-height: 2.4rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-chip-background);
   font-size: 1.6rem;
   font-weight: 800;
 }
@@ -3577,8 +3606,13 @@ button {
 }
 
 .body-tab__choice {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
   min-height: 2.5rem;
-  padding: 0 0.8rem;
+  padding: 0.25rem 0.8rem;
   border: 2px solid var(--color-border);
   border-radius: 10px;
   background: var(--color-background);
@@ -3588,6 +3622,11 @@ button {
 .body-tab__choice--on {
   border-color: var(--color-accent);
   box-shadow: inset 0 0 0 3px var(--color-accent);
+}
+
+.head-preview {
+  display: block;
+  flex: none;
 }
 
 /* Jokes */
@@ -3643,6 +3682,43 @@ button {
   padding: 0.75rem;
 }
 
+.music-screen__lists {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.music-screen__list {
+  min-height: 3rem;
+  padding: 0 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-background);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.music-screen__list--chosen {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 3px var(--color-accent);
+}
+
+.music-screen__list:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.music-screen__play-all {
+  margin-left: auto;
+  background: var(--color-chip-background);
+}
+
+.music-screen__none {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
 .music-screen__songs {
   flex: 1;
   min-height: 0;
@@ -3692,6 +3768,28 @@ button {
   margin: 0;
   font-size: 1.2rem;
   font-weight: 700;
+}
+
+.music-tab__playlist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.music-tab__playlist-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.music-tab__pick {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .music-tab__add {
@@ -5039,4 +5137,297 @@ html[data-labels='words'] .board-button__label {
 
 .safeguarding-tab__lead {
   font-size: 1.1rem;
+}
+
+/* Seasons: words and games for a time of year */
+.seasons-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  height: 100%;
+  padding: 0.75rem;
+}
+
+.seasons-screen__choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.seasons-screen__choice {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-background);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.seasons-screen__choice--gap {
+  visibility: hidden;
+}
+
+.seasons-screen__none {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.seasons-screen__choice--chosen,
+.seasons-screen__mode--chosen {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 3px var(--color-accent);
+}
+
+.seasons-screen__choice-emoji {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.seasons-screen__now {
+  padding: 0 0.4rem;
+  border-radius: 6px;
+  background: var(--color-chip-background);
+  font-size: 0.8rem;
+}
+
+.seasons-screen__modes {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.seasons-screen__mode {
+  flex: 1;
+  min-height: 2.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-background);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.seasons-screen__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.seasons-screen__words {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(7rem, 1fr);
+  gap: 0.6rem;
+  min-height: 100%;
+}
+
+.seasons-screen__word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.4rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.seasons-screen__word-emoji {
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.seasons-screen__word-label {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Make a tree */
+.tree-screen {
+  display: flex;
+  gap: 1rem;
+  height: 100%;
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+
+.tree-screen__stage {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.tree-screen__picture {
+  position: relative;
+  height: 100%;
+  min-height: 20rem;
+  aspect-ratio: 5 / 6;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tree-screen__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tree-screen__slot {
+  position: absolute;
+  width: 11%;
+  min-width: 2.25rem;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 2px dashed rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.tree-screen__slot--full {
+  border: 0;
+  background: transparent;
+}
+
+.tree-screen__slot--floor {
+  border-radius: 8px;
+  width: 15%;
+  aspect-ratio: 1;
+  border-color: #1a1a1a;
+}
+
+.tree-screen__slot--top {
+  border-color: #92400e;
+}
+
+.tree-screen__bauble {
+  display: block;
+  width: 78%;
+  aspect-ratio: 1;
+  border: 2px solid #1a1a1a;
+  border-radius: 50%;
+}
+
+.tree-screen__emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: min(2.2rem, 4vh);
+  line-height: 1;
+}
+
+.tree-screen__side {
+  flex: 1;
+  min-width: 14rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.tree-screen__tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.5rem;
+}
+
+.tree-screen__tool {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.2rem 0.6rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-background);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.tree-screen__tool--chosen {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 3px var(--color-accent);
+}
+
+.tree-screen__tool-sample {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.tree-screen__tool-sample .tree-screen__bauble {
+  width: 1.6rem;
+}
+
+.tree-screen__controls {
+  display: flex;
+  gap: 0.6rem;
+}
+
+/* Parent Mode: seasons and celebrations */
+.seasons-tab__season {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.seasons-tab__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.seasons-tab__show {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 14rem;
+}
+
+.seasons-tab__emoji {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.seasons-tab__words {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.seasons-tab__word {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.seasons-tab__emoji-input {
+  width: 3.2rem;
+  padding: 0.3rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 1.4rem;
+  text-align: center;
 }

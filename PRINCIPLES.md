@@ -19,8 +19,12 @@ is a companion for anyone whose speech is unavailable, unreliable or costly in
 the moment. Some users will speak most of the time and reach for this only when
 stuck. The product must never behave as though speaking has been given up on.
 
-Target: **a normal desktop application on Windows 10 Pro.** Double-click an
-icon, it opens. That is the whole deployment story.
+Targets: **a normal desktop application on Windows 10 and 11, and on macOS**
+(Apple silicon and Intel). The same app and the same features ship for both at
+every release. Double-click an icon, it opens. That is the whole deployment
+story. Windows was the first target and is where the child's own computer is
+most often found, so where the two differ, Windows is the one the wording and
+the defaults are written for.
 
 ## 2. The five invariants
 

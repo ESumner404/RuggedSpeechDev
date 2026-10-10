@@ -1,8 +1,9 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron } from './cleanup';
 
 async function setUpPin(page: Page, pin: string): Promise<void> {
   for (const digit of pin) {
@@ -26,7 +27,7 @@ async function completeFirstRun(page: Page, pin: string): Promise<void> {
 test.describe('Skeleton', () => {
   test('opens maximised on the home screen, no menu, no devtools, secure context', async () => {
     const userDataDir = mkdtempSync(join(tmpdir(), 'mywords-e2e-smoke-'));
-    const app = await electron.launch({
+    const app = await launchElectron({
       executablePath: resolveExecutablePath(),
       args: [`--user-data-dir=${userDataDir}`],
     });
@@ -41,8 +42,10 @@ test.describe('Skeleton', () => {
     );
     expect(isMaximized).toBe(true);
 
-    const menu = await app.evaluate(({ Menu }) => Menu.getApplicationMenu());
-    expect(menu).toBeNull();
+    // Windows has no menu at all. A Mac cannot, so it has only Hide, Quit and the editing shortcuts.
+    const menuLabels = await app.evaluate(({ Menu }) => Menu.getApplicationMenu()?.items.map((item) => item.label) ?? null);
+    if (process.platform === 'darwin') expect(menuLabels).toEqual(['Rugged Speech Test', 'Edit']);
+    else expect(menuLabels).toBeNull();
 
     const devToolsOpened = await app.evaluate(
       ({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.webContents.isDevToolsOpened() ?? false,
@@ -53,7 +56,7 @@ test.describe('Skeleton', () => {
     expect(isSecureContext).toBe(true);
 
     await app.close();
-    rmSync(userDataDir, { recursive: true, force: true });
+    removeDir(userDataDir);
   });
 
   test.skip(

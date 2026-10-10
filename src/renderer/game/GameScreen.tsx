@@ -15,7 +15,8 @@ import { Pic } from '../symbols/Pic';
 // Nothing speaks unless a person presses something (invariant I5): not when
 // a new picture appears, and not when the right word is found. What is said
 // is not kept in Recent, because it is practice and not what the person said.
-export function GameScreen() {
+// With `fixedWords` (the Seasons game) it uses those words and not the boards.
+export function GameScreen({ fixedWords }: { fixedWords?: Item[] } = {}) {
   const words = useSignal<Item[] | null>(null);
   const round = useSignal<Round | undefined>(undefined);
   const tried = useSignal<string[]>([]);
@@ -24,6 +25,11 @@ export function GameScreen() {
   const picturesOnWords = useSignal(false);
 
   useEffect(() => {
+    if (fixedWords) {
+      words.value = fixedWords;
+      round.value = makeRound(fixedWords);
+      return;
+    }
     void getAllBoards().then((boards) => {
       const available = gameWords(boards, wordStageSetting.signal.value);
       words.value = available;

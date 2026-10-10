@@ -1,8 +1,9 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type ElectronApplication, type Page } from '@playwright/test';
+import { expect, type ElectronApplication, type Page } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron } from './cleanup';
 
 export async function setUpPin(page: Page, pin: string): Promise<void> {
   for (const digit of pin) {
@@ -73,7 +74,7 @@ export async function openDetails(page: Page, label: string) {
 }
 
 export function launchApp(userDataDir: string): Promise<ElectronApplication> {
-  return electron.launch({
+  return launchElectron({
     executablePath: resolveExecutablePath(),
     args: [`--user-data-dir=${userDataDir}`],
   });
@@ -81,7 +82,7 @@ export function launchApp(userDataDir: string): Promise<ElectronApplication> {
 
 export function makeUserDataDir(name: string): { dir: string; remove: () => void } {
   const dir = mkdtempSync(join(tmpdir(), `mywords-e2e-${name}-`));
-  return { dir, remove: () => rmSync(dir, { recursive: true, force: true }) };
+  return { dir, remove: () => removeDir(dir) };
 }
 
 /** Points the native save dialog at a fixed path with no UI. */

@@ -1,5 +1,5 @@
 import { myBodySetting } from '../store/db';
-import { BodyFigure } from '../body/BodyFigure';
+import { BodyFigure, HeadPreview } from '../body/BodyFigure';
 import {
   CLOTHES_COLOURS,
   DEFAULT_BODY_LOOK,
@@ -7,6 +7,7 @@ import {
   FIGURE_STARTS,
   HAIR_COLOURS,
   HAIR_STYLES,
+  HEADWEAR,
   OUTFITS,
   SKIN_TONES,
   withDefaults,
@@ -70,6 +71,7 @@ export function BodyTab() {
               aria-pressed={look.figure === figure}
               onClick={() => update(FIGURE_STARTS[figure].changes)}
             >
+              <HeadPreview look={{ ...look, ...FIGURE_STARTS[figure].changes }} />
               {FIGURE_STARTS[figure].label}
             </button>
           ))}
@@ -90,10 +92,33 @@ export function BodyTab() {
               aria-pressed={look.hairStyle === style.id}
               onClick={() => update({ hairStyle: style.id })}
             >
+              <HeadPreview look={{ ...look, hairStyle: style.id, headwear: 'none' }} />
               {style.label}
             </button>
           ))}
         </div>
+
+        <h2 class="access-tab__heading">Head covering</h2>
+        <div class="body-tab__choices" role="group" aria-label="Head covering">
+          {HEADWEAR.map((item) => (
+            <button
+              type="button"
+              key={item.id}
+              class={`body-tab__choice${look.headwear === item.id ? ' body-tab__choice--on' : ''}`}
+              aria-pressed={look.headwear === item.id}
+              onClick={() => update({ headwear: item.id })}
+            >
+              <HeadPreview look={{ ...look, headwear: item.id }} />
+              {item.label}
+            </button>
+          ))}
+        </div>
+        {look.headwear !== 'none' && (
+          <Swatches label="Head covering colour" colours={CLOTHES_COLOURS} value={look.headwearColour} onChoose={(headwearColour) => update({ headwearColour })} />
+        )}
+        <p class="access-tab__hint">
+          {HEADWEAR.find((item) => item.id === look.headwear)?.hint || 'Only if the child wears one. A hijab, a turban or a kippah can be shown.'}
+        </p>
 
         <h2 class="access-tab__heading">Clothes</h2>
         <div class="body-tab__choices" role="group" aria-label="Bottoms">

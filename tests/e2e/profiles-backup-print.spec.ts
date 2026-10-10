@@ -1,8 +1,9 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type ElectronApplication, type Page, test } from '@playwright/test';
+import { expect, type ElectronApplication, type Page, test } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron } from './cleanup';
 
 function parentModeButton(page: Page) {
   return page.locator('.parent-mode-button');
@@ -63,7 +64,7 @@ async function spyOnSpeech(page: Page): Promise<void> {
 }
 
 function launch(userDataDir: string) {
-  return electron.launch({
+  return launchElectron({
     executablePath: resolveExecutablePath(),
     args: [`--user-data-dir=${userDataDir}`],
   });
@@ -135,7 +136,7 @@ test.describe('Phase 6. Profiles, backup, print', () => {
 
       await app.close();
     } finally {
-      rmSync(userDataDir, { recursive: true, force: true });
+      removeDir(userDataDir);
     }
   });
 
@@ -205,9 +206,9 @@ test.describe('Phase 6. Profiles, backup, print', () => {
 
       await cleanApp.close();
     } finally {
-      rmSync(sourceDataDir, { recursive: true, force: true });
-      rmSync(cleanDataDir, { recursive: true, force: true });
-      rmSync(backupDir, { recursive: true, force: true });
+      removeDir(sourceDataDir);
+      removeDir(cleanDataDir);
+      removeDir(backupDir);
     }
   });
 
@@ -260,9 +261,9 @@ test.describe('Phase 6. Profiles, backup, print', () => {
 
       await cleanApp.close();
     } finally {
-      rmSync(sourceDataDir, { recursive: true, force: true });
-      rmSync(cleanDataDir, { recursive: true, force: true });
-      rmSync(backupDir, { recursive: true, force: true });
+      removeDir(sourceDataDir);
+      removeDir(cleanDataDir);
+      removeDir(backupDir);
     }
   });
 
@@ -291,7 +292,7 @@ test.describe('Phase 6. Profiles, backup, print', () => {
       await page.emulateMedia({ media: 'screen' });
       await app.close();
     } finally {
-      rmSync(userDataDir, { recursive: true, force: true });
+      removeDir(userDataDir);
     }
   });
 });

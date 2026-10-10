@@ -213,7 +213,7 @@ export function Grid({ board, onPress, auxiliaryControls = [] }: Props) {
       <div
         class="board-grid"
         style={{
-          gridTemplateRows: `repeat(${board.grid.rows}, 1fr)`,
+          gridTemplateRows: `repeat(${board.grid.rows}, minmax(min-content, 1fr))`,
           gridTemplateColumns: `repeat(${board.grid.columns}, 1fr)`,
         }}
         onKeyDown={handleGridKeyDown}
