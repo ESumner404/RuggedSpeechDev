@@ -25,11 +25,36 @@ export async function launchElectron(options: LaunchOptions): Promise<ElectronAp
   let lastError: unknown;
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
-      return await electron.launch(options);
+      return watch(await electron.launch(options));
     } catch (error) {
       lastError = error;
       await new Promise((resolve) => setTimeout(resolve, 1500));
     }
   }
   throw lastError;
+}
+
+/**
+ * On a build server only: say what the app is doing when a test has been
+ * running too long, so a stuck run can be read from its log instead of guessed at.
+ * It prints what the window shows and anything the page reported, and nothing else.
+ */
+function watch(app: ElectronApplication): ElectronApplication {
+  if (!process.env['CI']) return app;
+  app.on('window', (page) => {
+    page.on('console', (message) => {
+      if (message.type() === 'error' || message.type() === 'warning') console.log(`[page ${message.type()}] ${message.text().slice(0, 300)}`);
+    });
+    page.on('pageerror', (error) => console.log(`[page error] ${error.message.slice(0, 300)}`));
+    page.on('crash', () => console.log('[page crashed]'));
+  });
+  app.process().on('exit', (code) => console.log(`[app exited] code ${code}`));
+  const timer = setTimeout(async () => {
+    for (const page of app.windows()) {
+      const text = await page.evaluate(() => document.body.innerText.replace(/\s+/g, ' ').slice(0, 500)).catch((e: Error) => `(could not read the page: ${e.message.slice(0, 120)})`);
+      console.log(`[still open after 40s] ${page.url()} :: ${text}`);
+    }
+  }, 40_000);
+  app.on('close', () => clearTimeout(timer));
+  return app;
 }
