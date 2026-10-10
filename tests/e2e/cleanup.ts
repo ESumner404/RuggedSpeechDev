@@ -28,10 +28,7 @@ export async function launchElectron(options: LaunchOptions): Promise<ElectronAp
   for (let attempt = 0; attempt < 6; attempt += 1) {
     let app: ElectronApplication | undefined;
     try {
-      // A build computer on Windows has no graphics card; starting without the graphics process
-      // (the log shows its cache failing) is where the starts that never finish were stopping.
-      const args = process.env['CI'] && process.platform === 'win32' ? [...(options?.args ?? []), '--disable-gpu'] : options?.args;
-      app = await electron.launch({ ...options, ...(args ? { args } : {}), timeout: options?.timeout ?? 12_000 });
+      app = await electron.launch({ ...options, timeout: options?.timeout ?? 12_000 });
       // A start that gives no window is as good as one that never finished.
       await app.firstWindow({ timeout: 12_000 });
       return watch(app);
