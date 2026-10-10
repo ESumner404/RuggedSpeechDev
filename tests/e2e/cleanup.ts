@@ -17,17 +17,20 @@ export function removeDir(path: string): void {
 type LaunchOptions = Parameters<typeof electron.launch>[0];
 
 /**
- * Starts the app. Starting it again straight after it was closed can fail on
- * Windows while the old one is still letting go of its folder (the debug
- * connection is reset), so a failed start is tried again a couple of times.
+ * Starts the app. Now and then, on a build computer, the connection Playwright makes
+ * to the app's debug port is reset and the start never finishes, though the window has
+ * opened (the log shows ECONNRESET), and starting it again straight away works. So
+ * each try is given only a short time, and a start that does not finish is thrown away
+ * and tried again, rather than waiting out the whole test.
  */
 export async function launchElectron(options: LaunchOptions): Promise<ElectronApplication> {
   let lastError: unknown;
-  for (let attempt = 0; attempt < 3; attempt += 1) {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
     try {
-      return watch(await electron.launch(options));
+      return watch(await electron.launch({ ...options, timeout: options?.timeout ?? 20_000 }));
     } catch (error) {
       lastError = error;
+      console.log(`[launch] attempt ${attempt + 1} did not finish: ${String(error).split('\n')[0]?.slice(0, 160)}`);
       await new Promise((resolve) => setTimeout(resolve, 1500));
     }
   }
