@@ -27,6 +27,8 @@ jobs:
     name: End-to-end tests on ${{ matrix.os }}
     needs: verify
     runs-on: ${{ matrix.os }}
+    # A stuck test must not hold the build for hours.
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
@@ -39,4 +41,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run pack
-      - run: npx playwright test
+      # Stop after a few failures: if the app will not start at all, there is no point running every test.
+      - run: npx playwright test --max-failures=6
+      - name: Keep what the failed tests saw
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failed-tests-${{ matrix.os }}
+          path: test-results/**/error-context.md
+          if-no-files-found: ignore
