@@ -42,6 +42,7 @@ export async function launchElectron(options: LaunchOptions): Promise<ElectronAp
       // The first failure of a run is shown in full (Playwright's own call log says where it stopped).
       console.log(`[launch] attempt ${attempt + 1} did not finish: ${String(error).slice(0, attempt === 0 ? 2500 : 160)}`);
       await app?.close().catch(() => undefined);
+      clearLeftovers();
       await new Promise((resolve) => setTimeout(resolve, 1500));
     }
   }
@@ -88,5 +89,19 @@ export function killOutright(pid: number): void {
     }
   } else {
     process.kill(pid, 'SIGKILL');
+  }
+}
+
+/**
+ * On Windows a start that failed leaves the program's helper processes running (as when one
+ * is killed outright), and they pile up and slow or block the starts after it. Tests run one at
+ * a time here, so after a failed start anything left over is stray: end it.
+ */
+function clearLeftovers(): void {
+  if (process.platform !== 'win32') return;
+  try {
+    execFileSync('taskkill', ['/F', '/T', '/IM', 'Rugged Speech Test.exe'], { stdio: 'ignore' });
+  } catch {
+    /* none left */
   }
 }
