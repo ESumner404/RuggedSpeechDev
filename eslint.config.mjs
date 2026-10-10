@@ -29,7 +29,7 @@ export default tseslint.config(
     files: ['scripts/**/*.mjs'],
     languageOptions: {
       sourceType: 'module',
-      globals: { console: 'readonly', globalThis: 'readonly' },
+      globals: { console: 'readonly', globalThis: 'readonly', process: 'readonly' },
     },
   },
   {
