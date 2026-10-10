@@ -50,6 +50,7 @@ function watch(app: ElectronApplication): ElectronApplication {
   });
   app.process().on('exit', (code) => console.log(`[app exited] code ${code}`));
   const timer = setTimeout(async () => {
+    console.log(`[still open after 40s] ${app.windows().length} window(s)`);
     for (const page of app.windows()) {
       const text = await page.evaluate(() => document.body.innerText.replace(/\s+/g, ' ').slice(0, 500)).catch((e: Error) => `(could not read the page: ${e.message.slice(0, 120)})`);
       console.log(`[still open after 40s] ${page.url()} :: ${text}`);

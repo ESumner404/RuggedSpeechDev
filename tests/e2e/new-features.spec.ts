@@ -273,7 +273,10 @@ test.describe('newer features, in the real app', () => {
     await expect(page.locator('.notes-tab__note')).toContainText('Something that went well');
 
     await open('Today');
-    await expect(page.locator('.today-tab')).toContainText('Registration');
+    // The typical school day is Monday to Friday, so at a weekend there is no plan for today.
+    const weekday = new Date().getDay();
+    if (weekday >= 1 && weekday <= 5) await expect(page.locator('.today-tab')).toContainText('Registration');
+    else await expect(page.locator('.today-tab')).toContainText('Nothing planned for today');
     await expect(page.locator('.today-tab')).toContainText('Chose juice with two words.');
     await expect(page.locator('.today-tab__big').first()).toBeVisible();
 
@@ -357,7 +360,7 @@ test.describe('newer features, in the real app', () => {
       for (let i = 0; i < data.length; i += 4) if (data[i + 1]! < 200) n += 1;
       return n;
     });
-    expect(await ink()).toBe(0);
+    await expect.poll(ink).toBe(0); // once the white paper has been painted
     await page.locator('.draw-screen__colour[aria-label="red"]').click();
     await page.mouse.move(box.x + box.width * 0.2, box.y + box.height * 0.5);
     await page.mouse.down();
@@ -365,7 +368,7 @@ test.describe('newer features, in the real app', () => {
     await page.mouse.up();
     expect(await ink()).toBeGreaterThan(500);
     await page.locator('.draw-screen__button', { hasText: 'Undo' }).click();
-    expect(await ink()).toBe(0);
+    await expect.poll(ink).toBe(0);
     await expect(page.locator('.draw-screen__button', { hasText: 'Undo' })).toBeDisabled(); // nothing more to undo
     await page.mouse.move(box.x + box.width * 0.3, box.y + box.height * 0.3);
     await page.mouse.down();
