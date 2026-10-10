@@ -26,11 +26,17 @@ type LaunchOptions = Parameters<typeof electron.launch>[0];
 export async function launchElectron(options: LaunchOptions): Promise<ElectronApplication> {
   let lastError: unknown;
   for (let attempt = 0; attempt < 5; attempt += 1) {
+    let app: ElectronApplication | undefined;
     try {
-      return watch(await electron.launch({ ...options, timeout: options?.timeout ?? 20_000 }));
+      app = await electron.launch({ ...options, timeout: options?.timeout ?? 20_000 });
+      // A start that gives no window is as good as one that never finished.
+      await app.firstWindow({ timeout: 20_000 });
+      return watch(app);
     } catch (error) {
       lastError = error;
-      console.log(`[launch] attempt ${attempt + 1} did not finish: ${String(error).split('\n')[0]?.slice(0, 160)}`);
+      // The first failure of a run is shown in full (Playwright's own call log says where it stopped).
+      console.log(`[launch] attempt ${attempt + 1} did not finish: ${String(error).slice(0, attempt === 0 ? 2500 : 160)}`);
+      await app?.close().catch(() => undefined);
       await new Promise((resolve) => setTimeout(resolve, 1500));
     }
   }
