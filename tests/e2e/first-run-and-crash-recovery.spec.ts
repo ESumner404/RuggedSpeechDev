@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { expect, type Page, test } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
-import { removeDir, launchElectron } from './cleanup';
+import { removeDir, launchElectron, killOutright } from './cleanup';
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -111,8 +111,8 @@ test.describe('Phase 8, first run and crash recovery', () => {
     // closest a test harness can get to "pulling the power".
     const pid = app.process().pid;
     expect(pid).toBeDefined();
-    process.kill(pid!, 'SIGKILL');
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    killOutright(pid!);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     app = await launch();
     page = await app.firstWindow();

@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { rmSync } from 'node:fs';
 import { _electron as electron, type ElectronApplication } from '@playwright/test';
 
@@ -67,4 +68,21 @@ function watch(app: ElectronApplication): ElectronApplication {
   }, 40_000);
   app.on('close', () => clearTimeout(timer));
   return app;
+}
+
+/**
+ * Ends the app outright, the closest a test can get to pulling the power. On Windows the
+ * program's helper processes are separate and carry on holding the profile folder after the
+ * main one is killed, so the next start of the app on that folder fails; kill the whole group.
+ */
+export function killOutright(pid: number): void {
+  if (process.platform === 'win32') {
+    try {
+      execFileSync('taskkill', ['/PID', String(pid), '/T', '/F'], { stdio: 'ignore' });
+    } catch {
+      /* already gone */
+    }
+  } else {
+    process.kill(pid, 'SIGKILL');
+  }
 }
