@@ -28,7 +28,7 @@ jobs:
     needs: verify
     runs-on: ${{ matrix.os }}
     # A stuck test must not hold the build for hours.
-    timeout-minutes: 40
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -41,8 +41,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run pack
-      # Stop after a few failures: if the app will not start at all, there is no point running every test.
-      - run: npx playwright test --max-failures=6
+      # Stop after three failures: if the app will not start at all, there is no point running every test.
+      - run: npx playwright test --max-failures=3
       - name: Keep what the failed tests saw
         if: failure()
         uses: actions/upload-artifact@v4
