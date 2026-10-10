@@ -34,19 +34,6 @@
       ]
     },
     {
-      "source": "/download/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
-        }
-      ]
-    },
-    {
       "source": "/(board\\.js|board-data\\.js)",
       "headers": [
         {
@@ -72,23 +59,159 @@
           "value": "public, max-age=0, must-revalidate"
         }
       ]
-    }
-  ],
-  "redirects": [
+    },
     {
       "source": "/download/windows",
-      "destination": "https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Setup-Windows.exe",
-      "permanent": false
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Rugged-Speech-Setup.exe\""
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/octet-stream"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/downloads/RuggedSpeech-Setup-Windows.exe",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Rugged-Speech-Setup.exe\""
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/octet-stream"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
     },
     {
       "source": "/download/mac",
-      "destination": "https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Mac-AppleSilicon.dmg",
-      "permanent": false
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Rugged-Speech-Mac-AppleSilicon.dmg\""
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/x-apple-diskimage"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/downloads/RuggedSpeech-Mac-AppleSilicon.dmg",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Rugged-Speech-Mac-AppleSilicon.dmg\""
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/x-apple-diskimage"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
     },
     {
       "source": "/download/mac-intel",
-      "destination": "https://github.com/ESumner404/RuggedSpeechDev/releases/latest/download/RuggedSpeech-Mac-Intel.dmg",
-      "permanent": false
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Rugged-Speech-Mac-Intel.dmg\""
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/x-apple-diskimage"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/downloads/RuggedSpeech-Mac-Intel.dmg",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Rugged-Speech-Mac-Intel.dmg\""
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/x-apple-diskimage"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/downloads/SHA256SUMS.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/download/windows",
+      "destination": "/downloads/RuggedSpeech-Setup-Windows.exe"
+    },
+    {
+      "source": "/download/mac",
+      "destination": "/downloads/RuggedSpeech-Mac-AppleSilicon.dmg"
+    },
+    {
+      "source": "/download/mac-intel",
+      "destination": "/downloads/RuggedSpeech-Mac-Intel.dmg"
     }
   ]
 }

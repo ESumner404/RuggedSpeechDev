@@ -51,7 +51,9 @@ npm run dev
 
 The page in `website/` is plain HTML. Its "Have a go" board uses the app's own starter words, folders and drawn symbols, in `website/board-data.js`. That file is generated: if you change the starter words or the symbols, run `npm run website:board` and commit the result. A unit test fails if the two drift apart.
 
-The download buttons point at `/download/windows`, `/download/mac` and `/download/mac-intel`. `website/vercel.json` redirects those to the latest GitHub release's `RuggedSpeech-Setup-Windows.exe`, `RuggedSpeech-Mac-AppleSilicon.dmg` and `RuggedSpeech-Mac-Intel.dmg`, which the release workflow uploads under those names, so they only work once a release has been published. The page's search-engine set-up (title, description, structured data, `robots.txt`, `sitemap.xml`) is in `website/`; if you move the site to its own domain, change the address in `index.html`, `robots.txt` and `sitemap.xml`.
+The download buttons point at `/download/windows`, `/download/mac` and `/download/mac-intel`. `website/vercel.json` serves those from the website itself, from `website/downloads/`, so a visitor never goes to GitHub. The installers are over 100 MB so that folder is not kept in git: after `npm run dist:all`, run `npm run website:downloads` to copy the builds in under their fixed names (with checksums), then `cd website && vercel deploy --prod` to upload them with the site. The download links work only once that has been done.
+
+The page's search-engine set-up (title, description, structured data, `robots.txt`, `sitemap.xml`) is in `website/`; if you move the site to its own domain, change the address in `index.html`, `robots.txt` and `sitemap.xml`.
 
 ## Releasing
 

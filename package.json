@@ -33,6 +33,7 @@
     "dist:mac": "npm run build && electron-builder --mac",
     "dist:all": "npm run build && electron-builder --win --mac",
     "website:board": "node scripts/generate-website-board.mjs",
+    "website:downloads": "node scripts/prepare-website-downloads.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.tests.json",
     "lint": "eslint .",
     "test:unit": "vitest run",
