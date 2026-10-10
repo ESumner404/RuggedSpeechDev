@@ -17,9 +17,9 @@ export default async function globalSetup(): Promise<void> {
     const app = await launchElectron({
       executablePath: resolveExecutablePath(),
       args: [`--user-data-dir=${dir}`],
-      timeout: 120_000,
+      timeout: 180_000,
     });
-    await app.firstWindow({ timeout: 120_000 });
+    await app.firstWindow({ timeout: 180_000 });
     console.log(`[warm-up] the app showed its first window after ${((Date.now() - started) / 1000).toFixed(1)} s`);
     await app.close();
   } catch (error) {

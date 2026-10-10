@@ -40,14 +40,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Windows Defender scans every new program and profile folder as it is used, which
+      # makes the first starts of the freshly built app very slow on a build computer.
+      - name: Keep Windows Defender off the test files
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Add-MpPreference -ExclusionPath $env:RUNNER_TEMP, $env:TEMP, $env:GITHUB_WORKSPACE
       - run: npm run pack
-      # TEMPORARY: show every step the first Windows test takes, to find where it stops.
-      - name: Trace the first test on Windows
-        if: matrix.os == 'windows-latest'
-        continue-on-error: true
-        run: npx playwright test tests/e2e/access.spec.ts -g "high contrast" --max-failures=1 --timeout=45000
-        env:
-          DEBUG: pw:api
       # Stop after three failures: if the app will not start at all, there is no point running every test.
       - run: npx playwright test --max-failures=3
       - name: Keep what the failed tests saw
