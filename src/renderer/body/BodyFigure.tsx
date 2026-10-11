@@ -1,5 +1,6 @@
 import { geometry, regionsFor, type PartId, type Shape, type View } from './parts';
-import { hasExtra, withDefaults, type BodyLook, type EquipmentId } from './look';
+import { mix } from '../ui/theme';
+import { coversHair, hasExtra, withDefaults, type BodyLook, type EquipmentId, type Headwear as HeadwearKind } from './look';
 
 type Props = {
   look: BodyLook;
@@ -83,11 +84,161 @@ function WheelchairFront({ frame }: { frame: string }) {
   );
 }
 
+/**
+ * A head covering, drawn over the head. The face is left clear: a hijab has an
+ * opening for it, a turban sits above the forehead, and a kippah is a small
+ * cap on the crown.
+ */
+function Headwear({ kind, colour, back }: { kind: Exclude<HeadwearKind, 'none'>; colour: string; back: boolean }) {
+  const fold = { fill: 'none', stroke: OUTLINE, 'stroke-width': 1.5, 'stroke-linecap': 'round' } as const;
+  if (kind === 'hijab') {
+    return (
+      <g>
+        {back ? (
+          <path d="M64 52 C60 10 140 10 136 52 C140 76 142 94 134 104 Q100 118 66 104 C58 94 60 76 64 52 Z" fill={colour} stroke={OUTLINE} stroke-width="2" />
+        ) : (
+          <path
+            fill-rule="evenodd"
+            d="M64 52 C60 10 140 10 136 52 C140 76 142 94 134 104 Q100 118 66 104 C58 94 60 76 64 52 Z M100 26 C86 26 77 38 77 52 C77 68 87 79 100 79 C113 79 123 68 123 52 C123 38 114 26 100 26 Z"
+            fill={colour}
+            stroke={OUTLINE}
+            stroke-width="2"
+          />
+        )}
+      </g>
+    );
+  }
+  if (kind === 'turban') {
+    return (
+      <g>
+        <path d="M67 46 C62 4 138 4 133 46 Q100 32 67 46 Z" fill={colour} stroke={OUTLINE} stroke-width="2" />
+        <path d="M70 36 Q100 14 132 34" {...fold} />
+        <path d="M68 42 Q100 20 133 40" {...fold} />
+        {back && <ellipse cx="100" cy="50" rx="30" ry="14" fill={colour} stroke={OUTLINE} stroke-width="2" />}
+      </g>
+    );
+  }
+  return <path d="M79 22 A21 14 0 0 1 121 22 Q100 27 79 22 Z" fill={colour} stroke={OUTLINE} stroke-width="2" />;
+}
+
+/** A darker shade of a colour, for seams, cuffs, hems and soles. */
+const shade = (colour: string, amount = 0.2): string => mix(colour, '#000000', amount);
+
+// The head is drawn a little larger than the body's own scale, as a child's is.
+// Everything on the head sits in one group scaled about the neck, and the parts
+// of the head that can be pressed are scaled the same way, so the picture and
+// what it points to always agree.
+export const HEAD_TRANSFORM = 'translate(100 90) scale(1.2) translate(-100 -90)';
+
+/** The hair that sits behind the head and shoulders. */
+function HairBehind({ look }: { look: BodyLook }) {
+  const stroke = { stroke: OUTLINE, 'stroke-width': 2, 'stroke-linejoin': 'round' } as const;
+  if (coversHair(look.headwear)) return null;
+  return (
+    <g>
+      {look.hairStyle === 'long' && (
+        <g>
+          <path d="M65 48 C57 76 59 104 68 126 Q100 138 132 126 C141 104 143 76 135 48 Z" fill={look.hair} />
+          <path d="M65 48 C57 76 59 104 68 126 Q100 138 132 126 C141 104 143 76 135 48" fill="none" {...stroke} />
+        </g>
+      )}
+      {look.hairStyle === 'curly' &&
+        [[70, 34], [84, 18], [100, 12], [116, 18], [130, 34], [65, 54], [135, 54]].map(([cx, cy]) => (
+          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="14" fill={look.hair} {...stroke} />
+        ))}
+      {look.hairStyle === 'tied' && (
+        <g>
+          <circle cx="100" cy="6" r="12" fill={look.hair} {...stroke} />
+          <rect x="91" y="13" width="18" height="5" rx="2.5" fill={shade(look.hair, 0.45)} stroke={OUTLINE} stroke-width="1.5" />
+        </g>
+      )}
+    </g>
+  );
+}
+
+/**
+ * The head and face. The fringe sits well up the forehead, clear of the
+ * eyebrows, so the face is open.
+ */
+function HeadArt({ look, back, helmet }: { look: BodyLook; back: boolean; helmet: boolean }) {
+  const skin = look.skin;
+  const skinShade = shade(skin, 0.22);
+  const covered = coversHair(look.headwear);
+  const hairy = !covered && look.hairStyle !== 'none';
+  const stroke = { stroke: OUTLINE, 'stroke-width': 2, 'stroke-linejoin': 'round' } as const;
+  const brow = look.hairStyle === 'none' || covered ? shade(skin, 0.5) : shade(look.hair, 0.3);
+  return (
+    <g>
+      {/* In the back view, long hair falls over the shoulders */}
+      {back && hairy && look.hairStyle === 'long' && (
+        <g>
+          <path d="M67 58 C60 84 62 110 70 130 Q100 142 130 130 C138 110 140 84 133 58 Q100 82 67 58 Z" fill={look.hair} />
+          <path d="M67 58 C60 84 62 110 70 130 Q100 142 130 130 C138 110 140 84 133 58" fill="none" {...stroke} />
+        </g>
+      )}
+      {/* Ears, half behind the head */}
+      <ellipse cx="70" cy="53" rx="6.5" ry="9" fill={skin} {...stroke} />
+      <ellipse cx="130" cy="53" rx="6.5" ry="9" fill={skin} {...stroke} />
+      <path d="M68 49 q3 4 0 8 M132 49 q-3 4 0 8" fill="none" stroke={skinShade} stroke-width="1.5" stroke-linecap="round" />
+      <circle cx="100" cy="50" r="30" fill={skin} {...stroke} />
+
+      {hairy && !back && look.hairStyle !== 'curly' && (
+        <path d="M69 42 C58 -2 142 -2 131 42 Q120 24 100 27 Q82 24 69 42 Z" fill={look.hair} {...stroke} />
+      )}
+      {hairy && !back && look.hairStyle === 'curly' &&
+        [[78, 27], [89, 22], [100, 20], [111, 22], [122, 27]].map(([cx, cy]) => (
+          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="8" fill={look.hair} {...stroke} />
+        ))}
+      {hairy && back && <path d="M69 46 C56 -2 144 -2 131 46 C134 66 122 80 100 81 C78 80 66 66 69 46 Z" fill={look.hair} {...stroke} />}
+
+      {look.headwear !== 'none' && <Headwear kind={look.headwear} colour={look.headwearColour} back={back} />}
+      {helmet && (
+        <g>
+          <path d="M68 52 Q68 12 100 12 Q132 12 132 52 Q100 40 68 52 Z" fill="#60a5fa" stroke={OUTLINE} stroke-width="2" />
+          <line x1="68" y1="52" x2="64" y2="64" stroke={OUTLINE} stroke-width="2" />
+          <line x1="132" y1="52" x2="136" y2="64" stroke={OUTLINE} stroke-width="2" />
+        </g>
+      )}
+
+      {!back && (
+        <g>
+          <circle cx="79" cy="62" r="5.5" fill="#f472b6" opacity="0.28" />
+          <circle cx="121" cy="62" r="5.5" fill="#f472b6" opacity="0.28" />
+          <path d="M80.5 41.5 Q88 36.5 95.5 40" fill="none" stroke={brow} stroke-width="2.6" stroke-linecap="round" />
+          <path d="M104.5 40 Q112 36.5 119.5 41.5" fill="none" stroke={brow} stroke-width="2.6" stroke-linecap="round" />
+          <ellipse cx="88" cy="49" rx="3.7" ry="4.6" fill={OUTLINE} />
+          <ellipse cx="112" cy="49" rx="3.7" ry="4.6" fill={OUTLINE} />
+          <circle cx="89.3" cy="47.4" r="1.3" fill="#ffffff" />
+          <circle cx="113.3" cy="47.4" r="1.3" fill="#ffffff" />
+          <path d="M97.5 57.5 Q100 61 102.5 57.5" fill="none" stroke={skinShade} stroke-width="2" stroke-linecap="round" />
+          <path d="M90 67 Q100 76 110 67" fill="none" stroke={OUTLINE} stroke-width="2.6" stroke-linecap="round" />
+        </g>
+      )}
+    </g>
+  );
+}
+
+/**
+ * A head on its own, for choosing a hair style or a head covering. It is the
+ * same drawing as on the figure.
+ */
+export function HeadPreview({ look: given, size = 56 }: { look: BodyLook; size?: number }) {
+  const look = withDefaults(given);
+  return (
+    <svg viewBox="40 -14 120 118" width={size} height={size} aria-hidden="true" focusable="false" class="head-preview">
+      <HairBehind look={look} />
+      <HeadArt look={look} back={false} helmet={false} />
+    </svg>
+  );
+}
+
+const HEAD_PARTS: ReadonlySet<PartId> = new Set<PartId>(['head', 'eyes', 'ears', 'nose', 'mouth', 'hearing', 'cochlear', 'oxygen']);
+
 // A simple, friendly figure, always clothed, drawn from a few shapes and
 // never moving. It can be made to look like the child (Parent Mode, My body):
 // a boy, a girl or a non-binary figure, with the child's skin, hair and
-// clothes, a wheelchair, and the equipment and aids they use. The pictures of
-// the parts are only hit areas over the clothed figure.
+// clothes, a head covering, a wheelchair, and the equipment and aids they use.
+// The pictures of the parts are only hit areas over the clothed figure.
 export function BodyFigure({ look: given, view, selected = new Set<PartId>(), onToggle }: Props) {
   const look = withDefaults(given);
   const { legEnd, hipTop, hipBottom, kneeY } = geometry(look.wheelchair);
@@ -105,9 +256,12 @@ export function BodyFigure({ look: given, view, selected = new Set<PartId>(), on
   const legBottom = look.wheelchair ? legEnd - 8 : legEnd - 6;
   const chairFrame = look.bottom === '#1a1a1a' ? '#374151' : look.bottom;
   const prostheticSide = (side: 'arm' | 'leg') => (side === 'arm' ? armRight : 102);
+  const topShade = shade(look.top, 0.2);
+  const bottomShade = shade(look.bottom, 0.22);
+  const socks = !trousers;
 
   return (
-    <svg class="body-figure" viewBox="0 0 200 420" role="img" aria-label={`A figure, seen from the ${view}`}>
+    <svg class="body-figure" viewBox="0 -34 200 454" role="img" aria-label={`A figure, seen from the ${view}`}>
       {look.wheelchair && <WheelchairBack frame={chairFrame} />}
 
       {/* Crutches and frame, when standing */}
@@ -129,27 +283,28 @@ export function BodyFigure({ look: given, view, selected = new Set<PartId>(), on
       )}
 
       {/* Hair behind the head */}
-      {look.hairStyle === 'long' && <rect x="66" y="30" width="68" height="104" rx="30" fill={look.hair} />}
-      {look.hairStyle === 'curly' &&
-        [[72, 30], [88, 20], [104, 18], [120, 24], [130, 38], [68, 46], [132, 52]].map(([cx, cy]) => (
-          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="14" fill={look.hair} />
-        ))}
-      {look.hairStyle === 'tied' && <circle cx="100" cy="14" r="13" fill={look.hair} />}
+      <g transform={HEAD_TRANSFORM}>
+        <HairBehind look={look} />
+      </g>
 
-      {/* Arms: sleeves in the top's colour, then skin */}
+      {/* Arms: sleeves in the top's colour with a cuff, then skin, then a hand with a thumb */}
       {[armLeft, armRight].map((x, index) => {
         const isProsthetic = extra('prostheticArm') && x === prostheticSide('arm');
         return (
           <g key={x}>
             <rect x={x} y="98" width="24" height="88" rx="10" fill={isProsthetic ? METAL : skin} stroke={OUTLINE} stroke-width="2" />
             <rect x={x} y="98" width="24" height="34" rx="10" fill={look.top} stroke={OUTLINE} stroke-width="2" />
+            <rect x={x + 1} y="124" width="22" height="7" fill={topShade} />
+            <line x1={x + 1} y1="124" x2={x + 23} y2="124" stroke={OUTLINE} stroke-width="1.5" />
             {isProsthetic ? (
               <g>
                 <rect x={x + 4} y="150" width="16" height="6" rx="3" fill={PLASTIC} stroke={OUTLINE} stroke-width="1" />
                 <path d={`M${x + 4} 192 q8 18 16 0`} fill={METAL} stroke={OUTLINE} stroke-width="2" />
               </g>
             ) : (
-              <ellipse cx={x + 12} cy="197" rx="12" ry="12" fill={skin} stroke={OUTLINE} stroke-width="2" />
+              <g>
+                <ellipse cx={x + 12} cy="197" rx="12" ry="12" fill={skin} stroke={OUTLINE} stroke-width="2" />
+              </g>
             )}
             {extra('sensor') && !back && index === 1 && <circle cx={x + 12} cy="126" r="7" fill="#f8fafc" stroke={OUTLINE} stroke-width="2" />}
             {extra('sensor') && !back && index === 1 && <circle cx={x + 12} cy="126" r="2.5" fill="#22a559" />}
@@ -157,12 +312,24 @@ export function BodyFigure({ look: given, view, selected = new Set<PartId>(), on
         );
       })}
 
-      {/* Legs and feet */}
+      {/* Legs, with socks or trouser hems, and shoes */}
       {([70, 102] as const).map((x) => {
         const isProsthetic = extra('prostheticLeg') && x === prostheticSide('leg');
         return (
           <g key={x}>
             <rect x={x} y={hipBottom - 4} width="28" height={legBottom - hipBottom + 4} rx="10" fill={isProsthetic ? METAL : bottomOnLegs ? look.bottom : skin} stroke={OUTLINE} stroke-width="2" />
+            {!isProsthetic && trousers && (
+              <g>
+                <line x1={x + 14} y1={hipBottom + 8} x2={x + 14} y2={legBottom - 14} stroke={bottomShade} stroke-width="1.5" stroke-linecap="round" />
+                <rect x={x + 1} y={legBottom - 11} width="26" height="9" rx="3" fill={bottomShade} />
+              </g>
+            )}
+            {!isProsthetic && socks && (
+              <g>
+                <rect x={x + 1} y={legBottom - 26} width="26" height="24" rx="5" fill="#f8fafc" stroke={OUTLINE} stroke-width="1.5" />
+                <rect x={x + 1.5} y={legBottom - 26} width="25" height="5" rx="2" fill={bottomShade} />
+              </g>
+            )}
             {isProsthetic && (
               <g>
                 <rect x={x + 8} y={kneeY - 6} width="12" height="10" rx="4" fill={PLASTIC} stroke={OUTLINE} stroke-width="1.5" />
@@ -180,19 +347,38 @@ export function BodyFigure({ look: given, view, selected = new Set<PartId>(), on
         );
       })}
       {([82, 118] as const).map((cx) => (
-        <ellipse key={cx} cx={cx} cy={legEnd} rx="17" ry="10" fill="#4b5563" stroke={OUTLINE} stroke-width="2" />
+        <g key={cx}>
+          <ellipse cx={cx} cy={legEnd} rx="17" ry="10" fill="#4b5563" stroke={OUTLINE} stroke-width="2" />
+          <path d={`M${cx - 15} ${legEnd + 3.5} Q${cx} ${legEnd + 11} ${cx + 15} ${legEnd + 3.5}`} fill="none" stroke="#f8fafc" stroke-width="3" stroke-linecap="round" />
+          <ellipse cx={cx} cy={legEnd - 3} rx="7" ry="3.5" fill="#ffffff" opacity="0.22" />
+          <path d={`M${cx - 4} ${legEnd - 7} l8 0 M${cx - 4} ${legEnd - 3} l8 0`} stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" />
+        </g>
       ))}
 
       {look.wheelchair && <WheelchairFront frame={chairFrame} />}
 
       {/* Top, and the clothes over the hips */}
       <rect x={torso.x} y="94" width={torso.w} height="116" rx="16" fill={look.top} stroke={OUTLINE} stroke-width="2" />
+      <line x1={torso.x + 8} y1="198" x2={torso.x + torso.w - 8} y2="198" stroke={topShade} stroke-width="3" stroke-linecap="round" />
       {dress ? (
-        <path d={`M${torso.x} ${hipTop - 16} L${torso.x + torso.w} ${hipTop - 16} L${torso.x + torso.w + 16} ${hipBottom + 36} L${torso.x - 16} ${hipBottom + 36} Z`} fill={look.bottom} stroke={OUTLINE} stroke-width="2" />
+        <g>
+          <path d={`M${torso.x} ${hipTop - 16} L${torso.x + torso.w} ${hipTop - 16} L${torso.x + torso.w + 16} ${hipBottom + 36} L${torso.x - 16} ${hipBottom + 36} Z`} fill={look.bottom} stroke={OUTLINE} stroke-width="2" />
+          <path d={`M${torso.x - 14} ${hipBottom + 30} L${torso.x + torso.w + 14} ${hipBottom + 30}`} stroke={bottomShade} stroke-width="5" />
+          <path d={`M${100 - 22} ${hipTop - 4} L${100 - 28} ${hipBottom + 28} M100 ${hipTop - 4} L100 ${hipBottom + 28} M${100 + 22} ${hipTop - 4} L${100 + 28} ${hipBottom + 28}`} stroke={bottomShade} stroke-width="1.5" stroke-linecap="round" />
+        </g>
       ) : skirt ? (
-        <path d={`M62 ${hipTop} L138 ${hipTop} L152 ${hipBottom + 24} L48 ${hipBottom + 24} Z`} fill={look.bottom} stroke={OUTLINE} stroke-width="2" />
+        <g>
+          <path d={`M62 ${hipTop} L138 ${hipTop} L152 ${hipBottom + 24} L48 ${hipBottom + 24} Z`} fill={look.bottom} stroke={OUTLINE} stroke-width="2" />
+          <path d={`M49 ${hipBottom + 18} L151 ${hipBottom + 18}`} stroke={bottomShade} stroke-width="5" />
+          <path d={`M${100 - 20} ${hipTop + 6} L${100 - 26} ${hipBottom + 16} M100 ${hipTop + 6} L100 ${hipBottom + 16} M${100 + 20} ${hipTop + 6} L${100 + 26} ${hipBottom + 16}`} stroke={bottomShade} stroke-width="1.5" stroke-linecap="round" />
+        </g>
       ) : (
-        <rect x="64" y={hipTop} width="72" height={hipBottom - hipTop + (trousers ? 8 : 4)} rx="10" fill={look.bottom} stroke={OUTLINE} stroke-width="2" />
+        <g>
+          <rect x="64" y={hipTop} width="72" height={hipBottom - hipTop + (trousers ? 8 : 4)} rx="10" fill={look.bottom} stroke={OUTLINE} stroke-width="2" />
+          <rect x="65" y={hipTop + 1} width="70" height="8" rx="4" fill={bottomShade} />
+          {!back && <circle cx="100" cy={hipTop + 5} r="2" fill="#f8fafc" />}
+          {!trousers && <rect x="65" y={hipBottom - 6} width="70" height="8" rx="4" fill={bottomShade} />}
+        </g>
       )}
       {extra('pump') && (
         <g>
@@ -208,69 +394,68 @@ export function BodyFigure({ look: given, view, selected = new Set<PartId>(), on
         </g>
       )}
 
-      {/* Neck and head */}
-      <rect x="90" y="78" width="20" height="18" fill={skin} />
+      {/* Neck, and the collar */}
+      <rect x="89" y="76" width="22" height="22" fill={skin} stroke={OUTLINE} stroke-width="2" />
+      <rect x="91" y="76" width="18" height="20" fill={skin} />
+      {!back ? (
+        <path d="M86 94 Q100 112 114 94" fill={skin} stroke={OUTLINE} stroke-width="2" stroke-linejoin="round" />
+      ) : (
+        <path d="M86 94 Q100 102 114 94" fill="none" stroke={topShade} stroke-width="4" stroke-linecap="round" />
+      )}
       {extra('trach') && !back && (
         <g>
           <rect x="93" y="84" width="14" height="9" rx="3" fill="#f8fafc" stroke={OUTLINE} stroke-width="1.5" />
           <circle cx="100" cy="88.5" r="2" fill={OUTLINE} />
         </g>
       )}
-      {look.hairStyle !== 'none' && !back && look.hairStyle !== 'curly' && <circle cx="100" cy="44" r="33" fill={look.hair} />}
-      <circle cx="100" cy="50" r="30" fill={skin} stroke={OUTLINE} stroke-width="2" />
-      {look.hairStyle !== 'none' && !back && <path d="M70 46 Q100 8 130 46 Q100 30 70 46 Z" fill={look.hair} />}
-      {back && look.hairStyle !== 'none' && <circle cx="100" cy="50" r="30" fill={look.hair} />}
-      {extra('helmet') && (
-        <g>
-          <path d="M68 52 Q68 12 100 12 Q132 12 132 52 Q100 40 68 52 Z" fill="#60a5fa" stroke={OUTLINE} stroke-width="2" />
-          <line x1="68" y1="52" x2="64" y2="64" stroke={OUTLINE} stroke-width="2" />
-          <line x1="132" y1="52" x2="136" y2="64" stroke={OUTLINE} stroke-width="2" />
-        </g>
-      )}
-      {!back && (
-        <>
-          <circle cx="88" cy="48" r="3.5" fill={OUTLINE} />
-          <circle cx="112" cy="48" r="3.5" fill={OUTLINE} />
-          <path d="M90 68 Q100 76 110 68" fill="none" stroke={OUTLINE} stroke-width="2.5" stroke-linecap="round" />
-          {extra('eyePatch') && (
-            <g>
-              <ellipse cx="112" cy="48" rx="9" ry="8" fill="#1f2937" />
-              <line x1="104" y1="42" x2="132" y2="34" stroke={OUTLINE} stroke-width="2" />
-            </g>
-          )}
-          {look.glasses && (
-            <g fill="none" stroke={OUTLINE} stroke-width="2.5">
-              <circle cx="88" cy="48" r="10" />
-              <circle cx="112" cy="48" r="10" />
-              <line x1="98" y1="48" x2="102" y2="48" />
-            </g>
-          )}
-          {extra('oxygen') && (
-            <g fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round">
-              <path d="M94 62 L94 58 M106 62 L106 58" />
-              <path d="M94 62 C80 68 72 60 66 58" />
-              <path d="M106 62 C120 68 128 60 134 58" />
-              <path d="M70 60 C60 90 70 120 80 150" />
-            </g>
-          )}
-        </>
-      )}
-      {back && look.glasses && <line x1="70" y1="48" x2="130" y2="48" stroke={OUTLINE} stroke-width="2.5" />}
-      {extra('hearingAids') && (
-        <g fill="#e8c9a0" stroke={OUTLINE} stroke-width="1.5">
-          <path d="M66 48 q-10 8 -2 22 q6 -6 4 -22" />
-          <path d="M134 48 q10 8 2 22 q-6 -6 -4 -22" />
-        </g>
-      )}
-      {extra('cochlear') && (
-        <g stroke={OUTLINE} stroke-width="1.5">
-          <path d="M134 46 q10 8 2 22 q-6 -6 -4 -22" fill="#d1d5db" />
-          <circle cx="142" cy="44" r="5" fill="#9ca3af" />
-          <path d="M138 44 L132 40" fill="none" />
-        </g>
-      )}
 
-      {/* Parts that can be pressed: see-through, lit when chosen */}
+      {/* The head, a little larger as a child's is, and what is worn on it */}
+      <g transform={HEAD_TRANSFORM}>
+        <HeadArt look={look} back={back} helmet={extra('helmet')} />
+        {!back && (
+          <>
+            {extra('eyePatch') && (
+              <g>
+                <ellipse cx="112" cy="49" rx="9" ry="8" fill="#1f2937" />
+                <line x1="104" y1="42" x2="132" y2="34" stroke={OUTLINE} stroke-width="2" />
+              </g>
+            )}
+            {look.glasses && (
+              <g fill="rgba(255,255,255,0.18)" stroke={OUTLINE} stroke-width="2.5">
+                <circle cx="88" cy="49" r="10.5" />
+                <circle cx="112" cy="49" r="10.5" />
+                <line x1="98.5" y1="48" x2="101.5" y2="48" fill="none" />
+                <line x1="77.5" y1="47" x2="71" y2="45" fill="none" />
+                <line x1="122.5" y1="47" x2="129" y2="45" fill="none" />
+              </g>
+            )}
+            {extra('oxygen') && (
+              <g fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round">
+                <path d="M94 62 L94 58 M106 62 L106 58" />
+                <path d="M94 62 C80 68 72 60 66 58" />
+                <path d="M106 62 C120 68 128 60 134 58" />
+                <path d="M70 60 C60 90 70 120 80 150" />
+              </g>
+            )}
+          </>
+        )}
+        {back && look.glasses && <line x1="70" y1="49" x2="130" y2="49" stroke={OUTLINE} stroke-width="2.5" />}
+        {extra('hearingAids') && (
+          <g fill="#e8c9a0" stroke={OUTLINE} stroke-width="1.5">
+            <path d="M66 48 q-10 8 -2 22 q6 -6 4 -22" />
+            <path d="M134 48 q10 8 2 22 q-6 -6 -4 -22" />
+          </g>
+        )}
+        {extra('cochlear') && (
+          <g stroke={OUTLINE} stroke-width="1.5">
+            <path d="M134 46 q10 8 2 22 q-6 -6 -4 -22" fill="#d1d5db" />
+            <circle cx="142" cy="44" r="5" fill="#9ca3af" />
+            <path d="M138 44 L132 40" fill="none" />
+          </g>
+        )}
+      </g>
+
+      {/* Parts that can be pressed: see-through, lit when chosen. The parts of the head are scaled with the head. */}
       <g class="body-figure__parts">
         {regionsFor(view, look).map((region) => {
           const on = selected.has(region.id);
@@ -279,6 +464,7 @@ export function BodyFigure({ look: given, view, selected = new Set<PartId>(), on
               key={region.id}
               class={`body-figure__part${on ? ' body-figure__part--on' : ''}${onToggle ? ' body-figure__part--press' : ''}`}
               data-part={region.id}
+              {...(HEAD_PARTS.has(region.id) ? { transform: HEAD_TRANSFORM } : {})}
               onClick={onToggle ? () => onToggle(region.id) : undefined}
             >
               {region.shapes.map((shape, index) => (

@@ -1,8 +1,9 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron } from './cleanup';
 
 async function spyOnSpeech(page: Page): Promise<void> {
   await page.evaluate(() => {
@@ -50,11 +51,11 @@ test.describe('Phase 3. Keyboard, prediction, and the stammering features', () =
   });
 
   test.afterEach(() => {
-    rmSync(userDataDir, { recursive: true, force: true });
+    removeDir(userDataDir);
   });
 
   function launch() {
-    return electron.launch({
+    return launchElectron({
       executablePath: resolveExecutablePath(),
       args: [`--user-data-dir=${userDataDir}`],
     });

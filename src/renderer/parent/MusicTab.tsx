@@ -1,12 +1,15 @@
 import { useSignal } from '@preact/signals';
-import { deleteVoiceClip, musicVolumeSetting, saveVoiceClip, songsSetting } from '../store/db';
+import { deleteVoiceClip, musicVolumeSetting, playlistsSetting, saveVoiceClip, songsSetting } from '../store/db';
 import {
   BIG_LIBRARY_BYTES,
+  MAX_PLAYLISTS,
   MAX_SONGS,
   MAX_SONG_BYTES,
   formatSize,
   isAudioFile,
+  songsInPlaylist,
   titleFromFile,
+  type Playlist,
   type Song,
 } from '../music/songs';
 
@@ -18,6 +21,8 @@ export function MusicTab() {
   const message = useSignal('');
   const adding = useSignal(false);
   const songs = songsSetting.signal.value;
+  const playlists = playlistsSetting.signal.value;
+  const newListName = useSignal('');
   const total = songs.reduce((sum, song) => sum + song.bytes, 0);
 
   async function addFiles(files: FileList | null): Promise<void> {
@@ -67,7 +72,30 @@ export function MusicTab() {
 
   async function remove(song: Song): Promise<void> {
     await songsSetting.set(songsSetting.signal.value.filter((s) => s.id !== song.id));
+    await playlistsSetting.set(
+      playlistsSetting.signal.value.map((list) => ({ ...list, songIds: list.songIds.filter((id) => id !== song.id) })),
+    );
     await deleteVoiceClip(song.blobId);
+  }
+
+  function addPlaylist(): void {
+    const name = newListName.value.trim();
+    if (!name || playlistsSetting.signal.value.length >= MAX_PLAYLISTS) return;
+    const list: Playlist = { id: `list-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, name, emoji: '🎶', songIds: [] };
+    void playlistsSetting.set([...playlistsSetting.signal.value, list]);
+    newListName.value = '';
+  }
+
+  function updatePlaylist(id: string, changes: Partial<Playlist>): void {
+    void playlistsSetting.set(playlistsSetting.signal.value.map((list) => (list.id === id ? { ...list, ...changes } : list)));
+  }
+
+  function movePlaylistSong(list: Playlist, index: number, by: -1 | 1): void {
+    const ids = [...list.songIds];
+    const target = index + by;
+    if (target < 0 || target >= ids.length) return;
+    [ids[index], ids[target]] = [ids[target]!, ids[index]!];
+    updatePlaylist(list.id, { songIds: ids });
   }
 
   return (
@@ -152,6 +180,115 @@ export function MusicTab() {
         {songs.length} of {MAX_SONGS} songs, {formatSize(total)} in all.
         {total > BIG_LIBRARY_BYTES && ' This is a lot of music: a backup will be large, and slow to save.'}
       </p>
+
+      <h2 class="access-tab__heading">Playlists</h2>
+      <p class="access-tab__hint">
+        A playlist is a named list of songs, such as bedtime or car journey. On the Music screen each one is a choice
+        along the top, with a Play all button that plays it through once when pressed. Nothing plays by itself.
+      </p>
+      <form
+        class="music-tab__playlist-head"
+        onSubmit={(event) => {
+          event.preventDefault();
+          addPlaylist();
+        }}
+      >
+        <input
+          type="text"
+          class="parent-mode-screen__label-input"
+          aria-label="Name of the new playlist"
+          placeholder="Name of a playlist"
+          value={newListName.value}
+          onInput={(event) => (newListName.value = (event.target as HTMLInputElement).value)}
+        />
+        <button type="submit" class="parent-mode-screen__button" disabled={!newListName.value.trim() || playlists.length >= MAX_PLAYLISTS || songs.length === 0}>
+          Add playlist
+        </button>
+      </form>
+      {songs.length === 0 && <p class="access-tab__hint">Add some songs first.</p>}
+      {playlists.map((list) => {
+        const inList = songsInPlaylist(list, songs);
+        const available = songs.filter((song) => !list.songIds.includes(song.id));
+        return (
+          <div class="music-tab__playlist" key={list.id}>
+            <div class="music-tab__playlist-head">
+              <select
+                class="music-tab__emoji"
+                aria-label={`Picture for ${list.name}`}
+                value={list.emoji}
+                onChange={(event) => updatePlaylist(list.id, { emoji: (event.target as HTMLSelectElement).value })}
+              >
+                {EMOJIS.map((emoji) => (
+                  <option value={emoji} key={emoji}>
+                    {emoji}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="text"
+                class="parent-mode-screen__label-input"
+                aria-label={`Name of playlist ${list.name}`}
+                value={list.name}
+                onInput={(event) => updatePlaylist(list.id, { name: (event.target as HTMLInputElement).value })}
+              />
+              <button
+                type="button"
+                class="parent-mode-screen__button"
+                aria-label={`Delete the playlist ${list.name}`}
+                onClick={() => void playlistsSetting.set(playlistsSetting.signal.value.filter((l) => l.id !== list.id))}
+              >
+                Delete playlist
+              </button>
+            </div>
+            {inList.length === 0 ? (
+              <p class="access-tab__hint">No songs in it yet.</p>
+            ) : (
+              <ol class="music-tab__list">
+                {inList.map((song, index) => (
+                  <li class="music-tab__song" key={song.id}>
+                    <span aria-hidden="true">{song.emoji}</span>
+                    <span class="music-tab__pick">{song.title}</span>
+                    <button type="button" class="parent-mode-screen__button" aria-label={`Move ${song.title} up in ${list.name}`} disabled={index === 0} onClick={() => movePlaylistSong(list, index, -1)}>
+                      ▲
+                    </button>
+                    <button type="button" class="parent-mode-screen__button" aria-label={`Move ${song.title} down in ${list.name}`} disabled={index === inList.length - 1} onClick={() => movePlaylistSong(list, index, 1)}>
+                      ▼
+                    </button>
+                    <button
+                      type="button"
+                      class="parent-mode-screen__button"
+                      aria-label={`Take ${song.title} out of ${list.name}`}
+                      onClick={() => updatePlaylist(list.id, { songIds: list.songIds.filter((id) => id !== song.id) })}
+                    >
+                      Take out
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            )}
+            {available.length > 0 && (
+              <label class="access-tab__select-row">
+                Add a song to {list.name}
+                <select
+                  aria-label={`Add a song to ${list.name}`}
+                  value=""
+                  onChange={(event) => {
+                    const id = (event.target as HTMLSelectElement).value;
+                    if (id) updatePlaylist(list.id, { songIds: [...list.songIds, id] });
+                  }}
+                >
+                  <option value="">Choose a song</option>
+                  {available.map((song) => (
+                    <option value={song.id} key={song.id}>
+                      {song.title}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

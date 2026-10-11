@@ -5,9 +5,11 @@ import { JokesScreen } from './JokesScreen';
 import { MusicScreen } from '../music/MusicScreen';
 import { PianoScreen } from '../music/PianoScreen';
 import { RideScreen } from './RideScreen';
+import { SeasonsScreen } from './SeasonsScreen';
 import { SnapScreen } from './SnapScreen';
+import { TreeScreen } from './TreeScreen';
 
-type Which = 'find' | 'snap' | 'ride' | 'draw' | 'jokes' | 'music' | 'piano';
+type Which = 'find' | 'snap' | 'ride' | 'draw' | 'jokes' | 'music' | 'piano' | 'seasons' | 'tree';
 
 const GAMES: { id: Which; label: string; icon: string; hint: string }[] = [
   { id: 'find', label: 'Find the word', icon: '🔎', hint: 'Match the word to the picture.' },
@@ -17,9 +19,11 @@ const GAMES: { id: Which; label: string; icon: string; hint: string }[] = [
   { id: 'jokes', label: 'Jokes', icon: '😄', hint: 'Questions and answers to make you laugh.' },
   { id: 'music', label: 'Music', icon: '🎵', hint: 'Songs to listen to.' },
   { id: 'piano', label: 'Piano', icon: '🎹', hint: 'Play the keys.' },
+  { id: 'seasons', label: 'Seasons', icon: '🍂', hint: 'Words and games for times of the year.' },
+  { id: 'tree', label: 'Make a tree', icon: '🎄', hint: 'Hang decorations on a Christmas tree.' },
 ];
 
-// A small menu of things to do for fun. The four tiles stay in the same
+// A small menu of things to do for fun. The nine tiles stay in the same
 // places, and each game has the same "All games" button in the same corner.
 // None keeps a score against anyone, none has a clock, and none speaks
 // unless a button is pressed.
@@ -55,6 +59,8 @@ export function GamesScreen() {
         {which.value === 'jokes' && <JokesScreen />}
         {which.value === 'music' && <MusicScreen />}
         {which.value === 'piano' && <PianoScreen />}
+        {which.value === 'seasons' && <SeasonsScreen />}
+        {which.value === 'tree' && <TreeScreen />}
       </div>
     </div>
   );

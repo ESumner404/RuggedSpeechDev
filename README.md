@@ -8,18 +8,29 @@ Rugged Speech Test is an open-source AAC (augmentative and alternative communica
 
 It is deliberately **not** positioned as "a device for non-verbal children". It is a companion for anyone whose speech is unavailable, unreliable or costly in the moment, including people who speak most of the time and reach for it only when they are stuck.
 
-> **Status:** a working, tested application, built and tested on macOS against packaged builds. It has **not yet been verified on real Windows hardware**, the installer is **not code-signed**, and the starter vocabulary has **not been reviewed by a speech and language therapist**. It has had a self-review against NHS speech and language therapy practice, but that is **not a clinical sign-off**. See [Known limitations](#known-limitations) before putting it in front of a child.
+> **Status:** a working, tested application, built and tested on macOS against packaged builds, and the Windows and Mac builds are checked by the same automated tests. It has **not yet been verified on real Windows hardware**, the Windows installer and the Mac disk images are **not code-signed**, and the starter vocabulary has **not been reviewed by a speech and language therapist**. It has had a self-review against NHS speech and language therapy practice, but that is **not a clinical sign-off**. See [Known limitations](#known-limitations) before putting it in front of a child.
 
-## Download and install (Windows)
+## Download and install
 
-**You need:** a Windows 10 or Windows 11 computer or tablet (64-bit). No internet connection, no account and no administrator password.
+**You need:** a Windows 10 or Windows 11 computer or tablet (64-bit), or a Mac (Apple silicon or Intel). No internet connection, no account and no administrator password. The same app, and the same features, go out for both at every release.
 
-1. Get the installer, a single file called **`Rugged Speech Test Setup 0.0.1.exe`** (the number may be newer). It is built by `npm run dist` and saved in the `release` folder; see [Building the Windows installer](#building-the-windows-installer).
+### Windows
+
+1. Get the installer, a single file called **`Rugged Speech Test Setup 0.0.1.exe`** (the number may be newer). It is built by `npm run dist` and saved in the `release` folder; see [Building the installers, and releasing](#building-the-installers-and-releasing).
 2. Double-click it. If Windows shows **Windows protected your PC**, press **More info**, then **Run anyway**. (This appears because the installer is not yet signed with a paid certificate.)
 3. Follow the steps. It installs just for you, and opens when it is done.
 4. A short **set-up** asks about the voice, the size of the buttons, the pictures and a Parent PIN. Write down the **recovery code** it shows you.
 
 To check a download, compare its SHA-256 code with the one you were given: `certutil -hashfile "Rugged Speech Test Setup 0.0.1.exe" SHA256`.
+
+### Mac
+
+1. Get the disk image for your Mac: **`Rugged-Speech-Test-0.0.1-mac-arm64.dmg`** for a Mac with Apple silicon (M1 or later), or **`-mac-x64.dmg`** for an Intel Mac. (Apple menu, **About This Mac**, says which.)
+2. Open it and drag **Rugged Speech Test** onto **Applications**.
+3. **The first time, a Mac will not open it by double-click**, because the app is not yet signed with an Apple Developer ID. Open it once, and when the Mac says it cannot be opened, go to **System Settings, Privacy & Security**, scroll down, and press **Open Anyway**. (On macOS 14 and earlier you can instead Control-click the app and choose **Open**.) After that it opens normally. Or, in Terminal, once: `xattr -dr com.apple.quarantine "/Applications/Rugged Speech Test.app"`.
+4. A short **set-up** asks about the voice, the size of the buttons, the pictures and a Parent PIN. Write down the **recovery code** it shows you.
+
+To check a download: `shasum -a 256 Rugged-Speech-Test-0.0.1-mac-arm64.dmg`, and compare it with `SHA256SUMS.txt`.
 
 ## Where to start
 
@@ -50,7 +61,7 @@ To check a download, compare its SHA-256 code with the one you were given: `cert
 - [Data and privacy](#data-and-privacy)
 - [Security](#security)
 - [Testing](#testing)
-- [Building the Windows installer](#building-the-windows-installer)
+- [Building the installers, and releasing](#building-the-installers-and-releasing)
 - [Known limitations](#known-limitations)
 - [What is deliberately not here](#what-is-deliberately-not-here)
 - [Contributing](#contributing)
@@ -69,8 +80,8 @@ A summary. The full list is in [docs/features.md](docs/features.md).
 | **Keyboard** | Full-screen keyboard with word prediction that only ever suggests. **Show** displays the text full-screen without speaking it, **No-pressure mode** strips the screen down, plus a personal phrase bank and conversation starters. |
 | **Give me time** | One persistent button that speaks "I know what I want to say. Please give me a moment." from any screen. |
 | **Feelings & Help** | Feelings (with *a little / medium / a lot*), a Help section, a Calm section with a breathing guide and a quiet-time timer, and **My body**. |
-| **My body** | Point to where it hurts, on a figure that looks like the child (boy, girl or non-binary; skin, hair, clothes; a wheelchair; hearing aids, feeding tube, pump, braces and other equipment), say how it feels and how much, and say it. Always dressed, and the private area is only ever "under my pants". |
-| **Games** | Find the word, Snap, a sentence-building Rollercoaster, Draw, Jokes, Music (songs added from files) and a basic Piano. No clocks, no scores, no motion. |
+| **My body** | Point to where it hurts, on a figure that looks like the child (boy, girl or non-binary; skin, hair, clothes; a wheelchair; a hijab, turban or kippah; hearing aids, feeding tube, pump, braces and other equipment), say how it feels and how much, and say it. Always dressed, and the private area is only ever "under my pants". |
+| **Games** | Find the word, Snap, a sentence-building Rollercoaster, Draw, Jokes, Music (songs added from files, with playlists), a basic Piano, **Seasons** (words and games for times of the year and celebrations, which an adult can choose between, change and add to) and **Make a tree** (a Christmas tree to decorate). No clocks, no scores, no motion. |
 | **Traffic light** | Shows, without a word, how much a child wants to be spoken to. |
 | **My Day** | A visual plan for the day with Today and Now / Next / Later views, a "change of plan" announcement, opt-in countdown warnings, a **weekly routine**, a picture for each activity and a printable **visual schedule**. **First / Then** is a two-card version. |
 | **My Pages** | Pages an adult builds from scratch, or starts from about twenty **ready-made templates**, which can be **shared between devices** as standard [Open Board Format](https://www.openboardformat.org/) (`.obf`) files. |
@@ -105,7 +116,7 @@ On I5: three features speak as the *continuation of a deliberate action* rather 
 
 ## Getting started (developers)
 
-**You need:** Node.js (a recent LTS release) and npm. You can develop on macOS, Windows or Linux. The app targets Windows 10 Pro, and the Windows installer can be cross-built from macOS (see [below](#building-the-windows-installer)).
+**You need:** Node.js (a recent LTS release) and npm. You can develop on macOS, Windows or Linux. The app targets Windows 10 and 11 and macOS, and the Windows installer can be cross-built from macOS (see [below](#building-the-installers-and-releasing)).
 
 ```bash
 git clone https://github.com/ESumner404/RuggedSpeechDev.git
@@ -191,7 +202,7 @@ src/
     safety/        Medical Info, About me and Lost mode
     symbols/       The drawn symbols, and the picture that chooses between them and emoji
     body/          My body: the figure, the parts, and how pointing becomes a sentence
-    game/          Games: find the word, snap, rollercoaster, jokes
+    game/          Games: find the word, snap, rollercoaster, jokes, seasons, make a tree
     draw/          Draw
     music/         Music and the piano
     school/        School Mode: its own screens, PIN and menu
@@ -215,6 +226,7 @@ build/             NSIS installer customisation (keep or remove data on uninstal
 PRINCIPLES.md      The invariants and working rules. Read first.
 CONTRIBUTING.md    How to change the code
 SECURITY.md        How to report a security problem
+.github/workflows Checks on every change, and the release for Windows and Mac
 ```
 
 ---
@@ -260,10 +272,12 @@ npm run test:e2e   # Playwright against release/
 
 ---
 
-## Building the Windows installer
+## Building the installers, and releasing
 
 ```bash
-npm run dist
+npm run dist       # the Windows installer
+npm run dist:mac   # the two Mac disk images (Apple silicon and Intel)
+npm run dist:all   # all three
 ```
 
 This produces `release/Rugged Speech Test Setup <version>.exe`, a **per-user** NSIS installer that needs no administrator rights, and `release/win-unpacked/`, the same program unpacked. It can be built from macOS or Linux. electron-builder cross-compiles it without Wine. An `afterPack` step (`build/afterPack.cjs`) switches off the Electron fuses the app does not need; check them with `npx @electron/fuses read --app "release/win-unpacked/Rugged Speech Test.exe"`.
@@ -271,6 +285,23 @@ This produces `release/Rugged Speech Test Setup <version>.exe`, a **per-user** N
 - **Code signing is not configured.** Without a certificate, Windows SmartScreen shows a "Windows protected your PC" warning on first run (users click **More info**, then **Run anyway**), and a school IT department may refuse an unsigned installer. Set `win.certificateFile` and `win.certificatePassword` (or the `CSC_LINK` / `CSC_KEY_PASSWORD` environment variables) in [electron-builder.yml](electron-builder.yml) before distributing widely. The certificate has a lead time, so start early.
 - **Uninstall** asks whether to keep or remove the child's saved data. That script ([build/installer.nsh](build/installer.nsh)) has **not yet been exercised on real Windows**.
 - **Updates are a new installer, handed over deliberately.** There is no auto-update, by design.
+
+### The Mac build
+
+`npm run dist:mac` makes `release/Rugged-Speech-Test-<version>-mac-arm64.dmg` and `-mac-x64.dmg`. It is the same app and the same code. The differences are small and deliberate: the menu bar cannot be removed on a Mac, so there is a tiny one (Hide, Quit and the editing shortcuts, so Cmd+C and Cmd+V work in text boxes), and closing the window leaves the app in the Dock, as Mac apps do. Voices are the ones macOS provides.
+
+- **Not signed or notarised yet.** A Mac will not open it by double-click the first time (the README's install steps say what to do). To sign and notarise, set `MAC_CSC_LINK`, `MAC_CSC_KEY_PASSWORD`, `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` and `APPLE_TEAM_ID` as repository secrets and add `notarize: true` under `mac:` in [electron-builder.yml](electron-builder.yml). This needs an Apple Developer Program membership, so start early.
+- **Where the data is:** `~/Library/Application Support/Rugged Speech Test`. Removing the app is dragging it to the Bin; delete that folder too if the child's data should go.
+
+### Releasing to both
+
+Every change is checked by [`.github/workflows/ci.yml`](.github/workflows/ci.yml) on Windows and macOS (type check, lint, unit tests, build, and the end-to-end tests against the packaged app). To release:
+
+1. Change `version` in `package.json` and commit it.
+2. Tag it and push the tag: `git tag v0.2.0 && git push origin v0.2.0`.
+3. [`.github/workflows/release.yml`](.github/workflows/release.yml) builds the Windows installer and both Mac disk images on their own kinds of computer, writes `SHA256SUMS.txt`, and puts everything in a **draft** release. Nothing is public until you try the files and press **Publish**.
+
+The workflows have been written but **have not yet run on GitHub**; expect to fix small things the first time.
 
 ---
 

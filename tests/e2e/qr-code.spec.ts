@@ -1,9 +1,10 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import jsQR from 'jsqr';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron } from './cleanup';
 
 async function setUpPin(page: Page, pin: string): Promise<void> {
   for (const digit of pin) {
@@ -50,11 +51,11 @@ test.describe('Medical Info QR code', () => {
   });
 
   test.afterEach(() => {
-    rmSync(userDataDir, { recursive: true, force: true });
+    removeDir(userDataDir);
   });
 
   test('the code on screen scans back to exactly the details entered, even with an accented name and dark high-contrast mode on', async () => {
-    const app = await electron.launch({
+    const app = await launchElectron({
       executablePath: resolveExecutablePath(),
       args: [`--user-data-dir=${userDataDir}`],
     });

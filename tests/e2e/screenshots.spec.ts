@@ -130,6 +130,9 @@ test('pictures for the guides', async () => {
   await shot('parent-look');
   await openTab(page, /^Music$/);
   await shot('parent-music');
+  await openTab(page, /^Seasons$/);
+  await page.getByRole('button', { name: 'Change the words for Eid' }).click();
+  await shot('parent-seasons');
   await openTab(page, /^Learning$/);
   await shot('parent-learning');
   await openTab(page, /^Backup$/);
@@ -162,6 +165,17 @@ test('pictures for the guides', async () => {
   await page.locator('.games-menu__tile', { hasText: 'Piano' }).click();
   await page.locator('.piano-screen__tune', { hasText: 'Twinkle' }).click();
   await shot('game-piano');
+  await page.locator('.games-shell__back').click();
+  await page.locator('.games-menu__tile', { hasText: 'Seasons' }).click();
+  await page.locator('.seasons-screen__choice', { hasText: 'Christmas' }).click();
+  await shot('game-seasons');
+  await page.locator('.games-shell__back').click();
+  await page.locator('.games-menu__tile', { hasText: 'Make a tree' }).click();
+  for (const [tool, slot] of [['Star', 0], ['Red bauble', 1], ['Gold bauble', 3], ['Light', 5], ['Blue bauble', 8], ['Bell', 12], ['Pink bauble', 10], ['Purple bauble', 17], ['Red present', 19], ['Blue present', 21]] as const) {
+    await page.locator('.tree-screen__tool', { hasText: tool }).click();
+    await page.locator('.tree-screen__slot').nth(slot).click();
+  }
+  await shot('game-tree');
   await page.locator('.games-shell__back').click();
   await page.locator('.games-menu__tile', { hasText: 'Draw' }).click();
   const canvas = page.locator('.draw-screen__canvas');

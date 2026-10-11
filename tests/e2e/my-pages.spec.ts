@@ -1,8 +1,9 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron } from './cleanup';
 
 function parentModeButton(page: Page) {
   return page.locator('.parent-mode-button');
@@ -34,7 +35,7 @@ async function enterParentMode(page: Page, pin: string): Promise<void> {
 }
 
 function launch(userDataDir: string) {
-  return electron.launch({
+  return launchElectron({
     executablePath: resolveExecutablePath(),
     args: [`--user-data-dir=${userDataDir}`],
   });
@@ -54,7 +55,7 @@ test.describe('My Pages, fully custom pages (feature review follow-up, Sep 2026)
   });
 
   test.afterEach(() => {
-    rmSync(userDataDir, { recursive: true, force: true });
+    removeDir(userDataDir);
   });
 
   test('an adult-built page appears on the child screen and speaks the words placed on it', async () => {

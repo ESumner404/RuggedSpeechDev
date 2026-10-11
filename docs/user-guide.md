@@ -33,9 +33,9 @@ Rugged Speech Test is a communication companion for when speaking is difficult, 
 - **Nothing is ever spoken unless someone presses something.** The app never guesses, never finishes a sentence for anyone, and never speaks over them. (There are three small, clearly described exceptions in Calm and My Day, listed in [section 5](#the-three-things-that-speak-without-a-fresh-press).)
 - **Buttons stay where they are.** A child learns where things are, and that matters more than almost anything. Nothing moves on its own: not when the window changes size, not when you hide a button. Only an adult, deliberately, in Parent Mode.
 - **Everything stays on the computer.** There is no account, no cloud, no internet connection used and nothing sent anywhere, ever. It works exactly the same with the network cable pulled out.
-- **The Parent PIN does not lock the computer.** It protects the settings and editing screens from being changed by accident. Anyone can still switch to another program with Alt+Tab or the Windows key. If you need the computer itself locked down, that is a separate kind of set-up.
+- **The Parent PIN does not lock the computer.** It protects the settings and editing screens from being changed by accident. Anyone can still switch to another program with Alt+Tab or the Windows key (Command+Tab on a Mac). If you need the computer itself locked down, that is a separate kind of set-up.
 
-**What you need:** a Windows 10 or Windows 11 computer or tablet (64-bit). A touch screen is helpful but not required; a mouse or keyboard works too, and so do switches (see [Access](#access)).
+**What you need:** a Windows 10 or Windows 11 computer or tablet (64-bit), or a Mac. A touch screen is helpful but not required; a mouse or keyboard works too, and so do switches (see [Access](#access)).
 
 **A word about the words.** The starter vocabulary is a small set of the first words a young child uses. It is a sensible beginning, **not a clinical prescription**. Which words matter for a child is a professional decision, so please review them with a speech and language therapist.
 
@@ -50,11 +50,13 @@ Rugged Speech Test is a communication companion for when speaking is difficult, 
 
 **Checking the file.** If you want to be sure the file is exactly the one you were sent, ask for its SHA-256 code and compare it with the one from a Command Prompt: `certutil -hashfile "Rugged Speech Test Setup 0.0.1.exe" SHA256`.
 
+**On a Mac.** Copy the disk image for your Mac (**Rugged-Speech-Test-0.0.1-mac-arm64.dmg** for Apple silicon, **-mac-x64.dmg** for an Intel Mac), open it, and drag **Rugged Speech Test** onto **Applications**. The first time, the Mac will say it cannot be opened, because the app is not yet signed with an Apple Developer ID. Go to **System Settings**, **Privacy & Security**, and press **Open Anyway** (on macOS 14 or earlier, Control-click the app and choose **Open**). After that it opens normally. Checking the file: `shasum -a 256` on the disk image, compared with the code you were given.
+
 **Updating.** There is no automatic update, by design, because the app never goes online. A new version arrives as a new installer file. Run it over the old one and your child's saved pages, photos and settings stay.
 
-**Where your data is.** In the folder **Rugged Speech Test** inside your Windows **AppData\Roaming** folder, for the person who is signed in. A backup file is the safe way to move or keep it.
+**Where your data is.** On Windows, in the folder **Rugged Speech Test** inside your **AppData\Roaming** folder, for the person who is signed in. On a Mac, in **Library/Application Support/Rugged Speech Test** in your home folder. A backup file is the safe way to move or keep it.
 
-**Removing it:** use Windows' usual **Add or remove programs**. It will ask whether to **keep** or **delete** the saved boards, photos and settings. Choose keep if the computer might be used again, or delete if you are finished with it.
+**Removing it:** on a Mac, drag the app to the Bin (and delete the data folder above if you want the saved things gone). On Windows, use the usual **Add or remove programs**. It will ask whether to **keep** or **delete** the saved boards, photos and settings. Choose keep if the computer might be used again, or delete if you are finished with it.
 
 ---
 
@@ -205,9 +207,9 @@ Point to where it hurts. The child sees a figure that looks like them, presses t
 
 ![Pointing to where it hurts](images/body-pointing.png)
 
-1. **Press a part of the body**, on the picture or in the list: head, eyes, ears, nose, mouth, throat, chest, tummy, arms, hands, **under my pants**, legs, knees, feet. **Turn round** (**See my back**) shows the back: neck, back, lower back and the rest. Each part you press is said ("My tummy.") and lit.
-2. **Press how it feels**: *hurts, sore, itchy, feels funny, hot, cold, too tight, not working*.
-3. **Press how much**: *a little, medium, a lot*.
+1. **Where?** Press a part of the body, on the picture or in the list: head, eyes, ears, nose, mouth, throat, chest, tummy, arms, hands, **under my pants**, legs, knees, feet. **Turn round** (**See my back**) shows the back: neck, back, lower back and the rest. Each part you press is said ("My tummy.") and lit.
+2. **What is it like?** Press how it feels: *hurts, sore, itchy, feels funny, hot, cold, too tight, not working*.
+3. **How much?** Press how much: *a little, medium, a lot*.
 4. **Say it**: "My tummy hurts a lot." Several parts make one sentence ("My head and my tummy hurt."). **Start again** clears it.
 
 If the child uses **equipment** (hearing aids, a cochlear implant, an oxygen tube, a neck tube, a tummy tube, a pump, a sensor, leg braces), each appears on the figure and can be pointed to: "My pump is not working." The adult chooses these in [My body (tab)](#my-body-tab).
@@ -241,10 +243,18 @@ Games are for fun and for practice. None keeps a score against anyone, none has 
 
   ![Jokes](images/game-jokes.png)
 
-- **Music.** A tile for each song an adult has added ([Music](#music)). Press one to play; **Pause** and **Stop** are always in the same place. Songs never play by themselves, and leaving the screen stops the music.
+- **Music.** A tile for each song an adult has added ([Music](#music)). Press one to play; **Pause** and **Stop** are always in the same place. Songs never play by themselves, and leaving the screen stops the music. If an adult has made **playlists**, they are choices along the top (**Everything** first). Choose one to see just its songs, and press **Play all** to play it through once, in order. It stops at the end.
 - **Piano.** Eight big coloured keys, C to the C above. Press a key and it plays. Choose a tune (*Hot cross buns, Mary had a little lamb, Twinkle twinkle, Ode to joy, Row row row your boat*) and the next key to press is outlined and pointed to. Pressing a wrong key just plays that note. **Hear it** plays the tune slowly. A computer keyboard's **A S D F G H J K** keys play too.
 
   ![The piano](images/game-piano.png)
+
+- **Seasons.** Words and games for times of the year and celebrations: **Spring, Summer, Autumn, Winter, Christmas, Easter, Halloween, Bonfire Night, Diwali, Eid** and **Hanukkah**. They stay in this order. The one that suits today's date is only marked **Now**; Diwali, Eid and Hanukkah follow the moon, so they are never marked, and a family chooses them. An adult chooses which ones show, and can change the words, in [Seasons](#seasons-tab) in Parent Mode. One that is left out leaves its place empty, so nothing else moves. For each, choose **Words** (big buttons that say the word when pressed), **Find the word**, or **Snap**, played with that season's words. Bonfire Night includes **ear defenders** and **too loud**.
+
+  ![Seasons](images/game-seasons.png)
+
+- **Make a tree.** A Christmas tree to decorate. Choose a decoration (a star, five colours of bauble, a light, a bell, a sweet, or a present), then press a place to hang it. The star goes on the top and presents go under the tree. **Take off** removes one, **Undo** takes back the last thing, and **Start again** clears the tree (and can be undone). The places never move, and the tree is still there next time. Nothing is scored.
+
+  ![Make a tree](images/game-tree.png)
 
 ### Traffic light
 
@@ -301,7 +311,7 @@ Parent Mode is where an adult sets everything up. The child's screen stays simpl
 | **Start here** | User guide |
 | **About the child** | User · About me · Medical · My body |
 | **Words and pages** | Boards · People · Places · My Pages · Quick Access · Profiles |
-| **Day and fun** | My Day · Music · Jokes |
+| **Day and fun** | My Day · Music · Jokes · Seasons |
 | **How it looks and works** | Access · Look |
 | **Learning and school** | Learning · Targets · Notes · Activity · Reports · School |
 | **Safety and data** | Lost mode · Backup · Print · General |
@@ -347,8 +357,9 @@ Make the figure on [My body](#my-body) look like the child. The child finds it i
 
 ![The My body settings](images/parent-my-body.png)
 
-- **Figure**: **Boy**, **Girl** or **Non-binary**. Choosing one picks hair and clothes to start from; change any of them.
+- **Figure**: **Boy**, **Girl** or **Non-binary**. Choosing one picks hair and clothes to start from; change any of them. The hair styles and head coverings are shown as small heads, so you can see what you are choosing.
 - **Skin** (eight tones), **hair** (ten colours, and short, long, tied up, curly or none), **clothes** (trousers, shorts, skirt or dress, and colours for the top and the bottom).
+- **Head covering.** None, a **hijab** (a headscarf worn by many Muslim women and girls), a **turban** (worn by many Sikh men and boys, and by others) or a **kippah** (a small cap worn by many Jewish men and boys, also called a yarmulke), in any of the clothes colours. A hijab or a turban covers the hair; a kippah sits on top of it. The face is always left clear.
 - **Wheelchair and glasses.** The figure sits in a wheelchair, drawn with its big wheels, push rims, seat, handles, arm pads, footplates and small front wheels.
 - **Equipment and aids**: hearing aids, cochlear implant, eye patch, helmet, oxygen tube, neck tube (tracheostomy), tummy tube (feeding tube), insulin pump, glucose sensor, leg braces, crutches, walking frame (only when standing), artificial arm, artificial leg. Each one that is shown can be pointed to on My body.
 
@@ -415,7 +426,7 @@ For each **activity** you can set a **name**, **time**, **location** and **who w
 
 ![My Pages](images/parent-my-pages.png)
 
-- **Start from a ready-made page**: choose a template and press **Make this page**. There are about twenty: *snacks, drinks, playground, classroom requests, hello and thank you, getting dressed, bedtime, café or shop, doctor or dentist, maths, science and nature, story time, PE and movement, art and making, lunchtime, assembly and quiet times, computers and tablets, working with a friend, feeling too much.* It is added as a new page you can edit freely; check the words suit this child first.
+- **Start from a ready-made page**: choose a template and press **Make this page**. There are about thirty: *snacks, drinks, playground, classroom requests, hello and thank you, getting dressed, bedtime, café or shop, doctor or dentist, maths, science and nature, story time, PE and movement, art and making, lunchtime, assembly and quiet times, computers and tablets, working with a friend, feeling too much,* and one for each season and celebration (*Spring, Summer, Autumn, Winter, Christmas, Easter, Halloween, Bonfire Night, Diwali, Eid, Hanukkah*). It is added as a new page you can edit freely; check the words suit this child first.
 - **Add page**: type a name. Pages appear in a list; pick one to edit it, **Rename** it, or **Delete** it (which deletes its buttons too).
 - Each page works like a board: set the **grid size** (starts at 3 × 3), **add buttons** (emoji or photo), edit labels, open **Details**, **hide**, and reorder by dragging or with **▲ ▼**.
 - **Share this page…** saves the page as a file (an **.obf** file, the open standard other communication software can read too). Photos and recordings are inside it. Give the file to another device on a USB stick or by email.
@@ -447,6 +458,7 @@ Add songs from files on this computer, such as **MP3**s (and M4A, WAV, OGG, FLAC
 - **Add songs from this computer** opens the Windows file window. Each song keeps its file name as its name (tidied up); rename it, give it a picture, move it up or down, or **Remove** it.
 - Up to **60 songs**, each up to **30 MB**. The page shows the total, and a reminder if the library is large, because a backup holds every song.
 - **Music volume** is separate from the voice.
+- **Playlists.** Below the songs, name a playlist (such as *Bedtime* or *Car journey*), choose a picture, and add songs to it from a list. Put them in order with **▲ ▼**, or **Take out** a song. Up to 12 playlists. On the child's Music screen each is a choice along the top, with a **Play all** button. Removing a song also takes it out of every playlist.
 - Songs stay on this computer and play with no internet.
 
 **There is no Spotify or Apple Music.** Those need an account and an internet connection, and this app never uses either. Songs you have bought as ordinary files, songs copied from a CD, and recordings of someone singing all work. Songs that are locked to a streaming app cannot be added.
@@ -454,6 +466,19 @@ Add songs from files on this computer, such as **MP3**s (and M4A, WAV, OGG, FLAC
 ### Jokes
 
 The built-in jokes are in Games. Add your own here: a question and its answer. They are mixed in with the others and can be removed.
+
+### Seasons (tab)
+
+Which times of the year and celebrations the child sees in Games, Seasons, and the words in each. Everything starts as the usual set, and nothing changes until you change it.
+
+![Seasons settings](images/parent-seasons.png)
+
+- **Choices grouped by tradition.** **The year**, **Christian**, **Muslim**, **Jewish**, **Hindu**, **Other celebrations** and **Your own**. Untick any that are not part of your family's life. A season that is left out leaves its place empty on the child's screen, so nothing else moves.
+- **Change the words.** For any of them: change the word, the picture, what it says if that is different, and the kind of word (which sets its colour). Add a word, remove one, or **Put back the usual words**. Up to 12 words each. To choose a picture, open the computer's own emoji picker (on Windows press the Windows key and the full stop together; on a Mac press Control, Command and Space), then pick an emoji.
+- **Add a celebration.** Choose one **from a list** (Ramadan, Vaisakhi, Holi, Passover, Chinese New Year, Birthday) or **name your own**. Up to 12. Remove one you added with **Remove**.
+- **Put everything back to the usual.**
+
+**A note on the words.** Eid covers Eid al-Fitr and Eid al-Adha; Diwali is also called Deepavali, and is kept by Hindus, Sikhs and Jains; Hanukkah is also spelled Chanukah. The words are a starting point. Only you know how your family keeps a celebration, so please read them and change anything that is not right. The ready-made My Pages pages for each season use the usual words, and are an ordinary page once made.
 
 ### Access
 
@@ -477,7 +502,7 @@ Settings for different ways of pressing buttons, and for how things sound and ar
 | **Keyboard letters** | Usual keyboard order, or alphabetical order (A, B, C…). |
 | **Show each word's picture in the sentence** | Puts the button's picture beside each word in the sentence strip. |
 | **High contrast** | Off, Light or Dark. When on, it is used instead of a colour scheme from Look. |
-| **Text size** | 1× to 2×. |
+| **Text size** | 1× to 2×. At the larger sizes the buttons grow, so a board that no longer fits on the screen **scrolls**, and nothing is hidden. Buttons stay in the same order and place. |
 | **Reduce motion** | For people who find movement difficult. (The app already avoids animation.) |
 | **Low-arousal colours** | The same word-class colours, but muted, for a child overwhelmed by bright colour. |
 
@@ -535,7 +560,7 @@ For laminated cards that still work when the computer is broken, charging, or so
 
 ### General
 
-- **Start when Windows starts.** Off by default. When on, the app opens automatically after sign-in.
+- **Start when the computer starts.** Off by default. When on, the app opens automatically after sign-in (a Mac's login items, or Windows' start-up).
 - **Close Parent Mode after…** Never, or 5, 10, 15, 30 or 60 minutes without use, so a shared or unattended device is not left open. Any press, key or typing counts as use, and the PIN is needed again to get back in.
 - **Change the PIN.** Choose a new 4-digit PIN (twice). You get a **new recovery code, and the old one stops working**, so write it down.
 - **Favourites.** The words saved to Favourites, each with a **Remove** button.
@@ -730,11 +755,11 @@ A sensible order for a new child:
 
 **Feelings & Help tabs:** Feelings · Help · Calm · My body.
 
-**Games:** Find the word · Snap · Rollercoaster · Draw · Jokes · Music · Piano.
+**Games:** Find the word · Snap · Rollercoaster · Draw · Jokes · Music · Piano · Seasons · Make a tree.
 
 **School Mode** (once switched on, next to Parent Mode, with its own PIN): Today · Pupil and school · About me · Safeguarding · Timetable · Lesson pages · Vocabulary · Targets · Notes · Activity · Reports · Classroom set-up · School guide.
 
-**Parent Mode:** User guide · User · About me · Medical · My body · Boards · People · Places · My Pages · Quick Access · Profiles · My Day · Music · Jokes · Access · Look · Learning · Targets · Notes · Activity · Reports · School · Lost mode · Backup · Print · General.
+**Parent Mode:** User guide · User · About me · Medical · My body · Boards · People · Places · My Pages · Quick Access · Profiles · My Day · Music · Jokes · Seasons · Access · Look · Learning · Targets · Notes · Activity · Reports · School · Lost mode · Backup · Print · General.
 
 **Gestures**
 

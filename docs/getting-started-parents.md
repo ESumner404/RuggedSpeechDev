@@ -10,13 +10,17 @@ This guide takes you from nothing to a child using it, in about twenty minutes. 
 
 ## What you need
 
-- A **Windows 10 or Windows 11** computer or tablet (64-bit). A touchscreen is ideal, but a mouse works.
+- A **Windows 10 or Windows 11** computer or tablet (64-bit), or a **Mac**. A touchscreen is ideal, but a mouse works.
 - The installer: a single file called **Rugged Speech Test Setup 0.0.1.exe** (the number may be newer).
 - About 10 minutes for set-up, and a quiet moment to choose a voice with your child if you can.
 
 You do **not** need an internet connection, an account or an administrator password.
 
 ## 1. Install it
+
+**On a Mac**, skip to [Installing on a Mac](#installing-on-a-mac) below. The rest of this guide is the same on both.
+
+**On Windows:**
 
 1. Copy the installer file onto the computer (from a USB stick, an email, or wherever you were given it).
 2. Double-click it.
@@ -25,6 +29,14 @@ You do **not** need an internet connection, an account or an administrator passw
 5. When it finishes, **Rugged Speech Test** opens by itself. There is also a shortcut on the desktop and in the Start menu.
 
 If you want to be sure the file is exactly the one that was sent to you, ask whoever gave it to you for its "SHA-256" code, then open a Command Prompt and type `certutil -hashfile "Rugged Speech Test Setup 0.0.1.exe" SHA256`. The two codes should match.
+
+### Installing on a Mac
+
+1. Get the disk image for your Mac: **Rugged-Speech-Test-0.0.1-mac-arm64.dmg** for a Mac with Apple silicon (M1 or later), or **-mac-x64.dmg** for an Intel Mac. The Apple menu, then **About This Mac**, says which you have.
+2. Double-click it, and drag **Rugged Speech Test** onto **Applications**.
+3. Open it from Applications. The first time, the Mac says it cannot be opened, because the app is not yet signed with an Apple Developer ID. This is normal for new software and does not mean anything is wrong. Open **System Settings**, then **Privacy & Security**, scroll down and press **Open Anyway**, and enter your Mac password. (On macOS 14 or earlier, Control-click the app and choose **Open** instead.) After this once, it opens normally.
+
+On a Mac, your child's saved pages, photos and settings are in **Library/Application Support/Rugged Speech Test** in your home folder. To remove the app, drag it to the Bin (and that folder too, if you want the saved things gone).
 
 ## 2. The first-run set-up
 
@@ -139,6 +151,8 @@ If you add equipment (hearing aids, a pump, a feeding tube, leg braces and other
 - **Jokes**: very simple jokes you can say, and you can add your own.
 - **Music**: songs you add from files on the computer (MP3s and similar).
 - **Piano**: eight big coloured keys, and tunes to follow.
+- **Seasons**: words and games for spring, summer, autumn, winter, Christmas, Easter, Halloween, Bonfire Night, Diwali, Eid and Hanukkah.
+- **Make a tree**: hang baubles, lights and presents on a Christmas tree.
 
 Nothing in a game speaks or plays unless your child presses something.
 
@@ -172,6 +186,6 @@ Nothing in a game speaks or plays unless your child presses something.
 | There is no sound | Turn up the computer's volume, then check **Access → Voice volume** and **Voice**. Press **Hear this voice**. |
 | A button is in the wrong place | In Parent Mode, **Boards**, drag the button, or use the up and down arrows. |
 | I want to start again | **Boards** has **Put this board back to the starter version** for each page. |
-| I want to remove it | Use Windows **Add or remove programs**. It asks whether to keep or delete your child's saved pages, photos and settings. |
+| I want to remove it | On Windows, use **Add or remove programs**. It asks whether to keep or delete your child's saved pages, photos and settings. On a Mac, drag the app to the Bin. |
 
 More detail on everything is in [the whole guide](user-guide.md). For teachers and staff, see [Getting started: teachers and staff](getting-started-staff.md).

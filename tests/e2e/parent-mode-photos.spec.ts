@@ -1,8 +1,9 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron } from './cleanup';
 
 const FIXTURE_PHOTO = join(__dirname, 'fixtures/test-photo.png');
 
@@ -56,14 +57,14 @@ test.describe('Phase 4, photo capture, voice clips, and People/Places', () => {
   });
 
   test.afterEach(() => {
-    rmSync(userDataDir, { recursive: true, force: true });
+    removeDir(userDataDir);
   });
 
   // Electron is Chromium underneath, so the same fake-media-device switches
   // Chromium supports work here, a synthetic camera/mic without needing
   // real hardware in this environment.
   function launchWithFakeMedia() {
-    return electron.launch({
+    return launchElectron({
       executablePath: resolveExecutablePath(),
       args: [
         `--user-data-dir=${userDataDir}`,

@@ -38,7 +38,8 @@ function Card({ item, label, empty }: { item?: Item | undefined; label: string; 
 // is no clock, no other player to beat and no penalty. Pressing a card says
 // its word, which is the point: the word is heard each time the picture is
 // looked at. Nothing speaks unless something is pressed.
-export function SnapScreen() {
+// With `fixedWords` (the Seasons game) it uses those words and not the boards.
+export function SnapScreen({ fixedWords }: { fixedWords?: Item[] } = {}) {
   const deck = useSignal<SnapDeck | undefined | null>(null);
   const turn = useSignal(-1); // index of the card on the right; -1 before the first is turned
   const found = useSignal(0);
@@ -57,6 +58,11 @@ export function SnapScreen() {
   }
 
   useEffect(() => {
+    if (fixedWords) {
+      words.value = fixedWords;
+      deal(fixedWords);
+      return;
+    }
     void getAllBoards().then((boards) => {
       words.value = gameWords(boards, wordStageSetting.signal.value);
       deal(words.value);

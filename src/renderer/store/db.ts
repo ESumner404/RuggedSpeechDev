@@ -20,7 +20,9 @@ import {
   type StaffNote,
   type Target,
 } from './staff';
-import { isSongList, type Song } from '../music/songs';
+import { isTreeDesign, type TreeDesign } from '../game/tree';
+import { DEFAULT_SEASONS_CONFIG, isSeasonsConfig, type SeasonsConfig } from '../vocab/seasons';
+import { isPlaylistList, isSongList, type Playlist, type Song } from '../music/songs';
 import { isJokeList, type Joke } from '../vocab/jokes';
 import { DEFAULT_BODY_LOOK, isBodyLook, type BodyLook } from '../body/look';
 import { isDrawingList } from '../draw/palette';
@@ -897,6 +899,12 @@ export const myBodySetting = storedSetting<BodyLook>('myBody', DEFAULT_BODY_LOOK
 export const customJokesSetting = storedSetting<Joke[]>('customJokes', [], isJokeList);
 /** Songs an adult has added (Parent Mode, Music). The audio is kept with the voice clips. */
 export const songsSetting = storedSetting<Song[]>('songs', [], isSongList);
+/** Named lists of those songs (Parent Mode, Music), shown as choices on the child's Music screen. */
+/** Which seasons and celebrations show, and their words (Parent Mode, Seasons). */
+export const seasonsSetting = storedSetting<SeasonsConfig>('seasons', DEFAULT_SEASONS_CONFIG, isSeasonsConfig);
+/** The Christmas tree a child has decorated (Games, Make a tree). */
+export const treeDesignSetting = storedSetting<TreeDesign>('treeDesign', {}, isTreeDesign);
+export const playlistsSetting = storedSetting<Playlist[]>('playlists', [], isPlaylistList);
 const isVolume = (value: unknown): value is number => typeof value === 'number' && value >= 0.1 && value <= 1;
 /** How loud the music plays. */
 export const musicVolumeSetting = storedSetting<number>('musicVolume', 0.8, isVolume);
@@ -1016,6 +1024,9 @@ const SETTINGS = [
   myBodySetting,
   customJokesSetting,
   songsSetting,
+  playlistsSetting,
+  treeDesignSetting,
+  seasonsSetting,
   musicVolumeSetting,
   lostModeSetting,
   trafficSetting,

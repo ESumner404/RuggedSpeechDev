@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://rugged-speech.vercel.app/</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en-GB" href="https://rugged-speech.vercel.app/"/>
+    <image:image><image:loc>https://rugged-speech.vercel.app/brand/og-image.jpg</image:loc><image:title>Rugged Speech on a rugged tablet</image:title></image:image>
+    <image:image><image:loc>https://rugged-speech.vercel.app/screens/talk-sentence.png</image:loc><image:title>The Talk page, with a sentence being built</image:title></image:image>
+    <image:image><image:loc>https://rugged-speech.vercel.app/screens/body-pointing.png</image:loc><image:title>My body, pointing to where it hurts</image:title></image:image>
+    <image:image><image:loc>https://rugged-speech.vercel.app/screens/school-today.png</image:loc><image:title>School Mode, the Today page</image:title></image:image>
+  </url>
+</urlset>

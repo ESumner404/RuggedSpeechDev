@@ -1,8 +1,9 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron } from './cleanup';
 
 async function setUpPin(page: Page, pin: string): Promise<void> {
   for (const digit of pin) {
@@ -30,7 +31,7 @@ async function enterParentMode(page: Page, pin: string): Promise<void> {
 }
 
 function launch(userDataDir: string) {
-  return electron.launch({
+  return launchElectron({
     executablePath: resolveExecutablePath(),
     args: [`--user-data-dir=${userDataDir}`],
   });
@@ -66,7 +67,7 @@ test.describe('Quick Access, press mode and pitch (docs/build-plan.md Phases 1-2
   });
 
   test.afterEach(() => {
-    rmSync(userDataDir, { recursive: true, force: true });
+    removeDir(userDataDir);
   });
 
   test('an adult can rearrange the Quick Access bar; Help can never leave it; the layout survives a relaunch', async () => {

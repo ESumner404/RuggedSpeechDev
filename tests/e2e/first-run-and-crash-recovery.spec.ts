@@ -1,8 +1,9 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { _electron as electron, expect, type Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import { resolveExecutablePath } from './resolve-executable';
+import { removeDir, launchElectron, killOutright } from './cleanup';
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -29,11 +30,11 @@ test.describe('Phase 8, first run and crash recovery', () => {
   });
 
   test.afterEach(() => {
-    rmSync(userDataDir, { recursive: true, force: true });
+    removeDir(userDataDir);
   });
 
   function launch() {
-    return electron.launch({
+    return launchElectron({
       executablePath: resolveExecutablePath(),
       args: [`--user-data-dir=${userDataDir}`],
     });
@@ -110,8 +111,8 @@ test.describe('Phase 8, first run and crash recovery', () => {
     // closest a test harness can get to "pulling the power".
     const pid = app.process().pid;
     expect(pid).toBeDefined();
-    process.kill(pid!, 'SIGKILL');
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    killOutright(pid!);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     app = await launch();
     page = await app.firstWindow();

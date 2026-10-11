@@ -60,6 +60,7 @@ describe('ParentModeScreen shell', () => {
       'My Day',
       'Music',
       'Jokes',
+      'Seasons',
       'Access',
       'Look',
       'Learning',

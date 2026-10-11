@@ -36,6 +36,8 @@ npm run dev
 | `npm run pack` | An unpacked Electron build, for quick testing |
 | `npm run test:e2e` | Playwright against the packaged app (run `npm run pack` first) |
 | `npm run dist` | The Windows installer, into `release/` |
+| `npm run dist:mac` | The two Mac disk images (Apple silicon and Intel), into `release/` |
+| `npm run dist:all` | All three |
 
 ## Making a change
 
@@ -44,6 +46,18 @@ npm run dev
 - **Say why you are adding a dependency** in the commit message. Every dependency is a liability on a machine that will never be updated.
 - Keep pull requests small and about one thing. Describe what a person using the app will notice.
 - If you change what the app does, update [the guide](docs/user-guide.md) and [the feature list](docs/features.md) in the same pull request.
+
+## The website
+
+The page in `website/` is plain HTML. Its "Have a go" board uses the app's own starter words, folders and drawn symbols, in `website/board-data.js`. That file is generated: if you change the starter words or the symbols, run `npm run website:board` and commit the result. A unit test fails if the two drift apart.
+
+The download buttons point at `/download/windows`, `/download/mac` and `/download/mac-intel`. `website/vercel.json` serves those from the website itself, from `website/downloads/`, so a visitor never goes to GitHub. The installers are over 100 MB so that folder is not kept in git: after `npm run dist:all`, run `npm run website:downloads` to copy the builds in under their fixed names (with checksums), then `cd website && vercel deploy --prod` to upload them with the site. The download links work only once that has been done.
+
+The page's search-engine set-up (title, description, structured data, `robots.txt`, `sitemap.xml`) is in `website/`; if you move the site to its own domain, change the address in `index.html`, `robots.txt` and `sitemap.xml`.
+
+## Releasing
+
+A new version goes to Windows and Mac together. Change `version` in `package.json`, commit, then tag and push (`git tag v0.2.0 && git push origin v0.2.0`). The release workflow builds the Windows installer and both Mac disk images and makes a draft release with checksums; publish it once you have tried the files. Run `npm run pack` again before the end-to-end tests if you have just built a release locally, because a release build switches the debug port off, and the tests need it.
 
 ## Please do not
 

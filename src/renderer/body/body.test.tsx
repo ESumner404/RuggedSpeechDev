@@ -331,3 +331,35 @@ describe('My body for the child and the adult', () => {
     await waitFor(() => box('Crutches').disabled); // crutches are for standing
   });
 });
+
+describe('head coverings', () => {
+  it('a hijab or a turban covers the hair, a kippah sits on top of it', () => {
+    const host = document.createElement('div');
+    const hair = '#123456';
+    const cap = '#654321';
+    const drawn = (headwear: 'none' | 'hijab' | 'turban' | 'kippah') => {
+      render(<BodyFigure look={{ ...DEFAULT_BODY_LOOK, hair, hairStyle: 'long', headwear, headwearColour: cap }} view="front" />, host);
+      return {
+        hair: host.querySelectorAll(`[fill="${hair}"]`).length,
+        covering: host.querySelectorAll(`[fill="${cap}"]`).length,
+      };
+    };
+    expect(drawn('none')).toEqual({ hair: expect.any(Number), covering: 0 });
+    expect(drawn('none').hair).toBeGreaterThan(0);
+    expect(drawn('hijab')).toEqual({ hair: 0, covering: 1 });
+    expect(drawn('turban')).toEqual({ hair: 0, covering: 1 });
+    const kippah = drawn('kippah');
+    expect(kippah.hair).toBe(drawn('none').hair);
+    expect(kippah.covering).toBe(1);
+    render(null, host);
+  });
+
+  it('an older saved look, with no head covering, still opens', () => {
+    const old: Partial<typeof DEFAULT_BODY_LOOK> = { ...DEFAULT_BODY_LOOK };
+    delete old.headwear;
+    delete old.headwearColour;
+    expect(isBodyLook(old)).toBe(true);
+    expect(withDefaults(old).headwear).toBe('none');
+    expect(isBodyLook({ ...DEFAULT_BODY_LOOK, headwear: 'cape' })).toBe(false);
+  });
+});

@@ -12,6 +12,7 @@ win:
   target:
     - target: nsis
       arch: [x64]
+  artifactName: ${productName} Setup ${version}.${ext}
   # Code signing (docs/build-plan.md Phase 8): NOT YET CONFIGURED. Without a
   # certificate, Windows SmartScreen warns on every install, get one and
   # set win.certificateFile/certificatePassword (or CSC_LINK/CSC_KEY_PASSWORD
@@ -32,13 +33,20 @@ nsis:
   #. NOT YET VERIFIED on real Windows; see the comment in the script itself.
   include: build/installer.nsh
 
-# Windows 10 Pro is the only shipping target (PRINCIPLES.md §1). This mac target
-# exists purely so the app can be built and run locally for development and
-# testing, it is not a release channel. Unsigned: expect Gatekeeper to
-# require right-click > Open on first launch.
+# macOS is shipped alongside Windows (PRINCIPLES.md section 1): the same app,
+# a disk image for Apple silicon and one for Intel Macs. It is not signed or
+# notarised yet, so a Mac will not open it by double-click the first time; the
+# guides say how to allow it. To sign and notarise, give the build a Developer
+# ID certificate (CSC_LINK and CSC_KEY_PASSWORD) and, to notarise, set
+# APPLE_ID, APPLE_APP_SPECIFIC_PASSWORD and APPLE_TEAM_ID and add
+# `notarize: true` below. Without them electron-builder skips signing.
 mac:
   target:
     - target: dmg
       arch: [arm64, x64]
   category: public.app-category.education
-  identity: null
+  artifactName: Rugged-Speech-Test-${version}-mac-${arch}.${ext}
+  hardenedRuntime: false
+dmg:
+  title: ${productName}
+  writeUpdateInfo: false
