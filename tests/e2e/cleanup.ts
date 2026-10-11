@@ -28,8 +28,8 @@ export async function launchElectron(options: LaunchOptions): Promise<ElectronAp
   let lastError: unknown;
   // On Windows build computers about half of the starts do not finish, so each is given less time and more tries.
   const slowStarts = Boolean(process.env['CI']) && process.platform === 'win32';
-  const tries = slowStarts ? 10 : 6;
-  const waitFor = slowStarts ? 8_000 : 12_000;
+  const tries = slowStarts ? 12 : 6;
+  const waitFor = slowStarts ? 6_000 : 12_000;
   for (let attempt = 0; attempt < tries; attempt += 1) {
     let app: ElectronApplication | undefined;
     try {

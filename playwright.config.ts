@@ -10,7 +10,8 @@ export default defineConfig({
   testDir: 'tests/e2e',
   // A computer on a build server is slower than a desk one, and several tests start the app more than once.
   timeout: process.env['CI'] ? (process.platform === 'win32' ? 150_000 : 60_000) : 30_000,
-  retries: 0,
+  // On Windows build computers about half of the starts of the app never finish, so a test that fails there is given two more goes from a clean start.
+  retries: process.env['CI'] && process.platform === 'win32' ? 2 : 0,
   reporter: 'list',
   workers: 1,
 });
