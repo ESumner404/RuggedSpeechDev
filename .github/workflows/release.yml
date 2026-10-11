@@ -91,8 +91,8 @@ jobs:
         working-directory: files
         run: |
           cp Rugged*Setup*.exe RuggedSpeech-Setup-Windows.exe
-          cp Rugged-Speech-Test-*-mac-arm64.dmg RuggedSpeech-Mac-AppleSilicon.dmg
-          cp Rugged-Speech-Test-*-mac-x64.dmg RuggedSpeech-Mac-Intel.dmg
+          cp Rugged-Speech-*-mac-arm64.dmg RuggedSpeech-Mac-AppleSilicon.dmg
+          cp Rugged-Speech-*-mac-x64.dmg RuggedSpeech-Mac-Intel.dmg
       - name: Checksums
         working-directory: files
         run: sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt
@@ -104,7 +104,7 @@ jobs:
           gh release create "${GITHUB_REF_NAME}" files/* \
             --repo "${GITHUB_REPOSITORY}" \
             --draft \
-            --title "Rugged Speech Test ${GITHUB_REF_NAME}" \
+            --title "Rugged Speech ${GITHUB_REF_NAME}" \
             --notes "Windows: the Setup .exe. Mac: the .dmg for your Mac (arm64 for Apple silicon, x64 for Intel). Check a download against SHA256SUMS.txt. These are not signed yet, so see the README for how to open them the first time."
       - name: Keep the files (a manual run)
         if: ${{ !startsWith(github.ref, 'refs/tags/v') }}

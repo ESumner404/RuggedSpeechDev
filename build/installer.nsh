@@ -10,13 +10,15 @@
 ; before relying on it.
 
 ; Electron's app.getPath('userData') resolves to %APPDATA%\<productName>,
-; "Rugged Speech Test" here matches the productName in electron-builder.yml exactly.
+; "Rugged Speech" here matches the productName in electron-builder.yml exactly.
 ; Hardcoded rather than an electron-builder NSIS variable: the available
 ; variable names for this vary by electron-builder version, and getting it
 ; wrong here would silently point RMDir at the wrong folder or none at all.
 !macro customUnInstall
   MessageBox MB_YESNO "Keep this child's saved boards, photos and settings on this computer?" IDYES keepData IDNO removeData
   removeData:
+    RMDir /r "$APPDATA\Rugged Speech"
+    ; the folder an older test build, named "Rugged Speech Test", used
     RMDir /r "$APPDATA\Rugged Speech Test"
     Goto uninstallDone
   keepData:

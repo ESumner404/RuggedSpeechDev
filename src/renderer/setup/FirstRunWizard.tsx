@@ -156,7 +156,7 @@ export function FirstRunWizard({ onComplete }: Props) {
     <div class="first-run-wizard">
       {screen.value === 'welcome' && (
         <div class="first-run-wizard__screen">
-          <h1 class="first-run-wizard__title">Welcome to Rugged Speech Test</h1>
+          <h1 class="first-run-wizard__title">Welcome to Rugged Speech</h1>
           <p class="first-run-wizard__hint">
             A way to say what you want to say, when speaking is hard. Words, pictures and a keyboard, spoken
             out loud, for children and young people.

@@ -1,6 +1,6 @@
 # Getting started: teachers and staff
 
-This guide is for teachers, teaching assistants, key workers, SENCos and speech and language therapists who support a child who uses Rugged Speech Test in a school or setting.
+This guide is for teachers, teaching assistants, key workers, SENCos and speech and language therapists who support a child who uses Rugged Speech in a school or setting.
 
 The app is built for **one device and one pupil**. There are no pupil accounts and no class lists, and nothing is sent anywhere. Each child has their own device, with their own words, pictures, voice and settings.
 

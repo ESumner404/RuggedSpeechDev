@@ -1,13 +1,13 @@
-# Setting up Rugged Speech Test
+# Setting up Rugged Speech
 
 *Print this page and keep it somewhere handy: the shelf near the computer, or inside the front cover of the child's communication folder.*
 
 ## Installing
 
-1. Copy the **Rugged Speech Test Setup** file onto the computer (from a USB stick, a shared drive, or wherever it was given to you). You need Windows 10 or 11.
+1. Copy the **Rugged Speech Setup** file onto the computer (from a USB stick, a shared drive, or wherever it was given to you). You need Windows 10 or 11.
 2. Double-click it. Windows may show a blue "Windows protected your PC" screen. Press **More info**, then **Run anyway**. This is normal for new software and does not mean anything is wrong.
 3. Follow the installer. It does not need an administrator password: it installs just for the person currently signed in.
-4. When it finishes, **Rugged Speech Test** opens on its own.
+4. When it finishes, **Rugged Speech** opens on its own.
 
 ## The first-run questions
 

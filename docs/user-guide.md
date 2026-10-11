@@ -1,12 +1,12 @@
-# Rugged Speech Test: the whole guide
+# Rugged Speech: the whole guide
 
-A guide for the parents, carers, teachers and therapists who set up and use Rugged Speech Test with a child or young person. It describes every part of the app. If you are new, start with the shorter guides:
+A guide for the parents, carers, teachers and therapists who set up and use Rugged Speech with a child or young person. It describes every part of the app. If you are new, start with the shorter guides:
 
 - [Getting started: parents and carers](getting-started-parents.md)
 - [Getting started: teachers and staff](getting-started-staff.md)
 - A one-page printable [setup sheet](setup-sheet.md)
 
-Rugged Speech Test is a communication companion for when speaking is difficult, unreliable or tiring. It helps someone say what they want to say by pressing large buttons, typing, pointing, or showing their words. It is made for young children and for children with limited speech, and it works for people who rarely speak and for people who speak most of the time but sometimes get stuck, including those who stammer.
+Rugged Speech is a communication companion for when speaking is difficult, unreliable or tiring. It helps someone say what they want to say by pressing large buttons, typing, pointing, or showing their words. It is made for young children and for children with limited speech, and it works for people who rarely speak and for people who speak most of the time but sometimes get stuck, including those who stammer.
 
 ![The Home screen](images/home.png)
 
@@ -43,18 +43,18 @@ Rugged Speech Test is a communication companion for when speaking is difficult, 
 
 ## 2. Installing
 
-1. Copy the **Rugged Speech Test Setup** file (for example *Rugged Speech Test Setup 0.0.1.exe*) onto the computer, from a USB stick, a shared drive, or wherever it was given to you.
+1. Copy the **Rugged Speech Setup** file (for example *Rugged Speech Setup 0.0.1.exe*) onto the computer, from a USB stick, a shared drive, or wherever it was given to you.
 2. Double-click it. Windows may show a blue **"Windows protected your PC"** screen. Click **More info**, then **Run anyway**. This is normal for new software that has not been through Windows' paid signing process. It does not mean anything is wrong.
 3. Follow the installer. It does **not** need an administrator password. It installs just for the person who is signed in, and lets you choose the folder.
-4. When it finishes, Rugged Speech Test opens on its own. A shortcut is added to the desktop and the Start menu.
+4. When it finishes, Rugged Speech opens on its own. A shortcut is added to the desktop and the Start menu.
 
-**Checking the file.** If you want to be sure the file is exactly the one you were sent, ask for its SHA-256 code and compare it with the one from a Command Prompt: `certutil -hashfile "Rugged Speech Test Setup 0.0.1.exe" SHA256`.
+**Checking the file.** If you want to be sure the file is exactly the one you were sent, ask for its SHA-256 code and compare it with the one from a Command Prompt: `certutil -hashfile "Rugged Speech Setup 0.0.1.exe" SHA256`.
 
-**On a Mac.** Copy the disk image for your Mac (**Rugged-Speech-Test-0.0.1-mac-arm64.dmg** for Apple silicon, **-mac-x64.dmg** for an Intel Mac), open it, and drag **Rugged Speech Test** onto **Applications**. The first time, the Mac will say it cannot be opened, because the app is not yet signed with an Apple Developer ID. Go to **System Settings**, **Privacy & Security**, and press **Open Anyway** (on macOS 14 or earlier, Control-click the app and choose **Open**). After that it opens normally. Checking the file: `shasum -a 256` on the disk image, compared with the code you were given.
+**On a Mac.** Copy the disk image for your Mac (**Rugged-Speech-0.0.1-mac-arm64.dmg** for Apple silicon, **-mac-x64.dmg** for an Intel Mac), open it, and drag **Rugged Speech** onto **Applications**. The first time, the Mac will say it cannot be opened, because the app is not yet signed with an Apple Developer ID. Go to **System Settings**, **Privacy & Security**, and press **Open Anyway** (on macOS 14 or earlier, Control-click the app and choose **Open**). After that it opens normally. Checking the file: `shasum -a 256` on the disk image, compared with the code you were given.
 
 **Updating.** There is no automatic update, by design, because the app never goes online. A new version arrives as a new installer file. Run it over the old one and your child's saved pages, photos and settings stay.
 
-**Where your data is.** On Windows, in the folder **Rugged Speech Test** inside your **AppData\Roaming** folder, for the person who is signed in. On a Mac, in **Library/Application Support/Rugged Speech Test** in your home folder. A backup file is the safe way to move or keep it.
+**Where your data is.** On Windows, in the folder **Rugged Speech** inside your **AppData\Roaming** folder, for the person who is signed in. On a Mac, in **Library/Application Support/Rugged Speech** in your home folder. A backup file is the safe way to move or keep it.
 
 **Removing it:** on a Mac, drag the app to the Bin (and delete the data folder above if you want the saved things gone). On Windows, use the usual **Add or remove programs**. It will ask whether to **keep** or **delete** the saved boards, photos and settings. Choose keep if the computer might be used again, or delete if you are finished with it.
 

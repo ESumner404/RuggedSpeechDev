@@ -4,7 +4,7 @@ import { EMPTY_USER_PROFILE } from '../store/db';
 
 describe('deviceTitle', () => {
   it('is the app\'s own name until someone is named', () => {
-    expect(deviceTitle(EMPTY_USER_PROFILE)).toBe('Rugged Speech Test');
+    expect(deviceTitle(EMPTY_USER_PROFILE)).toBe('Rugged Speech');
   });
 
   it('makes "Lucy\'s device" from a name, and "James\'s device" too', () => {

@@ -1,6 +1,6 @@
 {
-  "name": "rugged-speech-test",
-  "productName": "Rugged Speech Test",
+  "name": "rugged-speech",
+  "productName": "Rugged Speech",
   "version": "0.0.1",
   "private": true,
   "description": "A communication companion for when speaking is difficult.",
@@ -34,6 +34,7 @@
     "dist:all": "npm run build && electron-builder --win --mac",
     "website:board": "node scripts/generate-website-board.mjs",
     "website:downloads": "node scripts/prepare-website-downloads.mjs",
+    "icon": "electron scripts/make-app-icon.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.tests.json",
     "lint": "eslint .",
     "test:unit": "vitest run",

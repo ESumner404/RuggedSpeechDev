@@ -26,14 +26,14 @@ export function resolveExecutablePath(): string {
         f.endsWith('.app'),
       );
       if (appBundle) {
-        return join(RELEASE_DIR, macDir, appBundle, 'Contents/MacOS/Rugged Speech Test');
+        return join(RELEASE_DIR, macDir, appBundle, 'Contents/MacOS/Rugged Speech');
       }
     }
   } else if (process.platform === 'win32') {
-    const candidate = join(RELEASE_DIR, 'win-unpacked', 'Rugged Speech Test.exe');
+    const candidate = join(RELEASE_DIR, 'win-unpacked', 'Rugged Speech.exe');
     if (existsSync(candidate)) return candidate;
   } else {
-    const candidate = join(RELEASE_DIR, 'linux-unpacked', 'rugged-speech-test');
+    const candidate = join(RELEASE_DIR, 'linux-unpacked', 'rugged-speech');
     if (existsSync(candidate)) return candidate;
   }
 
