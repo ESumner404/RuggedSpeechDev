@@ -83,6 +83,8 @@ test.describe('PIN screens', () => {
     }
     for (const [width, height] of SIZES) {
       await resize(app, page, width, height);
+      // The page lays itself out again after a resize; measure once the keypad is there to measure.
+      await expect(page.locator('.pin-gate__keypad')).toBeVisible();
       expect(overlaps(await boxesOf(page, PARTS)), `${width}x${height} entry`).toEqual([]);
       const keypad = (await boxesOf(page, ['.pin-gate__keypad']))[0]!;
       expect(keypad.x, `${width}x${height} keypad left`).toBeGreaterThanOrEqual(-1);
@@ -93,6 +95,7 @@ test.describe('PIN screens', () => {
     await expect(page.locator('.pin-gate__recovery-code')).toBeVisible();
     for (const [width, height] of SIZES) {
       await resize(app, page, width, height);
+      await expect(page.locator('.pin-gate__recovery-code')).toBeVisible();
       expect(overlaps(await boxesOf(page, PARTS)), `${width}x${height} recovery`).toEqual([]);
     }
     await app.close();
