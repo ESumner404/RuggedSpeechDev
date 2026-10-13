@@ -28,6 +28,7 @@ import { BackupTab } from '../backup/BackupTab';
 import { PrintTab } from '../print/PrintTab';
 import { hasContentWorthBackingUp, lastBackupSetting, parentModeTimeoutSetting } from '../store/db';
 import { modeName } from '../ui/modeName';
+import { deviceNoun } from '../platform/deviceWord';
 
 type Props = {
   onExit: () => void;
@@ -171,7 +172,7 @@ export function ParentModeScreen({ onExit }: Props) {
       {needsBackup.value && (
         <div class="parent-mode-screen__notice" role="status">
           <span>
-            There's no recent backup. A backup keeps the photos, pages and settings safe if this computer is
+            There's no recent backup. A backup keeps the photos, pages and settings safe if this {deviceNoun()} is
             lost or breaks.
           </span>
           <button

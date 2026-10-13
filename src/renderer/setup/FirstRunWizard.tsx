@@ -19,12 +19,13 @@ import {
 } from '../store/db';
 import { DEFAULT_THEME, FUN_COLOURS, THEME_PRESETS, isFunColour, type ThemePresetId } from '../ui/theme';
 import { deviceTitle } from '../ui/deviceName';
-import { getOfflineVoices, speak } from '../speech/speak';
+import { speak, watchVoices } from '../speech/speak';
 import { resizeGrid } from '../parent/boardEditing';
 import { VALID_GRID_SIZES, type Board, type GridSize } from '../store/types';
 import { PinGate } from '../parent/PinGate';
 import { PictureChoices } from '../symbols/PictureChoices';
 import type { PressMode } from '../store/types';
+import { deviceNoun } from '../platform/deviceWord';
 
 type Screen = 'welcome' | 'about' | 'voice' | 'grid' | 'pictures' | 'press' | 'look' | 'pin' | 'ready';
 
@@ -63,8 +64,12 @@ export function FirstRunWizard({ onComplete }: Props) {
   const gridError = useSignal<string | null>(null);
 
   useEffect(() => {
-    voices.value = getOfflineVoices(window.speechSynthesis.getVoices());
-    chosenVoiceURI.value = voices.value[0]?.voiceURI;
+    // The list can arrive a moment after the page opens, so it is watched
+    // rather than read once; a voice an adult has already picked is kept.
+    const stopWatching = watchVoices((found) => {
+      voices.value = found;
+      chosenVoiceURI.value ??= found[0]?.voiceURI;
+    });
 
     void getRootBoard().then((board) => {
       if (!board) return;
@@ -73,6 +78,7 @@ export function FirstRunWizard({ onComplete }: Props) {
       const needed = VALID_GRID_SIZES.find((size) => size * size >= board.buttons.length) ?? 5;
       minSize.value = needed as GridSize;
     });
+    return stopWatching;
   }, []);
 
   function tryVoice(): void {
@@ -163,7 +169,7 @@ export function FirstRunWizard({ onComplete }: Props) {
           </p>
           <ul class="first-run-wizard__promises">
             <li>It works with no internet, always.</li>
-            <li>Everything stays on this computer. Nothing is sent anywhere.</li>
+            <li>Everything stays on this {deviceNoun()}. Nothing is sent anywhere.</li>
             <li>Nothing is spoken unless someone presses something.</li>
             <li>An adult sets it up now. It takes about two minutes, and every choice can be changed later.</li>
           </ul>
@@ -184,7 +190,7 @@ export function FirstRunWizard({ onComplete }: Props) {
           <h1 class="first-run-wizard__title">Whose device is this?</h1>
           <p class="first-run-wizard__hint">
             All optional. A name makes it clear whose device this is, if it is ever picked up by someone else.
-            It stays on this computer.
+            It stays on this {deviceNoun()}.
           </p>
           <label class="first-run-wizard__field">
             Name
@@ -239,7 +245,7 @@ export function FirstRunWizard({ onComplete }: Props) {
         <div class="first-run-wizard__screen">
           <h1 class="first-run-wizard__title">Choose a voice</h1>
           <p class="first-run-wizard__hint">This is the voice that speaks what's built on the board.</p>
-          {voices.value.length === 0 && <p>No offline voices were found on this computer.</p>}
+          {voices.value.length === 0 && <p>No offline voices were found on this {deviceNoun()}.</p>}
           <ul class="first-run-wizard__voice-list">
             {voices.value.map((voice) => (
               <li key={voice.voiceURI}>
@@ -421,7 +427,7 @@ export function FirstRunWizard({ onComplete }: Props) {
         <div class="first-run-wizard__screen">
           <h1 class="first-run-wizard__title">Set a Parent PIN</h1>
           <p class="first-run-wizard__hint">
-            This protects settings and editing. It does not lock the computer.
+            This protects settings and editing. It does not lock the {deviceNoun()}.
           </p>
           <PinGate onUnlock={() => void finishSetup()} onCancel={() => {}} showCancel={false} />
           <button type="button" class="first-run-wizard__button first-run-wizard__button--back" onClick={() => (screen.value = 'look')}>

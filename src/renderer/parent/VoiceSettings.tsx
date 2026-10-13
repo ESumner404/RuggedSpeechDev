@@ -2,7 +2,7 @@ import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { announceText } from '../speech/announce';
 import { VOICE_PRESETS, matchingPreset } from '../speech/presets';
-import { getOfflineVoices } from '../speech/speak';
+import { watchVoices } from '../speech/speak';
 import {
   preferredSpeechPitch,
   preferredSpeechRate,
@@ -13,6 +13,7 @@ import {
   speakStyleSetting,
 } from '../store/db';
 import type { SpeakStyle } from '../store/types';
+import { deviceNoun } from '../platform/deviceWord';
 
 const SAMPLE = 'This is what I sound like.';
 
@@ -23,14 +24,7 @@ const SAMPLE = 'This is what I sound like.';
 export function VoiceSettings() {
   const voices = useSignal<SpeechSynthesisVoice[]>([]);
 
-  useEffect(() => {
-    const synth = window.speechSynthesis;
-    if (!synth) return;
-    const load = () => (voices.value = getOfflineVoices(synth.getVoices()));
-    load();
-    synth.addEventListener?.('voiceschanged', load);
-    return () => synth.removeEventListener?.('voiceschanged', load);
-  }, []);
+  useEffect(() => watchVoices((found) => (voices.value = found)), []);
 
   const rate = preferredSpeechRate.value;
   const pitch = preferredSpeechPitch.value;
@@ -58,7 +52,7 @@ export function VoiceSettings() {
           prefer one over another, and a voice that sounds friendly to an adult may not to a child.
         </p>
         {voices.value.length === 0 ? (
-          <p class="access-tab__hint">No voices that work without the internet were found on this computer.</p>
+          <p class="access-tab__hint">No voices that work without the internet were found on this {deviceNoun()}.</p>
         ) : (
           <label class="access-tab__select-row">
             Voice

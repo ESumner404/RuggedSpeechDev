@@ -27,7 +27,7 @@ What every shell must keep to (see [the principles](../PRINCIPLES.md)):
 | --- | --- | --- |
 | Windows 10 and 11 | Released | Not yet signed or tested on real hardware |
 | macOS | Released | Not yet signed or notarised |
-| **iPhone and iPad** | **Built, not yet run on a device** | See [iPhone and iPad](#iphone-and-ipad) |
+| **iPhone and iPad** | **Built and run on the iPad simulator; not yet on a real device** | See [iPhone and iPad](#iphone-and-ipad) |
 | Android | Next | Add the Capacitor Android shell, give it the same four bridge groups, and test voices and storage |
 | Amazon Fire OS | After Android | Fire tablets run Android, so the same shell; no Google services may be needed. Test on a Fire tablet |
 | Apple Watch | Not started | See below |
@@ -48,7 +48,7 @@ One app for both, written for the iPad first (most children who use AAC on Apple
 
 ### Build and run
 
-You need a Mac with Xcode (accept its licence once with `sudo xcodebuild -license accept`).
+You need a Mac with Xcode (accept its licence once with `sudo xcodebuild -license accept`). If `xcode-select` still points at the command line tools, prefix the commands below with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`.
 
 ```bash
 npm install
@@ -91,12 +91,12 @@ Not done yet, and worth doing next, because both need a device to test on:
 
 ### Things to know
 
-- **Not yet run on a device.** The page was checked at iPad and iPhone sizes in a browser, and the app's Swift code was syntax-checked, but the app has not been built and run in Xcode on a real device or simulator. Treat the first run as a test.
+- **Run on the simulator, not yet on a real device.** The app builds with Xcode and has been run on the iPad Air simulator: first-run, the child's screens, Parent Mode with the PIN, saved data surviving a relaunch, the share sheet, the Files picker, and the device's text size and contrast being followed live. It has not been run on a real iPad or iPhone, so camera, microphone, sound, haptics, printing and Eye Tracking are still to be checked on one.
 - **Voices.** iOS speaks with the voices installed on the device. For good offline voices, add an Enhanced or Premium voice in **Settings, Accessibility, Spoken Content, Voices**, before relying on it.
 - **Saved data.** Words, photos and settings are kept inside the app. iOS can clear an app's web storage if the device is nearly out of space. Make a backup (Parent Mode, **Backup**) and keep it somewhere safe.
 - **Large backups.** A backup with a great many photographs passes through the app as one piece of text, which is slow on an older iPad.
 - **Locking the device.** On an iPad, **Guided Access** (Settings, Accessibility) really does stop a child leaving the app. This is stronger than anything the Windows or Mac app can do, and worth setting up. The Parent PIN on its own does not lock the device.
-- **Some wording says "computer".** A few screens still say "this computer" where an iPad would say "this iPad".
+- **Wording.** The app says "this device" in place of "this computer". It does not yet say "iPad" or "iPhone".
 - **Phones are tighter.** The child's screens fit an iPhone, but several of the adult screens in Parent Mode are laid out for a bigger screen. Use an iPad for set-up.
 
 ### Adding the app to the App Store

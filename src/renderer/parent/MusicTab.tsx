@@ -12,6 +12,7 @@ import {
   type Playlist,
   type Song,
 } from '../music/songs';
+import { deviceNoun } from '../platform/deviceWord';
 
 const EMOJIS = ['🎵', '🎶', '🎤', '🎸', '🥁', '🎹', '🎺', '🐑', '⭐', '🌙', '🚌', '🐸', '🦆', '🌈', '🎄', '💤'];
 
@@ -101,14 +102,14 @@ export function MusicTab() {
   return (
     <div class="parent-mode-screen__body music-tab">
       <p class="about-tab__hint">
-        Add songs from files on this computer, such as MP3s. They stay on this computer and play with no internet.
+        Add songs from files on this {deviceNoun()}, such as MP3s. They stay on this {deviceNoun()} and play with no internet.
         There is no Spotify or Apple Music: those need an account and an internet connection, which this app never
         uses. Songs you have bought as ordinary files, songs copied from a CD, and recordings of someone singing
         all work. Songs that are locked to a streaming app cannot be added.
       </p>
 
       <label class="parent-mode-screen__button music-tab__add">
-        {adding.value ? 'Adding…' : 'Add songs from this computer'}
+        {adding.value ? 'Adding…' : `Add songs from this ${deviceNoun()}`}
         <input
           type="file"
           accept="audio/*,.mp3,.m4a,.wav,.ogg,.opus,.flac"

@@ -22,6 +22,7 @@ import type { ActivityEntry } from '../store/activity';
 import type { AccessSettings } from '../store/types';
 import { handoverSheet, reviewSheet, type Sheet } from './reports';
 import { printPage } from '../platform/print';
+import { deviceNoun } from '../platform/deviceWord';
 
 type Which = 'handover' | 'review';
 
@@ -96,8 +97,8 @@ export function ReportsTab() {
   return (
     <div class="parent-mode-screen__body reports-tab">
       <p class="about-tab__hint">
-        Sheets to print, or to save as a PDF from the print window. They are made here from what is already on this
-        computer and are not sent anywhere.
+        Sheets to print, or to save as a PDF from the print window. They are made here from what is already on this{' '}
+        {deviceNoun()} and are not sent anywhere.
       </p>
       <div class="activity-tab__what" role="group" aria-label="Which sheet">
         <button type="button" class={`activity-tab__chip${which.value === 'handover' ? ' activity-tab__chip--on' : ''}`} aria-pressed={which.value === 'handover'} onClick={() => (which.value = 'handover')}>

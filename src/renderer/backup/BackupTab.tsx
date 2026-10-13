@@ -2,6 +2,7 @@ import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { exportBackupPayload, importBackupPayload, lastBackupSetting } from '../store/db';
 import { BackupFormatError, BackupPassphraseError, backupNeedsPassphrase, decodeBackup, encodeBackup } from './backupCodec';
+import { deviceNoun } from '../platform/deviceWord';
 
 type RestoreStep = 'idle' | 'needs-passphrase' | 'confirming' | 'done';
 
@@ -119,7 +120,7 @@ export function BackupTab() {
         <h2 class="backup-tab__heading">Save a backup</h2>
         <p class="backup-tab__last">
           {lastBackupSetting.signal.value === null
-            ? 'Last backup: never on this computer.'
+            ? `Last backup: never on this ${deviceNoun()}.`
             : `Last backup: ${new Date(lastBackupSetting.signal.value).toLocaleDateString('en-GB', {
                 day: 'numeric',
                 month: 'long',

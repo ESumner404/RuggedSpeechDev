@@ -19,6 +19,7 @@ import {
   type ActivityKind,
   type Period,
 } from '../store/activity';
+import { deviceNoun } from '../platform/deviceWord';
 
 const PERIODS: { id: Period; label: string; heading: string }[] = [
   { id: 'hour', label: 'Hours', heading: 'Each hour, over the last day' },
@@ -85,7 +86,7 @@ export function ActivityTab() {
         <p class="access-tab__hint">
           Keeps a note of what is said and which parts of the app are opened, with the time, so you can see how the
           device is used through the day and over the weeks. It is <strong>off</strong> until you turn it on. It
-          stays on this computer and is kept only for the days you choose. Every phrase is noted the same way,
+          stays on this {deviceNoun()} and is kept only for the days you choose. Every phrase is noted the same way,
           including the Help phrases: nothing is flagged and nobody is told. If someone says something that worries
           you, follow your safeguarding procedure.
         </p>

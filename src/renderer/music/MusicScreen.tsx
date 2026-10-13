@@ -2,6 +2,7 @@ import { useSignal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
 import { getVoiceClip, musicVolumeSetting, playlistsSetting, songsSetting } from '../store/db';
 import { songsInPlaylist, type Song } from './songs';
+import { deviceNoun } from '../platform/deviceWord';
 
 // Music: a big tile for each song. A song plays when its tile is pressed, and
 // never by itself. If an adult has made playlists, they are choices along the
@@ -58,14 +59,14 @@ export function MusicScreen() {
       paused.value = false;
     });
     audio.addEventListener('error', () => {
-      problem.value = 'That song will not play on this computer.';
+      problem.value = `That song will not play on this ${deviceNoun()}.`;
       playing.value = null;
     });
     audioRef.current = audio;
     playing.value = song;
     paused.value = false;
     void audio.play().catch(() => {
-      problem.value = 'That song will not play on this computer.';
+      problem.value = `That song will not play on this ${deviceNoun()}.`;
       playing.value = null;
     });
   }

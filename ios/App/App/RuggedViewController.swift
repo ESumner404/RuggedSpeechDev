@@ -8,7 +8,6 @@ class RuggedViewController: CAPBridgeViewController {
         bridge?.registerPluginInstance(RuggedNativePlugin())
     }
 
-    // The page draws edge to edge and has its own bars; the system's would only take space.
+    // The page draws edge to edge and has its own bars; the system's status bar would only take space.
     override var prefersStatusBarHidden: Bool { true }
-    override var prefersHomeIndicatorAutoHidden: Bool { true }
 }
