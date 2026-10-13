@@ -99,6 +99,28 @@ Not done yet, and worth doing next, because both need a device to test on:
 - **Wording.** The app says "this device" in place of "this computer". It does not yet say "iPad" or "iPhone".
 - **Phones are tighter.** The child's screens fit an iPhone, but several of the adult screens in Parent Mode are laid out for a bigger screen. Use an iPad for set-up.
 
+### TestFlight
+
+TestFlight is how the app gets onto real iPads and iPhones for testing without the App Store. It needs things only the account holder can do:
+
+1. **An Apple Developer Program membership** (paid, yearly), at [developer.apple.com](https://developer.apple.com/programs/).
+2. **Sign Xcode in** to that account: Xcode, Settings, Accounts. This is what lets Xcode make the signing certificate and profile.
+3. **An app record** in [App Store Connect](https://appstoreconnect.apple.com), under My Apps, New App, with the bundle identifier from `capacitor.config.ts` (`dev.ruggedspeech.app` unless you changed it).
+4. **Your team ID** (ten letters and digits, in the Membership page).
+
+Then, from this folder:
+
+```bash
+APPLE_TEAM_ID=ABCDE12345 npm run ios:testflight
+```
+
+That builds the page, makes a signed release archive, and uploads it. After Apple has processed it (a few minutes) it appears under **TestFlight** in App Store Connect. Add yourself as an internal tester and install it from the TestFlight app. External testers need a short Apple review first, and a privacy policy address.
+
+Questions Apple asks on the first upload:
+
+- **Export compliance.** The app uses encryption only for the optional backup passphrase, through the system's own cryptography. That normally counts as exempt, but it is a legal statement made by the account holder, so it is left for you to answer.
+- **Privacy.** Data Not Collected, no tracking (see below).
+
 ### Adding the app to the App Store
 
 The answers are simple, because nothing is collected: **Data Not Collected**, no tracking, no accounts. The camera and microphone descriptions the review asks for are already in `ios/App/App/Info.plist`, and the privacy manifest is `ios/App/App/PrivacyInfo.xcprivacy`. The bundle identifier is `dev.ruggedspeech.app`; change it in Xcode (and in `capacitor.config.ts`) before the first upload, because it cannot change afterwards.

@@ -37,6 +37,7 @@
     "ios:sync": "npm run build && cap sync ios",
     "ios:open": "npm run ios:sync && cap open ios",
     "ios:simulator": "npm run ios:sync && xcodebuild -project ios/App/App.xcodeproj -scheme App -sdk iphonesimulator -configuration Debug -destination \"generic/platform=iOS Simulator\" -derivedDataPath ios/DerivedData CODE_SIGNING_ALLOWED=NO build",
+    "ios:testflight": "bash scripts/ios-testflight.sh",
     "website:board": "node scripts/generate-website-board.mjs",
     "website:downloads": "node scripts/prepare-website-downloads.mjs",
     "icon": "electron scripts/make-app-icon.cjs",
