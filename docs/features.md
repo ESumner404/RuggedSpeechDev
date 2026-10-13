@@ -1,8 +1,8 @@
 # Features
 
-Everything Rugged Speech Test does, in one list. For how to use each part, see [the whole guide](user-guide.md). For a quick start, see [parents and carers](getting-started-parents.md) or [teachers and staff](getting-started-staff.md).
+Everything Rugged Speech does, in one list. For how to use each part, see [the whole guide](user-guide.md). For a quick start, see [parents and carers](getting-started-parents.md) or [teachers and staff](getting-started-staff.md).
 
-Rugged Speech Test is a communication companion for children and young people whose speech is difficult, unreliable or tiring: young children, autistic children, children with speech and language difficulties, and children who stammer. It is a Windows desktop app that works with **no internet, ever**.
+Rugged Speech is a communication companion for children and young people whose speech is difficult, unreliable or tiring: young children, autistic children, children with speech and language difficulties, and children who stammer. It is a Windows desktop app that works with **no internet, ever**.
 
 ## Where it runs
 

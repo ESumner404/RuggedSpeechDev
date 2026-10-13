@@ -17,10 +17,10 @@ export default tseslint.config(
   },
   {
     // Build scripts that run under Node, as plain CommonJS.
-    files: ['build/**/*.cjs'],
+    files: ['build/**/*.cjs', 'scripts/**/*.cjs'],
     languageOptions: {
       sourceType: 'commonjs',
-      globals: { require: 'readonly', process: 'readonly', setTimeout: 'readonly', exports: 'writable', module: 'writable', __dirname: 'readonly' },
+      globals: { require: 'readonly', process: 'readonly', setTimeout: 'readonly', console: 'readonly', exports: 'writable', module: 'writable', __dirname: 'readonly' },
     },
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },

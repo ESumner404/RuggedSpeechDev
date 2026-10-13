@@ -267,10 +267,10 @@ describe('FirstRunWizard', () => {
     act(() => primary(container).click());
     await waitFor(() => title() === 'Choose the colours');
 
-    for (const expected of ['What should pressing a word do?', 'Pictures and words', 'Choose a grid size', 'Choose a voice', 'Whose device is this?', 'Welcome to Rugged Speech Test']) {
+    for (const expected of ['What should pressing a word do?', 'Pictures and words', 'Choose a grid size', 'Choose a voice', 'Whose device is this?', 'Welcome to Rugged Speech']) {
       act(() => back().click());
       await waitFor(() => title() === expected);
-      if (expected === 'Welcome to Rugged Speech Test') break;
+      if (expected === 'Welcome to Rugged Speech') break;
     }
   });
 

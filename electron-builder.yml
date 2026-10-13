@@ -1,5 +1,5 @@
 appId: dev.opssumner.ruggedspeechtest
-productName: Rugged Speech Test
+productName: Rugged Speech
 directories:
   output: release
 files:
@@ -45,7 +45,7 @@ mac:
     - target: dmg
       arch: [arm64, x64]
   category: public.app-category.education
-  artifactName: Rugged-Speech-Test-${version}-mac-${arch}.${ext}
+  artifactName: Rugged-Speech-${version}-mac-${arch}.${ext}
   hardenedRuntime: false
 dmg:
   title: ${productName}

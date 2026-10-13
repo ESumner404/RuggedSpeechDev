@@ -47,7 +47,7 @@ test.describe('Phase 8, first run and crash recovery', () => {
     const next = page.locator('.first-run-wizard__button--primary');
 
     await expect(page.locator('.home-screen__tile')).toHaveCount(0);
-    await expect(title).toHaveText('Welcome to Rugged Speech Test');
+    await expect(title).toHaveText('Welcome to Rugged Speech');
     await next.click();
 
     await expect(title).toHaveText('Whose device is this?');

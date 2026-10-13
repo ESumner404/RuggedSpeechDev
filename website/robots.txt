@@ -3,4 +3,4 @@ Allow: /
 Disallow: /download/
 Disallow: /downloads/
 
-Sitemap: https://rugged-speech.vercel.app/sitemap.xml
+Sitemap: https://www.ruggedspeech.dev/sitemap.xml

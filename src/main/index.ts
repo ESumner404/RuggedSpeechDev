@@ -1,4 +1,5 @@
 import { buildMenuTemplate } from './menu';
+import { keepOldDataFolder } from './dataFolder';
 import { join } from 'node:path';
 import { readFile, stat, writeFile } from 'node:fs/promises';
 import {
@@ -40,7 +41,13 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 // The folder the saved data lives in is named after this, so it must never change by accident.
-app.setName('Rugged Speech Test');
+app.setName('Rugged Speech');
+// Builds before this one were named "Rugged Speech Test": keep a person's saved data when they update.
+if (!process.argv.some((argument) => argument.startsWith('--user-data-dir'))) {
+  const appData = app.getPath('appData');
+  const kept = keepOldDataFolder(appData, 'Rugged Speech Test', 'Rugged Speech');
+  if (kept) app.setPath('userData', kept);
+}
 
 const RENDERER_DIST = join(__dirname, '../renderer');
 const isDev = !app.isPackaged;
@@ -234,7 +241,7 @@ if (!gotLock) {
       const dialogOptions = {
         title: 'Save backup',
         defaultPath: `rugged-speech-backup-${new Date().toISOString().slice(0, 10)}.mwbackup`,
-        filters: [{ name: 'Rugged Speech Test backup', extensions: ['mwbackup'] }],
+        filters: [{ name: 'Rugged Speech backup', extensions: ['mwbackup'] }],
       };
       const result = win
         ? await dialog.showSaveDialog(win, dialogOptions)
@@ -249,7 +256,7 @@ if (!gotLock) {
       const win = BrowserWindow.fromWebContents(event.sender);
       const dialogOptions = {
         title: 'Restore backup',
-        filters: [{ name: 'Rugged Speech Test backup', extensions: ['mwbackup'] }],
+        filters: [{ name: 'Rugged Speech backup', extensions: ['mwbackup'] }],
         properties: ['openFile'] as Array<'openFile'>,
       };
       const result = win

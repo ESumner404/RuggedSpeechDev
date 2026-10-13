@@ -100,7 +100,7 @@ export function killOutright(pid: number): void {
 function clearLeftovers(): void {
   if (process.platform !== 'win32') return;
   try {
-    execFileSync('taskkill', ['/F', '/T', '/IM', 'Rugged Speech Test.exe'], { stdio: 'ignore' });
+    execFileSync('taskkill', ['/F', '/T', '/IM', 'Rugged Speech.exe'], { stdio: 'ignore' });
   } catch {
     /* none left */
   }

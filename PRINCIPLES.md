@@ -1,4 +1,4 @@
-# Principles: Rugged Speech Test
+# Principles: Rugged Speech
 
 A communication companion for when speaking is difficult.
 

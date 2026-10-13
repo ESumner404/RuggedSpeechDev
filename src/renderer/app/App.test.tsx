@@ -220,7 +220,7 @@ describe('App', () => {
 
   it('shows whose device it is along the top, names the window after them, and can be hidden', async () => {
     expect(container.querySelector('.app-shell__device-name')).toBeNull();
-    expect(document.title).toBe('Rugged Speech Test');
+    expect(document.title).toBe('Rugged Speech');
 
     await userProfileSetting.set({ ...EMPTY_USER_PROFILE, name: 'Lucy', emoji: '🦁' });
     await waitFor(() => container.querySelector('.app-shell__device-name') !== null);

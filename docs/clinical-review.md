@@ -1,6 +1,6 @@
 # Clinical review
 
-A critical review of Rugged Speech Test from the point of view of an NHS speech and language therapist (SLT) working with young children who have little or no spoken language.
+A critical review of Rugged Speech from the point of view of an NHS speech and language therapist (SLT) working with young children who have little or no spoken language.
 
 > **Please read this first.**
 > This review was written by an AI model asked to take the role of a specialist NHS SLT and to be critical. It is a **structured self-review to find problems early**. It is **not** a clinical assessment, not a sign-off, and not the opinion of a registered clinician. Guidance named below is referred to **in general terms** and must be checked against the current published documents by a real clinician. A registered SLT (HCPC-registered, ideally with AAC experience) should review the vocabulary, the defaults and the wording before any child relies on the app. The sign-off block at the end is deliberately blank.
