@@ -32,6 +32,10 @@ To check a download, compare its SHA-256 code with the one you were given: `cert
 
 To check a download: `shasum -a 256 Rugged-Speech-0.0.1-mac-arm64.dmg`, and compare it with `SHA256SUMS.txt`.
 
+### iPhone and iPad
+
+An iPhone and iPad app is built from the same page, and is **not released yet**: it has been built but not yet run on a device. Android and Amazon Fire OS come next. See [docs/platforms.md](docs/platforms.md) for how to build it and what is still to do.
+
 ## Where to start
 
 | You are | Read |
@@ -147,6 +151,8 @@ npm run verify     # typecheck + lint + unit tests + build
 | `npm run test:e2e` | Playwright, driving the **packaged** app from `release/`. |
 | `npm run dist` | The Windows NSIS installer, written to `release/`. |
 | `npm run dist:mac` | A macOS `.dmg` (for local testing only; not a release channel). |
+| `npm run ios:open` | Builds the page, copies it into the iPhone and iPad app, and opens Xcode. See [docs/platforms.md](docs/platforms.md). |
+| `npm run ios:simulator` | Builds the iPhone and iPad app for the simulator, from the command line, with no signing. |
 | `SCREENSHOTS=1 npx playwright test tests/e2e/screenshots.spec.ts` | Retakes the pictures in `docs/images` from the packaged app. |
 
 ---
@@ -193,8 +199,10 @@ Photographs are blobs in IndexedDB referenced by id, never filesystem paths, so 
 src/
   main/            Electron main process: window, app:// scheme, dialogs, startup setting
   preload/         The narrow bridge exposed to the renderer, and nothing else
+ios/               The iPhone and iPad app: a small native shell around the same page
   renderer/
     app/           App shell, Home, Quick Access bar, Feelings & Help, Favourites
+    platform/      The bridge for phone and tablet shells, and printing
     board/         Grid, buttons, sentence strip, Talk and My Pages screens
     keyboard/      On-screen keyboard, prediction, phrase bank, conversation starters
     day/           My Day: child screen, day builder, countdown and change-of-plan logic

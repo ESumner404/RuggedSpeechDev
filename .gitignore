@@ -32,3 +32,7 @@ CLAUDE.md
 
 # Installers are uploaded with the website, not kept in git
 website/downloads/
+
+# iOS build output
+ios/DerivedData/
+ios/App/build/

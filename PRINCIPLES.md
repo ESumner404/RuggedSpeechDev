@@ -26,6 +26,13 @@ story. Windows was the first target and is where the child's own computer is
 most often found, so where the two differ, Windows is the one the wording and
 the defaults are written for.
 
+The same page also runs inside a native shell on **iPhone and iPad**, and the
+same arrangement is planned for Android and Amazon Fire OS (see
+[platforms](docs/platforms.md)). A shell supplies only the bridge the page
+already uses and keeps to every invariant below: no network, nothing leaves
+the device, buttons do not move. Anything a device cannot do is hidden, not
+faked.
+
 ## 2. The five invariants
 
 These are not preferences. Breaking any of them is a defect.

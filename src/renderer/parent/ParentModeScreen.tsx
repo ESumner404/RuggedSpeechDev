@@ -157,9 +157,11 @@ export function ParentModeScreen({ onExit }: Props) {
       <header class="parent-mode-screen__header">
         <h1 class="parent-mode-screen__title">{name}</h1>
         <div class="parent-mode-screen__header-actions">
-          <button type="button" class="parent-mode-screen__button" onClick={() => void toggleFullscreen()}>
-            Fullscreen: {fullscreen.value ? 'On' : 'Off'}
-          </button>
+          {window.myWords.capabilities?.fullscreen === false ? null : (
+            <button type="button" class="parent-mode-screen__button" onClick={() => void toggleFullscreen()}>
+              Fullscreen: {fullscreen.value ? 'On' : 'Off'}
+            </button>
+          )}
           <button type="button" class="parent-mode-screen__button parent-mode-screen__exit" onClick={onExit}>
             Exit {name}
           </button>

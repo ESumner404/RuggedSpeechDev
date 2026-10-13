@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'out/**', 'release/**', 'node_modules/**', 'website/board-data.js'],
+    ignores: ['dist/**', 'out/**', 'release/**', 'node_modules/**', 'ios/**', 'website/board-data.js'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

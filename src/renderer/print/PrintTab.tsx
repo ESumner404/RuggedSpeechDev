@@ -7,6 +7,7 @@ import { ROOT_BOARD_ID } from '../vocab/starter';
 import type { Board, DayActivity } from '../store/types';
 import { PhotoThumbnail } from '../ui/PhotoThumbnail';
 import { Pic } from '../symbols/Pic';
+import { printPage } from '../platform/print';
 
 // Laminated cards are what get used when the machine is broken, charging or
 // elsewhere (docs/build-plan.md Phase 6), physical backups of the same vocabulary.
@@ -100,7 +101,7 @@ export function PrintTab() {
           </select>
         </label>
 
-        <button type="button" class="parent-mode-screen__button print-tab__print-button" onClick={() => window.print()}>
+        <button type="button" class="parent-mode-screen__button print-tab__print-button" onClick={() => printPage()}>
           Print
         </button>
       </div>

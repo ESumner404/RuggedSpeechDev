@@ -54,6 +54,28 @@ body,
   overflow: hidden;
 }
 
+/* A phone or tablet has a notch, rounded corners and a home bar. The edges of
+   the screen are kept clear of them; on the desktop these are all zero. */
+body {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* In the iPhone and iPad app, a long press holds a button (to add a favourite)
+   and must not open the system's copy menu or start a text selection. */
+html[data-platform] body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+html[data-platform] input,
+html[data-platform] textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 body {
   background: var(--color-background);
   color: var(--color-text);
@@ -5430,4 +5452,33 @@ html[data-labels='words'] .board-button__label {
   border-radius: 8px;
   font-size: 1.4rem;
   text-align: center;
+}
+
+/* On a phone the six always-there buttons must all stay on screen, so they
+   share the width and shrink their writing; none moves or wraps to a new row. */
+@media (max-width: 600px) {
+  .quick-access-bar {
+    gap: 0.25rem;
+    padding: 0.35rem 0.25rem;
+  }
+
+  .quick-access-bar__button {
+    min-width: 0;
+    padding: 0.25rem 0.1rem;
+    font-size: 0.64rem;
+  }
+
+  /* The same three columns and two rows as everywhere else, only smaller. */
+  .home-screen {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .home-screen__tile {
+    min-width: 0;
+    padding: 0.25rem;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
 }

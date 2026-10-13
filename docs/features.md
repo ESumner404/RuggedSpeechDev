@@ -8,7 +8,8 @@ Rugged Speech is a communication companion for children and young people whose s
 
 - **Windows 10 and 11** (64-bit), as a per-user installer that needs no administrator password.
 - **macOS**, as a disk image for Apple silicon and one for Intel Macs.
-- The same app and the same features go out for both at every release.
+- **iPhone and iPad**, as an app built from the same page (built, and still to be run on a device). Android and Amazon Fire OS are next. See [platforms](platforms.md).
+- The same app and the same features go out for Windows and Mac at every release.
 
 ## Principles that shape every feature
 

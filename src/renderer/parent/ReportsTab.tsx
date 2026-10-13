@@ -21,6 +21,7 @@ import { DEFAULT_ACCESS_SETTINGS } from '../store/db';
 import type { ActivityEntry } from '../store/activity';
 import type { AccessSettings } from '../store/types';
 import { handoverSheet, reviewSheet, type Sheet } from './reports';
+import { printPage } from '../platform/print';
 
 type Which = 'handover' | 'review';
 
@@ -117,7 +118,7 @@ export function ReportsTab() {
             </select>
           </label>
         )}
-        <button type="button" class="parent-mode-screen__button" onClick={() => window.print()}>
+        <button type="button" class="parent-mode-screen__button" onClick={() => printPage()}>
           Print this sheet
         </button>
       </div>
