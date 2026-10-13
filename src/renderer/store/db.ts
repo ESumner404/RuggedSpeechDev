@@ -852,6 +852,10 @@ export const clearAfterSpeakSetting = storedSetting<boolean>('clearAfterSpeak', 
 export const schoolModeSetting = storedSetting<boolean>('schoolMode', false, isBoolean);
 /** Minutes of inactivity before Parent Mode closes itself; 0 never. */
 export const parentModeTimeoutSetting = storedSetting<number>('parentModeTimeoutMin', 0, isMinutes);
+/** On a phone or tablet: follow the device's own Reduce Motion, Increase Contrast, Bold Text and text size. */
+export const followDeviceAccessibilitySetting = storedSetting<boolean>('followDeviceAccessibility', true, isBoolean);
+/** On a phone or tablet: a short buzz from the device when a button is pressed. Off unless an adult turns it on. */
+export const pressBuzzSetting = storedSetting<boolean>('pressBuzz', false, isBoolean);
 /** Extra phrases beyond the four fixed slots in the keyboard's Phrases tab. */
 export const customPhrasesSetting = storedSetting<string[]>('customPhrases', [], isStringArray);
 export const aboutMeSetting = storedSetting<AboutMe>('aboutMe', EMPTY_ABOUT_ME, isAboutMe);
@@ -1006,6 +1010,8 @@ const SETTINGS = [
   schoolModeSetting,
   schoolTimeoutSetting,
   parentModeTimeoutSetting,
+  followDeviceAccessibilitySetting,
+  pressBuzzSetting,
   customPhrasesSetting,
   aboutMeSetting,
   weeklyRoutineSetting,

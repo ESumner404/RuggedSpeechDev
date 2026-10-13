@@ -8,6 +8,24 @@ export interface PlatformCapabilities {
   fullscreen: boolean;
   /** Opening by itself when the device starts. */
   startup: boolean;
+  /** The device can say which of its own accessibility settings are on. */
+  deviceAccessibility: boolean;
+  /** A short buzz from the device when a button is pressed. */
+  haptics: boolean;
+}
+
+/** What the device's own accessibility settings say right now. Everything off and a text scale of 1 when nothing is known. */
+export interface DeviceAccessibility {
+  reduceMotion: boolean;
+  /** Increase Contrast. */
+  increaseContrast: boolean;
+  boldText: boolean;
+  /** The device's text size as a multiplier, 1 being the usual size. */
+  textScale: number;
+  voiceOver: boolean;
+  switchControl: boolean;
+  /** Guided Access is holding the device in this app. */
+  guidedAccess: boolean;
 }
 
 export interface MyWordsBridge {
@@ -19,6 +37,10 @@ export interface MyWordsBridge {
   capabilities?: PlatformCapabilities;
   /** Prints the page. Absent where the page can simply call window.print(). */
   print?: () => Promise<void>;
+  /** The device's own accessibility settings. Absent where the page cannot ask. */
+  deviceAccessibility?: () => Promise<DeviceAccessibility>;
+  /** A short buzz. Absent on devices without one. */
+  haptic?: () => Promise<void>;
   parentMode: {
     setFullscreen: (value: boolean) => Promise<void>;
     isFullscreen: () => Promise<boolean>;

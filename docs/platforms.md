@@ -72,6 +72,23 @@ npm run ios:simulator
 - Camera and microphone are asked for only when you take a photo or record a voice.
 - A long press on a button holds it (to add a favourite) and does not open the system's copy menu.
 
+### Apple accessibility
+
+| Feature | What the app does |
+| --- | --- |
+| **Eye Tracking** (iPadOS and iOS 18 or later) | Works with no extra code: it is the system's own pointer and dwell, and every control here is a normal button. Parent Mode, **Access** says how to switch it on and to leave **Hold-to-select** at 0 if Eye Tracking's dwell is used. The app cannot see the gaze, and never asks for it. |
+| **Switch Control** and **Voice Control** | Every button is a real button with a name. The always-there bar is a labelled navigation region and each screen is a `main` region. |
+| **VoiceOver** | Same names, read aloud. |
+| **Reduce Motion, Increase Contrast, Bold Text, text size** | Read from the device and added to the app's own settings, unless an adult turns **Follow this device's accessibility settings** off. The device can only ask for more: it never weakens a choice made in the app. |
+| **Guided Access** | Detected and shown in Parent Mode. The app cannot start it: that is a deliberate choice by whoever holds the device, in Settings. |
+| **Assistive Access** | The app declares full-screen support (`UISupportsFullScreenInAssistiveAccess`) so it fills the screen instead of sitting in a small frame. |
+| **Haptics** | An optional short buzz on a press, off by default. |
+
+Not done yet, and worth doing next, because both need a device to test on:
+
+- **Personal Voice** (a person's own voice, made on the device, iOS 17 and later). The page speaks with the web speech API, which does not offer it. Using it means a native speech path in the Swift plugin (`AVSpeechSynthesizer`) and the voice list in Parent Mode.
+- **Gaze from the camera inside the app** (ARKit). It would only help iPads with a TrueDepth camera and iOS before 18, and the system's Eye Tracking is more accurate and works on more devices, so it has been left out.
+
 ### Things to know
 
 - **Not yet run on a device.** The page was checked at iPad and iPhone sizes in a browser, and the app's Swift code was syntax-checked, but the app has not been built and run in Xcode on a real device or simulator. Treat the first run as a test.

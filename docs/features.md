@@ -86,6 +86,7 @@ See [the principles](../PRINCIPLES.md) for the reasoning.
 - **Hold-to-select** for eye gaze and head pointers.
 - **Repeat-press suppression** for a double-firing finger or switch.
 - **Text size** up to twice (boards scroll rather than hiding buttons), **high contrast** (light or dark), **low-arousal colours**, **reduce motion**.
+- **On iPhone and iPad:** follows the device's own Reduce Motion, Increase Contrast, Bold Text and text size; works with iOS **Eye Tracking**, Switch Control, Voice Control, VoiceOver, Guided Access and Assistive Access; an optional buzz when a button is pressed.
 
 ## Looks
 

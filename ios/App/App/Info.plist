@@ -47,6 +47,8 @@
       </array>
     </dict>
 	</dict>
+	<key>UISupportsFullScreenInAssistiveAccess</key>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

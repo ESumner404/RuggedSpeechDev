@@ -8,6 +8,16 @@ function fakeShell(overrides: Partial<NativeShell> = {}): NativeShell {
     saveFile: vi.fn(async () => ({ ok: true })),
     openFile: vi.fn(async () => ({ ok: true, data: 'hello' })),
     printPage: vi.fn(async () => undefined),
+    accessibility: vi.fn(async () => ({
+      reduceMotion: true,
+      increaseContrast: false,
+      boldText: false,
+      textScale: 1.25,
+      voiceOver: false,
+      switchControl: false,
+      guidedAccess: false,
+    })),
+    haptic: vi.fn(async () => undefined),
     ...overrides,
   };
 }
@@ -16,7 +26,7 @@ describe('the phone and tablet bridge', () => {
   it('says what a phone or tablet cannot do, so the page can hide it', () => {
     const bridge = buildNativeBridge(fakeShell(), 'ios', '1.0');
     expect(bridge.platform).toBe('ios');
-    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false });
+    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true });
     expect(bridge.versions.app).toBe('1.0');
   });
 
@@ -58,6 +68,14 @@ describe('the phone and tablet bridge', () => {
   it('treats a picked file with no text as not opened', async () => {
     const bridge = buildNativeBridge(fakeShell({ openFile: async () => ({ ok: true }) }), 'ios', '1.0');
     expect(await bridge.backup.restore()).toEqual({ ok: false });
+  });
+
+  it('asks the device which accessibility settings are on, and can buzz', async () => {
+    const shell = fakeShell();
+    const bridge = buildNativeBridge(shell, 'ios', '1.0');
+    expect((await bridge.deviceAccessibility!()).reduceMotion).toBe(true);
+    await bridge.haptic!();
+    expect(shell.haptic).toHaveBeenCalled();
   });
 
   it('has no start-up setting and stays full screen', async () => {

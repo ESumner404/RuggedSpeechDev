@@ -22,6 +22,8 @@ import { announceText } from '../speech/announce';
 import {
   DEFAULT_ACCESS_SETTINGS,
   accessSettingsVersion,
+  followDeviceAccessibilitySetting,
+  pressBuzzSetting,
   getAccessSettings,
   getPreferredSpeechPitch,
   getPreferredSpeechRate,
@@ -44,6 +46,7 @@ import {
   userProfileSetting,
 } from '../store/db';
 import { applyAccessSettings } from '../access/applyAccessSettings';
+import { buzzOnPress, deviceAccessibility, followDevice, watchDeviceAccessibility } from '../platform/deviceAccessibility';
 import { applyTheme } from '../ui/theme';
 import { applyLabelStyle, applySymbolStyle } from '../symbols/icons';
 import { deviceTitle } from '../ui/deviceName';
@@ -100,6 +103,7 @@ export function App() {
   const access = useSignal(DEFAULT_ACCESS_SETTINGS);
   const firstRunDone = useSignal<boolean | null>(null);
   const settingsReady = useSignal(false);
+  const accessLoaded = useSignal(false);
 
   useEffect(() => {
     void hasCompletedFirstRun().then((done) => (firstRunDone.value = done));
@@ -117,9 +121,23 @@ export function App() {
   useEffect(() => {
     void getAccessSettings().then((settings) => {
       access.value = settings;
-      applyAccessSettings(settings);
+      accessLoaded.value = true;
     });
   }, [accessVersion]);
+
+  // On a phone or tablet, the device's own accessibility settings are added to
+  // the app's (never taking anything away), unless an adult turned that off.
+  useEffect(() => watchDeviceAccessibility(), []);
+  const followDeviceNow = followDeviceAccessibilitySetting.signal.value && settingsReady.value;
+  const device = deviceAccessibility.value;
+  useEffect(() => {
+    if (!accessLoaded.value) return;
+    const effective = followDeviceNow ? followDevice(access.value, device) : access.value;
+    applyAccessSettings(effective, { boldText: followDeviceNow && device.boldText });
+  }, [access.value, accessLoaded.value, followDeviceNow, device]);
+
+  const buzzNow = pressBuzzSetting.signal.value && settingsReady.value;
+  useEffect(() => (buzzNow ? buzzOnPress() : undefined), [buzzNow]);
 
   // Which part of the app is being used, for the activity log (if an adult
   // has turned that on). Only the name of the screen, nothing on it.
@@ -310,7 +328,7 @@ export function App() {
           </button>
         )}
       </div>
-      <div class="app-shell__screen">{renderScreen()}</div>
+      <main class="app-shell__screen">{renderScreen()}</main>
       {pinGateOpen.value && (
         <div class="pin-gate-overlay">
           <PinGate

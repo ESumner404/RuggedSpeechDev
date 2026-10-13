@@ -70,6 +70,15 @@ html[data-platform] body {
   touch-action: manipulation;
 }
 
+/* The device's Bold Text setting, when the app is following the device. */
+html[data-bold-text='true'] body,
+html[data-bold-text='true'] button,
+html[data-bold-text='true'] input,
+html[data-bold-text='true'] select,
+html[data-bold-text='true'] textarea {
+  font-weight: 700;
+}
+
 html[data-platform] input,
 html[data-platform] textarea {
   -webkit-user-select: text;

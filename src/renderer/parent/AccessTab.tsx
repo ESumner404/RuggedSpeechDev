@@ -21,6 +21,7 @@ import {
 import type { AccessSettings, ContrastMode, KeyboardLayout, PressMode, ScanningMode } from '../store/types';
 import { announceText } from '../speech/announce';
 import { VoiceSettings } from './VoiceSettings';
+import { AppleAccessibilitySection } from './AppleAccessibilitySection';
 
 // Access (docs/build-plan.md Phase 7): everything here defaults off, and stays off
 // for a family that never opens this tab, ordinary touch/mouse behaviour
@@ -292,6 +293,8 @@ export function AccessTab() {
           </label>
         )}
       </section>
+
+      <AppleAccessibilitySection />
 
       <section class="access-tab__section">
         <h2 class="access-tab__heading">Keyboard and sentence</h2>

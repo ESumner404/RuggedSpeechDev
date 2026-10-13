@@ -5,7 +5,8 @@ import UniformTypeIdentifiers
 /// The few things the page cannot do for itself inside an iPhone or iPad app:
 /// show the share sheet (to save a file where the adult chooses), show the
 /// document picker (to open a file the adult chooses), show the print sheet,
-/// and report the app's version. The page never sees a file path. Nothing here
+/// report the app's version, say which of the device's accessibility settings
+/// are on, and give a short buzz. The page never sees a file path. Nothing here
 /// uses the network. Mirrors `NativeShell` in src/renderer/platform/nativeBridge.ts.
 @objc(RuggedNativePlugin)
 public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate {
@@ -16,6 +17,8 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
         CAPPluginMethod(name: "saveFile", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "openFile", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "printPage", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "accessibility", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "haptic", returnType: CAPPluginReturnPromise),
     ]
 
     /// The largest file the app will read: a backup with a great many photographs and songs.
@@ -132,6 +135,46 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
             controller.printInfo = printInfo
             controller.printFormatter = webView.viewPrintFormatter()
             controller.present(animated: true) { _, _, _ in call.resolve() }
+        }
+    }
+
+    // MARK: Accessibility: which of the device's own settings are on. Read only, and never sent anywhere.
+
+    @objc func accessibility(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            call.resolve([
+                "reduceMotion": UIAccessibility.isReduceMotionEnabled,
+                "increaseContrast": UIAccessibility.isDarkerSystemColorsEnabled,
+                "boldText": UIAccessibility.isBoldTextEnabled,
+                "textScale": RuggedNativePlugin.textScale(UIApplication.shared.preferredContentSizeCategory),
+                "voiceOver": UIAccessibility.isVoiceOverRunning,
+                "switchControl": UIAccessibility.isSwitchControlRunning,
+                "guidedAccess": UIAccessibility.isGuidedAccessEnabled,
+            ])
+        }
+    }
+
+    /// The device's text size as a multiplier on the usual one. Smaller than usual counts as usual:
+    /// the page only ever makes writing larger, never smaller.
+    private static func textScale(_ category: UIContentSizeCategory) -> Double {
+        switch category {
+        case .extraLarge: return 1.1
+        case .extraExtraLarge: return 1.25
+        case .extraExtraExtraLarge: return 1.5
+        case .accessibilityMedium: return 1.5
+        case .accessibilityLarge: return 1.75
+        case .accessibilityExtraLarge, .accessibilityExtraExtraLarge, .accessibilityExtraExtraExtraLarge: return 2
+        default: return 1
+        }
+    }
+
+    // MARK: Haptic: one short buzz, for a press that should be felt.
+
+    @objc func haptic(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+            call.resolve()
         }
     }
 

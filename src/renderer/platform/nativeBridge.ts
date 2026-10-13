@@ -2,8 +2,9 @@
 // page inside a native app. The page only ever talks to `window.myWords`, the
 // same narrow bridge the desktop app's preload script provides, so the shell
 // has to provide it too. This file builds it from a small native plugin that
-// does four things: show the share sheet, show a document picker, show the
-// print sheet, and report the app's version. Nothing else crosses over.
+// shows the share sheet, the document picker and the print sheet, reports the
+// app's version, tells the page which of the device's accessibility settings
+// are on, and gives a short buzz. Nothing else crosses over.
 
 type Bridge = Window['myWords'];
 
@@ -13,7 +14,11 @@ export interface NativeShell {
   saveFile: (options: { data: string; name: string }) => Promise<{ ok: boolean }>;
   openFile: (options: { extensions: string[] }) => Promise<{ ok: boolean; data?: string }>;
   printPage: () => Promise<void>;
+  accessibility: () => Promise<DeviceAccessibility>;
+  haptic: () => Promise<void>;
 }
+
+export type DeviceAccessibility = Awaited<ReturnType<NonNullable<Window['myWords']['deviceAccessibility']>>>;
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
@@ -29,7 +34,7 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     versions: { app: version },
     platform,
     // A phone or tablet app is always full screen, and starts only when it is opened.
-    capabilities: { fullscreen: false, startup: false },
+    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true },
     parentMode: {
       setFullscreen: async () => undefined,
       isFullscreen: async () => true,
@@ -71,6 +76,8 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
       setOpenAtLogin: async () => undefined,
     },
     print: () => shell.printPage(),
+    deviceAccessibility: () => shell.accessibility(),
+    haptic: () => shell.haptic(),
   };
 }
 

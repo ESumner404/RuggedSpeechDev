@@ -508,6 +508,22 @@ Settings for different ways of pressing buttons, and for how things sound and ar
 
 With a **physical keyboard**, the arrow keys move around a board and **Enter** presses a button.
 
+#### On an iPhone or iPad
+
+Two more groups appear in **Access** in the iPhone and iPad app. They are not in the Windows and Mac apps.
+
+| Setting | What it does |
+| --- | --- |
+| **Follow this device's accessibility settings** | On to begin with. The device's own **Reduce Motion**, **Increase Contrast**, **Bold Text** and text size (set in Settings, Accessibility) are used in the app too. What you chose in the app is never made weaker: the device can only ask for more. It says what the device is asking for right now. |
+| **Buzz when a button is pressed** | A short buzz from the device so a press can be felt. Off to begin with. |
+
+The same place explains how the iPhone and iPad's own ways of pressing work with the app:
+
+- **Eye Tracking** (iPadOS and iOS 18 or later, on recent devices) is switched on in Settings, Accessibility, Eye Tracking. It works in this app as it does everywhere else. The app cannot see where anyone is looking and cannot switch it on. If you use Eye Tracking's own dwell, leave **Hold-to-select** at 0.
+- **Switch Control** and **Voice Control** reach every button, and **VoiceOver** reads each one.
+- **Guided Access** keeps a child inside the app. The app tells you whether it is on.
+- **Assistive Access** fills the whole screen with the app.
+
 ### Look
 
 The pictures and colours of the whole app. Changes show straight away.
