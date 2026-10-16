@@ -13,7 +13,7 @@ struct SettingsView: View {
             Button("Hear the voice") {
                 Speaker.shared.speak("This is what I sound like.")
             }
-            Text("Works with no internet. Words stay on this watch. Favourites only arrive from the iPhone app over Bluetooth, and only if an adult turned that on.")
+            Text("Works with no internet. Words stay on this watch. Favourites, today's plan and the traffic light only pass to and from the iPhone app over Bluetooth, and only if an adult turned the link on in Parent Mode.")
                 .font(.footnote)
         }
         .navigationTitle("Settings")

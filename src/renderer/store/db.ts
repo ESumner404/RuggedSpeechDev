@@ -363,12 +363,17 @@ export async function getFavourites(): Promise<Item[]> {
 export async function removeFavourite(id: string): Promise<void> {
   const db = await openMyWordsDB();
   await db.delete('favourites', id);
+  favouritesVersion.value += 1;
 }
 
 export async function saveFavourite(item: Item): Promise<void> {
   const db = await openMyWordsDB();
   await db.put('favourites', item);
+  favouritesVersion.value += 1;
 }
+
+/** Goes up whenever a Favourite is added or taken away, so something showing them elsewhere can follow. */
+export const favouritesVersion = signal(0);
 
 const RECENT_MAX_ENTRIES = 50;
 const RECENT_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
@@ -856,6 +861,19 @@ export const parentModeTimeoutSetting = storedSetting<number>('parentModeTimeout
 export const followDeviceAccessibilitySetting = storedSetting<boolean>('followDeviceAccessibility', true, isBoolean);
 /** On a phone or tablet: a short buzz from the device when a button is pressed. Off unless an adult turns it on. */
 export const pressBuzzSetting = storedSetting<boolean>('pressBuzz', false, isBoolean);
+/**
+ * On a phone or tablet: whether the app links with the family's Apple Watch and Apple TV, and the four-digit code the
+ * television shows, which the television must give before it is let in. Off unless an adult turns it on, and never in a
+ * backup, because it belongs to this device and this home.
+ */
+export type AppleLinkSetting = { enabled: boolean; code: string };
+export const isAppleLinkSetting = (value: unknown): value is AppleLinkSetting =>
+  typeof value === 'object' &&
+  value !== null &&
+  typeof (value as AppleLinkSetting).enabled === 'boolean' &&
+  typeof (value as AppleLinkSetting).code === 'string' &&
+  /^\d{0,4}$/.test((value as AppleLinkSetting).code);
+export const appleLinkSetting = storedSetting<AppleLinkSetting>('appleLink', { enabled: false, code: '' }, isAppleLinkSetting, false);
 /** Extra phrases beyond the four fixed slots in the keyboard's Phrases tab. */
 export const customPhrasesSetting = storedSetting<string[]>('customPhrases', [], isStringArray);
 export const aboutMeSetting = storedSetting<AboutMe>('aboutMe', EMPTY_ABOUT_ME, isAboutMe);
@@ -1012,6 +1030,7 @@ const SETTINGS = [
   parentModeTimeoutSetting,
   followDeviceAccessibilitySetting,
   pressBuzzSetting,
+  appleLinkSetting,
   customPhrasesSetting,
   aboutMeSetting,
   weeklyRoutineSetting,

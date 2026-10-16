@@ -18,6 +18,10 @@ function fakeShell(overrides: Partial<NativeShell> = {}): NativeShell {
       guidedAccess: false,
     })),
     haptic: vi.fn(async () => undefined),
+    linkStart: vi.fn(async () => undefined),
+    linkStop: vi.fn(async () => undefined),
+    linkSend: vi.fn(async () => undefined),
+    linkInbox: vi.fn(async () => ({ messages: ['{"type":"open","screen":"game"}', 'not json', '{"nope":1}'], peers: 2 })),
     ...overrides,
   };
 }
@@ -26,7 +30,7 @@ describe('the phone and tablet bridge', () => {
   it('says what a phone or tablet cannot do, so the page can hide it', () => {
     const bridge = buildNativeBridge(fakeShell(), 'ios', '1.0');
     expect(bridge.platform).toBe('ios');
-    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true });
+    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true });
     expect(bridge.versions.app).toBe('1.0');
   });
 
@@ -76,6 +80,16 @@ describe('the phone and tablet bridge', () => {
     expect((await bridge.deviceAccessibility!()).reduceMotion).toBe(true);
     await bridge.haptic!();
     expect(shell.haptic).toHaveBeenCalled();
+  });
+
+  it('passes link messages through as objects and drops what it cannot read', async () => {
+    const shell = fakeShell();
+    const bridge = buildNativeBridge(shell, 'ios', '1.0');
+    await bridge.link!.start('1234');
+    expect(shell.linkStart).toHaveBeenCalledWith({ code: '1234' });
+    await bridge.link!.send({ type: 'state', screen: 'home' });
+    expect(shell.linkSend).toHaveBeenCalledWith({ json: '{"type":"state","screen":"home"}' });
+    expect(await bridge.link!.inbox()).toEqual({ messages: [{ type: 'open', screen: 'game' }], peers: 2 });
   });
 
   it('has no start-up setting and stays full screen', async () => {

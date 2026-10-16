@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Rugged Speech uses your home network only to talk to your own iPad or iPhone, if an adult turns the link on there. Nothing goes to the internet.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_rugged-link._tcp</string>
+		<string>_rugged-link._udp</string>
+	</array>
+</dict>
+</plist>

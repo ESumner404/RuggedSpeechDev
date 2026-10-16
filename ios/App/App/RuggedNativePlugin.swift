@@ -19,6 +19,10 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
         CAPPluginMethod(name: "printPage", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "accessibility", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "haptic", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "linkStart", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "linkStop", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "linkSend", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "linkInbox", returnType: CAPPluginReturnPromise),
     ]
 
     /// The largest file the app will read: a backup with a great many photographs and songs.
@@ -176,6 +180,28 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
             generator.impactOccurred()
             call.resolve()
         }
+    }
+
+    // MARK: Link: the family's own Apple Watch and Apple TV (see AppleLink.swift).
+
+    @objc func linkStart(_ call: CAPPluginCall) {
+        AppleLink.shared.start(code: call.getString("code") ?? "")
+        call.resolve()
+    }
+
+    @objc func linkStop(_ call: CAPPluginCall) {
+        AppleLink.shared.stop()
+        call.resolve()
+    }
+
+    @objc func linkSend(_ call: CAPPluginCall) {
+        if let json = call.getString("json") { AppleLink.shared.send(json) }
+        call.resolve()
+    }
+
+    @objc func linkInbox(_ call: CAPPluginCall) {
+        let taken = AppleLink.shared.takeInbox()
+        call.resolve(["messages": taken.messages, "peers": taken.peers])
     }
 
     /// A file name with nothing in it that could name a folder.

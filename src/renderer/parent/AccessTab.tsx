@@ -22,6 +22,7 @@ import type { AccessSettings, ContrastMode, KeyboardLayout, PressMode, ScanningM
 import { announceText } from '../speech/announce';
 import { VoiceSettings } from './VoiceSettings';
 import { AppleAccessibilitySection } from './AppleAccessibilitySection';
+import { AppleLinkSection } from './AppleLinkSection';
 import { deviceNoun } from '../platform/deviceWord';
 
 // Access (docs/build-plan.md Phase 7): everything here defaults off, and stays off
@@ -296,6 +297,7 @@ export function AccessTab() {
       </section>
 
       <AppleAccessibilitySection />
+      <AppleLinkSection />
 
       <section class="access-tab__section">
         <h2 class="access-tab__heading">Keyboard and sentence</h2>

@@ -12,9 +12,24 @@ struct RootView: View {
         ("again", "🔁", 0xE9D5FF),
     ]
 
+    @ObservedObject private var link = PhoneLink.shared
+
     var body: some View {
         NavigationStack {
             ScrollView {
+                if let now = link.state.now {
+                    NavigationLink { MyDayView() } label: {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Now").font(.caption2).foregroundStyle(Color.buttonText.opacity(0.7))
+                            Text(now).font(.system(size: 15, weight: .semibold)).foregroundStyle(Color.buttonText).lineLimit(2)
+                        }
+                        .padding(8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(hex: 0xBBF7D0), in: RoundedRectangle(cornerRadius: 12))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.bottom, 6)
+                }
                 LazyVGrid(columns: watchColumns, spacing: 6) {
                     ForEach(essentials, id: \.id) { entry in
                         if let phrase = Vocabulary.quickPhrase(entry.id) {
@@ -37,6 +52,9 @@ struct RootView: View {
                     FolderLink(emoji: "💬", label: "Words", colour: 0xFEF08A) { WordsView(board: Vocabulary.root) }
                     FolderLink(emoji: "😊", label: "Feelings", colour: 0xBFDBFE) { FeelingsView() }
                     FolderLink(emoji: "⭐", label: "Favourites", colour: 0xFEF08A) { FavouritesView() }
+                    FolderLink(emoji: "📅", label: "My Day", colour: 0xBBF7D0) { MyDayView() }
+                    FolderLink(emoji: "🚦", label: "Traffic light", colour: 0xFED7AA) { TrafficView() }
+                    FolderLink(emoji: "📱", label: "On iPhone", colour: 0xE5E7EB) { OnPhoneView() }
                     FolderLink(emoji: "⚙️", label: "Settings", colour: 0xE5E7EB) { SettingsView() }
                 }
             }

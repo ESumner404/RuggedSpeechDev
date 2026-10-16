@@ -2,29 +2,25 @@ import Combine
 import Foundation
 import WatchConnectivity
 
-/// A favourite sent from the iPhone app.
-struct Favourite: Codable, Identifiable, Hashable {
-    let id: String
-    let label: String
-    let spoken: String
-    let emoji: String
-    let colour: UInt32
-}
-
-/// Receives Favourites from the iPhone app over the Bluetooth link between the two, and keeps them on the watch.
-/// Nothing goes the other way, and nothing uses the internet.
+/// The link to the iPhone app over the Bluetooth between a watch and the iPhone it is paired with. Nothing uses the
+/// internet. Things come from the iPhone only if an adult turned the link on in Parent Mode; what the watch can ask
+/// the iPhone is to open an ordinary page or change the traffic light, and never to speak.
 final class PhoneLink: NSObject, ObservableObject, WCSessionDelegate {
     static let shared = PhoneLink()
 
-    private static let storageKey = "favourites"
+    private static let storageKey = "linkState"
 
-    @Published private(set) var favourites: [Favourite] = []
+    @Published private(set) var state = LinkState.empty
+    @Published private(set) var reachable = false
+    /// What happened to the last thing asked of the iPhone, in words.
+    @Published var result: String?
+
+    var favourites: [Favourite] { state.favourites }
 
     override private init() {
         super.init()
-        if let data = UserDefaults.standard.data(forKey: Self.storageKey),
-           let saved = try? JSONDecoder().decode([Favourite].self, from: data) {
-            favourites = saved
+        if let json = UserDefaults.standard.string(forKey: Self.storageKey), let saved = LinkState.decode(json) {
+            state = saved
         }
     }
 
@@ -35,25 +31,34 @@ final class PhoneLink: NSObject, ObservableObject, WCSessionDelegate {
     }
 
     private func receive(_ context: [String: Any]) {
-        guard let raw = context["favourites"] as? [[String: Any]] else { return }
-        let received: [Favourite] = raw.prefix(30).compactMap { entry in
-            guard let id = entry["id"] as? String,
-                  let label = entry["label"] as? String, !label.isEmpty,
-                  let spoken = entry["spoken"] as? String else { return nil }
-            let colour = (entry["colour"] as? NSNumber)?.uint32Value ?? 0xFEF08A
-            return Favourite(id: id, label: String(label.prefix(40)), spoken: String(spoken.prefix(200)),
-                             emoji: String((entry["emoji"] as? String ?? "").prefix(8)), colour: colour)
-        }
+        guard let json = context["state"] as? String, let received = LinkState.decode(json) else { return }
         DispatchQueue.main.async {
-            self.favourites = received
-            if let data = try? JSONEncoder().encode(received) {
-                UserDefaults.standard.set(data, forKey: Self.storageKey)
-            }
+            self.state = received
+            UserDefaults.standard.set(json, forKey: Self.storageKey)
         }
     }
 
+    /// Asks the iPhone to do something, and says in words how that went.
+    func ask(_ json: String, done: String) {
+        let session = WCSession.default
+        guard session.activationState == .activated, session.isReachable else {
+            result = "Open Rugged Speech on the iPhone first, and turn the link on in Parent Mode."
+            return
+        }
+        session.sendMessage(["json": json], replyHandler: { _ in
+            DispatchQueue.main.async { self.result = done }
+        }, errorHandler: { _ in
+            DispatchQueue.main.async { self.result = "The iPhone did not answer. Is the link on in Parent Mode?" }
+        })
+    }
+
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        DispatchQueue.main.async { self.reachable = session.isReachable }
         if activationState == .activated { receive(session.receivedApplicationContext) }
+    }
+
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        DispatchQueue.main.async { self.reachable = session.isReachable }
     }
 
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {

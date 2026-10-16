@@ -802,3 +802,11 @@ A sensible order for a new child:
 | Social | Pink |
 | Little words | Purple |
 | No and stop | Red |
+
+#### Linking an Apple Watch and Apple TV
+
+In the iPhone and iPad app, **Access** has **Link with the Apple Watch and Apple TV**. It is off to begin with.
+
+- **Apple Watch:** pair it with the iPhone as usual, then turn the link on. The watch shows the Favourites and today's plan, shares the traffic light, and its **On iPhone** page opens Games, Draw, Music and the rest on the iPhone.
+- **Apple TV:** open Rugged Speech on the television, go to its **iPad** tab, and type the four-digit code it shows into the box in Access, then **Turn the link on**. The iPad and the television must be on the same home wifi. **New code** on the television changes the code.
+- Only the Favourites, today's plan, the traffic light and the page that is open are shared. Nothing the child has said or typed is. Another device can open a page or change the traffic light, and cannot make the iPad speak.

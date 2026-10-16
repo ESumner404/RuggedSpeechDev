@@ -125,10 +125,25 @@ Questions Apple asks on the first upload:
 
 The answers are simple, because nothing is collected: **Data Not Collected**, no tracking, no accounts. The camera and microphone descriptions the review asks for are already in `ios/App/App/Info.plist`, and the privacy manifest is `ios/App/App/PrivacyInfo.xcprivacy`. The bundle identifier is `dev.ruggedspeech.app`; change it in Xcode (and in `capacitor.config.ts`) before the first upload, because it cannot change afterwards.
 
-## Apple Watch and Apple TV (first version, just built)
+## Apple Watch and Apple TV
 
-Native SwiftUI apps in `apple/Watch` and `apple/TV`, sharing the starter words in `apple/Shared/Vocabulary.swift` (generated from the app's own vocabulary by `npm run apple:vocabulary`). One Xcode project (`ios/App/App.xcodeproj`, made from `ios/App/project.yml` by XcodeGen, `npm run apple:project`) holds the iPhone and iPad app, the Watch app (embedded in it) and the Apple TV app.
+Native SwiftUI apps in `apple/Watch` and `apple/TV`, sharing the starter words in `apple/Shared/Vocabulary.swift` (generated from the app's own vocabulary by `npm run apple:vocabulary`, and checked by a test). One Xcode project (`ios/App/App.xcodeproj`, made from `ios/App/project.yml` by XcodeGen, `npm run apple:project`) holds the iPhone and iPad app, the Watch app (embedded in it) and the Apple TV app.
 
-- **Apple Watch:** Yes, No, Break, Toilet, Finished, Question, Say again and Give me time in a fixed grid, plus Help, Words (the Talk pages), Feelings and Favourites. Works alone, with no internet. It builds and installs on the watchOS simulator. Sending Favourites from the iPhone app (WatchConnectivity) is written on the watch side only; the iPhone side and the Parent Mode switch for it are still to do.
-- **Apple TV:** Talk (sentence strip, fixed word grid, always-there bar), Feelings, Help, Traffic light and Settings, with a focus outline and no animation. It builds and installs on the tvOS simulator.
-- **Not done yet:** their app icons (the TV needs layered icons), checking the screens by eye and with the remote on the simulators, an iPhone-simulator pass over Parent Mode at phone width, CI for the new targets, and TestFlight (needs the paid membership).
+Each works **on its own, with no internet and no iPhone or iPad**, and does more when linked to the iPhone or iPad app, where the games, drawing, music, My body and the rest live.
+
+### On their own
+- **Apple Watch:** Yes, No, Break, Toilet, Finished, Question, Say again and Give me time in a fixed grid, with Help, Words (the Talk pages), Feelings, a traffic light and settings. It speaks only when something is pressed.
+- **Apple TV:** Talk (sentence strip, fixed word grid, always-there bar), Feelings, Help, Traffic light (full screen, for the room) and Settings. A focus outline instead of animation.
+
+### Linked to the iPhone or iPad (off until an adult turns it on)
+Parent Mode, Access, **Link with the Apple Watch and Apple TV**.
+
+- **Watch:** paired watches need no code (Bluetooth, through WatchConnectivity). It shows the iPhone's Favourites, today's plan (a Now card on its first page), shares the traffic light, and has an **On iPhone** page that opens Games, Draw, Music, My Day, First / Then, My body, Feelings & Help, My Pages, Keyboard or Talk on the iPhone.
+- **Apple TV:** the television shows a four-digit code; an adult types it into the iPad. It then connects over the home wifi (MultipeerConnectivity, encrypted, never the internet) and the iPad lets in only a television that gives that code (five wrong tries and it stops listening). The television gets an **iPad** tab that opens the same pages on the iPad, plus the iPad's Favourites, today's plan and the traffic light on the big screen.
+- **What is sent:** the Favourites, today's plan, the traffic light and which page is open. Never what the child has said or typed.
+- **What another device may ask:** to open an ordinary page, or to change the traffic light. Never to speak, never to open Parent Mode or School Mode, and nothing is applied while an adult has one of those open.
+
+Checked on the simulators: the iPad and the Apple TV found each other, the code was accepted ("1 connected" in Parent Mode), and everything builds for iOS, watchOS and tvOS. The watch pairing path, the remote on the television, and a real network are not yet checked.
+
+### Not done yet
+Their app icons (the TV needs layered icons), CI for the new targets, an iPhone-simulator pass over Parent Mode at phone width, and TestFlight (needs the paid membership).

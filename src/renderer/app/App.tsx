@@ -1,5 +1,5 @@
 import { useSignal } from '@preact/signals';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { HomeScreen, type HomeTileId } from './HomeScreen';
 import { FeelingsHelpScreen, type FeelingsHelpTab } from './FeelingsHelpScreen';
 import { FavouritesScreen, type FavouritesTab } from './FavouritesScreen';
@@ -22,6 +22,12 @@ import { announceText } from '../speech/announce';
 import {
   DEFAULT_ACCESS_SETTINGS,
   accessSettingsVersion,
+  appleLinkSetting,
+  dayPlanVersion,
+  favouritesVersion,
+  getEffectiveDayPlan,
+  getFavourites,
+  trafficSetting,
   followDeviceAccessibilitySetting,
   pressBuzzSetting,
   getAccessSettings,
@@ -47,6 +53,9 @@ import {
 } from '../store/db';
 import { applyAccessSettings } from '../access/applyAccessSettings';
 import { buzzOnPress, deviceAccessibility, followDevice, watchDeviceAccessibility } from '../platform/deviceAccessibility';
+import { buildLinkState, startLink, type LinkCommand, type LinkSession } from '../platform/appleLink';
+import { linkPeers } from '../platform/linkStatus';
+import { getDateString } from '../day/dayLogic';
 import { applyTheme } from '../ui/theme';
 import { applyLabelStyle, applySymbolStyle } from '../symbols/icons';
 import { deviceTitle } from '../ui/deviceName';
@@ -135,6 +144,41 @@ export function App() {
     const effective = followDeviceNow ? followDevice(access.value, device) : access.value;
     applyAccessSettings(effective, { boldText: followDeviceNow && device.boldText });
   }, [access.value, accessLoaded.value, followDeviceNow, device]);
+
+  // The link to the family's own Apple Watch and Apple TV, only if an adult turned it on. Other devices may ask for a
+  // page to open or the traffic light to change, never for anything to be spoken, and never while an adult has
+  // Parent Mode or School Mode open.
+  const linkSettings = appleLinkSetting.signal.value;
+  const linkOn = linkSettings.enabled && /^\d{4}$/.test(linkSettings.code) && settingsReady.value;
+  const linkRef = useRef<LinkSession | undefined>(undefined);
+  function handleLinkCommand(command: LinkCommand): void {
+    if (mode.value !== 'child') return;
+    if (command.kind === 'open') {
+      screen.value = command.screen === 'feelings' ? { name: 'feelings' } : command.screen === 'favourites' ? { name: 'favourites' } : { name: command.screen };
+    } else {
+      void trafficSetting.set({ ...trafficSetting.signal.value, status: command.status });
+    }
+  }
+  useEffect(() => {
+    if (!linkOn) return undefined;
+    const session = startLink(linkSettings.code, handleLinkCommand, (count) => (linkPeers.value = count));
+    linkRef.current = session;
+    return () => {
+      session?.stop();
+      linkRef.current = undefined;
+      linkPeers.value = 0;
+    };
+  }, [linkOn, linkSettings.code]);
+  const favouritesNow = favouritesVersion.value;
+  const planNow = dayPlanVersion.value;
+  const trafficNow = trafficSetting.signal.value.status;
+  const linkedScreen = screen.value.name;
+  useEffect(() => {
+    if (!linkRef.current) return;
+    void Promise.all([getFavourites(), getEffectiveDayPlan(getDateString(new Date()))]).then(([favourites, { plan }]) => {
+      linkRef.current?.publish(buildLinkState({ screen: linkedScreen, traffic: trafficNow, plan: plan.activities, favourites }));
+    });
+  }, [linkOn, favouritesNow, planNow, trafficNow, linkedScreen]);
 
   const buzzNow = pressBuzzSetting.signal.value && settingsReady.value;
   useEffect(() => (buzzNow ? buzzOnPress() : undefined), [buzzNow]);

@@ -24,6 +24,13 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Rugged Speech uses the camera only when you choose to take a photo for a button, a person or a place. The photo stays on this device.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Rugged Speech uses your home network only to talk to your own Apple TV, if you turn the link on in Parent Mode. Nothing goes to the internet.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_rugged-link._tcp</string>
+		<string>_rugged-link._udp</string>
+	</array>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Rugged Speech uses the microphone only when you choose to record a voice for a button. The recording stays on this device.</string>
 	<key>LSRequiresIPhoneOS</key>

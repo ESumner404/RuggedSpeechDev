@@ -16,6 +16,7 @@ struct TrafficLightView: View {
         Light(id: "green", name: "Green", message: "Happy to talk", colour: Color(hex: 0x16A34A), text: .white),
     ]
 
+    @ObservedObject private var link = IPadLink.shared
     @State private var shown: Light?
 
     var body: some View {
@@ -24,6 +25,7 @@ struct TrafficLightView: View {
                 // The whole screen, so everyone in the room can see it. Press anything to put it away.
                 Button {
                     shown = nil
+                    link.send(LinkCommand.traffic("off"))
                 } label: {
                     VStack(spacing: 24) {
                         Text(light.message).font(.system(size: 110, weight: .bold)).multilineTextAlignment(.center)
@@ -39,6 +41,7 @@ struct TrafficLightView: View {
                     ForEach(lights) { light in
                         Button {
                             shown = light
+                            link.send(LinkCommand.traffic(light.id))
                         } label: {
                             Text(light.name).font(.system(size: 60, weight: .bold)).foregroundStyle(light.text)
                         }

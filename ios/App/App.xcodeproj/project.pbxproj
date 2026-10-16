@@ -15,6 +15,7 @@
 		22F37DD22BEBF53182CA49FE /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130CB5C5D6306CD4797EFB5A /* RootView.swift */; };
 		26E51AC20D9FE4119F144870 /* public in Resources */ = {isa = PBXBuildFile; fileRef = 7E5BBB12596EE01767A6151A /* public */; };
 		2700A5422E45C887BEAE5B76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CC6C49B810BBC284BCED483 /* Main.storyboard */; };
+		28B8157B5DA9DE580217157A /* LinkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22F1099B57DD0E23A8C3774 /* LinkState.swift */; };
 		317D9CB082EA48B9D62A8585 /* FeelingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */; };
 		33894972445A547C53525D94 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 42299223C1270749CDB36540 /* PrivacyInfo.xcprivacy */; };
 		3ECAA36FE1937631F99ECE2C /* TrafficLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19361A32DC5EBBED296019C2 /* TrafficLightView.swift */; };
@@ -22,12 +23,14 @@
 		44DEC6B5EFBFC1F083A04CC9 /* Vocabulary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816380435624AC5EC5C1CECD /* Vocabulary.swift */; };
 		49FDF93485BD1B5F5D5C6804 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65879761B3E0FB60EDF1A2D /* HelpView.swift */; };
 		4AC31C8FEA32681A0D3611EB /* RuggedSpeechWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4340C25CC735B51F5C321827 /* RuggedSpeechWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4B2D6E0EDEA9EA5B37136DFC /* MyDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF500EA76A709DA65D08690 /* MyDayView.swift */; };
 		4D3F2630D26594B18A1E0A3C /* Colours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0E9A0BF464C7375090A551 /* Colours.swift */; };
 		4FB34C264C0E482A4F3BA9EA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23F8D68E28D07D16EB72E4AA /* LaunchScreen.storyboard */; };
 		59FB32608DC2CF140CE2C646 /* FavouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33C3818573C48EE3123579D /* FavouritesView.swift */; };
 		5CBA01DD0B2C2B9C9AC30752 /* TalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA37DFD3E6C0695C200E19D /* TalkView.swift */; };
 		5E04533C01261A377D816DB8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8776CD2CC1249496A6F18C86 /* config.xml */; };
 		67740B5377F807ABF1532F55 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2016878D44EAA9692D059F /* SceneDelegate.swift */; };
+		722A9217FCDD97B83B13D3B0 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B78992D825F92552EF69B09 /* LinkView.swift */; };
 		75CA7222FA8143CBE81D8BB1 /* RuggedSpeechWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053D8104D4D23A62373CD05E /* RuggedSpeechWatchApp.swift */; };
 		78728FD8E95658F1C8DA4664 /* PressButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A3C29165F901B0885CF9EE /* PressButton.swift */; };
 		7BD6CE0FB1784F77D688A0AD /* RuggedSpeechTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AC3A845CA43A906419F93A /* RuggedSpeechTVApp.swift */; };
@@ -37,13 +40,20 @@
 		8EDB8EBD884F018026E55497 /* PhoneLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5BD6EA66DFD5807E09B6E1 /* PhoneLink.swift */; };
 		93215BD4FBEAFA498541BA87 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1BE806AA055FC55BEC1EF /* Speaker.swift */; };
 		93AF4DCA86CB972AF0E661BB /* RuggedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A3D357482A33BD0752F017 /* RuggedViewController.swift */; };
+		A00EB09D051C71E95664BD1C /* TrafficView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A415F5AA01D3EE30B4CE2D5 /* TrafficView.swift */; };
+		A3D11A276F42E90F148C2438 /* FavouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */; };
+		A6E9F12CE19C8EC25B2B2675 /* LinkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22F1099B57DD0E23A8C3774 /* LinkState.swift */; };
+		A844A5FAE996B6AD81C77182 /* AppleLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF7D807DC10CEDCD9D4AD7 /* AppleLink.swift */; };
 		ABED17246DE431A4F4340003 /* Colours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0E9A0BF464C7375090A551 /* Colours.swift */; };
 		BF216F575F36258A76ECC8D2 /* FeelingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0002DBFC6DEC9F6EFC5E28E /* FeelingsView.swift */; };
 		C06343D200D067F1C1D47579 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1BE806AA055FC55BEC1EF /* Speaker.swift */; };
 		CA3A0BA5422B7D487E3B5B04 /* WordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7994EED4E82B742F75D509CB /* WordsView.swift */; };
+		CD43577A7360E52D644FABA0 /* MyDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A472A1CFB488F926C0D5DEC /* MyDayView.swift */; };
 		DAC8B61E340368A6B1C6703E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81927A013CDB49DBF3B7C3 /* SettingsView.swift */; };
 		DE5A67874BD3153E9239C24C /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96A26BA16DA21949B12B73 /* HelpView.swift */; };
+		E49A0FC24814F4D0489B9DEF /* OnPhoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5071B07446383C163124C636 /* OnPhoneView.swift */; };
 		E8E03F4FB1BE61A377693A7C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420949282AB92AA28A975D3 /* AppDelegate.swift */; };
+		F7C1492D97661B6AC1A562FF /* IPadLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,13 +88,17 @@
 		19361A32DC5EBBED296019C2 /* TrafficLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficLightView.swift; sourceTree = "<group>"; };
 		1ABEFBEC61F4D2C38E025080 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		1CD2617EAB5002448AAC0E2D /* RuggedNativePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuggedNativePlugin.swift; sourceTree = "<group>"; };
+		2B78992D825F92552EF69B09 /* LinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkView.swift; sourceTree = "<group>"; };
 		3F81927A013CDB49DBF3B7C3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		42299223C1270749CDB36540 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		4340C25CC735B51F5C321827 /* RuggedSpeechWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RuggedSpeechWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49D88A349FD70A9153DD2C03 /* App.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5071B07446383C163124C636 /* OnPhoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPhoneView.swift; sourceTree = "<group>"; };
 		50A3D357482A33BD0752F017 /* RuggedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuggedViewController.swift; sourceTree = "<group>"; };
+		5A415F5AA01D3EE30B4CE2D5 /* TrafficView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficView.swift; sourceTree = "<group>"; };
 		68ED4E8FE0185474B6E8E85B /* capacitor.config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		6B04ADF7B81E144C4949AE51 /* CapApp-SPM */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "CapApp-SPM"; path = "CapApp-SPM"; sourceTree = SOURCE_ROOT; };
+		6BF500EA76A709DA65D08690 /* MyDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayView.swift; sourceTree = "<group>"; };
 		6DD84CC12F631F85CABE53A8 /* RuggedSpeechTV.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RuggedSpeechTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		76989E05CECAD7B8B3C424A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7994EED4E82B742F75D509CB /* WordsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsView.swift; sourceTree = "<group>"; };
@@ -96,6 +110,8 @@
 		85626B44C1FDB678049D785D /* BigButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigButton.swift; sourceTree = "<group>"; };
 		86AC3A845CA43A906419F93A /* RuggedSpeechTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuggedSpeechTVApp.swift; sourceTree = "<group>"; };
 		8776CD2CC1249496A6F18C86 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
+		89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
+		8A472A1CFB488F926C0D5DEC /* MyDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayView.swift; sourceTree = "<group>"; };
 		9420949282AB92AA28A975D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A33C3818573C48EE3123579D /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
 		A348982BCE2FD882CD176B83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -105,9 +121,12 @@
 		C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingsView.swift; sourceTree = "<group>"; };
 		CA96A26BA16DA21949B12B73 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		D65879761B3E0FB60EDF1A2D /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadLink.swift; sourceTree = "<group>"; };
 		EC5BD6EA66DFD5807E09B6E1 /* PhoneLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneLink.swift; sourceTree = "<group>"; };
 		ED2016878D44EAA9692D059F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		EEFF7D807DC10CEDCD9D4AD7 /* AppleLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLink.swift; sourceTree = "<group>"; };
 		F03156A005B8D5FB142B0035 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		F22F1099B57DD0E23A8C3774 /* LinkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				9420949282AB92AA28A975D3 /* AppDelegate.swift */,
+				EEFF7D807DC10CEDCD9D4AD7 /* AppleLink.swift */,
 				76989E05CECAD7B8B3C424A7 /* Assets.xcassets */,
 				68ED4E8FE0185474B6E8E85B /* capacitor.config.json */,
 				8776CD2CC1249496A6F18C86 /* config.xml */,
@@ -158,11 +178,14 @@
 				A33C3818573C48EE3123579D /* FavouritesView.swift */,
 				B0002DBFC6DEC9F6EFC5E28E /* FeelingsView.swift */,
 				CA96A26BA16DA21949B12B73 /* HelpView.swift */,
+				6BF500EA76A709DA65D08690 /* MyDayView.swift */,
+				5071B07446383C163124C636 /* OnPhoneView.swift */,
 				EC5BD6EA66DFD5807E09B6E1 /* PhoneLink.swift */,
 				C7A3C29165F901B0885CF9EE /* PressButton.swift */,
 				130CB5C5D6306CD4797EFB5A /* RootView.swift */,
 				053D8104D4D23A62373CD05E /* RuggedSpeechWatchApp.swift */,
 				1ABEFBEC61F4D2C38E025080 /* SettingsView.swift */,
+				5A415F5AA01D3EE30B4CE2D5 /* TrafficView.swift */,
 				7994EED4E82B742F75D509CB /* WordsView.swift */,
 			);
 			path = Watch;
@@ -208,8 +231,12 @@
 			isa = PBXGroup;
 			children = (
 				85626B44C1FDB678049D785D /* BigButton.swift */,
+				89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */,
 				C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */,
 				D65879761B3E0FB60EDF1A2D /* HelpView.swift */,
+				D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */,
+				2B78992D825F92552EF69B09 /* LinkView.swift */,
+				8A472A1CFB488F926C0D5DEC /* MyDayView.swift */,
 				F03156A005B8D5FB142B0035 /* RootView.swift */,
 				86AC3A845CA43A906419F93A /* RuggedSpeechTVApp.swift */,
 				3F81927A013CDB49DBF3B7C3 /* SettingsView.swift */,
@@ -233,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				7D0E9A0BF464C7375090A551 /* Colours.swift */,
+				F22F1099B57DD0E23A8C3774 /* LinkState.swift */,
 				7DD1BE806AA055FC55BEC1EF /* Speaker.swift */,
 				816380435624AC5EC5C1CECD /* Vocabulary.swift */,
 			);
@@ -375,8 +403,13 @@
 			files = (
 				0AF5FB10639AA3F032AF113E /* BigButton.swift in Sources */,
 				4D3F2630D26594B18A1E0A3C /* Colours.swift in Sources */,
+				A3D11A276F42E90F148C2438 /* FavouritesView.swift in Sources */,
 				317D9CB082EA48B9D62A8585 /* FeelingsView.swift in Sources */,
 				49FDF93485BD1B5F5D5C6804 /* HelpView.swift in Sources */,
+				F7C1492D97661B6AC1A562FF /* IPadLink.swift in Sources */,
+				A6E9F12CE19C8EC25B2B2675 /* LinkState.swift in Sources */,
+				722A9217FCDD97B83B13D3B0 /* LinkView.swift in Sources */,
+				CD43577A7360E52D644FABA0 /* MyDayView.swift in Sources */,
 				83A3212E3B3AD97B444D83B0 /* RootView.swift in Sources */,
 				7BD6CE0FB1784F77D688A0AD /* RuggedSpeechTVApp.swift in Sources */,
 				DAC8B61E340368A6B1C6703E /* SettingsView.swift in Sources */,
@@ -395,12 +428,16 @@
 				59FB32608DC2CF140CE2C646 /* FavouritesView.swift in Sources */,
 				BF216F575F36258A76ECC8D2 /* FeelingsView.swift in Sources */,
 				DE5A67874BD3153E9239C24C /* HelpView.swift in Sources */,
+				28B8157B5DA9DE580217157A /* LinkState.swift in Sources */,
+				4B2D6E0EDEA9EA5B37136DFC /* MyDayView.swift in Sources */,
+				E49A0FC24814F4D0489B9DEF /* OnPhoneView.swift in Sources */,
 				8EDB8EBD884F018026E55497 /* PhoneLink.swift in Sources */,
 				78728FD8E95658F1C8DA4664 /* PressButton.swift in Sources */,
 				22F37DD22BEBF53182CA49FE /* RootView.swift in Sources */,
 				75CA7222FA8143CBE81D8BB1 /* RuggedSpeechWatchApp.swift in Sources */,
 				7BD7675BBE05FE204398178A /* SettingsView.swift in Sources */,
 				93215BD4FBEAFA498541BA87 /* Speaker.swift in Sources */,
+				A00EB09D051C71E95664BD1C /* TrafficView.swift in Sources */,
 				0BB059505B4E6481C62BE33A /* Vocabulary.swift in Sources */,
 				CA3A0BA5422B7D487E3B5B04 /* WordsView.swift in Sources */,
 			);
@@ -411,6 +448,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8E03F4FB1BE61A377693A7C /* AppDelegate.swift in Sources */,
+				A844A5FAE996B6AD81C77182 /* AppleLink.swift in Sources */,
 				025643294D1903CD4992DC89 /* RuggedNativePlugin.swift in Sources */,
 				93AF4DCA86CB972AF0E661BB /* RuggedViewController.swift in Sources */,
 				67740B5377F807ABF1532F55 /* SceneDelegate.swift in Sources */,
@@ -564,6 +602,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ../../apple/TV/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Rugged Speech";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -583,6 +622,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ../../apple/TV/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Rugged Speech";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

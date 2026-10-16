@@ -86,12 +86,15 @@ targets:
     platform: tvOS
     sources:
       - path: ../../apple/TV
+        excludes:
+          - Info.plist
       - path: ../../apple/Shared
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.ruggedspeech.app
         PRODUCT_NAME: Rugged Speech
         GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: ../../apple/TV/Info.plist
         INFOPLIST_KEY_CFBundleDisplayName: Rugged Speech
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         TARGETED_DEVICE_FAMILY: "3"

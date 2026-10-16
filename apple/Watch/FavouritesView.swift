@@ -7,7 +7,7 @@ struct FavouritesView: View {
     var body: some View {
         ScrollView {
             if link.favourites.isEmpty {
-                Text("Favourites from the iPhone app show here, if an adult has turned that on in Parent Mode, Access.")
+                Text("Favourites from the iPhone app show here, if an adult has turned the link on in Parent Mode, Access.")
                     .font(.footnote)
                     .padding()
             } else {

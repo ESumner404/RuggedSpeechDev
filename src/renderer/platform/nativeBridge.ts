@@ -16,6 +16,10 @@ export interface NativeShell {
   printPage: () => Promise<void>;
   accessibility: () => Promise<DeviceAccessibility>;
   haptic: () => Promise<void>;
+  linkStart: (options: { code: string }) => Promise<void>;
+  linkStop: () => Promise<void>;
+  linkSend: (options: { json: string }) => Promise<void>;
+  linkInbox: () => Promise<{ messages: string[]; peers: number }>;
 }
 
 export type DeviceAccessibility = Awaited<ReturnType<NonNullable<Window['myWords']['deviceAccessibility']>>>;
@@ -34,7 +38,7 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     versions: { app: version },
     platform,
     // A phone or tablet app is always full screen, and starts only when it is opened.
-    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true },
+    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true },
     parentMode: {
       setFullscreen: async () => undefined,
       isFullscreen: async () => true,
@@ -78,6 +82,26 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     print: () => shell.printPage(),
     deviceAccessibility: () => shell.accessibility(),
     haptic: () => shell.haptic(),
+    link: {
+      start: (code) => shell.linkStart({ code }),
+      stop: () => shell.linkStop(),
+      send: (message) => shell.linkSend({ json: JSON.stringify(message) }),
+      inbox: async () => {
+        const { messages, peers } = await shell.linkInbox();
+        const parsed: Array<{ type: string; [key: string]: unknown }> = [];
+        for (const raw of messages) {
+          try {
+            const value: unknown = JSON.parse(raw);
+            if (typeof value === 'object' && value !== null && typeof (value as { type?: unknown }).type === 'string') {
+              parsed.push(value as { type: string });
+            }
+          } catch {
+            // Not a message this app understands; ignore it.
+          }
+        }
+        return { messages: parsed, peers };
+      },
+    },
   };
 }
 
