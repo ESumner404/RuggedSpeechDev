@@ -124,3 +124,11 @@ Questions Apple asks on the first upload:
 ### Adding the app to the App Store
 
 The answers are simple, because nothing is collected: **Data Not Collected**, no tracking, no accounts. The camera and microphone descriptions the review asks for are already in `ios/App/App/Info.plist`, and the privacy manifest is `ios/App/App/PrivacyInfo.xcprivacy`. The bundle identifier is `dev.ruggedspeech.app`; change it in Xcode (and in `capacitor.config.ts`) before the first upload, because it cannot change afterwards.
+
+## Apple Watch and Apple TV (first version, just built)
+
+Native SwiftUI apps in `apple/Watch` and `apple/TV`, sharing the starter words in `apple/Shared/Vocabulary.swift` (generated from the app's own vocabulary by `npm run apple:vocabulary`). One Xcode project (`ios/App/App.xcodeproj`, made from `ios/App/project.yml` by XcodeGen, `npm run apple:project`) holds the iPhone and iPad app, the Watch app (embedded in it) and the Apple TV app.
+
+- **Apple Watch:** Yes, No, Break, Toilet, Finished, Question, Say again and Give me time in a fixed grid, plus Help, Words (the Talk pages), Feelings and Favourites. Works alone, with no internet. It builds and installs on the watchOS simulator. Sending Favourites from the iPhone app (WatchConnectivity) is written on the watch side only; the iPhone side and the Parent Mode switch for it are still to do.
+- **Apple TV:** Talk (sentence strip, fixed word grid, always-there bar), Feelings, Help, Traffic light and Settings, with a focus outline and no animation. It builds and installs on the tvOS simulator.
+- **Not done yet:** their app icons (the TV needs layered icons), checking the screens by eye and with the remote on the simulators, an iPhone-simulator pass over Parent Mode at phone width, CI for the new targets, and TestFlight (needs the paid membership).
