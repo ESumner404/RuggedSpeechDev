@@ -4,7 +4,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 // built page the desktop app shows. Nothing here points at a server: the page
 // is read from inside the app, as it is on the desktop (PRINCIPLES.md I1).
 const config: CapacitorConfig = {
-  appId: 'dev.ruggedspeech.app',
+  appId: 'ruggedspeechaac',
   appName: 'Rugged Speech',
   webDir: 'dist/renderer',
   ios: {

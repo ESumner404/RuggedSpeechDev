@@ -105,7 +105,7 @@ TestFlight is how the app gets onto real iPads and iPhones for testing without t
 
 1. **An Apple Developer Program membership** (paid, yearly), at [developer.apple.com](https://developer.apple.com/programs/).
 2. **Sign Xcode in** to that account: Xcode, Settings, Accounts. This is what lets Xcode make the signing certificate and profile.
-3. **An app record** in [App Store Connect](https://appstoreconnect.apple.com), under My Apps, New App, with the bundle identifier from `capacitor.config.ts` (`dev.ruggedspeech.app` unless you changed it).
+3. **An app record** in [App Store Connect](https://appstoreconnect.apple.com), under My Apps, New App, with the bundle identifier from `capacitor.config.ts` (`ruggedspeechaac` unless you changed it).
 4. **Your team ID** (ten letters and digits, in the Membership page).
 
 Then, from this folder:
@@ -123,7 +123,7 @@ Questions Apple asks on the first upload:
 
 ### Adding the app to the App Store
 
-The answers are simple, because nothing is collected: **Data Not Collected**, no tracking, no accounts. The camera and microphone descriptions the review asks for are already in `ios/App/App/Info.plist`, and the privacy manifest is `ios/App/App/PrivacyInfo.xcprivacy`. The bundle identifier is `dev.ruggedspeech.app`; change it in Xcode (and in `capacitor.config.ts`) before the first upload, because it cannot change afterwards.
+The answers are simple, because nothing is collected: **Data Not Collected**, no tracking, no accounts. The camera and microphone descriptions the review asks for are already in `ios/App/App/Info.plist`, and the privacy manifest is `ios/App/App/PrivacyInfo.xcprivacy`. The bundle identifier is `ruggedspeechaac`; change it in Xcode (and in `capacitor.config.ts`) before the first upload, because it cannot change afterwards.
 
 ## Apple Watch and Apple TV
 
