@@ -111,7 +111,8 @@ TestFlight is how the app gets onto real iPads and iPhones for testing without t
 Then, from this folder:
 
 ```bash
-APPLE_TEAM_ID=ABCDE12345 npm run ios:testflight
+APPLE_TEAM_ID=ABCDE12345 npm run ios:testflight     # iPhone, iPad and the Apple Watch app inside it
+APPLE_TEAM_ID=ABCDE12345 npm run tvos:testflight    # Apple TV
 ```
 
 That builds the page, makes a signed release archive, and uploads it. After Apple has processed it (a few minutes) it appears under **TestFlight** in App Store Connect. Add yourself as an internal tester and install it from the TestFlight app. External testers need a short Apple review first, and a privacy policy address.
@@ -146,4 +147,4 @@ Parent Mode, Access, **Link with the Apple Watch and Apple TV**.
 Checked on the simulators: the iPad and the Apple TV found each other, the code was accepted ("1 connected" in Parent Mode), and everything builds for iOS, watchOS and tvOS. The watch pairing path, the remote on the television, and a real network are not yet checked.
 
 ### Not done yet
-Their app icons (the TV needs layered icons), CI for the new targets, an iPhone-simulator pass over Parent Mode at phone width, and TestFlight (needs the paid membership).
+CI for the new targets, an iPhone-simulator pass over Parent Mode at phone width, and TestFlight (needs the paid membership).

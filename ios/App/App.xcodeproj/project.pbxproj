@@ -54,6 +54,7 @@
 		E49A0FC24814F4D0489B9DEF /* OnPhoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5071B07446383C163124C636 /* OnPhoneView.swift */; };
 		E8E03F4FB1BE61A377693A7C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420949282AB92AA28A975D3 /* AppDelegate.swift */; };
 		F7C1492D97661B6AC1A562FF /* IPadLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */; };
+		F92779BB8232E0C901958308 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52BA3F8A9E19DEB1FA0B7E0A /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		49D88A349FD70A9153DD2C03 /* App.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5071B07446383C163124C636 /* OnPhoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPhoneView.swift; sourceTree = "<group>"; };
 		50A3D357482A33BD0752F017 /* RuggedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuggedViewController.swift; sourceTree = "<group>"; };
+		52BA3F8A9E19DEB1FA0B7E0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5A415F5AA01D3EE30B4CE2D5 /* TrafficView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficView.swift; sourceTree = "<group>"; };
 		68ED4E8FE0185474B6E8E85B /* capacitor.config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		6B04ADF7B81E144C4949AE51 /* CapApp-SPM */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "CapApp-SPM"; path = "CapApp-SPM"; sourceTree = SOURCE_ROOT; };
@@ -230,6 +232,7 @@
 		D2E48DEF3FA32E31624F67CC /* TV */ = {
 			isa = PBXGroup;
 			children = (
+				52BA3F8A9E19DEB1FA0B7E0A /* Assets.xcassets */,
 				85626B44C1FDB678049D785D /* BigButton.swift */,
 				89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */,
 				C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */,
@@ -297,6 +300,7 @@
 			buildConfigurationList = D73FA75D2DE31290D9E34CB8 /* Build configuration list for PBXNativeTarget "RuggedSpeechTV" */;
 			buildPhases = (
 				55C3886D8AFB67827AB393B2 /* Sources */,
+				E38D3EF172D41053C89E4858 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -391,6 +395,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				17E3DE56EA9CACDA501A00E0 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E38D3EF172D41053C89E4858 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F92779BB8232E0C901958308 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
