@@ -24,14 +24,15 @@ npx cap sync ios
 rm -rf ios/build
 mkdir -p ios/build
 
+# Built unsigned: signing for distribution happens when it is exported, which needs no registered devices
+# (building signed would ask for a development profile, and that needs at least one device on the team).
 xcodebuild archive \
   -project ios/App/App.xcodeproj \
   -scheme App \
   -configuration Release \
   -destination "generic/platform=iOS" \
   -archivePath "$ARCHIVE" \
-  -allowProvisioningUpdates \
-  DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+  CODE_SIGNING_ALLOWED=NO \
   CURRENT_PROJECT_VERSION="$BUILD_NUMBER"
 
 cat > "$OPTIONS" <<PLIST
