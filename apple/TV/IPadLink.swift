@@ -20,6 +20,8 @@ final class IPadLink: NSObject, ObservableObject, MCNearbyServiceBrowserDelegate
 
     @Published private(set) var status = Status.searching
     @Published private(set) var state = LinkState.empty
+    /// What the iPad is building and has said, if an adult turned that on there.
+    @Published private(set) var mirror = MirrorState.empty
     /// The code an adult types in on the iPad.
     @Published private(set) var code: String
 
@@ -62,6 +64,11 @@ final class IPadLink: NSObject, ObservableObject, MCNearbyServiceBrowserDelegate
         try? session.send(data, toPeers: session.connectedPeers, with: .reliable)
     }
 
+    /// Asks the iPad to send the boards, the settings and everything else again.
+    func requestSync() {
+        send(LinkCommand.syncRequest)
+    }
+
     var isConnected: Bool {
         if case .connected = status { return true }
         return false
@@ -88,6 +95,7 @@ final class IPadLink: NSObject, ObservableObject, MCNearbyServiceBrowserDelegate
             switch state {
             case .connected:
                 self.status = .connected(name: peerID.displayName)
+                self.requestSync()
             case .notConnected:
                 self.inviting.remove(peerID)
                 if session.connectedPeers.isEmpty { self.status = .searching }
@@ -101,8 +109,15 @@ final class IPadLink: NSObject, ObservableObject, MCNearbyServiceBrowserDelegate
     }
 
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        guard data.count <= 64 * 1024, let json = String(data: data, encoding: .utf8), let received = LinkState.decode(json) else { return }
-        DispatchQueue.main.async { self.state = received }
+        guard data.count <= 256 * 1024, let json = String(data: data, encoding: .utf8) else { return }
+        // The kind of message is at the start of its JSON.
+        if json.hasPrefix(#"{"type":"state""#) {
+            if let received = LinkState.decode(json) { DispatchQueue.main.async { self.state = received } }
+        } else if json.hasPrefix(#"{"type":"sync""#) {
+            TVContent.shared.apply(json)
+        } else if json.hasPrefix(#"{"type":"sentence""#) {
+            if let received = MirrorState.decode(json) { DispatchQueue.main.async { self.mirror = received } }
+        }
     }
 
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {}

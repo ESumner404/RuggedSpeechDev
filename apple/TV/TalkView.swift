@@ -13,15 +13,15 @@ final class Sentence: ObservableObject {
 
 /// The Talk page: a sentence along the top, the words in a fixed grid, and the always-there buttons underneath.
 struct TalkView: View {
-    let board: VocabBoard
     @StateObject private var sentence = Sentence()
+    @ObservedObject private var content = TVContent.shared
     @State private var path: [String] = []
 
     var body: some View {
         NavigationStack(path: $path) {
-            page(for: board)
+            page(for: content.rootBoard)
                 .navigationDestination(for: String.self) { id in
-                    if let next = Vocabulary.board(id) { page(for: next) }
+                    if let next = content.board(id) { page(for: next) }
                 }
         }
         .environmentObject(sentence)
@@ -53,8 +53,11 @@ struct SentenceStrip: View {
                 .disabled(sentence.words.isEmpty)
             Button("Clear") { sentence.clear() }
                 .disabled(sentence.words.isEmpty)
-            Button("Speak") { Speaker.shared.speak(sentence.text) }
-                .disabled(sentence.words.isEmpty)
+            Button("Speak") {
+                Speaker.shared.speak(sentence.text)
+                if TVContent.shared.clearAfterSpeak { sentence.clear() }
+            }
+            .disabled(sentence.words.isEmpty)
         }
         .frame(height: 100)
     }
@@ -78,13 +81,20 @@ struct WordGrid: View {
         }
     }
 
+    /// What a press does is the iPad's choice: add to the sentence, say it, or both. Either way, a person pressed.
+    private func press(_ item: VocabItem) {
+        let mode = TVContent.shared.press
+        if mode != "speak" { sentence.add(item.spoken) }
+        if mode != "sentence" { Speaker.shared.speak(item.spoken) }
+    }
+
     @ViewBuilder
     private func cell(_ id: String?) -> some View {
         if let id, let item = board.item(id) {
             if let opens = item.opens {
-                BigButton(emoji: item.emoji, label: item.label, colour: item.colour, folder: true, size: 34) { open(opens) }
+                BigButton(emoji: item.emoji, label: item.label, colour: item.colour, folder: true, size: 34, word: true) { open(opens) }
             } else {
-                BigButton(emoji: item.emoji, label: item.label, colour: item.colour, size: 34) { sentence.add(item.spoken) }
+                BigButton(emoji: item.emoji, label: item.label, colour: item.colour, size: 34, word: true) { press(item) }
             }
         } else {
             Color.clear.frame(maxWidth: .infinity, maxHeight: .infinity)

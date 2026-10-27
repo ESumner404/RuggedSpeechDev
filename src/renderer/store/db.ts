@@ -276,7 +276,11 @@ export async function getAllBoards(): Promise<Board[]> {
 export async function updateBoard(board: Board): Promise<void> {
   const db = await openMyWordsDB();
   await db.put('boards', board);
+  boardsVersion.value += 1;
 }
+
+/** Goes up whenever a board is changed, so something showing the boards elsewhere (the Apple TV) can follow. */
+export const boardsVersion = signal(0);
 
 function emptyGridOrder(rows: GridSize, columns: GridSize): (string | null)[][] {
   return Array.from({ length: rows }, () => Array.from({ length: columns }, () => null));
@@ -300,6 +304,7 @@ export async function createBoard(name: string, id: string = `board-${randomId()
     buttons: [],
   };
   await db.put('boards', board);
+  boardsVersion.value += 1;
   return board;
 }
 
@@ -347,6 +352,7 @@ export async function deleteMyPage(id: string): Promise<void> {
   const page = pages.find((candidate) => candidate.id === id);
   if (!page) return;
   await db.delete('boards', page.boardId);
+  boardsVersion.value += 1;
   await saveMyPages(pages.filter((candidate) => candidate.id !== id));
 }
 
@@ -866,13 +872,14 @@ export const pressBuzzSetting = storedSetting<boolean>('pressBuzz', false, isBoo
  * television shows, which the television must give before it is let in. Off unless an adult turns it on, and never in a
  * backup, because it belongs to this device and this home.
  */
-export type AppleLinkSetting = { enabled: boolean; code: string };
+export type AppleLinkSetting = { enabled: boolean; code: string; showSentence?: boolean };
 export const isAppleLinkSetting = (value: unknown): value is AppleLinkSetting =>
   typeof value === 'object' &&
   value !== null &&
   typeof (value as AppleLinkSetting).enabled === 'boolean' &&
   typeof (value as AppleLinkSetting).code === 'string' &&
-  /^\d{0,4}$/.test((value as AppleLinkSetting).code);
+  /^\d{0,4}$/.test((value as AppleLinkSetting).code) &&
+  ((value as AppleLinkSetting).showSentence === undefined || typeof (value as AppleLinkSetting).showSentence === 'boolean');
 export const appleLinkSetting = storedSetting<AppleLinkSetting>('appleLink', { enabled: false, code: '' }, isAppleLinkSetting, false);
 /** Extra phrases beyond the four fixed slots in the keyboard's Phrases tab. */
 export const customPhrasesSetting = storedSetting<string[]>('customPhrases', [], isStringArray);

@@ -14,7 +14,9 @@ final class AppleLink: NSObject, MCNearbyServiceAdvertiserDelegate, MCSessionDel
     static let shared = AppleLink()
 
     private static let serviceType = "rugged-link"
-    private static let maxMessageBytes = 64 * 1024
+    private static let maxMessageBytes = 256 * 1024
+    /// The watch only ever gets the small `state` message, never the boards.
+    private static let maxWatchBytes = 64 * 1024
     private static let maxInbox = 50
     private static let maxWrongCodes = 5
 
@@ -23,7 +25,8 @@ final class AppleLink: NSObject, MCNearbyServiceAdvertiserDelegate, MCSessionDel
     private var advertiser: MCNearbyServiceAdvertiser?
     private var code = ""
     private var wrongCodes = 0
-    private var lastState: String?
+    /// The latest message of each kind, sent again to a device that has just connected.
+    private var lastByType: [String: String] = [:]
 
     private let lock = NSLock()
     private var inbox: [String] = []
@@ -54,22 +57,30 @@ final class AppleLink: NSObject, MCNearbyServiceAdvertiserDelegate, MCSessionDel
         advertiser = nil
         session?.disconnect()
         session = nil
-        lock.lock(); code = ""; inbox.removeAll(); lastState = nil; lock.unlock()
+        lock.lock(); code = ""; inbox.removeAll(); lastByType.removeAll(); lock.unlock()
     }
 
     // MARK: Sending and receiving
 
     func send(_ json: String) {
         guard json.utf8.count <= Self.maxMessageBytes else { return }
-        lock.lock(); lastState = json; lock.unlock()
-        pushState(json)
+        let type = Self.type(of: json)
+        lock.lock(); lastByType[type] = json; lock.unlock()
+        push(json, type: type)
     }
 
-    private func pushState(_ json: String) {
+    /// The kind of message, read from the start of its JSON (`{"type":"state",...`).
+    private static func type(of json: String) -> String {
+        guard let range = json.range(of: "^\\{\"type\":\"[A-Za-z-]{1,30}\"", options: .regularExpression) else { return "other" }
+        return String(json[range].dropFirst(9).dropLast(1))
+    }
+
+    private func push(_ json: String, type: String) {
         if let session = session, !session.connectedPeers.isEmpty, let data = json.data(using: .utf8) {
             try? session.send(data, toPeers: session.connectedPeers, with: .reliable)
         }
-        if WCSession.isSupported() {
+        // Only the small state goes to the watch: it has no use for the boards, and a limit on how much it can take.
+        if type == "state", json.utf8.count <= Self.maxWatchBytes, WCSession.isSupported() {
             let watch = WCSession.default
             if watch.activationState == .activated, watch.isPaired, watch.isWatchAppInstalled {
                 try? watch.updateApplicationContext(["state": json])
@@ -120,9 +131,9 @@ final class AppleLink: NSObject, MCNearbyServiceAdvertiserDelegate, MCSessionDel
 
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         guard state == .connected else { return }
-        lock.lock(); let json = lastState; lock.unlock()
-        if let json = json, let data = json.data(using: .utf8) {
-            try? session.send(data, toPeers: [peerID], with: .reliable)
+        lock.lock(); let all = Array(lastByType.values); lock.unlock()
+        for json in all {
+            if let data = json.data(using: .utf8) { try? session.send(data, toPeers: [peerID], with: .reliable) }
         }
     }
 
@@ -134,8 +145,8 @@ final class AppleLink: NSObject, MCNearbyServiceAdvertiserDelegate, MCSessionDel
     // MARK: Paired watch
 
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        lock.lock(); let json = lastState; lock.unlock()
-        if activationState == .activated, let json = json { pushState(json) }
+        lock.lock(); let json = lastByType["state"]; lock.unlock()
+        if activationState == .activated, let json = json { push(json, type: "state") }
     }
 
     func sessionDidBecomeInactive(_ session: WCSession) {}

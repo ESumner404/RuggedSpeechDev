@@ -5,6 +5,7 @@ import type { Board, Item, MyPage } from '../store/types';
 import { announceItem, announceSentence } from '../speech/announce';
 import { recordPress } from '../store/usage';
 import { Grid } from './Grid';
+import { liveSentence } from '../platform/liveSpeech';
 import { SentenceStrip, type SentenceChip } from './SentenceStrip';
 
 type Props = {
@@ -25,6 +26,14 @@ export function MyPagesScreen({ onExit, initialPageId }: Props) {
   const board = useSignal<Board | null>(null);
   const sentence = useSignal<SentenceChip[]>([]);
   const speakingChipId = useSignal<string | null>(null);
+
+  // The sentence being built, for the Apple TV if an adult has turned that on. Cleared when this page is left.
+  useEffect(() => {
+    liveSentence.value = sentence.value.map((chip) => chip.item.label);
+    return () => {
+      liveSentence.value = [];
+    };
+  }, [sentence.value]);
 
   useEffect(() => {
     void getMyPages().then((loadedPages) => {

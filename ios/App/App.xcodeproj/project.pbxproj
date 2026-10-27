@@ -16,6 +16,7 @@
 		26E51AC20D9FE4119F144870 /* public in Resources */ = {isa = PBXBuildFile; fileRef = 7E5BBB12596EE01767A6151A /* public */; };
 		2700A5422E45C887BEAE5B76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CC6C49B810BBC284BCED483 /* Main.storyboard */; };
 		28B8157B5DA9DE580217157A /* LinkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22F1099B57DD0E23A8C3774 /* LinkState.swift */; };
+		2B608FC58D68A11CF0A3B6C7 /* ShowingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5434C6526F1663FF6280341 /* ShowingView.swift */; };
 		317D9CB082EA48B9D62A8585 /* FeelingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */; };
 		33894972445A547C53525D94 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 42299223C1270749CDB36540 /* PrivacyInfo.xcprivacy */; };
 		3ECAA36FE1937631F99ECE2C /* TrafficLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19361A32DC5EBBED296019C2 /* TrafficLightView.swift */; };
@@ -40,6 +41,7 @@
 		8EDB8EBD884F018026E55497 /* PhoneLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5BD6EA66DFD5807E09B6E1 /* PhoneLink.swift */; };
 		93215BD4FBEAFA498541BA87 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1BE806AA055FC55BEC1EF /* Speaker.swift */; };
 		93AF4DCA86CB972AF0E661BB /* RuggedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A3D357482A33BD0752F017 /* RuggedViewController.swift */; };
+		9E54AAD49E83D5816503A190 /* TVContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB2773832555232C75F9F50 /* TVContent.swift */; };
 		A00EB09D051C71E95664BD1C /* TrafficView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A415F5AA01D3EE30B4CE2D5 /* TrafficView.swift */; };
 		A3D11A276F42E90F148C2438 /* FavouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */; };
 		A6E9F12CE19C8EC25B2B2675 /* LinkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22F1099B57DD0E23A8C3774 /* LinkState.swift */; };
@@ -101,6 +103,7 @@
 		50A3D357482A33BD0752F017 /* RuggedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuggedViewController.swift; sourceTree = "<group>"; };
 		52BA3F8A9E19DEB1FA0B7E0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5A415F5AA01D3EE30B4CE2D5 /* TrafficView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficView.swift; sourceTree = "<group>"; };
+		5BB2773832555232C75F9F50 /* TVContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVContent.swift; sourceTree = "<group>"; };
 		68ED4E8FE0185474B6E8E85B /* capacitor.config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		6B04ADF7B81E144C4949AE51 /* CapApp-SPM */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "CapApp-SPM"; path = "CapApp-SPM"; sourceTree = SOURCE_ROOT; };
 		6BF500EA76A709DA65D08690 /* MyDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayView.swift; sourceTree = "<group>"; };
@@ -122,6 +125,7 @@
 		A348982BCE2FD882CD176B83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AEA37DFD3E6C0695C200E19D /* TalkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkView.swift; sourceTree = "<group>"; };
 		B0002DBFC6DEC9F6EFC5E28E /* FeelingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingsView.swift; sourceTree = "<group>"; };
+		C5434C6526F1663FF6280341 /* ShowingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowingView.swift; sourceTree = "<group>"; };
 		C7A3C29165F901B0885CF9EE /* PressButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressButton.swift; sourceTree = "<group>"; };
 		C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingsView.swift; sourceTree = "<group>"; };
 		CA96A26BA16DA21949B12B73 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
@@ -249,8 +253,10 @@
 				F03156A005B8D5FB142B0035 /* RootView.swift */,
 				86AC3A845CA43A906419F93A /* RuggedSpeechTVApp.swift */,
 				3F81927A013CDB49DBF3B7C3 /* SettingsView.swift */,
+				C5434C6526F1663FF6280341 /* ShowingView.swift */,
 				AEA37DFD3E6C0695C200E19D /* TalkView.swift */,
 				19361A32DC5EBBED296019C2 /* TrafficLightView.swift */,
+				5BB2773832555232C75F9F50 /* TVContent.swift */,
 			);
 			path = TV;
 			sourceTree = "<group>";
@@ -432,7 +438,9 @@
 				83A3212E3B3AD97B444D83B0 /* RootView.swift in Sources */,
 				7BD6CE0FB1784F77D688A0AD /* RuggedSpeechTVApp.swift in Sources */,
 				DAC8B61E340368A6B1C6703E /* SettingsView.swift in Sources */,
+				2B608FC58D68A11CF0A3B6C7 /* ShowingView.swift in Sources */,
 				C06343D200D067F1C1D47579 /* Speaker.swift in Sources */,
+				9E54AAD49E83D5816503A190 /* TVContent.swift in Sources */,
 				5CBA01DD0B2C2B9C9AC30752 /* TalkView.swift in Sources */,
 				3ECAA36FE1937631F99ECE2C /* TrafficLightView.swift in Sources */,
 				44DEC6B5EFBFC1F083A04CC9 /* Vocabulary.swift in Sources */,

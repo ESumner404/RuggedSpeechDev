@@ -29,23 +29,32 @@ struct BigButton: View {
     let colour: UInt32
     var folder = false
     var size: CGFloat = 44
+    /// A word from the boards, which follows the iPad's choice of pictures, words or both, and its muted colours.
+    var word = false
     let action: () -> Void
 
+    @ObservedObject private var content = TVContent.shared
+
     var body: some View {
+        let showPicture = !emoji.isEmpty && !(word && content.labels == "words")
+        let showLabel = !(word && content.labels == "pictures" && !emoji.isEmpty)
+        let scale = CGFloat(content.textScale)
         Button(action: action) {
             VStack(spacing: 8) {
-                if !emoji.isEmpty {
-                    Text(emoji).font(.system(size: size * 1.6))
+                if showPicture {
+                    Text(emoji).font(.system(size: size * 1.6 * scale))
                 }
-                Text(label)
-                    .font(.system(size: size, weight: .semibold))
-                    .multilineTextAlignment(.center)
-                    .minimumScaleFactor(0.6)
-                    .lineLimit(2)
+                if showLabel {
+                    Text(label)
+                        .font(.system(size: size * scale, weight: .semibold))
+                        .multilineTextAlignment(.center)
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(2)
+                }
             }
             .padding(12)
         }
-        .buttonStyle(BigButtonStyle(colour: colour, folder: folder))
+        .buttonStyle(BigButtonStyle(colour: LowArousal.colour(colour, on: content.lowArousal), folder: folder))
         .focusEffectDisabled()
         .accessibilityLabel(folder ? "\(label), opens more" : label)
     }

@@ -37,6 +37,16 @@ final class Speaker {
 
     private let synthesizer = AVSpeechSynthesizer()
 
+    /// How the iPhone or iPad has the voice set, when the television has been sent it. Nil until then.
+    struct Voice {
+        var rate: Double = 1
+        var pitch: Double = 1
+        var volume: Double = 1
+        var pronunciations: [(written: String, spoken: String)] = []
+    }
+
+    var voice: Voice?
+
     private init() {
         #if !os(watchOS)
         // Speech is played as media, so a silent switch does not mute a child's voice.
@@ -48,10 +58,25 @@ final class Speaker {
     /// Each new thing said ends whatever was being said before it.
     func speak(_ text: String) {
         synthesizer.stopSpeaking(at: .immediate)
-        let utterance = AVSpeechUtterance(string: text)
+        var spoken = text
+        var rate = SpeechSpeed.current.rate
+        var pitch: Float = 1
+        var volume: Float = 1
+        if let voice = voice {
+            // The iPad's own settings win over this device's, so both say words the same way.
+            rate = min(AVSpeechUtteranceMaximumSpeechRate, max(AVSpeechUtteranceMinimumSpeechRate, Float(voice.rate) * AVSpeechUtteranceDefaultSpeechRate))
+            pitch = Float(min(2, max(0.5, voice.pitch)))
+            volume = Float(min(1, max(0, voice.volume)))
+            for entry in voice.pronunciations {
+                let pattern = "\\b" + NSRegularExpression.escapedPattern(for: entry.written) + "\\b"
+                spoken = spoken.replacingOccurrences(of: pattern, with: entry.spoken, options: [.regularExpression, .caseInsensitive])
+            }
+        }
+        let utterance = AVSpeechUtterance(string: spoken)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")
-        utterance.rate = SpeechSpeed.current.rate
-        utterance.volume = 1
+        utterance.rate = rate
+        utterance.pitchMultiplier = pitch
+        utterance.volume = volume
         #if os(watchOS)
         // A watch is silent until the app asks for the audio session, and only then plays through its own speaker
         // (or the headphones it is connected to). Ask each time, because the system can take it back between presses.

@@ -27,13 +27,28 @@ export function AppleLinkSection() {
       <h2 class="access-tab__heading">Link with the Apple Watch and Apple TV</h2>
       <p class="access-tab__hint">
         Lets this family's own Apple Watch and Apple TV show the Favourites and today's plan, share the traffic light,
-        and open pages here, such as Games or Draw. It works over Bluetooth to the watch and over the home wifi to the
-        television, never the internet, and nothing the child says or types is sent. Off unless you turn it on.
+        and open pages here, such as Games or Draw. The Apple TV also gets the words on the boards and the settings, so
+        the two match. It works over Bluetooth to the watch and over the home wifi to the television, never the
+        internet. Off unless you turn it on.
       </p>
       {setting.enabled ? (
         <>
           <p class="access-tab__hint" role="status">
             On. {peers === 0 ? 'Nothing is connected yet.' : `${peers} connected.`} The code is {setting.code}.
+          </p>
+          <label class="access-tab__checkbox">
+            <input
+              type="checkbox"
+              checked={setting.showSentence === true}
+              onChange={(event) =>
+                void appleLinkSetting.set({ ...setting, showSentence: (event.target as HTMLInputElement).checked })
+              }
+            />
+            Show the sentence being built, and what was said, on the Apple TV
+          </label>
+          <p class="access-tab__hint">
+            Off to begin with. The Apple TV always gets the words on the boards and how the app is set up (voice, text
+            size, colours), so it says the same words in the same places.
           </p>
           <button type="button" class="parent-mode-screen__button" onClick={() => void turnOff()}>
             Turn the link off

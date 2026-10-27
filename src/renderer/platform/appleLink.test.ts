@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { OPENABLE_SCREENS, buildLinkState, parseCommand, startLink } from './appleLink';
+import { OPENABLE_SCREENS, buildLinkState, buildSentenceMessage, buildSyncMessage, parseCommand, startLink } from './appleLink';
 
 describe('what another device may ask for', () => {
   it('may open the ordinary pages and nothing else', () => {
@@ -99,6 +99,21 @@ describe('the link itself', () => {
     expect(inbox.mock.calls.length).toBe(polled);
   });
 
+  it('keeps each kind of message on its own, and sends them all again on request', async () => {
+    const inbox = vi.fn(async () => ({ messages: [], peers: 1 }));
+    const link = setLink(inbox);
+    const session = startLink('1111', vi.fn(), vi.fn())!;
+    session.publish({ type: 'state', screen: 'a' });
+    session.publish({ type: 'sync', root: 'x' });
+    await vi.advanceTimersByTimeAsync(400);
+    expect(link.send).toHaveBeenCalledWith({ type: 'state', screen: 'a' });
+    expect(link.send).toHaveBeenCalledWith({ type: 'sync', root: 'x' });
+    link.send.mockClear();
+    session.resend();
+    expect(link.send).toHaveBeenCalledTimes(2);
+    session.stop();
+  });
+
   it('sends the latest state once things go quiet, and again when someone connects', async () => {
     let peers = 0;
     const inbox = vi.fn(async () => ({ messages: [], peers }));
@@ -113,5 +128,71 @@ describe('the link itself', () => {
     await vi.advanceTimersByTimeAsync(500);
     expect(link.send).toHaveBeenCalledTimes(2);
     session.stop();
+  });
+});
+
+describe('what the television is sent', () => {
+  const board = {
+    id: 'talk-root',
+    name: 'Talk',
+    grid: { rows: 2, columns: 2, order: [['a', 'b'], ['c', null]] as (string | null)[][] },
+    buttons: [
+      { id: 'a', label: 'I', image: { kind: 'emoji' as const, char: '🙋' }, background_color: '#e9d5ff' },
+      { id: 'b', label: 'want', hidden: true },
+      { id: 'c', label: 'mum', image: { kind: 'photo' as const, blobId: 'p1' }, vocalization: 'Mummy' },
+    ],
+  };
+  const input = {
+    deviceName: 'Lucy’s device',
+    rootBoardId: 'talk-root',
+    boards: [board],
+    wordStage: 0,
+    speech: { rate: 0.9, pitch: 1.1, volume: 0.8 },
+    pronunciations: [{ written: 'Lucy', spoken: 'Loosey' }, { written: '', spoken: 'x' }],
+    labelStyle: 'both' as const,
+    pressMode: 'sentence' as const,
+    clearAfterSpeak: true,
+    access: { textScale: 1.5, highContrast: 'off' as const, lowArousalPalette: true },
+  };
+
+  it('has the words in the same places, with a hidden word as an empty place', () => {
+    const message = buildSyncMessage(input);
+    const [sent] = message['boards'] as Array<{ order: (string | null)[][]; items: Array<{ id: string; emoji: string; spoken: string }> }>;
+    expect(sent!.order).toEqual([['a', null], ['c', null]]);
+    expect(sent!.items.map((i) => i.id)).toEqual(['a', 'c']);
+  });
+
+  it('sends a photo button as its label alone, and what to say instead when there is one', () => {
+    const [sent] = buildSyncMessage(input)['boards'] as Array<{ items: Array<{ id: string; emoji: string; spoken: string }> }>;
+    expect(sent!.items[1]).toMatchObject({ id: 'c', emoji: '', spoken: 'Mummy' });
+  });
+
+  it('carries the voice, the pronunciations that are filled in, the look and what a press does', () => {
+    const message = buildSyncMessage(input);
+    expect(message).toMatchObject({
+      type: 'sync',
+      device: 'Lucy’s device',
+      root: 'talk-root',
+      speech: { rate: 0.9, pitch: 1.1, volume: 0.8 },
+      look: { labels: 'both', lowArousal: true, textScale: 1.5, contrast: 'off' },
+      press: 'sentence',
+      clearAfterSpeak: true,
+    });
+    expect(message['pronunciations']).toEqual([{ written: 'Lucy', spoken: 'Loosey' }]);
+  });
+
+  it('puts the word stage in force: a word held back is an empty place too', () => {
+    const staged = { ...board, buttons: [{ id: 'a', label: 'I', stage: 3 }, { id: 'c', label: 'mum', stage: 1 }] };
+    const [sent] = buildSyncMessage({ ...input, boards: [staged], wordStage: 2 })['boards'] as Array<{ order: (string | null)[][] }>;
+    expect(sent!.order).toEqual([[null, null], ['c', null]]);
+  });
+
+  it('shows the sentence and what was said only as plain words, kept short', () => {
+    expect(buildSentenceMessage(['I', 'want'], 'I want juice')).toEqual({ type: 'sentence', words: ['I', 'want'], said: 'I want juice' });
+    expect(buildSentenceMessage([], null)).toEqual({ type: 'sentence', words: [], said: null });
+  });
+
+  it('can be asked to send everything again', () => {
+    expect(parseCommand({ type: 'sync-request' })).toEqual({ kind: 'sync' });
   });
 });

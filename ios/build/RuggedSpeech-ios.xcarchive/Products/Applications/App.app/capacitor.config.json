@@ -1,0 +1,11 @@
+{
+	"appId": "ruggedspeechaac",
+	"appName": "Rugged Speech",
+	"webDir": "dist/renderer",
+	"ios": {
+		"contentInset": "never",
+		"scrollEnabled": false,
+		"allowsLinkPreview": false
+	},
+	"packageClassList": []
+}

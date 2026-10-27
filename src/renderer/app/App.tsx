@@ -22,7 +22,15 @@ import { announceText } from '../speech/announce';
 import {
   DEFAULT_ACCESS_SETTINGS,
   accessSettingsVersion,
+  activeProfileVersion,
   appleLinkSetting,
+  boardsVersion,
+  clearAfterSpeakSetting,
+  getActiveProfile,
+  getAllBoards,
+  pronunciationsSetting,
+  speechVolumeSetting,
+  wordStageSetting,
   dayPlanVersion,
   favouritesVersion,
   getEffectiveDayPlan,
@@ -53,7 +61,8 @@ import {
 } from '../store/db';
 import { applyAccessSettings } from '../access/applyAccessSettings';
 import { buzzOnPress, deviceAccessibility, followDevice, watchDeviceAccessibility } from '../platform/deviceAccessibility';
-import { buildLinkState, startLink, type LinkCommand, type LinkSession } from '../platform/appleLink';
+import { buildLinkState, buildSentenceMessage, buildSyncMessage, startLink, type LinkCommand, type LinkSession } from '../platform/appleLink';
+import { lastSaid, liveSentence } from '../platform/liveSpeech';
 import { linkPeers } from '../platform/linkStatus';
 import { getDateString } from '../day/dayLogic';
 import { applyTheme } from '../ui/theme';
@@ -152,6 +161,10 @@ export function App() {
   const linkOn = linkSettings.enabled && /^\d{4}$/.test(linkSettings.code) && settingsReady.value;
   const linkRef = useRef<LinkSession | undefined>(undefined);
   function handleLinkCommand(command: LinkCommand): void {
+    if (command.kind === 'sync') {
+      linkRef.current?.resend();
+      return;
+    }
     if (mode.value !== 'child') return;
     if (command.kind === 'open') {
       screen.value = command.screen === 'feelings' ? { name: 'feelings' } : command.screen === 'favourites' ? { name: 'favourites' } : { name: command.screen };
@@ -179,6 +192,63 @@ export function App() {
       linkRef.current?.publish(buildLinkState({ screen: linkedScreen, traffic: trafficNow, plan: plan.activities, favourites }));
     });
   }, [linkOn, favouritesNow, planNow, trafficNow, linkedScreen]);
+
+  // The words on the boards and how the app is set up, for the television, so it says the same words in the same
+  // places with the same voice. Sent again whenever any of it changes.
+  const boardsNow = boardsVersion.value;
+  const activeProfileNow = activeProfileVersion.value;
+  const speechRateNow = preferredSpeechRate.value;
+  const speechPitchNow = preferredSpeechPitch.value;
+  const speechVolumeNow = speechVolumeSetting.signal.value;
+  const pronunciationsNow = pronunciationsSetting.signal.value;
+  const labelStyleNow = labelStyleSetting.signal.value;
+  const pressModeNow = pressMode.value;
+  const clearAfterSpeakNow = clearAfterSpeakSetting.signal.value;
+  const wordStageNow = wordStageSetting.signal.value;
+  const deviceProfileNow = userProfileSetting.signal.value;
+  const accessNow = access.value;
+  useEffect(() => {
+    if (!linkRef.current) return;
+    void Promise.all([getAllBoards(), getActiveProfile()]).then(([boards, active]) => {
+      linkRef.current?.publish(
+        buildSyncMessage({
+          deviceName: deviceTitle(deviceProfileNow),
+          rootBoardId: active.rootBoardId,
+          boards,
+          wordStage: wordStageNow,
+          speech: { rate: speechRateNow, pitch: speechPitchNow, volume: speechVolumeNow },
+          pronunciations: pronunciationsNow,
+          labelStyle: labelStyleNow,
+          pressMode: pressModeNow,
+          clearAfterSpeak: clearAfterSpeakNow,
+          access: accessNow,
+        }),
+      );
+    });
+  }, [
+    linkOn,
+    boardsNow,
+    activeProfileNow,
+    speechRateNow,
+    speechPitchNow,
+    speechVolumeNow,
+    pronunciationsNow,
+    labelStyleNow,
+    pressModeNow,
+    clearAfterSpeakNow,
+    wordStageNow,
+    deviceProfileNow,
+    accessNow,
+  ]);
+
+  // What is being built and said, for the television, only if an adult separately turned that on.
+  const showSentence = linkSettings.showSentence === true;
+  const sentenceNow = liveSentence.value;
+  const saidNow = lastSaid.value;
+  useEffect(() => {
+    if (!linkRef.current) return;
+    linkRef.current.publish(showSentence ? buildSentenceMessage(sentenceNow, saidNow?.text ?? null) : buildSentenceMessage([], null));
+  }, [linkOn, showSentence, sentenceNow, saidNow]);
 
   const buzzNow = pressBuzzSetting.signal.value && settingsReady.value;
   useEffect(() => (buzzNow ? buzzOnPress() : undefined), [buzzNow]);

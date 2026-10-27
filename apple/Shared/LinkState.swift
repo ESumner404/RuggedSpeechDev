@@ -86,3 +86,99 @@ struct TrafficColour: Identifiable, Hashable {
         TrafficColour(id: "green", name: "Green", message: "Happy to talk", hex: 0x16A34A, lightText: true),
     ]
 }
+
+// MARK: What the iPhone or iPad sends the television: the boards and how the app is set up
+
+struct SyncItem: Codable {
+    let id: String
+    let label: String
+    let spoken: String
+    let emoji: String
+    let colour: UInt32
+    let opens: String?
+}
+
+struct SyncBoard: Codable {
+    let id: String
+    let name: String
+    let rows: Int
+    let columns: Int
+    let order: [[String?]]
+    let items: [SyncItem]
+
+    var vocab: VocabBoard {
+        VocabBoard(
+            id: id, name: name, rows: rows, columns: columns, order: order,
+            items: items.map { VocabItem(id: $0.id, label: $0.label, spoken: $0.spoken, emoji: $0.emoji, colour: $0.colour, opens: $0.opens) }
+        )
+    }
+}
+
+struct SyncSpeech: Codable {
+    let rate: Double
+    let pitch: Double
+    let volume: Double
+}
+
+struct SyncPronunciation: Codable {
+    let written: String
+    let spoken: String
+}
+
+struct SyncLook: Codable {
+    let labels: String        // both, pictures, words
+    let lowArousal: Bool
+    let textScale: Double     // 1 to 2
+    let contrast: String      // off, light, dark
+}
+
+/// The words on the boards and how the app is set up, as the iPhone or iPad has them. The television uses these in
+/// place of its own starter words, and keeps the last it was sent, so it still matches when the iPad is away.
+struct SyncMessage: Codable {
+    var type: String = "sync"
+    let device: String
+    let root: String
+    let boards: [SyncBoard]
+    let speech: SyncSpeech
+    let pronunciations: [SyncPronunciation]
+    let look: SyncLook
+    let press: String         // sentence, speak, both
+    let clearAfterSpeak: Bool
+
+    static func decode(_ json: String) -> SyncMessage? {
+        guard json.utf8.count <= 256 * 1024, let data = json.data(using: .utf8),
+              let message = try? JSONDecoder().decode(SyncMessage.self, from: data), message.type == "sync",
+              message.boards.contains(where: { $0.id == message.root }) else { return nil }
+        return message
+    }
+}
+
+/// What the iPad is building and has said, shown on the television only if an adult turned that on.
+struct MirrorState: Codable, Equatable {
+    var type: String = "sentence"
+    var words: [String] = []
+    var said: String? = nil
+
+    static let empty = MirrorState()
+
+    static func decode(_ json: String) -> MirrorState? {
+        guard json.utf8.count <= 16 * 1024, let data = json.data(using: .utf8),
+              let state = try? JSONDecoder().decode(MirrorState.self, from: data), state.type == "sentence" else { return nil }
+        return state
+    }
+}
+
+extension LinkCommand {
+    /// Asks the iPad to send everything again.
+    static let syncRequest = #"{"type":"sync-request"}"#
+}
+
+/// The Fitzgerald Key colours and their muted (low-arousal) partners, as the iPhone and iPad app has them.
+enum LowArousal {
+    private static let pairs: [UInt32: UInt32] = [
+        0xFEF08A: 0xF5F0DC, 0xBBF7D0: 0xDCEBDC, 0xBFDBFE: 0xDCE6F0, 0xFED7AA: 0xF0E3D4,
+        0x99F6E4: 0xD9ECE8, 0xFBCFE8: 0xF0DCE6, 0xE9D5FF: 0xE6DCF0, 0xFECACA: 0xF0D9D9,
+    ]
+
+    static func colour(_ hex: UInt32, on: Bool) -> UInt32 { on ? (pairs[hex] ?? hex) : hex }
+}

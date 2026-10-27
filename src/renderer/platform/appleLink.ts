@@ -1,10 +1,13 @@
-import type { DayActivity, Item } from '../store/types';
+import type { AccessSettings, Board, DayActivity, Item, LabelStyle, PressMode } from '../store/types';
 import type { TrafficStatus } from '../signals/traffic';
+import { isItemShown } from '../board/visibility';
 
 // The link to the family's own Apple Watch and Apple TV. An adult turns it on in Parent Mode, Access. Nothing here
 // goes to the internet: the watch is reached over Bluetooth, and the television over the home network, and only if it
 // gives the code the adult typed in. What is sent is what a person across the room could be shown anyway: the
-// Favourites, today's plan, the traffic light and which page is open. Never what the child has said or typed.
+// Favourites, today's plan, the traffic light, which page is open, and (to the television only) the words on the
+// boards and how the app is set up, so the television says the same words in the same places. What the child is saying
+// or has said is sent only if an adult separately turned that on.
 
 export type LinkMessage = { type: string; [key: string]: unknown };
 
@@ -25,7 +28,10 @@ export const OPENABLE_SCREENS = [
 ] as const;
 export type OpenableScreen = (typeof OPENABLE_SCREENS)[number];
 
-export type LinkCommand = { kind: 'open'; screen: OpenableScreen } | { kind: 'traffic'; status: TrafficStatus };
+export type LinkCommand =
+  | { kind: 'open'; screen: OpenableScreen }
+  | { kind: 'traffic'; status: TrafficStatus }
+  | { kind: 'sync' };
 
 const TRAFFIC_VALUES: readonly string[] = ['off', 'red', 'amber', 'green'];
 
@@ -37,6 +43,7 @@ export function parseCommand(message: LinkMessage): LinkCommand | null {
       : null;
     return screen ? { kind: 'open', screen } : null;
   }
+  if (message.type === 'sync-request') return { kind: 'sync' };
   if (message.type === 'traffic' && typeof message['status'] === 'string' && TRAFFIC_VALUES.includes(message['status'])) {
     return { kind: 'traffic', status: message['status'] as TrafficStatus };
   }
@@ -82,12 +89,84 @@ export function buildLinkState(input: LinkStateInput): LinkMessage {
   };
 }
 
+export type SyncInput = {
+  deviceName: string;
+  rootBoardId: string;
+  boards: Board[];
+  wordStage: number;
+  speech: { rate: number; pitch: number; volume: number };
+  pronunciations: Array<{ written: string; spoken: string }>;
+  labelStyle: LabelStyle;
+  pressMode: PressMode;
+  clearAfterSpeak: boolean;
+  access: Pick<AccessSettings, 'textScale' | 'highContrast' | 'lowArousalPalette'>;
+};
+
+const MAX_BOARDS = 24;
+const MAX_ITEMS_PER_BOARD = 40;
+
+/**
+ * The words on the boards, and how the app is set up, for the television. A word an adult has hidden (or that is not
+ * yet in this word stage) is an empty place, so every other word is still where it was. A photo button is sent as its
+ * label alone, because a photo stays on the device.
+ */
+export function buildSyncMessage(input: SyncInput): LinkMessage {
+  return {
+    type: 'sync',
+    device: input.deviceName.slice(0, 60),
+    root: input.rootBoardId,
+    boards: input.boards.slice(0, MAX_BOARDS).map((board) => {
+      const shown = board.buttons.filter((item) => isItemShown(item, input.wordStage)).slice(0, MAX_ITEMS_PER_BOARD);
+      const ids = new Set(shown.map((item) => item.id));
+      return {
+        id: board.id,
+        name: board.name,
+        rows: board.grid.rows,
+        columns: board.grid.columns,
+        order: board.grid.order.map((row) => row.map((cell) => (cell && ids.has(cell) ? cell : null))),
+        items: shown.map((item) => ({
+          id: item.id,
+          label: item.label,
+          spoken: item.vocalization ?? item.label,
+          emoji: item.image?.kind === 'emoji' ? item.image.char : '',
+          colour: hexNumber(item.background_color),
+          opens: item.load_board?.id ?? null,
+        })),
+      };
+    }),
+    speech: {
+      rate: input.speech.rate,
+      pitch: input.speech.pitch,
+      volume: input.speech.volume,
+    },
+    pronunciations: input.pronunciations
+      .filter((entry) => entry.written.trim() && entry.spoken.trim())
+      .slice(0, 100)
+      .map((entry) => ({ written: entry.written.slice(0, 60), spoken: entry.spoken.slice(0, 60) })),
+    look: {
+      labels: input.labelStyle,
+      lowArousal: input.access.lowArousalPalette,
+      textScale: input.access.textScale,
+      contrast: input.access.highContrast,
+    },
+    press: input.pressMode,
+    clearAfterSpeak: input.clearAfterSpeak,
+  };
+}
+
+/** The sentence being built and the last thing said, for the television, only if an adult turned that on. */
+export function buildSentenceMessage(words: string[], said: string | null): LinkMessage {
+  return { type: 'sentence', words: words.slice(0, 40).map((word) => word.slice(0, 60)), said: said ? said.slice(0, 400) : null };
+}
+
 const POLL_MS = 500;
 const SEND_QUIET_MS = 400;
 
 export type LinkSession = {
-  /** Tells the other devices the latest. Several in quick succession are sent as one. */
-  publish: (state: LinkMessage) => void;
+  /** Tells the other devices the latest of this kind of message. Several in quick succession are sent as one. */
+  publish: (message: LinkMessage) => void;
+  /** Sends everything last published again, for a device that has asked. */
+  resend: () => void;
   stop: () => void;
 };
 
@@ -105,8 +184,8 @@ export function startLink(
 
   let stopped = false;
   let lastPeers = -1;
-  let pending: LinkMessage | undefined;
-  let sendTimer: number | undefined;
+  const pending = new Map<string, LinkMessage>();
+  const timers = new Map<string, number>();
 
   void link.start(code).catch(() => undefined);
 
@@ -119,7 +198,7 @@ export function startLink(
           lastPeers = peers;
           onPeers(peers);
           // Someone has just connected: tell them how things stand.
-          if (peers > 0 && pending) void link.send(pending).catch(() => undefined);
+          if (peers > 0) for (const message of pending.values()) void link.send(message).catch(() => undefined);
         }
         for (const message of messages) {
           const command = parseCommand(message);
@@ -131,17 +210,25 @@ export function startLink(
   const pollTimer = window.setInterval(poll, POLL_MS);
 
   return {
-    publish: (state) => {
-      pending = state;
-      window.clearTimeout(sendTimer);
-      sendTimer = window.setTimeout(() => {
-        if (!stopped && pending) void link.send(pending).catch(() => undefined);
-      }, SEND_QUIET_MS);
+    publish: (message) => {
+      // Each kind of message is kept and sent on its own, so a change to one does not hold up another.
+      pending.set(message.type, message);
+      window.clearTimeout(timers.get(message.type));
+      timers.set(
+        message.type,
+        window.setTimeout(() => {
+          const latest = pending.get(message.type);
+          if (!stopped && latest) void link.send(latest).catch(() => undefined);
+        }, SEND_QUIET_MS),
+      );
+    },
+    resend: () => {
+      for (const message of pending.values()) void link.send(message).catch(() => undefined);
     },
     stop: () => {
       stopped = true;
       window.clearInterval(pollTimer);
-      window.clearTimeout(sendTimer);
+      for (const timer of timers.values()) window.clearTimeout(timer);
       void link.stop().catch(() => undefined);
     },
   };
