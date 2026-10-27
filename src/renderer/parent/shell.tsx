@@ -14,9 +14,6 @@ export function SavedNote() {
 export function PageHeader({ label, info }: { label: string; info: SectionInfo | undefined }) {
   return (
     <header class="page-header">
-      <span class="page-header__icon" aria-hidden="true">
-        {info?.icon ?? '•'}
-      </span>
       <div class="page-header__text">
         <h2 class="page-header__title">{label}</h2>
         {info && <p class="page-header__purpose">{info.purpose}</p>}

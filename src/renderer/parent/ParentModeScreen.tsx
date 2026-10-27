@@ -10,7 +10,7 @@ import { LookTab } from './LookTab';
 import { BodyTab } from './BodyTab';
 import { StartTab } from './StartTab';
 import { PageHeader, SavedNote } from './shell';
-import { PARENT_SECTIONS, groupIcon } from './sectionInfo';
+import { PARENT_SECTIONS } from './sectionInfo';
 import { StoriesTab } from '../stories/StoriesTab';
 import { DiaryTab } from '../diary/DiaryTab';
 import { FamilyTab } from '../family/FamilyTab';
@@ -227,11 +227,10 @@ export function ParentModeScreen({ onExit }: Props) {
         />
         {GROUPS.map((group) => ({ group, tabs: group.tabs.filter((entry) => entry.label.toLowerCase().includes(navFilter.value.trim().toLowerCase())) })).filter(({ tabs }) => tabs.length > 0).map(({ group, tabs }) => (
           <div class="parent-nav__group" key={group.title}>
-            <p class="parent-nav__heading" data-icon={groupIcon[group.title] ?? ''}>{group.title}</p>
+            <p class="parent-nav__heading">{group.title}</p>
             {tabs.map((entry) => (
               <button
                 type="button"
-                data-icon={PARENT_SECTIONS[entry.id]?.icon ?? ''}
                 class="page-tabs__tab parent-nav__tab"
                 key={entry.id}
                 aria-pressed={tab.value === entry.id}

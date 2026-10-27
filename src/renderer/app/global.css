@@ -6019,11 +6019,6 @@ html[data-labels='words'] .board-button__label {
   text-align: left;
 }
 
-.start-tab__emoji {
-  font-size: 2rem;
-  line-height: 1;
-}
-
 .start-tab__label {
   font-size: 1.15rem;
   font-weight: 800;
@@ -6467,10 +6462,6 @@ html[data-labels='words'] .board-button__label {
   opacity: 1;
 }
 
-.parent-mode-screen .parent-nav__heading::before {
-  content: attr(data-icon) ' ';
-}
-
 .parent-mode-screen .parent-nav__tab {
   display: flex;
   align-items: center;
@@ -6485,14 +6476,6 @@ html[data-labels='words'] .board-button__label {
   font-size: 1rem;
   font-weight: 600;
   text-align: left;
-}
-
-.parent-mode-screen .parent-nav__tab::before {
-  content: attr(data-icon);
-  width: 1.5rem;
-  flex: none;
-  text-align: center;
-  font-size: 1.15rem;
 }
 
 .parent-mode-screen .parent-nav__tab[aria-pressed='true'] {
@@ -6517,18 +6500,6 @@ html[data-labels='words'] .board-button__label {
   align-items: center;
   gap: 0.9rem;
   margin-bottom: 1rem;
-}
-
-.page-header__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3.2rem;
-  height: 3.2rem;
-  flex: none;
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--color-accent) 16%, var(--color-background));
-  font-size: 1.7rem;
 }
 
 .page-header__title {
@@ -6691,12 +6662,6 @@ html[data-labels='words'] .board-button__label {
 @media (max-width: 600px) {
   .parent-mode-screen .parent-mode-screen__main {
     padding: 0.9rem 0.8rem 3rem;
-  }
-
-  .page-header__icon {
-    width: 2.6rem;
-    height: 2.6rem;
-    font-size: 1.4rem;
   }
 
   .page-header__title {

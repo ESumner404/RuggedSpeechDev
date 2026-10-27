@@ -15,7 +15,7 @@ import { ChoicesTab } from './ChoicesTab';
 import { ClassroomTab } from './ClassroomTab';
 import { PackTab } from './PackTab';
 import { PageHeader, SavedNote } from '../parent/shell';
-import { SCHOOL_SECTIONS, groupIcon } from '../parent/sectionInfo';
+import { SCHOOL_SECTIONS } from '../parent/sectionInfo';
 import { DiaryTab } from '../diary/DiaryTab';
 import { PupilTab } from './PupilTab';
 import { SafeguardingTab } from './SafeguardingTab';
@@ -154,11 +154,10 @@ export function SchoolModeScreen({ onExit }: Props) {
           />
           {GROUPS.map((group) => ({ group, sections: group.sections.filter((entry) => entry.label.toLowerCase().includes(navFilter.value.trim().toLowerCase())) })).filter(({ sections }) => sections.length > 0).map(({ group, sections }) => (
             <div class="parent-nav__group" key={group.title}>
-              <p class="parent-nav__heading" data-icon={groupIcon[group.title] ?? ''}>{group.title}</p>
+              <p class="parent-nav__heading">{group.title}</p>
               {sections.map((entry) => (
                 <button
                   type="button"
-                  data-icon={SCHOOL_SECTIONS[entry.id]?.icon ?? ''}
                   class="page-tabs__tab parent-nav__tab school-nav__tab"
                   key={entry.id}
                   aria-pressed={section.value === entry.id}
