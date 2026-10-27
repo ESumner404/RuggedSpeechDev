@@ -68,6 +68,7 @@ describe('movies on the device', () => {
     await waitFor(() => container.textContent?.includes('Added the movie') === true);
     await act(() => container.querySelector<HTMLButtonElement>('button[aria-label="Remove Holiday"]')!.click());
     await waitFor(() => moviesSetting.signal.value.length === 0);
+    await waitFor(() => library.remove.mock.calls.length > 0);
     expect(library.remove).toHaveBeenCalledWith('a.mov');
   });
 
