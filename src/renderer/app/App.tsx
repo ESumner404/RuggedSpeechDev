@@ -65,6 +65,7 @@ import { buildLinkState, buildSentenceMessage, buildSyncMessage, startLink, type
 import { lastSaid, liveSentence } from '../platform/liveSpeech';
 import { controllerSpec, linkPeers } from '../platform/linkStatus';
 import { ControllerScreen } from '../game/ControllerScreen';
+import { FamilyScreen } from '../family/FamilyScreen';
 import { getDateString } from '../day/dayLogic';
 import { applyTheme } from '../ui/theme';
 import { applyLabelStyle, applySymbolStyle } from '../symbols/icons';
@@ -87,6 +88,7 @@ type AppScreen =
   | { name: 'game' }
   | { name: 'draw' }
   | { name: 'body' }
+  | { name: 'family' }
   | { name: 'music' }
   | { name: 'traffic' }
   | { name: 'controller' }
@@ -103,6 +105,7 @@ const SCREEN_LABELS: Record<AppScreen['name'], string> = {
   game: 'Games',
   draw: 'Draw',
   body: 'My body',
+  family: 'My family',
   music: 'Music',
   traffic: 'Traffic light',
   controller: 'Game controller',
@@ -359,6 +362,8 @@ export function App() {
         return <GamesScreen />;
       case 'draw':
         return <DrawScreen />;
+      case 'family':
+        return <FamilyScreen />;
       case 'body':
         return <MyBodyScreen />;
       case 'music':
