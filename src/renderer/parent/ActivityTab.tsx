@@ -1,3 +1,4 @@
+import { LanguageProgress } from '../learning/LanguageProgress';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import {
@@ -161,6 +162,8 @@ export function ActivityTab() {
           ))}
         </ol>
       </section>
+
+      <LanguageProgress entries={entries.value} now={now} />
 
       {top.length > 0 && (
         <section class="access-tab__section">
