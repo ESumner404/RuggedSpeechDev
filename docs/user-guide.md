@@ -813,8 +813,12 @@ In the iPhone and iPad app, **Access** has **Link with the Apple Watch and Apple
 
 #### Music from this iPhone or iPad
 
-In the iPhone and iPad app, **Music** in Parent Mode has **Add songs from the Music library**. It lists songs already stored on the device (including songs you have downloaded from Apple Music) and adds the ones you choose. Songs that are only in the cloud are not listed, because they need the internet. The device plays them at its own volume, and nothing is copied or sent anywhere. The first time, the device asks whether Rugged Speech may see the library.
+In the iPhone and iPad app, **Music** in Parent Mode has **Add songs from the Music library**. It lists songs already stored on the device (including songs you have downloaded from Apple Music), even a few hundred. **Search** by song or artist, narrow it to one of the playlists you made in the Music app, tick the songs you want (or **Add all shown**), and **Make a playlist from this one** brings a device playlist across with its songs. Songs that are only in the cloud are not listed, because they need the internet. The device plays them at its own volume, and nothing is copied or sent anywhere. The first time, the device asks whether Rugged Speech may see the library.
 
 #### Words for a timetable activity
 
 In **Timetable**, each activity can have **Words: (a lesson page)**. On the child's **My Day**, pressing that activity then offers **Words for this**, which opens the page. In School Mode, **Classroom set-up** has **Link lesson pages to the timetable**, which fills this in for activities whose names match a page (Maths and Maths lesson). It never changes one you chose.
+
+#### My family and friends
+
+In **My family**, add each person with a name, how they are related, a photo (or an emoji), their parents and a partner. The child's **My family** page draws the family tree from the oldest generation down, with partners together, and friends on their own tab. Pressing a person says who they are ("This is Nan, my grandma."), or what you wrote instead. Add **My family** to the top bar in **Quick Access** to reach it from every screen.

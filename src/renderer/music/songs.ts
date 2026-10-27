@@ -29,7 +29,7 @@ export type Playlist = {
   songIds: string[];
 };
 
-export const MAX_PLAYLISTS = 12;
+export const MAX_PLAYLISTS = 30;
 
 export const isPlaylistList = (value: unknown): value is Playlist[] =>
   Array.isArray(value) &&
@@ -52,7 +52,8 @@ export function songsInPlaylist(playlist: Playlist, songs: Song[]): Song[] {
 }
 
 export const MAX_SONG_BYTES = 30 * 1024 * 1024;
-export const MAX_SONGS = 60;
+/** Songs that are files are limited by their size; songs from the device's Music library are only references, so there is room for hundreds. */
+export const MAX_SONGS = 500;
 /** A reminder, not a limit: a backup holds every song, so a large library makes a large backup. */
 export const BIG_LIBRARY_BYTES = 150 * 1024 * 1024;
 

@@ -24,7 +24,10 @@ export interface PlatformCapabilities {
  */
 export interface MusicLibraryBridge {
   access: () => Promise<'granted' | 'denied' | 'restricted' | 'notDetermined'>;
-  list: () => Promise<Array<{ id: string; title: string; artist: string }>>;
+  /** The songs stored on the device: all of them, or of one of the device's playlists, or matching a search. */
+  list: (options?: { playlistId?: string; search?: string }) => Promise<Array<{ id: string; title: string; artist: string }>>;
+  /** The device's own playlists that have songs stored on the device. */
+  playlists: () => Promise<Array<{ id: string; name: string; count: number }>>;
   play: (id: string) => Promise<boolean>;
   pause: () => Promise<void>;
   resume: () => Promise<void>;

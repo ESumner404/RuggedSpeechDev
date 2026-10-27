@@ -23,6 +23,7 @@ function fakeShell(overrides: Partial<NativeShell> = {}): NativeShell {
     linkSend: vi.fn(async () => undefined),
     musicAccess: vi.fn(async () => ({ status: 'granted' as const })),
     musicList: vi.fn(async () => ({ songs: [{ id: '42', title: 'Twinkle', artist: 'A' }] })),
+    musicPlaylists: vi.fn(async () => ({ playlists: [{ id: '7', name: 'Bedtime', count: 3 }] })),
     musicPlay: vi.fn(async () => ({ ok: true })),
     musicPause: vi.fn(async () => undefined),
     musicResume: vi.fn(async () => undefined),
@@ -104,6 +105,9 @@ describe('the phone and tablet bridge', () => {
     const bridge = buildNativeBridge(shell, 'ios', '1.0');
     expect(await bridge.music!.access()).toBe('granted');
     expect(await bridge.music!.list()).toEqual([{ id: '42', title: 'Twinkle', artist: 'A' }]);
+    expect(await bridge.music!.playlists()).toEqual([{ id: '7', name: 'Bedtime', count: 3 }]);
+    await bridge.music!.list({ playlistId: '7', search: 'tw' });
+    expect(shell.musicList).toHaveBeenLastCalledWith({ playlistId: '7', search: 'tw' });
     expect(await bridge.music!.play('42')).toBe(true);
     expect(shell.musicPlay).toHaveBeenCalledWith({ id: '42' });
     expect(await bridge.music!.state()).toBe('playing');

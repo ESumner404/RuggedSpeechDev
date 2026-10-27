@@ -5847,3 +5847,27 @@ html[data-labels='words'] .board-button__label {
   gap: 0.5rem;
   padding: 0.5rem 0;
 }
+
+/* Choosing from a few hundred songs on the device: a list that scrolls, so the page does not get long. */
+.music-tab__library-tools,
+.music-tab__library-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.music-tab__library-list {
+  max-height: 22rem;
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  overflow-y: auto;
+  list-style: none;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.music-tab__library-list li {
+  padding: 0.2rem 0;
+}

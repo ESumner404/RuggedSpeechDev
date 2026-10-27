@@ -21,7 +21,8 @@ export interface NativeShell {
   linkSend: (options: { json: string }) => Promise<void>;
   linkInbox: () => Promise<{ messages: string[]; peers: number }>;
   musicAccess: () => Promise<{ status: 'granted' | 'denied' | 'restricted' | 'notDetermined' }>;
-  musicList: () => Promise<{ songs: Array<{ id: string; title: string; artist: string }> }>;
+  musicList: (options: { playlistId?: string; search?: string }) => Promise<{ songs: Array<{ id: string; title: string; artist: string }> }>;
+  musicPlaylists: () => Promise<{ playlists: Array<{ id: string; name: string; count: number }> }>;
   musicPlay: (options: { id: string }) => Promise<{ ok: boolean }>;
   musicPause: () => Promise<void>;
   musicResume: () => Promise<void>;
@@ -91,7 +92,8 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     haptic: () => shell.haptic(),
     music: {
       access: async () => (await shell.musicAccess()).status,
-      list: async () => (await shell.musicList()).songs,
+      list: async (options = {}) => (await shell.musicList(options)).songs,
+      playlists: async () => (await shell.musicPlaylists()).playlists,
       play: async (id) => (await shell.musicPlay({ id })).ok,
       pause: () => shell.musicPause(),
       resume: () => shell.musicResume(),

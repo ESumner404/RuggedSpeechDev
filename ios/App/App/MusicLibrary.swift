@@ -25,12 +25,40 @@ final class MusicLibrary {
         }
     }
 
-    /// The songs stored on the device, by title.
-    func list(limit: Int = 500) -> [[String: Any]] {
+    /// The device's own playlists that have at least one song stored on the device, by name.
+    func playlists() -> [[String: Any]] {
         guard MPMediaLibrary.authorizationStatus() == .authorized else { return [] }
-        let query = MPMediaQuery.songs()
-        query.addFilterPredicate(MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem))
-        let items = (query.items ?? []).sorted { ($0.title ?? "").localizedCaseInsensitiveCompare($1.title ?? "") == .orderedAscending }
+        let collections = MPMediaQuery.playlists().collections ?? []
+        return collections.compactMap { collection -> [String: Any]? in
+            guard let playlist = collection as? MPMediaPlaylist else { return nil }
+            let stored = playlist.items.filter { !$0.isCloudItem }
+            guard !stored.isEmpty else { return nil }
+            return ["id": String(playlist.persistentID), "name": playlist.name ?? "Playlist", "count": stored.count]
+        }
+        .sorted { ($0["name"] as? String ?? "").localizedCaseInsensitiveCompare($1["name"] as? String ?? "") == .orderedAscending }
+    }
+
+    /// The songs stored on the device, by title. Of one playlist, and/or matching a search of the title or artist.
+    func list(playlistId: String?, search: String?, limit: Int = 1000) -> [[String: Any]] {
+        guard MPMediaLibrary.authorizationStatus() == .authorized else { return [] }
+        var items: [MPMediaItem]
+        if let playlistId = playlistId, let identifier = UInt64(playlistId) {
+            let query = MPMediaQuery.playlists()
+            query.addFilterPredicate(MPMediaPropertyPredicate(value: NSNumber(value: identifier), forProperty: MPMediaPlaylistPropertyPersistentID))
+            items = (query.collections?.first as? MPMediaPlaylist)?.items ?? []
+        } else {
+            items = MPMediaQuery.songs().items ?? []
+        }
+        items = items.filter { !$0.isCloudItem }
+        if let search = search?.trimmingCharacters(in: .whitespaces), !search.isEmpty {
+            items = items.filter {
+                ($0.title ?? "").localizedCaseInsensitiveContains(search) || ($0.artist ?? "").localizedCaseInsensitiveContains(search)
+            }
+        }
+        // A playlist keeps its own order; everything else is by title.
+        if playlistId == nil {
+            items.sort { ($0.title ?? "").localizedCaseInsensitiveCompare($1.title ?? "") == .orderedAscending }
+        }
         return items.prefix(limit).map { item in
             [
                 "id": String(item.persistentID),

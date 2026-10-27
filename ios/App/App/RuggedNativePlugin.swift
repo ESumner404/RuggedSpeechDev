@@ -25,6 +25,7 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
         CAPPluginMethod(name: "linkInbox", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "musicAccess", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "musicList", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "musicPlaylists", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "musicPlay", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "musicPause", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "musicResume", returnType: CAPPluginReturnPromise),
@@ -218,7 +219,13 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
     }
 
     @objc func musicList(_ call: CAPPluginCall) {
-        DispatchQueue.main.async { call.resolve(["songs": MusicLibrary.shared.list()]) }
+        let playlistId = call.getString("playlistId")
+        let search = call.getString("search")
+        DispatchQueue.main.async { call.resolve(["songs": MusicLibrary.shared.list(playlistId: playlistId, search: search)]) }
+    }
+
+    @objc func musicPlaylists(_ call: CAPPluginCall) {
+        DispatchQueue.main.async { call.resolve(["playlists": MusicLibrary.shared.playlists()]) }
     }
 
     @objc func musicPlay(_ call: CAPPluginCall) {

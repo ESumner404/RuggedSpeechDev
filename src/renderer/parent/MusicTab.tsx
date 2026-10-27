@@ -61,10 +61,28 @@ export function MusicTab() {
   }
 
   // Songs already on this iPhone or iPad, in its Music library. Only those stored on the device are offered, because a
-  // song that is only in the cloud cannot play with no internet. Nothing is copied: the device plays them.
+  // song that is only in the cloud cannot play with no internet. Nothing is copied: the device plays them. A library of
+  // a few hundred songs can be searched, narrowed to one of the device's own playlists, and added in one go.
+  type Entry = { id: string; title: string; artist: string };
   const library = window.myWords?.music;
-  const libraryList = useSignal<Array<{ id: string; title: string; artist: string }> | null>(null);
+  const libraryOpen = useSignal(false);
+  const libraryList = useSignal<Entry[]>([]);
+  const devicePlaylists = useSignal<Array<{ id: string; name: string; count: number }>>([]);
+  const deviceListId = useSignal('');
+  const search = useSignal('');
+  const ticked = useSignal<Set<string>>(new Set());
   const libraryNote = useSignal('');
+
+  async function loadLibrary(): Promise<void> {
+    if (!library) return;
+    const found = await library.list({
+      ...(deviceListId.value ? { playlistId: deviceListId.value } : {}),
+      ...(search.value.trim() ? { search: search.value.trim() } : {}),
+    });
+    libraryList.value = found;
+    libraryNote.value = found.length === 0 ? 'No songs match. Only songs stored on the device are listed.' : '';
+  }
+
   async function openLibrary(): Promise<void> {
     if (!library) return;
     libraryNote.value = '';
@@ -74,18 +92,57 @@ export function MusicTab() {
         'Rugged Speech is not allowed to see the Music library. Allow it in Settings, Privacy & Security, Media & Apple Music, then try again.';
       return;
     }
-    const found = await library.list();
-    libraryList.value = found;
-    if (found.length === 0) libraryNote.value = 'No songs are stored on this device. Download some in the Music app first.';
+    libraryOpen.value = true;
+    devicePlaylists.value = await library.playlists();
+    await loadLibrary();
   }
-  async function addFromLibrary(entry: { id: string; title: string; artist: string }): Promise<void> {
-    const have = songsSetting.signal.value;
-    if (have.length >= MAX_SONGS) {
-      libraryNote.value = `There is room for ${MAX_SONGS} songs.`;
+
+  const room = (): number => MAX_SONGS - songsSetting.signal.value.length;
+  const alreadyHave = (id: string): boolean => songsSetting.signal.value.some((song) => song.libraryId === id);
+
+  function toggle(id: string): void {
+    const next = new Set(ticked.value);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    ticked.value = next;
+  }
+
+  /** Adds these songs, as many as there is room for, leaving out any already added. */
+  async function addEntries(entries: Entry[]): Promise<Song[]> {
+    const fresh = entries.filter((entry) => !alreadyHave(entry.id)).slice(0, Math.max(0, room()));
+    if (fresh.length === 0) return [];
+    const added = fresh.map(songFromLibrary);
+    await songsSetting.set([...songsSetting.signal.value, ...added]);
+    return added;
+  }
+
+  async function addTicked(): Promise<void> {
+    const chosen = libraryList.value.filter((entry) => ticked.value.has(entry.id));
+    const added = await addEntries(chosen);
+    ticked.value = new Set();
+    libraryNote.value = added.length === chosen.length ? `Added ${added.length}.` : `Added ${added.length}. There is room for ${MAX_SONGS} songs, or some were already added.`;
+  }
+
+  async function addAllShown(): Promise<void> {
+    const added = await addEntries(libraryList.value);
+    libraryNote.value = `Added ${added.length}${added.length < libraryList.value.length ? ', the rest were already added or there is no more room' : ''}.`;
+  }
+
+  /** Makes one of this app's playlists from one of the device's, adding its songs too. */
+  async function importDevicePlaylist(): Promise<void> {
+    const source = devicePlaylists.value.find((list) => list.id === deviceListId.value);
+    if (!library || !source) return;
+    if (playlistsSetting.signal.value.length >= MAX_PLAYLISTS) {
+      libraryNote.value = `There is room for ${MAX_PLAYLISTS} playlists.`;
       return;
     }
-    if (have.some((song) => song.libraryId === entry.id)) return;
-    await songsSetting.set([...have, songFromLibrary(entry)]);
+    const entries = await library.list({ playlistId: source.id });
+    await addEntries(entries);
+    const have = songsSetting.signal.value;
+    const songIds = entries.map((entry) => have.find((song) => song.libraryId === entry.id)?.id).filter((id): id is string => Boolean(id));
+    const list: Playlist = { id: `list-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, name: source.name, emoji: '🎶', songIds };
+    await playlistsSetting.set([...playlistsSetting.signal.value, list]);
+    libraryNote.value = `Made the playlist ${source.name} with ${songIds.length} songs.`;
   }
 
   function update(id: string, changes: Partial<Song>): void {
@@ -160,38 +217,85 @@ export function MusicTab() {
             Add songs from the Music library
           </button>
           <p class="about-tab__hint">
-            Songs already stored on this device in the Music app, including ones downloaded from Apple Music. Only
-            songs stored on the device are listed, because a song that is only in the cloud needs the internet. The
-            device plays them at its own volume, and nothing is copied or sent anywhere.
+            Songs already stored on this device in the Music app, including ones downloaded from Apple Music, and the
+            playlists you made there. Only songs stored on the device are listed, because a song that is only in the cloud
+            needs the internet. The device plays them at its own volume, and nothing is copied or sent anywhere.
           </p>
           {libraryNote.value && (
             <p role="status" class="music-tab__message">
               {libraryNote.value}
             </p>
           )}
-          {libraryList.value && libraryList.value.length > 0 && (
-            <ul class="music-tab__library-list">
-              {libraryList.value.map((entry) => {
-                const added = songs.some((song) => song.libraryId === entry.id);
-                return (
-                  <li key={entry.id}>
-                    <span>
-                      {entry.title}
-                      {entry.artist ? `, ${entry.artist}` : ''}
-                    </span>
-                    <button
-                      type="button"
-                      class="parent-mode-screen__button"
-                      disabled={added}
-                      aria-label={`${added ? 'Added' : 'Add'} ${entry.title}`}
-                      onClick={() => void addFromLibrary(entry)}
-                    >
-                      {added ? 'Added' : 'Add'}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+          {libraryOpen.value && (
+            <>
+              <div class="music-tab__library-tools">
+                <label>
+                  Search
+                  <input
+                    type="search"
+                    placeholder="Song or artist"
+                    value={search.value}
+                    onInput={(event) => {
+                      search.value = (event.target as HTMLInputElement).value;
+                      void loadLibrary();
+                    }}
+                  />
+                </label>
+                <label>
+                  From
+                  <select
+                    value={deviceListId.value}
+                    onChange={(event) => {
+                      deviceListId.value = (event.target as HTMLSelectElement).value;
+                      void loadLibrary();
+                    }}
+                  >
+                    <option value="">All songs</option>
+                    {devicePlaylists.value.map((list) => (
+                      <option value={list.id} key={list.id}>
+                        {list.name} ({list.count})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <div class="music-tab__library-actions">
+                <button type="button" class="parent-mode-screen__button" disabled={ticked.value.size === 0} onClick={() => void addTicked()}>
+                  Add {ticked.value.size} ticked
+                </button>
+                <button type="button" class="parent-mode-screen__button" disabled={libraryList.value.length === 0} onClick={() => void addAllShown()}>
+                  Add all {libraryList.value.length} shown
+                </button>
+                <button type="button" class="parent-mode-screen__button" disabled={!deviceListId.value} onClick={() => void importDevicePlaylist()}>
+                  Make a playlist from this one
+                </button>
+              </div>
+              <p class="about-tab__hint">
+                {libraryList.value.length} {libraryList.value.length === 1 ? 'song' : 'songs'} shown. There is room for {room()} more.
+              </p>
+              <ul class="music-tab__library-list">
+                {libraryList.value.map((entry) => {
+                  const added = alreadyHave(entry.id);
+                  return (
+                    <li key={entry.id}>
+                      <label class="access-tab__checkbox">
+                        <input
+                          type="checkbox"
+                          checked={added || ticked.value.has(entry.id)}
+                          disabled={added}
+                          onChange={() => toggle(entry.id)}
+                        />
+                        <span>
+                          {entry.title}
+                          {entry.artist ? `, ${entry.artist}` : ''}
+                          {added ? ' (added)' : ''}
+                        </span>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
           )}
         </section>
       )}
