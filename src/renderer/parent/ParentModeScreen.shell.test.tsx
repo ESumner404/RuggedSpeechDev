@@ -69,6 +69,7 @@ describe('ParentModeScreen shell', () => {
       'Learning',
       'Targets',
       'Notes',
+      'Home–school diary',
       'Activity',
       'Reports',
       'School',

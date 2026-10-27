@@ -13,6 +13,7 @@ import { ReportsTab } from '../parent/ReportsTab';
 import { TargetsTab } from '../parent/TargetsTab';
 import { ClassroomTab } from './ClassroomTab';
 import { PackTab } from './PackTab';
+import { DiaryTab } from '../diary/DiaryTab';
 import { PupilTab } from './PupilTab';
 import { SafeguardingTab } from './SafeguardingTab';
 import { TodayTab } from './TodayTab';
@@ -27,6 +28,7 @@ export type SchoolSection =
   | 'vocabulary'
   | 'targets'
   | 'notes'
+  | 'diary'
   | 'activity'
   | 'reports'
   | 'classroom'
@@ -56,6 +58,7 @@ const GROUPS: { title: string; sections: { id: SchoolSection; label: string }[] 
     sections: [
       { id: 'targets', label: 'Targets' },
       { id: 'notes', label: 'Notes' },
+      { id: 'diary', label: 'Home–school diary' },
       { id: 'activity', label: 'Activity' },
       { id: 'reports', label: 'Reports' },
     ],
@@ -161,6 +164,7 @@ export function SchoolModeScreen({ onExit }: Props) {
           {section.value === 'vocabulary' && <LearningTab />}
           {section.value === 'targets' && <TargetsTab />}
           {section.value === 'notes' && <NotesTab />}
+          {section.value === 'diary' && <DiaryTab side="school" />}
           {section.value === 'activity' && <ActivityTab />}
           {section.value === 'reports' && <ReportsTab />}
           {section.value === 'classroom' && <ClassroomTab />}

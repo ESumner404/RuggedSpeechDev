@@ -6091,3 +6091,48 @@ html[data-labels='words'] .board-button__label {
   white-space: nowrap;
   border: 0;
 }
+
+/* The home–school diary. */
+.diary-tab__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 40rem;
+  margin-bottom: 1rem;
+}
+
+.diary-tab__form textarea {
+  width: 100%;
+}
+
+.diary-tab__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.diary-tab__entry {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--color-border);
+  border-left-width: 8px;
+  border-radius: 10px;
+}
+
+.diary-tab__entry--home {
+  border-left-color: #f59e0b;
+}
+
+.diary-tab__entry--school {
+  border-left-color: #0f766e;
+}
+
+.diary-tab__meta {
+  margin: 0 0 0.2rem;
+  font-size: 0.95rem;
+}
+
+.diary-tab__text {
+  margin: 0 0 0.4rem;
+  white-space: pre-wrap;
+}

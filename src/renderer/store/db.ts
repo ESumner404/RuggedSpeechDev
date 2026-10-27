@@ -10,6 +10,7 @@ import {
 import { EMPTY_LOST_MODE, isLostMode, type LostMode } from '../safety/lostMode';
 import { isFamilyList, type FamilyMember } from '../family/family';
 import { isMovieList, type Movie } from '../movies/movies';
+import { isDiaryList, type DiaryEntry } from '../diary/diary';
 import { DEFAULT_TRAFFIC, isTrafficSetting, type TrafficSetting } from '../signals/traffic';
 import { hashSecret, isHashedSecret, verifySecret } from './pinSecurity';
 import { DEFAULT_RETENTION_DAYS, MAX_ENTRIES, MAX_LABEL, isRetention, type ActivityEntry, type ActivityKind } from './activity';
@@ -932,6 +933,12 @@ const isPendingPacks = (value: unknown): value is PendingPack[] =>
   value.length <= 3 &&
   value.every((p) => typeof p === 'object' && p !== null && typeof (p as PendingPack).id === 'string' && typeof (p as PendingPack).name === 'string' && typeof (p as PendingPack).receivedAt === 'number' && typeof (p as PendingPack).text === 'string');
 export const pendingPacksSetting = storedSetting<PendingPack[]>('pendingPacks', [], isPendingPacks, false);
+/** The home–school diary, and when each side last looked. */
+export const diarySetting = storedSetting<DiaryEntry[]>('diary', [], isDiaryList);
+export type DiarySeen = { home?: number; school?: number };
+const isDiarySeen = (value: unknown): value is DiarySeen =>
+  typeof value === 'object' && value !== null && ['home', 'school'].every((k) => (value as Record<string, unknown>)[k] === undefined || typeof (value as Record<string, unknown>)[k] === 'number');
+export const diarySeenSetting = storedSetting<DiarySeen>('diarySeen', {}, isDiarySeen, false);
 /** Movies kept on this device. Not in a backup: the films themselves are not, so the names would point at nothing. */
 export const moviesSetting = storedSetting<Movie[]>('movies', [], isMovieList, false);
 /** The people who matter to the child, and how they are related (My family). */
@@ -1069,6 +1076,8 @@ const SETTINGS = [
   myBodySetting,
   familySetting,
   moviesSetting,
+  diarySetting,
+  diarySeenSetting,
   pendingPacksSetting,
   customJokesSetting,
   songsSetting,

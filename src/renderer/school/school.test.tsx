@@ -74,6 +74,7 @@ describe('SchoolModeScreen', () => {
       'Vocabulary',
       'Targets',
       'Notes',
+      'Home–school diary',
       'Activity',
       'Reports',
       'Classroom set-up',
