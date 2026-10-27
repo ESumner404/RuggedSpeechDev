@@ -7,6 +7,7 @@ import {
   MAX_SONG_BYTES,
   formatSize,
   isAudioFile,
+  songFromLibrary,
   songsInPlaylist,
   titleFromFile,
   type Playlist,
@@ -59,6 +60,34 @@ export function MusicTab() {
     message.value = notes.length > 0 ? notes.join(' ') : `Added ${files.length === 1 ? 'the song' : `${files.length} songs`}.`;
   }
 
+  // Songs already on this iPhone or iPad, in its Music library. Only those stored on the device are offered, because a
+  // song that is only in the cloud cannot play with no internet. Nothing is copied: the device plays them.
+  const library = window.myWords?.music;
+  const libraryList = useSignal<Array<{ id: string; title: string; artist: string }> | null>(null);
+  const libraryNote = useSignal('');
+  async function openLibrary(): Promise<void> {
+    if (!library) return;
+    libraryNote.value = '';
+    const status = await library.access();
+    if (status !== 'granted') {
+      libraryNote.value =
+        'Rugged Speech is not allowed to see the Music library. Allow it in Settings, Privacy & Security, Media & Apple Music, then try again.';
+      return;
+    }
+    const found = await library.list();
+    libraryList.value = found;
+    if (found.length === 0) libraryNote.value = 'No songs are stored on this device. Download some in the Music app first.';
+  }
+  async function addFromLibrary(entry: { id: string; title: string; artist: string }): Promise<void> {
+    const have = songsSetting.signal.value;
+    if (have.length >= MAX_SONGS) {
+      libraryNote.value = `There is room for ${MAX_SONGS} songs.`;
+      return;
+    }
+    if (have.some((song) => song.libraryId === entry.id)) return;
+    await songsSetting.set([...have, songFromLibrary(entry)]);
+  }
+
   function update(id: string, changes: Partial<Song>): void {
     void songsSetting.set(songsSetting.signal.value.map((song) => (song.id === id ? { ...song, ...changes } : song)));
   }
@@ -76,7 +105,7 @@ export function MusicTab() {
     await playlistsSetting.set(
       playlistsSetting.signal.value.map((list) => ({ ...list, songIds: list.songIds.filter((id) => id !== song.id) })),
     );
-    await deleteVoiceClip(song.blobId);
+    if (song.blobId) await deleteVoiceClip(song.blobId);
   }
 
   function addPlaylist(): void {
@@ -103,9 +132,9 @@ export function MusicTab() {
     <div class="parent-mode-screen__body music-tab">
       <p class="about-tab__hint">
         Add songs from files on this {deviceNoun()}, such as MP3s. They stay on this {deviceNoun()} and play with no internet.
-        There is no Spotify or Apple Music: those need an account and an internet connection, which this app never
+        There is no Spotify and no streaming: that needs an account and an internet connection, which this app never
         uses. Songs you have bought as ordinary files, songs copied from a CD, and recordings of someone singing
-        all work. Songs that are locked to a streaming app cannot be added.
+        all work. Songs that are locked to a streaming app cannot be added as files.
       </p>
 
       <label class="parent-mode-screen__button music-tab__add">
@@ -124,6 +153,48 @@ export function MusicTab() {
       <p role="status" class="music-tab__message">
         {message.value}
       </p>
+
+      {library && (
+        <section class="music-tab__library" data-section="music-library">
+          <button type="button" class="parent-mode-screen__button" onClick={() => void openLibrary()}>
+            Add songs from the Music library
+          </button>
+          <p class="about-tab__hint">
+            Songs already stored on this device in the Music app, including ones downloaded from Apple Music. Only
+            songs stored on the device are listed, because a song that is only in the cloud needs the internet. The
+            device plays them at its own volume, and nothing is copied or sent anywhere.
+          </p>
+          {libraryNote.value && (
+            <p role="status" class="music-tab__message">
+              {libraryNote.value}
+            </p>
+          )}
+          {libraryList.value && libraryList.value.length > 0 && (
+            <ul class="music-tab__library-list">
+              {libraryList.value.map((entry) => {
+                const added = songs.some((song) => song.libraryId === entry.id);
+                return (
+                  <li key={entry.id}>
+                    <span>
+                      {entry.title}
+                      {entry.artist ? `, ${entry.artist}` : ''}
+                    </span>
+                    <button
+                      type="button"
+                      class="parent-mode-screen__button"
+                      disabled={added}
+                      aria-label={`${added ? 'Added' : 'Add'} ${entry.title}`}
+                      onClick={() => void addFromLibrary(entry)}
+                    >
+                      {added ? 'Added' : 'Add'}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+      )}
 
       <label class="access-tab__slider-row">
         Music volume {Math.round(musicVolumeSetting.signal.value * 100)}%

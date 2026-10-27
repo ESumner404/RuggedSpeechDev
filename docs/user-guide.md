@@ -810,3 +810,11 @@ In the iPhone and iPad app, **Access** has **Link with the Apple Watch and Apple
 - **Apple Watch:** pair it with the iPhone as usual, then turn the link on. The watch shows the Favourites and today's plan, shares the traffic light, and its **On iPhone** page opens Games, Draw, Music and the rest on the iPhone.
 - **Apple TV:** open Rugged Speech on the television, go to its **iPad** tab, and type the four-digit code it shows into the box in Access, then **Turn the link on**. The iPad and the television must be on the same home wifi. **New code** on the television changes the code.
 - Only the Favourites, today's plan, the traffic light and the page that is open are shared. Nothing the child has said or typed is. Another device can open a page or change the traffic light, and cannot make the iPad speak.
+
+#### Music from this iPhone or iPad
+
+In the iPhone and iPad app, **Music** in Parent Mode has **Add songs from the Music library**. It lists songs already stored on the device (including songs you have downloaded from Apple Music) and adds the ones you choose. Songs that are only in the cloud are not listed, because they need the internet. The device plays them at its own volume, and nothing is copied or sent anywhere. The first time, the device asks whether Rugged Speech may see the library.
+
+#### Words for a timetable activity
+
+In **Timetable**, each activity can have **Words: (a lesson page)**. On the child's **My Day**, pressing that activity then offers **Words for this**, which opens the page. In School Mode, **Classroom set-up** has **Link lesson pages to the timetable**, which fills this in for activities whose names match a page (Maths and Maths lesson). It never changes one you chose.

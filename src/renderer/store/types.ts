@@ -113,6 +113,8 @@ export type DayActivity = {
   person?: string;
   description?: string;
   spokenMessage?: string;
+  /** One of the child's pages (My Pages) with the words for this activity, opened from My Day. */
+  pageId?: string;
   finished?: boolean;
   // Set by an edit to an already-built activity; cleared once the child's
   // My Day screen has shown and spoken the change once (docs/build-plan.md: "the app

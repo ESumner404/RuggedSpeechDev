@@ -24,6 +24,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Rugged Speech uses the camera only when you choose to take a photo for a button, a person or a place. The photo stays on this device.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Rugged Speech plays songs already stored on this device from the Music app, only when you press one. Nothing is copied or sent anywhere.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Rugged Speech uses your home network only to talk to your own Apple TV, if you turn the link on in Parent Mode. Nothing goes to the internet.</string>
 	<key>NSBonjourServices</key>

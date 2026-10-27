@@ -54,6 +54,30 @@ describe('MyDayScreen', () => {
     render(null, container);
   });
 
+  it('offers the words for an activity that has a page, and opens that page', async () => {
+    await saveDayPlan({
+      date: today,
+      activities: [
+        { id: 'a', name: 'Maths', pageId: 'page-maths' },
+        { id: 'b', name: 'Lunch' },
+      ],
+    });
+    const opened: string[] = [];
+    render(<MyDayScreen onOpenPage={(id) => opened.push(id)} />, container);
+    await waitFor(() => container.querySelectorAll('.day-activity').length === 2);
+    const cards = container.querySelectorAll<HTMLButtonElement>('.day-activity');
+
+    await act(() => cards[1]!.click());
+    expect(container.textContent).not.toContain('Words for this');
+    await act(() => container.querySelector<HTMLButtonElement>('.day-ask-overlay__close')!.click());
+
+    await act(() => cards[0]!.click());
+    const words = Array.from(container.querySelectorAll('button')).find((b) => b.textContent === 'Words for this');
+    expect(words).toBeDefined();
+    await act(() => words!.click());
+    expect(opened).toEqual(['page-maths']);
+  });
+
   it('shows an empty state when nothing has been planned', async () => {
     render(<MyDayScreen />, container);
     await waitFor(() => container.querySelector('.my-day-screen__empty') !== null);

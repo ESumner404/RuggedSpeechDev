@@ -75,6 +75,7 @@ See [the principles](../PRINCIPLES.md) for the reasoning.
 ## Games and fun
 
 - **Find the word**, **Snap**, **Rollercoaster** (build short sentences), **Draw**, **Jokes** (with your own), **Music** (songs from files you add, with playlists) and **Piano**.
+- **Music from the device (iPhone and iPad):** songs already stored in the Music library, including downloaded Apple Music songs, can be added in Parent Mode. Only songs stored on the device are offered, they are played by the device, and nothing is copied or streamed.
 - **Seasons**: words, Find the word and Snap for spring, summer, autumn, winter, Christmas, Easter, Halloween, Bonfire Night, Diwali, Eid and Hanukkah, with the one that suits today's date marked. An adult chooses which to show, changes the words, and adds others (Ramadan, Vaisakhi, Holi, Passover, Chinese New Year, Birthday, or their own).
 - **Make a tree**: decorate a Christmas tree with baubles, lights, a star and presents; it is remembered.
 - No scores against anyone, no clocks, nothing moves or flashes.
@@ -110,6 +111,7 @@ A separate side for school staff, with its own button next to Parent Mode and it
 - **Pupil and school**: school details, key adults, the speech and language therapist.
 - **Safeguarding**: steps to follow and the designated safeguarding lead.
 - **Timetable**, **Lesson pages**, **Vocabulary**.
+- **Words for this:** a timetable activity can point at a lesson page, so the child's My Day offers the words for it in one press (and **Link lesson pages to the timetable** does the matching by name).
 - **Targets** with review dates, and **Notes** by kind (something noticed, went well, an idea, to follow up).
 - **Activity** (off by default): counts by hour, day, week and month, saved as a spreadsheet only when you choose.
 - **Reports**: a printable **handover sheet** and a **review report**.

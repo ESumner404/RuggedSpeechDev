@@ -72,7 +72,7 @@ type AppScreen =
   | { name: 'talk' }
   | { name: 'keyboard' }
   | { name: 'myday' }
-  | { name: 'mypages' }
+  | { name: 'mypages'; pageId?: string }
   | { name: 'firstthen' }
   | { name: 'game' }
   | { name: 'draw' }
@@ -267,9 +267,9 @@ export function App() {
       case 'keyboard':
         return <KeyboardScreen />;
       case 'myday':
-        return <MyDayScreen />;
+        return <MyDayScreen onOpenPage={(pageId) => (screen.value = { name: 'mypages', pageId })} />;
       case 'mypages':
-        return <MyPagesScreen onExit={goHome} />;
+        return <MyPagesScreen onExit={goHome} {...(screen.value.name === 'mypages' && screen.value.pageId ? { initialPageId: screen.value.pageId } : {})} />;
       case 'firstthen':
         return <FirstThenScreen />;
       case 'game':

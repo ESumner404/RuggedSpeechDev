@@ -136,6 +136,9 @@ Each works **on its own, with no internet and no iPhone or iPad**, and does more
 - **Apple Watch:** Yes, No, Break, Toilet, Finished, Question, Say again and Give me time in a fixed grid, with Help, Words (the Talk pages), Feelings, a traffic light and settings. It speaks only when something is pressed.
 - **Apple TV:** Talk (sentence strip, fixed word grid, always-there bar), Feelings, Help, Traffic light (full screen, for the room) and Settings. A focus outline instead of animation.
 
+- **Games on the Apple TV:** **Find the word** and **Snap**, made from the same words, on the big screen (no score against anyone, no clock, nothing moves, and nothing speaks unless pressed). A third tile, **More on the iPad**, opens Games on the iPad once linked, for Rollercoaster, Draw, Jokes, Music, Piano, Seasons and Make a tree.
+- **Sound on the Apple Watch:** the watch asks for its audio session before every word, which a watch needs before it will play through its own speaker. If a watch is silent, check Silent Mode and the volume, and that no Bluetooth headphones are connected. This was changed after a report of no sound on a real watch and has not yet been heard on one.
+
 ### Linked to the iPhone or iPad (off until an adult turns it on)
 Parent Mode, Access, **Link with the Apple Watch and Apple TV**.
 

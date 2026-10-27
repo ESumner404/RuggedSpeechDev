@@ -51,7 +51,18 @@ final class Speaker {
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")
         utterance.rate = SpeechSpeed.current.rate
+        utterance.volume = 1
+        #if os(watchOS)
+        // A watch is silent until the app asks for the audio session, and only then plays through its own speaker
+        // (or the headphones it is connected to). Ask each time, because the system can take it back between presses.
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, mode: .spokenAudio, options: [])
+        session.activate(options: []) { [synthesizer] _, _ in
+            DispatchQueue.main.async { synthesizer.speak(utterance) }
+        }
+        #else
         synthesizer.speak(utterance)
+        #endif
     }
 
     func stop() {

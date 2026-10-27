@@ -10,6 +10,8 @@ struct RootView: View {
                 .tabItem { Label("Feelings", systemImage: "face.smiling") }
             HelpView()
                 .tabItem { Label("Help", systemImage: "lifepreserver") }
+            GamesView()
+                .tabItem { Label("Games", systemImage: "gamecontroller") }
             FavouritesView()
                 .tabItem { Label("Favourites", systemImage: "star") }
             MyDayView()

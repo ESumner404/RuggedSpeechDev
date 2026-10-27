@@ -5491,3 +5491,96 @@ html[data-labels='words'] .board-button__label {
     overflow-wrap: anywhere;
   }
 }
+
+/* Parent Mode and School Mode on a phone: the list of sections folds away behind a button, and the page has the
+   whole width. The button is not there on a tablet or a computer. */
+.parent-nav-toggle {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .parent-mode-screen__layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .parent-nav-toggle {
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0 1rem;
+    border: 0;
+    border-bottom: 2px solid var(--color-border);
+    background: var(--color-nav-background);
+    color: var(--color-text);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  /* The open menu sits over the page, never pushing it down. */
+  .parent-nav {
+    display: none;
+    grid-column: 1;
+    grid-row: 2;
+    z-index: 2;
+    border-right: 0;
+  }
+
+  .parent-nav--open {
+    display: block;
+  }
+
+  .parent-mode-screen__main {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .parent-mode-screen__header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .parent-mode-screen__title {
+    font-size: 1.3rem;
+  }
+
+  .parent-mode-screen__body {
+    padding: 0.75rem;
+  }
+}
+
+/* The row of Home, Medical Info, About me and Parent Mode: on a phone it may go onto a second line rather than
+   run off the edge, and its buttons are a little smaller. */
+@media (max-width: 600px) {
+  .app-shell__toolbar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    padding: 0.35rem 0.4rem;
+  }
+
+  .app-shell__toolbar button {
+    padding-inline: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .app-shell__toolbar .parent-mode-button,
+  .app-shell__toolbar .school-mode-button {
+    margin-left: auto;
+  }
+}
+
+/* Words on the buttons of a five-across page, so none is cut off on a phone. */
+@media (max-width: 600px) {
+  .board-button {
+    padding-inline: 0.15rem;
+  }
+
+  .board-button__label {
+    font-size: 0.72rem;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+}

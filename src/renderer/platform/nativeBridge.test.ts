@@ -21,6 +21,13 @@ function fakeShell(overrides: Partial<NativeShell> = {}): NativeShell {
     linkStart: vi.fn(async () => undefined),
     linkStop: vi.fn(async () => undefined),
     linkSend: vi.fn(async () => undefined),
+    musicAccess: vi.fn(async () => ({ status: 'granted' as const })),
+    musicList: vi.fn(async () => ({ songs: [{ id: '42', title: 'Twinkle', artist: 'A' }] })),
+    musicPlay: vi.fn(async () => ({ ok: true })),
+    musicPause: vi.fn(async () => undefined),
+    musicResume: vi.fn(async () => undefined),
+    musicStop: vi.fn(async () => undefined),
+    musicState: vi.fn(async () => ({ state: 'playing' as const })),
     linkInbox: vi.fn(async () => ({ messages: ['{"type":"open","screen":"game"}', 'not json', '{"nope":1}'], peers: 2 })),
     ...overrides,
   };
@@ -30,7 +37,7 @@ describe('the phone and tablet bridge', () => {
   it('says what a phone or tablet cannot do, so the page can hide it', () => {
     const bridge = buildNativeBridge(fakeShell(), 'ios', '1.0');
     expect(bridge.platform).toBe('ios');
-    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true });
+    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true });
     expect(bridge.versions.app).toBe('1.0');
   });
 
@@ -90,6 +97,16 @@ describe('the phone and tablet bridge', () => {
     await bridge.link!.send({ type: 'state', screen: 'home' });
     expect(shell.linkSend).toHaveBeenCalledWith({ json: '{"type":"state","screen":"home"}' });
     expect(await bridge.link!.inbox()).toEqual({ messages: [{ type: 'open', screen: 'game' }], peers: 2 });
+  });
+
+  it('lists and plays songs from the device’s own Music library', async () => {
+    const shell = fakeShell();
+    const bridge = buildNativeBridge(shell, 'ios', '1.0');
+    expect(await bridge.music!.access()).toBe('granted');
+    expect(await bridge.music!.list()).toEqual([{ id: '42', title: 'Twinkle', artist: 'A' }]);
+    expect(await bridge.music!.play('42')).toBe(true);
+    expect(shell.musicPlay).toHaveBeenCalledWith({ id: '42' });
+    expect(await bridge.music!.state()).toBe('playing');
   });
 
   it('has no start-up setting and stays full screen', async () => {

@@ -20,6 +20,13 @@ export interface NativeShell {
   linkStop: () => Promise<void>;
   linkSend: (options: { json: string }) => Promise<void>;
   linkInbox: () => Promise<{ messages: string[]; peers: number }>;
+  musicAccess: () => Promise<{ status: 'granted' | 'denied' | 'restricted' | 'notDetermined' }>;
+  musicList: () => Promise<{ songs: Array<{ id: string; title: string; artist: string }> }>;
+  musicPlay: (options: { id: string }) => Promise<{ ok: boolean }>;
+  musicPause: () => Promise<void>;
+  musicResume: () => Promise<void>;
+  musicStop: () => Promise<void>;
+  musicState: () => Promise<{ state: 'playing' | 'paused' | 'stopped' }>;
 }
 
 export type DeviceAccessibility = Awaited<ReturnType<NonNullable<Window['myWords']['deviceAccessibility']>>>;
@@ -38,7 +45,7 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     versions: { app: version },
     platform,
     // A phone or tablet app is always full screen, and starts only when it is opened.
-    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true },
+    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true },
     parentMode: {
       setFullscreen: async () => undefined,
       isFullscreen: async () => true,
@@ -82,6 +89,15 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     print: () => shell.printPage(),
     deviceAccessibility: () => shell.accessibility(),
     haptic: () => shell.haptic(),
+    music: {
+      access: async () => (await shell.musicAccess()).status,
+      list: async () => (await shell.musicList()).songs,
+      play: async (id) => (await shell.musicPlay({ id })).ok,
+      pause: () => shell.musicPause(),
+      resume: () => shell.musicResume(),
+      stop: () => shell.musicStop(),
+      state: async () => (await shell.musicState()).state,
+    },
     link: {
       start: (code) => shell.linkStart({ code }),
       stop: () => shell.linkStop(),

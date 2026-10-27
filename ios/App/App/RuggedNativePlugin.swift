@@ -23,6 +23,13 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
         CAPPluginMethod(name: "linkStop", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "linkSend", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "linkInbox", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "musicAccess", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "musicList", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "musicPlay", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "musicPause", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "musicResume", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "musicStop", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "musicState", returnType: CAPPluginReturnPromise),
     ]
 
     /// The largest file the app will read: a backup with a great many photographs and songs.
@@ -202,6 +209,37 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
     @objc func linkInbox(_ call: CAPPluginCall) {
         let taken = AppleLink.shared.takeInbox()
         call.resolve(["messages": taken.messages, "peers": taken.peers])
+    }
+
+    // MARK: Music: songs already stored on the device (see MusicLibrary.swift).
+
+    @objc func musicAccess(_ call: CAPPluginCall) {
+        MusicLibrary.shared.access { call.resolve(["status": $0]) }
+    }
+
+    @objc func musicList(_ call: CAPPluginCall) {
+        DispatchQueue.main.async { call.resolve(["songs": MusicLibrary.shared.list()]) }
+    }
+
+    @objc func musicPlay(_ call: CAPPluginCall) {
+        let id = call.getString("id") ?? ""
+        DispatchQueue.main.async { call.resolve(["ok": MusicLibrary.shared.play(id: id)]) }
+    }
+
+    @objc func musicPause(_ call: CAPPluginCall) {
+        DispatchQueue.main.async { MusicLibrary.shared.pause(); call.resolve() }
+    }
+
+    @objc func musicResume(_ call: CAPPluginCall) {
+        DispatchQueue.main.async { MusicLibrary.shared.resume(); call.resolve() }
+    }
+
+    @objc func musicStop(_ call: CAPPluginCall) {
+        DispatchQueue.main.async { MusicLibrary.shared.stop(); call.resolve() }
+    }
+
+    @objc func musicState(_ call: CAPPluginCall) {
+        DispatchQueue.main.async { call.resolve(["state": MusicLibrary.shared.state]) }
     }
 
     /// A file name with nothing in it that could name a folder.

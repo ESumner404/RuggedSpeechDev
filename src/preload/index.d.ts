@@ -14,6 +14,22 @@ export interface PlatformCapabilities {
   haptics: boolean;
   /** Linking with the family's own Apple Watch and Apple TV, over the local link between them. */
   link: boolean;
+  /** Songs already stored on the device, in its Music library. */
+  music: boolean;
+}
+
+/**
+ * Songs already stored on the device, in its Music library. Only what is on the device is offered and played: a song
+ * that is only in the cloud needs the internet, so it is left out. Nothing is copied or sent anywhere.
+ */
+export interface MusicLibraryBridge {
+  access: () => Promise<'granted' | 'denied' | 'restricted' | 'notDetermined'>;
+  list: () => Promise<Array<{ id: string; title: string; artist: string }>>;
+  play: (id: string) => Promise<boolean>;
+  pause: () => Promise<void>;
+  resume: () => Promise<void>;
+  stop: () => Promise<void>;
+  state: () => Promise<'playing' | 'paused' | 'stopped'>;
 }
 
 /** A message passed over the link. Always a plain object with a `type`. */
@@ -63,6 +79,8 @@ export interface MyWordsBridge {
   haptic?: () => Promise<void>;
   /** The link to a watch and a television. Absent where there is none. */
   link?: AppleLinkBridge;
+  /** The device's own Music library. Absent where there is none. */
+  music?: MusicLibraryBridge;
   parentMode: {
     setFullscreen: (value: boolean) => Promise<void>;
     isFullscreen: () => Promise<boolean>;

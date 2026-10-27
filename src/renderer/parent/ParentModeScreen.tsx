@@ -104,6 +104,11 @@ const IDLE_CHECK_MS = 5_000;
 export function ParentModeScreen({ onExit }: Props) {
   const tab = useSignal<Tab>('boards');
   const fullscreen = useSignal(false);
+  // On a phone the list of sections is folded away behind a button, so the page gets the whole width.
+  const menuOpen = useSignal(false);
+  const currentLabel =
+    GROUPS.flatMap((group): readonly { id: string; label: string }[] => group.tabs).find((entry) => entry.id === tab.value)?.label ??
+    'Sections';
   const needsBackup = useSignal(false);
 
   useEffect(() => {
@@ -188,7 +193,16 @@ export function ParentModeScreen({ onExit }: Props) {
       )}
 
       <div class="parent-mode-screen__layout">
-      <nav class="parent-nav" aria-label={`${name} sections`}>
+      <button
+        type="button"
+        class="parent-nav-toggle"
+        aria-expanded={menuOpen.value}
+        onClick={() => (menuOpen.value = !menuOpen.value)}
+      >
+        {currentLabel}
+        <span aria-hidden="true">{menuOpen.value ? ' ▴' : ' ▾'}</span>
+      </button>
+      <nav class={menuOpen.value ? 'parent-nav parent-nav--open' : 'parent-nav'} aria-label={`${name} sections`}>
         {GROUPS.map((group) => (
           <div class="parent-nav__group" key={group.title}>
             <p class="parent-nav__heading">{group.title}</p>
@@ -198,7 +212,10 @@ export function ParentModeScreen({ onExit }: Props) {
                 class="page-tabs__tab parent-nav__tab"
                 key={entry.id}
                 aria-pressed={tab.value === entry.id}
-                onClick={() => (tab.value = entry.id)}
+                onClick={() => {
+                  tab.value = entry.id;
+                  menuOpen.value = false;
+                }}
               >
                 {entry.label}
               </button>

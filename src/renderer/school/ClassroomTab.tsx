@@ -1,5 +1,6 @@
 import { useSignal } from '@preact/signals';
-import { quickAccessButtons, schoolTimeoutSetting, weeklyRoutineSetting } from '../store/db';
+import { getMyPages, quickAccessButtons, schoolTimeoutSetting, weeklyRoutineSetting } from '../store/db';
+import { linkLessonPages } from '../day/lessonPages';
 import { applySchoolTopBar } from '../store/school';
 import { SCHOOL_QUICK_ACCESS, QUICK_ACCESS_LABELS } from '../store/quickAccess';
 import { routineIsEmpty, typicalSchoolWeek } from '../store/staff';
@@ -17,6 +18,18 @@ export function ClassroomTab() {
   const changingPin = useSignal(false);
   const pinChanged = useSignal(false);
   const routineEmpty = routineIsEmpty(weeklyRoutineSetting.signal.value);
+  const linkedNote = useSignal('');
+
+  // Points each timetable activity at the lesson page with the matching name, so the child's My Day can open the
+  // words for it. Only fills in activities that have none; it never changes one an adult chose.
+  async function linkPages(): Promise<void> {
+    const { routine, linked } = linkLessonPages(weeklyRoutineSetting.signal.value, await getMyPages());
+    if (linked > 0) await weeklyRoutineSetting.set(routine);
+    linkedNote.value =
+      linked > 0
+        ? `Linked ${linked} ${linked === 1 ? 'activity' : 'activities'} to a lesson page. Check them in Timetable.`
+        : 'Nothing to link. Make the lesson pages first (Lesson pages), with names like the activities.';
+  }
 
   async function addTypicalWeek(): Promise<void> {
     if (!routineIsEmpty(weeklyRoutineSetting.signal.value)) return;
@@ -75,6 +88,19 @@ export function ClassroomTab() {
           Start from a typical school day
         </button>
         {!routineEmpty && !timetableAdded.value && <p class="school-tab__hint">There is a timetable already, so it is left alone.</p>}
+        <p class="school-tab__hint">
+          Each activity can have the words for it. On the child's My Day, pressing the activity then offers <strong>Words
+          for this</strong>, which opens that page. This links activities to lesson pages with a matching name, such as
+          Maths and Maths lesson.
+        </p>
+        <button type="button" class="parent-mode-screen__button" disabled={routineEmpty} onClick={() => void linkPages()}>
+          Link lesson pages to the timetable
+        </button>
+        {linkedNote.value && (
+          <p role="status" class="school-tab__hint">
+            {linkedNote.value}
+          </p>
+        )}
         {timetableAdded.value && (
           <p role="status" class="school-tab__hint">
             Added Monday to Friday. Change the times and names in Timetable to match.

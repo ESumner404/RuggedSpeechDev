@@ -9,6 +9,8 @@ import { SentenceStrip, type SentenceChip } from './SentenceStrip';
 
 type Props = {
   onExit: () => void;
+  /** A page to open straight away, for example the words for the activity on My Day. */
+  initialPageId?: string;
 };
 
 // Fully custom pages, built from scratch in Parent Mode (feature review
@@ -16,7 +18,7 @@ type Props = {
 // a single flat board (no folders), so building and speaking a sentence
 // here works exactly like Talk, just over whatever an adult has put on the
 // page rather than the built-in vocabulary tree.
-export function MyPagesScreen({ onExit }: Props) {
+export function MyPagesScreen({ onExit, initialPageId }: Props) {
   const pages = useSignal<MyPage[]>([]);
   const loaded = useSignal(false);
   const selectedPageId = useSignal<string | null>(null);
@@ -31,7 +33,8 @@ export function MyPagesScreen({ onExit }: Props) {
       // shouldn't pay an extra tap every time just because the data model
       // technically allows more than one (invariant I3: consistent
       // position, not consistent friction).
-      if (loadedPages.length === 1) selectedPageId.value = loadedPages[0]!.id;
+      if (initialPageId && loadedPages.some((page) => page.id === initialPageId)) selectedPageId.value = initialPageId;
+      else if (loadedPages.length === 1) selectedPageId.value = loadedPages[0]!.id;
       loaded.value = true;
     });
   }, []);

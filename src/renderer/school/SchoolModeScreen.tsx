@@ -100,7 +100,14 @@ export function SchoolModeScreen({ onExit }: Props) {
     };
   }, [minutes]);
 
-  const go = (next: SchoolSection) => (section.value = next);
+  const menuOpen = useSignal(false);
+  const currentLabel =
+    GROUPS.flatMap((group): readonly { id: string; label: string }[] => group.sections).find((entry) => entry.id === section.value)?.label ??
+    'Sections';
+  const go = (next: SchoolSection) => {
+    section.value = next;
+    menuOpen.value = false;
+  };
 
   return (
     <div class="parent-mode-screen school-mode-screen">
@@ -114,7 +121,16 @@ export function SchoolModeScreen({ onExit }: Props) {
       </header>
 
       <div class="parent-mode-screen__layout">
-        <nav class="parent-nav school-nav" aria-label={`${SCHOOL_MODE_NAME} sections`}>
+        <button
+          type="button"
+          class="parent-nav-toggle"
+          aria-expanded={menuOpen.value}
+          onClick={() => (menuOpen.value = !menuOpen.value)}
+        >
+          {currentLabel}
+          <span aria-hidden="true">{menuOpen.value ? ' ▴' : ' ▾'}</span>
+        </button>
+        <nav class={menuOpen.value ? 'parent-nav school-nav parent-nav--open' : 'parent-nav school-nav'} aria-label={`${SCHOOL_MODE_NAME} sections`}>
           {GROUPS.map((group) => (
             <div class="parent-nav__group" key={group.title}>
               <p class="parent-nav__heading">{group.title}</p>

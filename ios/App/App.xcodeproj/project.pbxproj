@@ -45,12 +45,14 @@
 		A6E9F12CE19C8EC25B2B2675 /* LinkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22F1099B57DD0E23A8C3774 /* LinkState.swift */; };
 		A844A5FAE996B6AD81C77182 /* AppleLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF7D807DC10CEDCD9D4AD7 /* AppleLink.swift */; };
 		ABED17246DE431A4F4340003 /* Colours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0E9A0BF464C7375090A551 /* Colours.swift */; };
+		B859A9687FD05E5191691BCE /* MusicLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AA27FA6AC072E8E6546709 /* MusicLibrary.swift */; };
 		BF216F575F36258A76ECC8D2 /* FeelingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0002DBFC6DEC9F6EFC5E28E /* FeelingsView.swift */; };
 		C06343D200D067F1C1D47579 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1BE806AA055FC55BEC1EF /* Speaker.swift */; };
 		CA3A0BA5422B7D487E3B5B04 /* WordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7994EED4E82B742F75D509CB /* WordsView.swift */; };
 		CD43577A7360E52D644FABA0 /* MyDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A472A1CFB488F926C0D5DEC /* MyDayView.swift */; };
 		DAC8B61E340368A6B1C6703E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81927A013CDB49DBF3B7C3 /* SettingsView.swift */; };
 		DE5A67874BD3153E9239C24C /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96A26BA16DA21949B12B73 /* HelpView.swift */; };
+		E30FEAF4D7BA9B789913141A /* GamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF52DEE947CDC57195F4D348 /* GamesView.swift */; };
 		E49A0FC24814F4D0489B9DEF /* OnPhoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5071B07446383C163124C636 /* OnPhoneView.swift */; };
 		E8E03F4FB1BE61A377693A7C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420949282AB92AA28A975D3 /* AppDelegate.swift */; };
 		F7C1492D97661B6AC1A562FF /* IPadLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */; };
@@ -89,6 +91,7 @@
 		19361A32DC5EBBED296019C2 /* TrafficLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficLightView.swift; sourceTree = "<group>"; };
 		1ABEFBEC61F4D2C38E025080 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		1CD2617EAB5002448AAC0E2D /* RuggedNativePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuggedNativePlugin.swift; sourceTree = "<group>"; };
+		28AA27FA6AC072E8E6546709 /* MusicLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicLibrary.swift; sourceTree = "<group>"; };
 		2B78992D825F92552EF69B09 /* LinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkView.swift; sourceTree = "<group>"; };
 		3F81927A013CDB49DBF3B7C3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		42299223C1270749CDB36540 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -129,6 +132,7 @@
 		EEFF7D807DC10CEDCD9D4AD7 /* AppleLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLink.swift; sourceTree = "<group>"; };
 		F03156A005B8D5FB142B0035 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		F22F1099B57DD0E23A8C3774 /* LinkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkState.swift; sourceTree = "<group>"; };
+		FF52DEE947CDC57195F4D348 /* GamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +166,7 @@
 				76989E05CECAD7B8B3C424A7 /* Assets.xcassets */,
 				68ED4E8FE0185474B6E8E85B /* capacitor.config.json */,
 				8776CD2CC1249496A6F18C86 /* config.xml */,
+				28AA27FA6AC072E8E6546709 /* MusicLibrary.swift */,
 				42299223C1270749CDB36540 /* PrivacyInfo.xcprivacy */,
 				7E5BBB12596EE01767A6151A /* public */,
 				1CD2617EAB5002448AAC0E2D /* RuggedNativePlugin.swift */,
@@ -236,6 +241,7 @@
 				85626B44C1FDB678049D785D /* BigButton.swift */,
 				89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */,
 				C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */,
+				FF52DEE947CDC57195F4D348 /* GamesView.swift */,
 				D65879761B3E0FB60EDF1A2D /* HelpView.swift */,
 				D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */,
 				2B78992D825F92552EF69B09 /* LinkView.swift */,
@@ -417,6 +423,7 @@
 				4D3F2630D26594B18A1E0A3C /* Colours.swift in Sources */,
 				A3D11A276F42E90F148C2438 /* FavouritesView.swift in Sources */,
 				317D9CB082EA48B9D62A8585 /* FeelingsView.swift in Sources */,
+				E30FEAF4D7BA9B789913141A /* GamesView.swift in Sources */,
 				49FDF93485BD1B5F5D5C6804 /* HelpView.swift in Sources */,
 				F7C1492D97661B6AC1A562FF /* IPadLink.swift in Sources */,
 				A6E9F12CE19C8EC25B2B2675 /* LinkState.swift in Sources */,
@@ -461,6 +468,7 @@
 			files = (
 				E8E03F4FB1BE61A377693A7C /* AppDelegate.swift in Sources */,
 				A844A5FAE996B6AD81C77182 /* AppleLink.swift in Sources */,
+				B859A9687FD05E5191691BCE /* MusicLibrary.swift in Sources */,
 				025643294D1903CD4992DC89 /* RuggedNativePlugin.swift in Sources */,
 				93AF4DCA86CB972AF0E661BB /* RuggedViewController.swift in Sources */,
 				67740B5377F807ABF1532F55 /* SceneDelegate.swift in Sources */,
