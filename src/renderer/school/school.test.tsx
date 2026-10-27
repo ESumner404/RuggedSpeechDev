@@ -77,6 +77,7 @@ describe('SchoolModeScreen', () => {
       'Activity',
       'Reports',
       'Classroom set-up',
+      'School pack',
       'School guide',
     ]);
     expect(container.querySelector('.today-tab')).not.toBeNull();

@@ -18,6 +18,17 @@ export interface PlatformCapabilities {
   music: boolean;
   /** Movies kept on the device, picked from Photos or Files, and played by the device. */
   movies: boolean;
+  /** Handing a school pack to nearby devices over the school's wifi. */
+  school: boolean;
+}
+
+/** One-way hand-over of a school pack: a sender (the school's device) to listeners (pupils' devices), with a code. */
+export interface SchoolLinkBridge {
+  start: (role: 'sender' | 'listener', code: string) => Promise<void>;
+  stop: () => Promise<void>;
+  /** Sends to every listener that is connected, and says how many. Only a sender can. */
+  send: (text: string) => Promise<number>;
+  inbox: () => Promise<{ messages: string[]; peers: number }>;
 }
 
 /** Movies kept on the device. Copied into the app when chosen, so they play with no internet. Nothing is sent anywhere. */
@@ -95,6 +106,8 @@ export interface MyWordsBridge {
   music?: MusicLibraryBridge;
   /** Movies kept on the device. Absent where there are none. */
   movies?: MovieLibraryBridge;
+  /** One-way school pack hand-over. Absent where there is none. */
+  school?: SchoolLinkBridge;
   parentMode: {
     setFullscreen: (value: boolean) => Promise<void>;
     isFullscreen: () => Promise<boolean>;

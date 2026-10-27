@@ -12,6 +12,7 @@ import { NotesTab } from '../parent/NotesTab';
 import { ReportsTab } from '../parent/ReportsTab';
 import { TargetsTab } from '../parent/TargetsTab';
 import { ClassroomTab } from './ClassroomTab';
+import { PackTab } from './PackTab';
 import { PupilTab } from './PupilTab';
 import { SafeguardingTab } from './SafeguardingTab';
 import { TodayTab } from './TodayTab';
@@ -29,6 +30,7 @@ export type SchoolSection =
   | 'activity'
   | 'reports'
   | 'classroom'
+  | 'pack'
   | 'guide';
 
 const GROUPS: { title: string; sections: { id: SchoolSection; label: string }[] }[] = [
@@ -62,6 +64,7 @@ const GROUPS: { title: string; sections: { id: SchoolSection; label: string }[] 
     title: 'Set-up',
     sections: [
       { id: 'classroom', label: 'Classroom set-up' },
+      { id: 'pack', label: 'School pack' },
       { id: 'guide', label: 'School guide' },
     ],
   },
@@ -161,6 +164,7 @@ export function SchoolModeScreen({ onExit }: Props) {
           {section.value === 'activity' && <ActivityTab />}
           {section.value === 'reports' && <ReportsTab />}
           {section.value === 'classroom' && <ClassroomTab />}
+          {section.value === 'pack' && <PackTab />}
           {section.value === 'guide' && <GuideTab start="staff" />}
         </main>
       </div>

@@ -32,6 +32,8 @@
 	<array>
 		<string>_rugged-link._tcp</string>
 		<string>_rugged-link._udp</string>
+		<string>_rugged-school._tcp</string>
+		<string>_rugged-school._udp</string>
 	</array>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Rugged Speech uses the microphone only when you choose to record a voice for a button. The recording stays on this device.</string>

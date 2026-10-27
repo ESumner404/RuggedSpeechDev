@@ -39,6 +39,7 @@
 		7BD6CE0FB1784F77D688A0AD /* RuggedSpeechTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AC3A845CA43A906419F93A /* RuggedSpeechTVApp.swift */; };
 		7BD7675BBE05FE204398178A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABEFBEC61F4D2C38E025080 /* SettingsView.swift */; };
 		81138B00431411BE1EF97D97 /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 68ED4E8FE0185474B6E8E85B /* capacitor.config.json */; };
+		82CC858946A4DD0E610E5121 /* SchoolLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5A569782FBA263894E0BEA /* SchoolLink.swift */; };
 		83A3212E3B3AD97B444D83B0 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03156A005B8D5FB142B0035 /* RootView.swift */; };
 		8EDB8EBD884F018026E55497 /* PhoneLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5BD6EA66DFD5807E09B6E1 /* PhoneLink.swift */; };
 		93215BD4FBEAFA498541BA87 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1BE806AA055FC55BEC1EF /* Speaker.swift */; };
@@ -128,6 +129,7 @@
 		9E3E0585172AC0E29E475454 /* MovieLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieLibrary.swift; sourceTree = "<group>"; };
 		A33C3818573C48EE3123579D /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
 		A348982BCE2FD882CD176B83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA5A569782FBA263894E0BEA /* SchoolLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolLink.swift; sourceTree = "<group>"; };
 		AEA37DFD3E6C0695C200E19D /* TalkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkView.swift; sourceTree = "<group>"; };
 		B0002DBFC6DEC9F6EFC5E28E /* FeelingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingsView.swift; sourceTree = "<group>"; };
 		C5434C6526F1663FF6280341 /* ShowingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowingView.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				1CD2617EAB5002448AAC0E2D /* RuggedNativePlugin.swift */,
 				50A3D357482A33BD0752F017 /* RuggedViewController.swift */,
 				ED2016878D44EAA9692D059F /* SceneDelegate.swift */,
+				AA5A569782FBA263894E0BEA /* SchoolLink.swift */,
 				23F8D68E28D07D16EB72E4AA /* LaunchScreen.storyboard */,
 				9CC6C49B810BBC284BCED483 /* Main.storyboard */,
 			);
@@ -492,6 +495,7 @@
 				025643294D1903CD4992DC89 /* RuggedNativePlugin.swift in Sources */,
 				93AF4DCA86CB972AF0E661BB /* RuggedViewController.swift in Sources */,
 				67740B5377F807ABF1532F55 /* SceneDelegate.swift in Sources */,
+				82CC858946A4DD0E610E5121 /* SchoolLink.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

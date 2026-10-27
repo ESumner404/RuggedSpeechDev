@@ -826,3 +826,11 @@ In **My family**, add each person with a name, how they are related, a photo (or
 #### Movies kept on this iPhone or iPad
 
 In **Movies**, add videos already on the device, from **Photos** or from **Files**. Each is copied into the app, so it plays with no internet and nothing is sent anywhere. Films you bought or rented in the TV app are locked to that app and cannot be added. A movie plays full screen, only when the child presses its tile (add **Movies** to the top bar in **Quick Access**). Movies are not part of a backup, because they are too big.
+
+#### School pack: handing lesson pages to many devices
+
+In **School Mode**, **School pack** hands a school's lesson pages, timetable and school details (not the key adult) to other devices at once. A pack holds nothing about any child, and it only ever goes one way, from the school's device to the pupils'.
+
+- **Save as a file** makes a `.rspack` file to share by AirDrop, email or a memory stick; **Open a pack file** reads one.
+- **Over the school's wifi** (iPhone and iPad): choose a four-digit code, press **Send** on the school's device and **Listen** on each pupil's device with the same code, with that page open. The pupil's device lets in only a sender that gives the code, and never sends anything back.
+- A pack that arrives only **waits**. An adult on the pupil's device sees what adding it would do (pages added, pages already there and left alone, whether the timetable goes in, which blank details it fills in) and chooses **Add to this device**. It only ever adds: nothing is replaced and nothing is removed, and a timetable only goes in if there is none.

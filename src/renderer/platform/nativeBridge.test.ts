@@ -23,6 +23,10 @@ function fakeShell(overrides: Partial<NativeShell> = {}): NativeShell {
     linkSend: vi.fn(async () => undefined),
     musicAccess: vi.fn(async () => ({ status: 'granted' as const })),
     musicList: vi.fn(async () => ({ songs: [{ id: '42', title: 'Twinkle', artist: 'A' }] })),
+    schoolStart: vi.fn(async () => undefined),
+    schoolStop: vi.fn(async () => undefined),
+    schoolSend: vi.fn(async () => ({ sent: 3 })),
+    schoolInbox: vi.fn(async () => ({ messages: ['{}'], peers: 2 })),
     moviePick: vi.fn(async () => ({ movies: [{ id: 'a.mov', title: 'Holiday', bytes: 10, seconds: 60 }] })),
     moviePlay: vi.fn(async () => ({ ok: true })),
     movieRemove: vi.fn(async () => undefined),
@@ -41,7 +45,7 @@ describe('the phone and tablet bridge', () => {
   it('says what a phone or tablet cannot do, so the page can hide it', () => {
     const bridge = buildNativeBridge(fakeShell(), 'ios', '1.0');
     expect(bridge.platform).toBe('ios');
-    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true, movies: true });
+    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true, movies: true, school: true });
     expect(bridge.versions.app).toBe('1.0');
   });
 
@@ -124,6 +128,15 @@ describe('the phone and tablet bridge', () => {
     expect(await bridge.movies!.play('a.mov')).toBe(true);
     await bridge.movies!.remove('a.mov');
     expect(shell.movieRemove).toHaveBeenCalledWith({ id: 'a.mov' });
+  });
+
+  it('hands a school pack one way over the school’s wifi', async () => {
+    const shell = fakeShell();
+    const bridge = buildNativeBridge(shell, 'ios', '1.0');
+    await bridge.school!.start('sender', '1234');
+    expect(shell.schoolStart).toHaveBeenCalledWith({ role: 'sender', code: '1234' });
+    expect(await bridge.school!.send('pack')).toBe(3);
+    expect(await bridge.school!.inbox()).toEqual({ messages: ['{}'], peers: 2 });
   });
 
   it('has no start-up setting and stays full screen', async () => {

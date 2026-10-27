@@ -854,7 +854,7 @@ const isAboutMe = (value: unknown): value is AboutMe =>
   isPlainObject(value) && Object.keys(EMPTY_ABOUT_ME).every((field) => typeof value[field] === 'string');
 
 export const EMPTY_ROUTINE: WeeklyRoutine = { mon: [], tue: [], wed: [], thu: [], fri: [], sat: [], sun: [] };
-const isRoutine = (value: unknown): value is WeeklyRoutine =>
+export const isRoutine = (value: unknown): value is WeeklyRoutine =>
   isPlainObject(value) && Object.keys(EMPTY_ROUTINE).every((day) => Array.isArray(value[day]));
 
 /** 0 shows every word; 1 to 4 holds back words whose stage is higher. */
@@ -925,6 +925,13 @@ const isUserProfile = (value: unknown): value is UserProfile =>
 /** Whose device this is: a name, a device name, a picture and an age (Parent Mode, User). */
 export const userProfileSetting = storedSetting<UserProfile>('userProfile', EMPTY_USER_PROFILE, isUserProfile);
 /** What the figure in My body looks like (Parent Mode, My body). */
+/** School packs received and waiting for an adult to add them. Never in a backup, and only ever added by choice. */
+export type PendingPack = { id: string; name: string; receivedAt: number; text: string };
+const isPendingPacks = (value: unknown): value is PendingPack[] =>
+  Array.isArray(value) &&
+  value.length <= 3 &&
+  value.every((p) => typeof p === 'object' && p !== null && typeof (p as PendingPack).id === 'string' && typeof (p as PendingPack).name === 'string' && typeof (p as PendingPack).receivedAt === 'number' && typeof (p as PendingPack).text === 'string');
+export const pendingPacksSetting = storedSetting<PendingPack[]>('pendingPacks', [], isPendingPacks, false);
 /** Movies kept on this device. Not in a backup: the films themselves are not, so the names would point at nothing. */
 export const moviesSetting = storedSetting<Movie[]>('movies', [], isMovieList, false);
 /** The people who matter to the child, and how they are related (My family). */
@@ -1062,6 +1069,7 @@ const SETTINGS = [
   myBodySetting,
   familySetting,
   moviesSetting,
+  pendingPacksSetting,
   customJokesSetting,
   songsSetting,
   playlistsSetting,

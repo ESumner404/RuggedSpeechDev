@@ -28,6 +28,10 @@ export interface NativeShell {
   musicResume: () => Promise<void>;
   musicStop: () => Promise<void>;
   musicState: () => Promise<{ state: 'playing' | 'paused' | 'stopped' }>;
+  schoolStart: (options: { role: 'sender' | 'listener'; code: string }) => Promise<void>;
+  schoolStop: () => Promise<void>;
+  schoolSend: (options: { json: string }) => Promise<{ sent: number }>;
+  schoolInbox: () => Promise<{ messages: string[]; peers: number }>;
   moviePick: (options: { source: 'photos' | 'files' }) => Promise<{ movies: Array<{ id: string; title: string; bytes: number; seconds: number }> }>;
   moviePlay: (options: { id: string }) => Promise<{ ok: boolean }>;
   movieRemove: (options: { id: string }) => Promise<void>;
@@ -49,7 +53,7 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     versions: { app: version },
     platform,
     // A phone or tablet app is always full screen, and starts only when it is opened.
-    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true, movies: true },
+    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true, movies: true, school: true },
     parentMode: {
       setFullscreen: async () => undefined,
       isFullscreen: async () => true,
@@ -93,6 +97,12 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     print: () => shell.printPage(),
     deviceAccessibility: () => shell.accessibility(),
     haptic: () => shell.haptic(),
+    school: {
+      start: (role, code) => shell.schoolStart({ role, code }),
+      stop: () => shell.schoolStop(),
+      send: async (text) => (await shell.schoolSend({ json: text })).sent,
+      inbox: () => shell.schoolInbox(),
+    },
     movies: {
       pick: async (source) => (await shell.moviePick({ source })).movies,
       play: async (id) => (await shell.moviePlay({ id })).ok,

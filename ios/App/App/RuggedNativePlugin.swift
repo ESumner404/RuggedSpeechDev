@@ -31,6 +31,10 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
         CAPPluginMethod(name: "musicResume", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "musicStop", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "musicState", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "schoolStart", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "schoolStop", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "schoolSend", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "schoolInbox", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "moviePick", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "moviePlay", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "movieRemove", returnType: CAPPluginReturnPromise),
@@ -250,6 +254,27 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
 
     @objc func musicState(_ call: CAPPluginCall) {
         DispatchQueue.main.async { call.resolve(["state": MusicLibrary.shared.state]) }
+    }
+
+    // MARK: School pack: one way, from the school's device to pupils' devices (see SchoolLink.swift).
+
+    @objc func schoolStart(_ call: CAPPluginCall) {
+        SchoolLink.shared.start(role: call.getString("role") ?? "", code: call.getString("code") ?? "")
+        call.resolve()
+    }
+
+    @objc func schoolStop(_ call: CAPPluginCall) {
+        SchoolLink.shared.stop()
+        call.resolve()
+    }
+
+    @objc func schoolSend(_ call: CAPPluginCall) {
+        call.resolve(["sent": SchoolLink.shared.send(call.getString("json") ?? "")])
+    }
+
+    @objc func schoolInbox(_ call: CAPPluginCall) {
+        let taken = SchoolLink.shared.takeInbox()
+        call.resolve(["messages": taken.messages, "peers": taken.peers])
     }
 
     // MARK: Movies kept on the device (see MovieLibrary.swift).
