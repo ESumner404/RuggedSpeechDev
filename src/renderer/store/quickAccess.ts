@@ -20,6 +20,7 @@ export const QUICK_ACCESS_LABELS: Record<QuickAccessId, string> = {
   draw: 'Draw',
   body: 'My body',
   family: 'My family',
+  movies: 'Movies',
   music: 'Music',
   traffic: 'Traffic light',
   break: 'Break',

@@ -16,6 +16,15 @@ export interface PlatformCapabilities {
   link: boolean;
   /** Songs already stored on the device, in its Music library. */
   music: boolean;
+  /** Movies kept on the device, picked from Photos or Files, and played by the device. */
+  movies: boolean;
+}
+
+/** Movies kept on the device. Copied into the app when chosen, so they play with no internet. Nothing is sent anywhere. */
+export interface MovieLibraryBridge {
+  pick: (source: 'photos' | 'files') => Promise<Array<{ id: string; title: string; bytes: number; seconds: number }>>;
+  play: (id: string) => Promise<boolean>;
+  remove: (id: string) => Promise<void>;
 }
 
 /**
@@ -84,6 +93,8 @@ export interface MyWordsBridge {
   link?: AppleLinkBridge;
   /** The device's own Music library. Absent where there is none. */
   music?: MusicLibraryBridge;
+  /** Movies kept on the device. Absent where there are none. */
+  movies?: MovieLibraryBridge;
   parentMode: {
     setFullscreen: (value: boolean) => Promise<void>;
     isFullscreen: () => Promise<boolean>;

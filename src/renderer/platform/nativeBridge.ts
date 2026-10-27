@@ -28,6 +28,9 @@ export interface NativeShell {
   musicResume: () => Promise<void>;
   musicStop: () => Promise<void>;
   musicState: () => Promise<{ state: 'playing' | 'paused' | 'stopped' }>;
+  moviePick: (options: { source: 'photos' | 'files' }) => Promise<{ movies: Array<{ id: string; title: string; bytes: number; seconds: number }> }>;
+  moviePlay: (options: { id: string }) => Promise<{ ok: boolean }>;
+  movieRemove: (options: { id: string }) => Promise<void>;
 }
 
 export type DeviceAccessibility = Awaited<ReturnType<NonNullable<Window['myWords']['deviceAccessibility']>>>;
@@ -46,7 +49,7 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     versions: { app: version },
     platform,
     // A phone or tablet app is always full screen, and starts only when it is opened.
-    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true },
+    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true, movies: true },
     parentMode: {
       setFullscreen: async () => undefined,
       isFullscreen: async () => true,
@@ -90,6 +93,11 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     print: () => shell.printPage(),
     deviceAccessibility: () => shell.accessibility(),
     haptic: () => shell.haptic(),
+    movies: {
+      pick: async (source) => (await shell.moviePick({ source })).movies,
+      play: async (id) => (await shell.moviePlay({ id })).ok,
+      remove: (id) => shell.movieRemove({ id }),
+    },
     music: {
       access: async () => (await shell.musicAccess()).status,
       list: async (options = {}) => (await shell.musicList(options)).songs,

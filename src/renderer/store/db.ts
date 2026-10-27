@@ -9,6 +9,7 @@ import {
 } from '../vocab/starter';
 import { EMPTY_LOST_MODE, isLostMode, type LostMode } from '../safety/lostMode';
 import { isFamilyList, type FamilyMember } from '../family/family';
+import { isMovieList, type Movie } from '../movies/movies';
 import { DEFAULT_TRAFFIC, isTrafficSetting, type TrafficSetting } from '../signals/traffic';
 import { hashSecret, isHashedSecret, verifySecret } from './pinSecurity';
 import { DEFAULT_RETENTION_DAYS, MAX_ENTRIES, MAX_LABEL, isRetention, type ActivityEntry, type ActivityKind } from './activity';
@@ -924,6 +925,8 @@ const isUserProfile = (value: unknown): value is UserProfile =>
 /** Whose device this is: a name, a device name, a picture and an age (Parent Mode, User). */
 export const userProfileSetting = storedSetting<UserProfile>('userProfile', EMPTY_USER_PROFILE, isUserProfile);
 /** What the figure in My body looks like (Parent Mode, My body). */
+/** Movies kept on this device. Not in a backup: the films themselves are not, so the names would point at nothing. */
+export const moviesSetting = storedSetting<Movie[]>('movies', [], isMovieList, false);
 /** The people who matter to the child, and how they are related (My family). */
 export const familySetting = storedSetting<FamilyMember[]>('family', [], isFamilyList);
 export const myBodySetting = storedSetting<BodyLook>('myBody', DEFAULT_BODY_LOOK, isBodyLook);
@@ -1058,6 +1061,7 @@ const SETTINGS = [
   drawingsSetting,
   myBodySetting,
   familySetting,
+  moviesSetting,
   customJokesSetting,
   songsSetting,
   playlistsSetting,

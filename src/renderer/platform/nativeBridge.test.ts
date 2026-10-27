@@ -23,6 +23,9 @@ function fakeShell(overrides: Partial<NativeShell> = {}): NativeShell {
     linkSend: vi.fn(async () => undefined),
     musicAccess: vi.fn(async () => ({ status: 'granted' as const })),
     musicList: vi.fn(async () => ({ songs: [{ id: '42', title: 'Twinkle', artist: 'A' }] })),
+    moviePick: vi.fn(async () => ({ movies: [{ id: 'a.mov', title: 'Holiday', bytes: 10, seconds: 60 }] })),
+    moviePlay: vi.fn(async () => ({ ok: true })),
+    movieRemove: vi.fn(async () => undefined),
     musicPlaylists: vi.fn(async () => ({ playlists: [{ id: '7', name: 'Bedtime', count: 3 }] })),
     musicPlay: vi.fn(async () => ({ ok: true })),
     musicPause: vi.fn(async () => undefined),
@@ -38,7 +41,7 @@ describe('the phone and tablet bridge', () => {
   it('says what a phone or tablet cannot do, so the page can hide it', () => {
     const bridge = buildNativeBridge(fakeShell(), 'ios', '1.0');
     expect(bridge.platform).toBe('ios');
-    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true });
+    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true, movies: true });
     expect(bridge.versions.app).toBe('1.0');
   });
 
@@ -111,6 +114,16 @@ describe('the phone and tablet bridge', () => {
     expect(await bridge.music!.play('42')).toBe(true);
     expect(shell.musicPlay).toHaveBeenCalledWith({ id: '42' });
     expect(await bridge.music!.state()).toBe('playing');
+  });
+
+  it('picks, plays and removes movies kept on the device', async () => {
+    const shell = fakeShell();
+    const bridge = buildNativeBridge(shell, 'ios', '1.0');
+    expect(await bridge.movies!.pick('photos')).toEqual([{ id: 'a.mov', title: 'Holiday', bytes: 10, seconds: 60 }]);
+    expect(shell.moviePick).toHaveBeenCalledWith({ source: 'photos' });
+    expect(await bridge.movies!.play('a.mov')).toBe(true);
+    await bridge.movies!.remove('a.mov');
+    expect(shell.movieRemove).toHaveBeenCalledWith({ id: 'a.mov' });
   });
 
   it('has no start-up setting and stays full screen', async () => {

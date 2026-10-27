@@ -77,6 +77,8 @@ See [the principles](../PRINCIPLES.md) for the reasoning.
 - **Find the word**, **Snap**, **Rollercoaster** (build short sentences), **Draw**, **Jokes** (with your own), **Music** (songs from files you add, with playlists) and **Piano**.
 - **Music from the device (iPhone and iPad):** songs already stored in the Music library, including downloaded Apple Music songs, can be added in Parent Mode. Only songs stored on the device are offered, they are played by the device, and nothing is copied or streamed.
 - **Seasons**: words, Find the word and Snap for spring, summer, autumn, winter, Christmas, Easter, Halloween, Bonfire Night, Diwali, Eid and Hanukkah, with the one that suits today's date marked. An adult chooses which to show, changes the words, and adds others (Ramadan, Vaisakhi, Holi, Passover, Chinese New Year, Birthday, or their own).
+- **Movies (iPhone and iPad):** videos already on the device, picked from Photos or Files and played full screen when pressed. Nothing is streamed or sent.
+- **My family and friends:** a family tree with photos, built in Parent Mode, where pressing a person says who they are.
 - **Make a tree**: decorate a Christmas tree with baubles, lights, a star and presents; it is remembered.
 - No scores against anyone, no clocks, nothing moves or flashes.
 

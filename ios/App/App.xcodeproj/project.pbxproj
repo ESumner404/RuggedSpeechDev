@@ -17,6 +17,7 @@
 		2700A5422E45C887BEAE5B76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CC6C49B810BBC284BCED483 /* Main.storyboard */; };
 		28B8157B5DA9DE580217157A /* LinkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22F1099B57DD0E23A8C3774 /* LinkState.swift */; };
 		2B608FC58D68A11CF0A3B6C7 /* ShowingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5434C6526F1663FF6280341 /* ShowingView.swift */; };
+		2D5F37D56024307203CB15BE /* MovieLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E0585172AC0E29E475454 /* MovieLibrary.swift */; };
 		317D9CB082EA48B9D62A8585 /* FeelingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */; };
 		33894972445A547C53525D94 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 42299223C1270749CDB36540 /* PrivacyInfo.xcprivacy */; };
 		3ECAA36FE1937631F99ECE2C /* TrafficLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19361A32DC5EBBED296019C2 /* TrafficLightView.swift */; };
@@ -124,6 +125,7 @@
 		89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
 		8A472A1CFB488F926C0D5DEC /* MyDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayView.swift; sourceTree = "<group>"; };
 		9420949282AB92AA28A975D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9E3E0585172AC0E29E475454 /* MovieLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieLibrary.swift; sourceTree = "<group>"; };
 		A33C3818573C48EE3123579D /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
 		A348982BCE2FD882CD176B83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AEA37DFD3E6C0695C200E19D /* TalkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkView.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				76989E05CECAD7B8B3C424A7 /* Assets.xcassets */,
 				68ED4E8FE0185474B6E8E85B /* capacitor.config.json */,
 				8776CD2CC1249496A6F18C86 /* config.xml */,
+				9E3E0585172AC0E29E475454 /* MovieLibrary.swift */,
 				28AA27FA6AC072E8E6546709 /* MusicLibrary.swift */,
 				42299223C1270749CDB36540 /* PrivacyInfo.xcprivacy */,
 				7E5BBB12596EE01767A6151A /* public */,
@@ -484,6 +487,7 @@
 			files = (
 				E8E03F4FB1BE61A377693A7C /* AppDelegate.swift in Sources */,
 				A844A5FAE996B6AD81C77182 /* AppleLink.swift in Sources */,
+				2D5F37D56024307203CB15BE /* MovieLibrary.swift in Sources */,
 				B859A9687FD05E5191691BCE /* MusicLibrary.swift in Sources */,
 				025643294D1903CD4992DC89 /* RuggedNativePlugin.swift in Sources */,
 				93AF4DCA86CB972AF0E661BB /* RuggedViewController.swift in Sources */,

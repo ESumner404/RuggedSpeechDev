@@ -31,6 +31,9 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
         CAPPluginMethod(name: "musicResume", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "musicStop", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "musicState", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "moviePick", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "moviePlay", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "movieRemove", returnType: CAPPluginReturnPromise),
     ]
 
     /// The largest file the app will read: a backup with a great many photographs and songs.
@@ -247,6 +250,29 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
 
     @objc func musicState(_ call: CAPPluginCall) {
         DispatchQueue.main.async { call.resolve(["state": MusicLibrary.shared.state]) }
+    }
+
+    // MARK: Movies kept on the device (see MovieLibrary.swift).
+
+    @objc func moviePick(_ call: CAPPluginCall) {
+        let source = call.getString("source") == "files" ? "files" : "photos"
+        DispatchQueue.main.async { [weak self] in
+            guard let controller = self?.bridge?.viewController else { call.resolve(["movies": []]); return }
+            MovieLibrary.shared.pick(source: source, from: controller) { call.resolve(["movies": $0]) }
+        }
+    }
+
+    @objc func moviePlay(_ call: CAPPluginCall) {
+        let id = call.getString("id") ?? ""
+        DispatchQueue.main.async { [weak self] in
+            guard let controller = self?.bridge?.viewController else { call.resolve(["ok": false]); return }
+            call.resolve(["ok": MovieLibrary.shared.play(id: id, from: controller)])
+        }
+    }
+
+    @objc func movieRemove(_ call: CAPPluginCall) {
+        MovieLibrary.shared.remove(id: call.getString("id") ?? "")
+        call.resolve()
     }
 
     /// A file name with nothing in it that could name a folder.

@@ -822,3 +822,7 @@ In **Timetable**, each activity can have **Words: (a lesson page)**. On the chil
 #### My family and friends
 
 In **My family**, add each person with a name, how they are related, a photo (or an emoji), their parents and a partner. The child's **My family** page draws the family tree from the oldest generation down, with partners together, and friends on their own tab. Pressing a person says who they are ("This is Nan, my grandma."), or what you wrote instead. Add **My family** to the top bar in **Quick Access** to reach it from every screen.
+
+#### Movies kept on this iPhone or iPad
+
+In **Movies**, add videos already on the device, from **Photos** or from **Files**. Each is copied into the app, so it plays with no internet and nothing is sent anywhere. Films you bought or rented in the TV app are locked to that app and cannot be added. A movie plays full screen, only when the child presses its tile (add **Movies** to the top bar in **Quick Access**). Movies are not part of a backup, because they are too big.
