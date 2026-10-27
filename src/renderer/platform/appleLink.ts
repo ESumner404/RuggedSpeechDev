@@ -27,6 +27,8 @@ export const OPENABLE_SCREENS = [
   'favourites',
   'family',
   'movies',
+  'timer',
+  'stories',
 ] as const;
 export type OpenableScreen = (typeof OPENABLE_SCREENS)[number];
 

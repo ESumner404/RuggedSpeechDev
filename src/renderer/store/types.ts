@@ -175,6 +175,8 @@ export const QUICK_ACCESS_IDS = [
   'body',
   'family',
   'movies',
+  'timer',
+  'stories',
   'music',
   'traffic',
   // Spoken straight away, like Yes and No: handy in a classroom.

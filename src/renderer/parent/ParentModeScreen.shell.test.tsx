@@ -53,6 +53,7 @@ describe('ParentModeScreen shell', () => {
       'Medical',
       'My body',
       'My family',
+      'My stories',
       'Boards',
       'People',
       'Places',

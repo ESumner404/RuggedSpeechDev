@@ -11,6 +11,7 @@ import { EMPTY_LOST_MODE, isLostMode, type LostMode } from '../safety/lostMode';
 import { isFamilyList, type FamilyMember } from '../family/family';
 import { isMovieList, type Movie } from '../movies/movies';
 import { isDiaryList, type DiaryEntry } from '../diary/diary';
+import { isStoryList, type Story } from '../stories/stories';
 import { DEFAULT_TRAFFIC, isTrafficSetting, type TrafficSetting } from '../signals/traffic';
 import { hashSecret, isHashedSecret, verifySecret } from './pinSecurity';
 import { DEFAULT_RETENTION_DAYS, MAX_ENTRIES, MAX_LABEL, isRetention, type ActivityEntry, type ActivityKind } from './activity';
@@ -933,6 +934,8 @@ const isPendingPacks = (value: unknown): value is PendingPack[] =>
   value.length <= 3 &&
   value.every((p) => typeof p === 'object' && p !== null && typeof (p as PendingPack).id === 'string' && typeof (p as PendingPack).name === 'string' && typeof (p as PendingPack).receivedAt === 'number' && typeof (p as PendingPack).text === 'string');
 export const pendingPacksSetting = storedSetting<PendingPack[]>('pendingPacks', [], isPendingPacks, false);
+/** My stories: step-by-step stories that get a child ready for something. */
+export const storiesSetting = storedSetting<Story[]>('stories', [], isStoryList);
 /** The home–school diary, and when each side last looked. */
 export const diarySetting = storedSetting<DiaryEntry[]>('diary', [], isDiaryList);
 export type DiarySeen = { home?: number; school?: number };
@@ -1076,6 +1079,7 @@ const SETTINGS = [
   myBodySetting,
   familySetting,
   moviesSetting,
+  storiesSetting,
   diarySetting,
   diarySeenSetting,
   pendingPacksSetting,

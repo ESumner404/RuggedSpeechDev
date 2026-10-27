@@ -67,6 +67,8 @@ import { controllerSpec, linkPeers } from '../platform/linkStatus';
 import { ControllerScreen } from '../game/ControllerScreen';
 import { FamilyScreen } from '../family/FamilyScreen';
 import { MoviesScreen } from '../movies/MoviesScreen';
+import { TimerScreen } from '../timer/TimerScreen';
+import { StoriesScreen } from '../stories/StoriesScreen';
 import { getDateString } from '../day/dayLogic';
 import { applyTheme } from '../ui/theme';
 import { applyLabelStyle, applySymbolStyle } from '../symbols/icons';
@@ -91,6 +93,8 @@ type AppScreen =
   | { name: 'body' }
   | { name: 'family' }
   | { name: 'movies' }
+  | { name: 'timer' }
+  | { name: 'stories' }
   | { name: 'music' }
   | { name: 'traffic' }
   | { name: 'controller' }
@@ -109,6 +113,8 @@ const SCREEN_LABELS: Record<AppScreen['name'], string> = {
   body: 'My body',
   family: 'My family',
   movies: 'Movies',
+  timer: 'Timer',
+  stories: 'My stories',
   music: 'Music',
   traffic: 'Traffic light',
   controller: 'Game controller',
@@ -365,6 +371,10 @@ export function App() {
         return <GamesScreen />;
       case 'draw':
         return <DrawScreen />;
+      case 'stories':
+        return <StoriesScreen />;
+      case 'timer':
+        return <TimerScreen />;
       case 'movies':
         return <MoviesScreen />;
       case 'family':
