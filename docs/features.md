@@ -103,11 +103,16 @@ See [the principles](../PRINCIPLES.md) for the reasoning.
 - **Word stages**: bring words in gradually, with held-back words leaving an empty place.
 - **Focus words**: a blue outline on the words being practised.
 - **Clear the sentence after it is spoken**, if that suits the person.
+- **A word to model each week**: one word for a partner to press while they talk, with easy ways to try it (Today and Learning).
+- **Goals to start from**: a bank of plain-words communication goals to put in Targets.
+- **How what is said is changing**: week by week, from the opt-in log (sentence length, different words, new words), as a rough guide for adults.
+- **Pages for communication functions**: asking, saying no and stop, commenting, asking questions, and hello and goodbye.
+- **Finish the sentence**, **My stories** (step-by-step stories with pictures), and a silent **visual timer** of ten blocks.
 - **Word counts** (off by default): how often each word is pressed, and which are never pressed.
 
 ## School Mode
 
-A separate side for school staff, with its own button next to Parent Mode and its own **School PIN**, both switched on afterwards in Parent Mode.
+A separate side for school staff, with a Start page, readiness check and a search for sections, with its own button next to Parent Mode and its own **School PIN**, both switched on afterwards in Parent Mode.
 
 - **Today**: the day at a glance, with a quick note.
 - **Pupil and school**: school details, key adults, the speech and language therapist.
@@ -117,6 +122,10 @@ A separate side for school staff, with its own button next to Parent Mode and it
 - **Targets** with review dates, and **Notes** by kind (something noticed, went well, an idea, to follow up).
 - **Activity** (off by default): counts by hour, day, week and month, saved as a spreadsheet only when you choose.
 - **Reports**: a printable **handover sheet** and a **review report**.
+- **School pack**: hands lesson pages, a timetable and the school's details to many devices at once, one way, as a file or over the school's wifi with a code. A pack holds nothing about any child, never goes back, and is only ever added by an adult's choice.
+- **Home–school diary**: a note each way between home and school, for adults (also in Parent Mode).
+- **Choice boards**: make a page of two to six words for a real choice.
+- **Is everything ready?**: a short, kind checklist on Today with a button to sort each thing out.
 - **Classroom set-up**: the school top bar, a typical school day, and an automatic close after a set time.
 - **School guide** inside School Mode.
 
@@ -139,4 +148,4 @@ Behind a four-digit PIN with a recovery code, in a grouped menu with the whole g
 - It does **not** stream music or connect to Spotify or Apple Music.
 - It does **not** call, message or alert anyone, and it is **not** a safeguarding record.
 - It does **not** find or lock a lost device, because it has no internet.
-- It does **not** manage a class: one device, one child.
+- It does **not** manage a class: one device, one child. A school can hand the same pages and timetable to many devices (School pack), one way, and nothing about any child ever travels back.

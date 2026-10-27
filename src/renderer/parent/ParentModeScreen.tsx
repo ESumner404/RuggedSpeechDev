@@ -115,6 +115,8 @@ export function ParentModeScreen({ onExit }: Props) {
   const fullscreen = useSignal(false);
   // On a phone the list of sections is folded away behind a button, so the page gets the whole width.
   const menuOpen = useSignal(false);
+  // Typing here narrows the list of sections, so a section can be found by name.
+  const navFilter = useSignal('');
   const currentLabel =
     GROUPS.flatMap((group): readonly { id: string; label: string }[] => group.tabs).find((entry) => entry.id === tab.value)?.label ??
     'Sections';
@@ -212,10 +214,18 @@ export function ParentModeScreen({ onExit }: Props) {
         <span aria-hidden="true">{menuOpen.value ? ' ▴' : ' ▾'}</span>
       </button>
       <nav class={menuOpen.value ? 'parent-nav parent-nav--open' : 'parent-nav'} aria-label={`${name} sections`}>
-        {GROUPS.map((group) => (
+        <input
+          class="parent-nav__search"
+          type="search"
+          aria-label="Find a section"
+          placeholder="Find a section"
+          value={navFilter.value}
+          onInput={(event) => (navFilter.value = (event.target as HTMLInputElement).value)}
+        />
+        {GROUPS.map((group) => ({ group, tabs: group.tabs.filter((entry) => entry.label.toLowerCase().includes(navFilter.value.trim().toLowerCase())) })).filter(({ tabs }) => tabs.length > 0).map(({ group, tabs }) => (
           <div class="parent-nav__group" key={group.title}>
             <p class="parent-nav__heading">{group.title}</p>
-            {group.tabs.map((entry) => (
+            {tabs.map((entry) => (
               <button
                 type="button"
                 class="page-tabs__tab parent-nav__tab"

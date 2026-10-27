@@ -110,6 +110,7 @@ export function SchoolModeScreen({ onExit }: Props) {
   }, [minutes]);
 
   const menuOpen = useSignal(false);
+  const navFilter = useSignal('');
   const currentLabel =
     GROUPS.flatMap((group): readonly { id: string; label: string }[] => group.sections).find((entry) => entry.id === section.value)?.label ??
     'Sections';
@@ -140,10 +141,18 @@ export function SchoolModeScreen({ onExit }: Props) {
           <span aria-hidden="true">{menuOpen.value ? ' ▴' : ' ▾'}</span>
         </button>
         <nav class={menuOpen.value ? 'parent-nav school-nav parent-nav--open' : 'parent-nav school-nav'} aria-label={`${SCHOOL_MODE_NAME} sections`}>
-          {GROUPS.map((group) => (
+          <input
+            class="parent-nav__search"
+            type="search"
+            aria-label="Find a section"
+            placeholder="Find a section"
+            value={navFilter.value}
+            onInput={(event) => (navFilter.value = (event.target as HTMLInputElement).value)}
+          />
+          {GROUPS.map((group) => ({ group, sections: group.sections.filter((entry) => entry.label.toLowerCase().includes(navFilter.value.trim().toLowerCase())) })).filter(({ sections }) => sections.length > 0).map(({ group, sections }) => (
             <div class="parent-nav__group" key={group.title}>
               <p class="parent-nav__heading">{group.title}</p>
-              {group.sections.map((entry) => (
+              {sections.map((entry) => (
                 <button
                   type="button"
                   class="page-tabs__tab parent-nav__tab school-nav__tab"

@@ -6391,3 +6391,15 @@ html[data-labels='words'] .board-button__label {
   border: 2px solid var(--color-border);
   border-radius: 10px;
 }
+
+.parent-nav__search {
+  width: 100%;
+  min-height: 2.6rem;
+  margin: 0 0 0.6rem;
+  padding: 0 0.6rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: 1rem;
+}
