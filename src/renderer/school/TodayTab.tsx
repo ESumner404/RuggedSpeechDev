@@ -1,3 +1,4 @@
+import { ModellingCard } from '../learning/ModellingCard';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { getDateString } from '../day/dayLogic';
@@ -65,6 +66,7 @@ export function TodayTab({ go }: { go: (section: SchoolSection) => void }) {
 
   return (
     <div class="parent-mode-screen__body today-tab">
+      <ModellingCard />
       <header class="today-tab__head">
         <h2 class="today-tab__date">{LONG_DATE.format(new Date())}</h2>
         <p class="today-tab__who">{deviceTitle(profile)}</p>

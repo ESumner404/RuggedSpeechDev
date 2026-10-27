@@ -1,6 +1,7 @@
 import { useSignal } from '@preact/signals';
 import { targetsSetting } from '../store/db';
 import { getDateString } from '../day/dayLogic';
+import { GOAL_BANK } from '../learning/goalBank';
 import {
   MAX_TARGETS,
   TARGET_AREAS,
@@ -52,6 +53,24 @@ export function TargetsTab() {
         <em> I want</em> and a word to ask for what they need.” They are for adults only and never shown on the
         child's screen. They appear on the Reports sheets.
       </p>
+
+      <details class="targets-tab__bank">
+        <summary>Ideas to start from</summary>
+        <p class="about-tab__hint">
+          Starting points, not a programme. Choose one to put it in the box below, then change it to suit this child. What
+          is right depends on the child, and a speech and language therapist can help you choose.
+        </p>
+        <ul class="targets-tab__bank-list">
+          {GOAL_BANK.filter((goal) => goal.area === area.value || area.value === 'other').map((goal) => (
+            <li key={goal.text}>
+              <span>{goal.text}</span>
+              <button type="button" class="parent-mode-screen__button" onClick={() => (text.value = goal.text)}>
+                Use
+              </button>
+            </li>
+          ))}
+        </ul>
+      </details>
 
       <form class="targets-tab__form" onSubmit={add}>
         <label class="about-tab__field">

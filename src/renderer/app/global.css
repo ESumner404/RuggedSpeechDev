@@ -5933,3 +5933,49 @@ html[data-labels='words'] .board-button__label {
   gap: 0.5rem;
   margin: 0.4rem 0;
 }
+
+/* The word to model this week, for adults. */
+.modelling-card {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-chip-background);
+}
+
+.modelling-card__title {
+  margin: 0 0 0.25rem;
+  font-size: 1.2rem;
+}
+
+.modelling-card__word {
+  font-size: 1.5rem;
+}
+
+.modelling-card__why,
+.modelling-card__lead {
+  margin: 0.25rem 0;
+}
+
+.modelling-card__list {
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.targets-tab__bank {
+  margin: 0.75rem 0;
+}
+
+.targets-tab__bank-list {
+  list-style: none;
+  padding: 0;
+}
+
+.targets-tab__bank-list li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
