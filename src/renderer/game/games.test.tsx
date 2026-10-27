@@ -57,7 +57,7 @@ describe('Games', () => {
 
   it('shows the games in a fixed order, and says nothing', () => {
     const labels = Array.from(container.querySelectorAll('.games-menu__label')).map((el) => el.textContent);
-    expect(labels).toEqual(['Find the word', 'Snap', 'Rollercoaster', 'Draw', 'Jokes', 'Music', 'Piano', 'Seasons', 'Make a tree']);
+    expect(labels).toEqual(['Find the word', 'Snap', 'Rollercoaster', 'Draw', 'Jokes', 'Music', 'Piano', 'Seasons', 'Make a tree', 'Finish the sentence']);
     expect(spoken).toEqual([]);
   });
 

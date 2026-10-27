@@ -11,6 +11,7 @@ import { MyPagesTab } from '../parent/MyPagesTab';
 import { NotesTab } from '../parent/NotesTab';
 import { ReportsTab } from '../parent/ReportsTab';
 import { TargetsTab } from '../parent/TargetsTab';
+import { ChoicesTab } from './ChoicesTab';
 import { ClassroomTab } from './ClassroomTab';
 import { PackTab } from './PackTab';
 import { DiaryTab } from '../diary/DiaryTab';
@@ -25,6 +26,7 @@ export type SchoolSection =
   | 'safeguarding'
   | 'timetable'
   | 'lessons'
+  | 'choices'
   | 'vocabulary'
   | 'targets'
   | 'notes'
@@ -50,6 +52,7 @@ const GROUPS: { title: string; sections: { id: SchoolSection; label: string }[] 
     sections: [
       { id: 'timetable', label: 'Timetable' },
       { id: 'lessons', label: 'Lesson pages' },
+      { id: 'choices', label: 'Choice boards' },
       { id: 'vocabulary', label: 'Vocabulary' },
     ],
   },
@@ -161,6 +164,7 @@ export function SchoolModeScreen({ onExit }: Props) {
           {section.value === 'safeguarding' && <SafeguardingTab />}
           {section.value === 'timetable' && <DayBuilderTab />}
           {section.value === 'lessons' && <MyPagesTab />}
+          {section.value === 'choices' && <ChoicesTab />}
           {section.value === 'vocabulary' && <LearningTab />}
           {section.value === 'targets' && <TargetsTab />}
           {section.value === 'notes' && <NotesTab />}

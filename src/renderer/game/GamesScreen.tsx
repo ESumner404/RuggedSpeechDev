@@ -1,5 +1,6 @@
 import { useSignal } from '@preact/signals';
 import { DrawScreen } from '../draw/DrawScreen';
+import { FinishScreen } from './FinishScreen';
 import { GameScreen } from './GameScreen';
 import { JokesScreen } from './JokesScreen';
 import { MusicScreen } from '../music/MusicScreen';
@@ -9,7 +10,7 @@ import { SeasonsScreen } from './SeasonsScreen';
 import { SnapScreen } from './SnapScreen';
 import { TreeScreen } from './TreeScreen';
 
-type Which = 'find' | 'snap' | 'ride' | 'draw' | 'jokes' | 'music' | 'piano' | 'seasons' | 'tree';
+type Which = 'find' | 'finish' | 'snap' | 'ride' | 'draw' | 'jokes' | 'music' | 'piano' | 'seasons' | 'tree';
 
 const GAMES: { id: Which; label: string; icon: string; hint: string }[] = [
   { id: 'find', label: 'Find the word', icon: '🔎', hint: 'Match the word to the picture.' },
@@ -21,6 +22,7 @@ const GAMES: { id: Which; label: string; icon: string; hint: string }[] = [
   { id: 'piano', label: 'Piano', icon: '🎹', hint: 'Play the keys.' },
   { id: 'seasons', label: 'Seasons', icon: '🍂', hint: 'Words and games for times of the year.' },
   { id: 'tree', label: 'Make a tree', icon: '🎄', hint: 'Hang decorations on a Christmas tree.' },
+  { id: 'finish', label: 'Finish the sentence', icon: '✏️', hint: 'Choose a word to finish the sentence.' },
 ];
 
 // A small menu of things to do for fun. The nine tiles stay in the same
@@ -61,6 +63,7 @@ export function GamesScreen() {
         {which.value === 'piano' && <PianoScreen />}
         {which.value === 'seasons' && <SeasonsScreen />}
         {which.value === 'tree' && <TreeScreen />}
+        {which.value === 'finish' && <FinishScreen />}
       </div>
     </div>
   );

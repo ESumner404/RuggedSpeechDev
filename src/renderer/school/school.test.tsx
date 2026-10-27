@@ -71,6 +71,7 @@ describe('SchoolModeScreen', () => {
       'Safeguarding',
       'Timetable',
       'Lesson pages',
+      'Choice boards',
       'Vocabulary',
       'Targets',
       'Notes',
