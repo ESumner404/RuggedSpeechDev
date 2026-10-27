@@ -115,6 +115,8 @@ final class IPadLink: NSObject, ObservableObject, MCNearbyServiceBrowserDelegate
             if let received = LinkState.decode(json) { DispatchQueue.main.async { self.state = received } }
         } else if json.hasPrefix(#"{"type":"sync""#) {
             TVContent.shared.apply(json)
+        } else if json.hasPrefix(#"{"type":"input""#) {
+            GameHub.shared.receive(json)
         } else if json.hasPrefix(#"{"type":"sentence""#) {
             if let received = MirrorState.decode(json) { DispatchQueue.main.async { self.mirror = received } }
         }

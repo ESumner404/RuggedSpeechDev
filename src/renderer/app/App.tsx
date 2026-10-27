@@ -63,7 +63,8 @@ import { applyAccessSettings } from '../access/applyAccessSettings';
 import { buzzOnPress, deviceAccessibility, followDevice, watchDeviceAccessibility } from '../platform/deviceAccessibility';
 import { buildLinkState, buildSentenceMessage, buildSyncMessage, startLink, type LinkCommand, type LinkSession } from '../platform/appleLink';
 import { lastSaid, liveSentence } from '../platform/liveSpeech';
-import { linkPeers } from '../platform/linkStatus';
+import { controllerSpec, linkPeers } from '../platform/linkStatus';
+import { ControllerScreen } from '../game/ControllerScreen';
 import { getDateString } from '../day/dayLogic';
 import { applyTheme } from '../ui/theme';
 import { applyLabelStyle, applySymbolStyle } from '../symbols/icons';
@@ -88,6 +89,7 @@ type AppScreen =
   | { name: 'body' }
   | { name: 'music' }
   | { name: 'traffic' }
+  | { name: 'controller' }
   | { name: 'feelings'; tab?: FeelingsHelpTab }
   | { name: 'favourites'; tab?: FavouritesTab };
 
@@ -103,6 +105,7 @@ const SCREEN_LABELS: Record<AppScreen['name'], string> = {
   body: 'My body',
   music: 'Music',
   traffic: 'Traffic light',
+  controller: 'Game controller',
   feelings: 'Feelings & Help',
   favourites: 'Favourites',
 };
@@ -163,6 +166,14 @@ export function App() {
   function handleLinkCommand(command: LinkCommand): void {
     if (command.kind === 'sync') {
       linkRef.current?.resend();
+      return;
+    }
+    if (command.kind === 'controller') {
+      // A game on the television asks for its buttons here; an empty set means it has finished.
+      controllerSpec.value = command.spec;
+      if (mode.value !== 'child') return;
+      if (command.spec) screen.value = { name: 'controller' };
+      else if (screen.value.name === 'controller') screen.value = { name: 'home' };
       return;
     }
     if (mode.value !== 'child') return;
@@ -336,6 +347,8 @@ export function App() {
         return <TalkScreen onExit={goHome} />;
       case 'keyboard':
         return <KeyboardScreen />;
+      case 'controller':
+        return <ControllerScreen onPress={(button) => linkRef.current?.sendNow({ type: 'input', button })} />;
       case 'myday':
         return <MyDayScreen onOpenPage={(pageId) => (screen.value = { name: 'mypages', pageId })} />;
       case 'mypages':

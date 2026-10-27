@@ -31,6 +31,7 @@
 		5CBA01DD0B2C2B9C9AC30752 /* TalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA37DFD3E6C0695C200E19D /* TalkView.swift */; };
 		5E04533C01261A377D816DB8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8776CD2CC1249496A6F18C86 /* config.xml */; };
 		67740B5377F807ABF1532F55 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2016878D44EAA9692D059F /* SceneDelegate.swift */; };
+		6993295D9B2B685761EEA4C6 /* FamilyGames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673736C7D886FA30C3FB1CEE /* FamilyGames.swift */; };
 		722A9217FCDD97B83B13D3B0 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B78992D825F92552EF69B09 /* LinkView.swift */; };
 		75CA7222FA8143CBE81D8BB1 /* RuggedSpeechWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053D8104D4D23A62373CD05E /* RuggedSpeechWatchApp.swift */; };
 		78728FD8E95658F1C8DA4664 /* PressButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A3C29165F901B0885CF9EE /* PressButton.swift */; };
@@ -51,6 +52,7 @@
 		BF216F575F36258A76ECC8D2 /* FeelingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0002DBFC6DEC9F6EFC5E28E /* FeelingsView.swift */; };
 		C06343D200D067F1C1D47579 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1BE806AA055FC55BEC1EF /* Speaker.swift */; };
 		CA3A0BA5422B7D487E3B5B04 /* WordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7994EED4E82B742F75D509CB /* WordsView.swift */; };
+		CA976459D2F292787FA33570 /* GameHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6E2232872DC3AB28188AD9 /* GameHub.swift */; };
 		CD43577A7360E52D644FABA0 /* MyDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A472A1CFB488F926C0D5DEC /* MyDayView.swift */; };
 		DAC8B61E340368A6B1C6703E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81927A013CDB49DBF3B7C3 /* SettingsView.swift */; };
 		DE5A67874BD3153E9239C24C /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96A26BA16DA21949B12B73 /* HelpView.swift */; };
@@ -104,6 +106,7 @@
 		52BA3F8A9E19DEB1FA0B7E0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5A415F5AA01D3EE30B4CE2D5 /* TrafficView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficView.swift; sourceTree = "<group>"; };
 		5BB2773832555232C75F9F50 /* TVContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVContent.swift; sourceTree = "<group>"; };
+		673736C7D886FA30C3FB1CEE /* FamilyGames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyGames.swift; sourceTree = "<group>"; };
 		68ED4E8FE0185474B6E8E85B /* capacitor.config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		6B04ADF7B81E144C4949AE51 /* CapApp-SPM */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "CapApp-SPM"; path = "CapApp-SPM"; sourceTree = SOURCE_ROOT; };
 		6BF500EA76A709DA65D08690 /* MyDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayView.swift; sourceTree = "<group>"; };
@@ -131,6 +134,7 @@
 		CA96A26BA16DA21949B12B73 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		D65879761B3E0FB60EDF1A2D /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadLink.swift; sourceTree = "<group>"; };
+		EA6E2232872DC3AB28188AD9 /* GameHub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHub.swift; sourceTree = "<group>"; };
 		EC5BD6EA66DFD5807E09B6E1 /* PhoneLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneLink.swift; sourceTree = "<group>"; };
 		ED2016878D44EAA9692D059F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		EEFF7D807DC10CEDCD9D4AD7 /* AppleLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLink.swift; sourceTree = "<group>"; };
@@ -243,8 +247,10 @@
 			children = (
 				52BA3F8A9E19DEB1FA0B7E0A /* Assets.xcassets */,
 				85626B44C1FDB678049D785D /* BigButton.swift */,
+				673736C7D886FA30C3FB1CEE /* FamilyGames.swift */,
 				89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */,
 				C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */,
+				EA6E2232872DC3AB28188AD9 /* GameHub.swift */,
 				FF52DEE947CDC57195F4D348 /* GamesView.swift */,
 				D65879761B3E0FB60EDF1A2D /* HelpView.swift */,
 				D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */,
@@ -427,8 +433,10 @@
 			files = (
 				0AF5FB10639AA3F032AF113E /* BigButton.swift in Sources */,
 				4D3F2630D26594B18A1E0A3C /* Colours.swift in Sources */,
+				6993295D9B2B685761EEA4C6 /* FamilyGames.swift in Sources */,
 				A3D11A276F42E90F148C2438 /* FavouritesView.swift in Sources */,
 				317D9CB082EA48B9D62A8585 /* FeelingsView.swift in Sources */,
+				CA976459D2F292787FA33570 /* GameHub.swift in Sources */,
 				E30FEAF4D7BA9B789913141A /* GamesView.swift in Sources */,
 				49FDF93485BD1B5F5D5C6804 /* HelpView.swift in Sources */,
 				F7C1492D97661B6AC1A562FF /* IPadLink.swift in Sources */,

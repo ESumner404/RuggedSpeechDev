@@ -22,7 +22,7 @@ enum GameWords {
 }
 
 private enum Game: String, Hashable {
-    case find, snap
+    case find, snap, silly, feelings, rather
 }
 
 /// The menu. The tiles are always in this order.
@@ -33,8 +33,8 @@ struct GamesView: View {
 
     var body: some View {
         NavigationStack(path: $path) {
-            VStack(spacing: 30) {
-                Text("Games").font(.system(size: 56, weight: .bold))
+            VStack(spacing: 24) {
+                Text("Games").font(.system(size: 52, weight: .bold))
                 HStack(spacing: 30) {
                     tile("🔎", "Find the word", "Match the word to the picture.") { path.append(.find) }
                     tile("🃏", "Snap", "Turn the cards. Press SNAP for two the same.") { path.append(.snap) }
@@ -47,7 +47,14 @@ struct GamesView: View {
                         }
                     }
                 }
-                .frame(height: 380)
+                .frame(height: 300)
+                Text("For the whole family, with the iPad as a controller").font(.title2).foregroundStyle(.secondary)
+                HStack(spacing: 30) {
+                    tile("🤪", "Silly Sentences", "Build a silly sentence together.") { path.append(.silly) }
+                    tile("🎭", "Feelings Stories", "How does the person feel?") { path.append(.feelings) }
+                    tile("🤔", "Would You Rather?", "Choose one, then say why.") { path.append(.rather) }
+                }
+                .frame(height: 300)
                 Text(asked ?? "").font(.title3).foregroundStyle(.secondary).frame(height: 40)
             }
             .padding(60)
@@ -55,6 +62,9 @@ struct GamesView: View {
                 switch game {
                 case .find: FindTheWordView()
                 case .snap: SnapView()
+                case .silly: SillySentencesView()
+                case .feelings: FeelingsStoriesView()
+                case .rather: WouldYouRatherView()
                 }
             }
         }
@@ -62,10 +72,10 @@ struct GamesView: View {
 
     private func tile(_ emoji: String, _ name: String, _ hint: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 14) {
-                Text(emoji).font(.system(size: 120))
-                Text(name).font(.system(size: 44, weight: .bold))
-                Text(hint).font(.system(size: 26)).multilineTextAlignment(.center).opacity(0.8)
+            VStack(spacing: 10) {
+                Text(emoji).font(.system(size: 90))
+                Text(name).font(.system(size: 40, weight: .bold))
+                Text(hint).font(.system(size: 24)).multilineTextAlignment(.center).opacity(0.8)
             }
             .padding(24)
         }
@@ -106,7 +116,25 @@ struct FindTheWordView: View {
             .frame(maxWidth: .infinity)
         }
         .padding(60)
-        .onAppear { if options.isEmpty { next() } }
+        .onAppear { if options.isEmpty { next() } else { showController() } }
+        .onDisappear { GameHub.shared.end(game: "find") }
+    }
+
+    /// The iPad shows the four words, and Hear the word and Next picture, in the same places.
+    private func showController() {
+        GameHub.shared.onInput = { button in
+            switch button {
+            case "quit": GameHub.shared.end(game: "find")
+            case "hear": Speaker.shared.speak(target.label)
+            case "next": next()
+            default:
+                if button.hasPrefix("o"), let index = Int(button.dropFirst()), index < options.count { choose(options[index]) }
+            }
+        }
+        var buttons = options.enumerated().map { ControllerButton(id: "o\($0.offset)", label: $0.element.label, emoji: "", colour: $0.element.colour) }
+        buttons.append(ControllerButton(id: "hear", label: "Hear the word", emoji: "🔊", colour: 0xBFDBFE))
+        buttons.append(ControllerButton(id: "next", label: "Next picture", emoji: "➡️", colour: 0xE5E7EB))
+        GameHub.shared.show(game: "find", prompt: "\(target.emoji)  \(message)", buttons: buttons)
     }
 
     private func next() {
@@ -119,11 +147,13 @@ struct FindTheWordView: View {
         let wrong = others.filter { $0.id != fresh.id }.shuffled().prefix(3)
         options = ([fresh] + wrong).shuffled()
         message = "Which word goes with the picture?"
+        showController()
     }
 
     private func choose(_ option: VocabItem) {
         Speaker.shared.speak(option.label)
         message = option.id == target.id ? "Yes! That is \(option.label)." : "Not that one. Try another."
+        showController()
     }
 }
 
@@ -195,6 +225,24 @@ struct SnapView: View {
             .frame(height: 130)
         }
         .padding(50)
+        .onAppear { showController() }
+        .onDisappear { GameHub.shared.end(game: "snap") }
+    }
+
+    /// The iPad shows SNAP! and Turn the next card, in the same two places.
+    private func showController() {
+        GameHub.shared.onInput = { button in
+            switch button {
+            case "quit": GameHub.shared.end(game: "snap")
+            case "snap": snap()
+            case "turn": if finished { restart() } else { turn() }
+            default: break
+            }
+        }
+        GameHub.shared.show(game: "snap", prompt: message.isEmpty ? (current.map { "\($0.emoji)  \($0.label)" } ?? "Turn a card to start.") : message, buttons: [
+            ControllerButton(id: "snap", label: "SNAP!", emoji: "✋", colour: 0xFECACA),
+            ControllerButton(id: "turn", label: finished ? "Play again" : (index < 0 ? "Turn a card" : "Turn the next card"), emoji: "🃏", colour: 0xBFDBFE),
+        ])
     }
 
     private func turn() {
@@ -202,6 +250,7 @@ struct SnapView: View {
         let before = index >= 1 && deck.cards[index].id == deck.cards[index - 1].id && !called.contains(index)
         index += 1
         message = before ? "Those two were the same, so that was a snap." : ""
+        showController()
     }
 
     private func snap() {
@@ -218,6 +267,7 @@ struct SnapView: View {
         } else {
             message = "Not the same this time. Keep looking."
         }
+        showController()
     }
 
     private func restart() {
@@ -226,5 +276,6 @@ struct SnapView: View {
         found = 0
         called = []
         message = "Turn a card to start."
+        showController()
     }
 }

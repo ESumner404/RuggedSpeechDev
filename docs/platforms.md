@@ -139,6 +139,21 @@ Each works **on its own, with no internet and no iPhone or iPad**, and does more
 - **Games on the Apple TV:** **Find the word** and **Snap**, made from the same words, on the big screen (no score against anyone, no clock, nothing moves, and nothing speaks unless pressed). A third tile, **More on the iPad**, opens Games on the iPad once linked, for Rollercoaster, Draw, Jokes, Music, Piano, Seasons and Make a tree.
 - **Sound on the Apple Watch:** the watch asks for its audio session before every word, which a watch needs before it will play through its own speaker. If a watch is silent, check Silent Mode and the volume, and that no Bluetooth headphones are connected. This was changed after a report of no sound on a real watch and has not yet been heard on one.
 
+### The iPad as the controller, and games for the family
+
+With the link on, a game on the television asks the iPad to show its buttons: a question and up to eight big buttons that stay in the same places for the whole question. Pressing one sends it to the television. The iPad's person can play every game this way, and the others use the Siri Remote.
+
+- **Find the word** and **Snap** use the iPad for the words, **Hear the word**, **SNAP!** and **Turn the next card**.
+- **Silly Sentences:** each person chooses one word in turn (who, what they wanted to do, where) from the boards' own words, and the television reads the silly sentence out when someone presses **Hear it**.
+- **Feelings Stories:** a short story, and how the person in it feels. Whoever's turn it is chooses from four feelings, and everyone talks about why.
+- **Would You Rather?:** two things, everyone chooses in turn, then the television shows who chose what and everyone says why.
+
+Two to four people play, taking turns, with Player 1 on the iPad. There are no scores and no clocks, nothing moves, and nothing speaks unless a button is pressed. The television only accepts a press from the iPad while a game is on its screen, and the iPad only shows the controller when an adult has turned the link on and the child's screen is open (never over Parent Mode or School Mode).
+
+### Kept in step with the iPad
+
+The television uses the iPad's boards (a hidden word, or one not yet in the word stage, is an empty place so nothing else moves), voice speed, pitch, volume and pronunciations, pictures and words, muted colours, text size, contrast and what a press does. It keeps the last it was sent and asks again when it connects. Photos stay on the iPad, so a photo button is its word alone on the television. An extra switch, **Show the sentence being built, and what was said, on the Apple TV** (off to begin with), fills the television's **Showing** tab.
+
 ### Linked to the iPhone or iPad (off until an adult turns it on)
 Parent Mode, Access, **Link with the Apple Watch and Apple TV**.
 

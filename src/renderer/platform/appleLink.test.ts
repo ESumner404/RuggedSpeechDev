@@ -197,3 +197,29 @@ describe('what the television is sent', () => {
     expect(parseCommand({ type: 'sync-request' })).toEqual({ kind: 'sync' });
   });
 });
+
+describe('the television asking for a game’s buttons', () => {
+  const buttons = [
+    { id: 'o0', label: 'Grandad', emoji: '👴', colour: 0xfef08a },
+    { id: 'o1', label: 'Mum', emoji: '👩', colour: 0xfef08a },
+  ];
+
+  it('is accepted as a prompt and buttons, in order', () => {
+    expect(parseCommand({ type: 'controller', game: 'silly', prompt: 'Who?', buttons, yourTurn: true })).toEqual({
+      kind: 'controller',
+      spec: { game: 'silly', prompt: 'Who?', buttons, yourTurn: true },
+    });
+  });
+
+  it('means the game is over when there are no buttons', () => {
+    expect(parseCommand({ type: 'controller', game: 'silly', prompt: '', buttons: [] })).toEqual({ kind: 'controller', spec: null });
+  });
+
+  it('is refused when it is not sensible: too many buttons, no id, a very long word', () => {
+    const many = Array.from({ length: 9 }, (_, i) => ({ id: `o${i}`, label: 'x', emoji: '', colour: 0 }));
+    expect(parseCommand({ type: 'controller', game: 'g', prompt: 'p', buttons: many })).toBeNull();
+    expect(parseCommand({ type: 'controller', game: 'g', prompt: 'p', buttons: [{ label: 'x' }] })).toBeNull();
+    expect(parseCommand({ type: 'controller', game: 'g', prompt: 'p', buttons: [{ id: 'a', label: 'x'.repeat(100) }] })).toBeNull();
+    expect(parseCommand({ type: 'controller', prompt: 'p', buttons })).toBeNull();
+  });
+});

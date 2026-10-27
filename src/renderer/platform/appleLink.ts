@@ -28,15 +28,58 @@ export const OPENABLE_SCREENS = [
 ] as const;
 export type OpenableScreen = (typeof OPENABLE_SCREENS)[number];
 
+/** What the television asks the iPad to show while a game is on: a prompt and a few big buttons, always in this order. */
+export type ControllerSpec = {
+  game: string;
+  prompt: string;
+  buttons: Array<{ id: string; label: string; emoji: string; colour: number }>;
+  /** Whether the iPad's person has the turn, so the buttons are for them. */
+  yourTurn: boolean;
+};
+
 export type LinkCommand =
   | { kind: 'open'; screen: OpenableScreen }
+  | { kind: 'controller'; spec: ControllerSpec | null }
   | { kind: 'traffic'; status: TrafficStatus }
   | { kind: 'sync' };
 
 const TRAFFIC_VALUES: readonly string[] = ['off', 'red', 'amber', 'green'];
 
 /** What another device has asked for, or nothing if the message is not one this app understands. */
+const text = (value: unknown, max: number): string | null =>
+  typeof value === 'string' && value.length <= max ? value : null;
+
+/** The buttons the television wants shown, or null if the message is not a sensible one. An empty set means "the game is over". */
+function parseController(message: LinkMessage): ControllerSpec | null | undefined {
+  const raw = message['buttons'];
+  if (!Array.isArray(raw)) return undefined;
+  if (raw.length === 0) return null;
+  if (raw.length > 8) return undefined;
+  const buttons: ControllerSpec['buttons'] = [];
+  for (const entry of raw) {
+    if (typeof entry !== 'object' || entry === null) return undefined;
+    const button = entry as Record<string, unknown>;
+    const id = text(button['id'], 24);
+    const label = text(button['label'], 40);
+    if (!id || label === null) return undefined;
+    buttons.push({
+      id,
+      label,
+      emoji: text(button['emoji'], 8) ?? '',
+      colour: typeof button['colour'] === 'number' ? button['colour'] : 0xe5e7eb,
+    });
+  }
+  const game = text(message['game'], 24);
+  const prompt = text(message['prompt'], 160);
+  if (!game || prompt === null) return undefined;
+  return { game, prompt, buttons, yourTurn: message['yourTurn'] !== false };
+}
+
 export function parseCommand(message: LinkMessage): LinkCommand | null {
+  if (message.type === 'controller') {
+    const spec = parseController(message);
+    return spec === undefined ? null : { kind: 'controller', spec };
+  }
   if (message.type === 'open' && typeof message['screen'] === 'string') {
     const screen = (OPENABLE_SCREENS as readonly string[]).includes(message['screen'])
       ? (message['screen'] as OpenableScreen)
@@ -167,6 +210,8 @@ export type LinkSession = {
   publish: (message: LinkMessage) => void;
   /** Sends everything last published again, for a device that has asked. */
   resend: () => void;
+  /** Sends one message straight away, such as a press on the controller. */
+  sendNow: (message: LinkMessage) => void;
   stop: () => void;
 };
 
@@ -221,6 +266,9 @@ export function startLink(
           if (!stopped && latest) void link.send(latest).catch(() => undefined);
         }, SEND_QUIET_MS),
       );
+    },
+    sendNow: (message) => {
+      if (!stopped) void link.send(message).catch(() => undefined);
     },
     resend: () => {
       for (const message of pending.values()) void link.send(message).catch(() => undefined);
