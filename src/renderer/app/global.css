@@ -5991,3 +5991,103 @@ html[data-labels='words'] .board-button__label {
   border-bottom: 1px solid var(--color-border);
   text-align: left;
 }
+
+/* The first page of Parent Mode, and "Is everything ready?". */
+.start-tab__title {
+  margin: 0 0 0.75rem;
+}
+
+.start-tab__jobs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.start-tab__job {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  padding: 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-background);
+  color: var(--color-text);
+  text-align: left;
+}
+
+.start-tab__emoji {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.start-tab__label {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.start-tab__hint {
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.ready-check {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.ready-check__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+}
+
+.ready-check__count {
+  font-size: 1rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.ready-check__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ready-check__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+}
+
+.ready-check__mark {
+  width: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.ready-check__item--done {
+  opacity: 0.75;
+}
+
+.ready-check__text {
+  flex: 1;
+  min-width: 12rem;
+}
+
+/* Text for a screen reader only. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -46,6 +46,7 @@ describe('ParentModeScreen shell', () => {
   it('has a tab for every area, in a fixed order', async () => {
     render(<ParentModeScreen onExit={onExit} />, container);
     expect(tabLabels()).toEqual([
+      'Start',
       'User guide',
       'User',
       'About me',

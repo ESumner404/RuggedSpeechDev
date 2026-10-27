@@ -8,6 +8,7 @@ import { QuickAccessTab } from './QuickAccessTab';
 import { AccessTab } from './AccessTab';
 import { LookTab } from './LookTab';
 import { BodyTab } from './BodyTab';
+import { StartTab } from './StartTab';
 import { FamilyTab } from '../family/FamilyTab';
 import { MoviesTab } from '../movies/MoviesTab';
 import { MusicTab } from './MusicTab';
@@ -39,7 +40,7 @@ type Props = {
 // The tabs, in groups so a long list is easy to find your way around. The
 // guide comes first, because it answers "what do I do?".
 const GROUPS = [
-  { title: 'Start here', tabs: [{ id: 'guide', label: 'User guide' }] },
+  { title: 'Start here', tabs: [{ id: 'start', label: 'Start' }, { id: 'guide', label: 'User guide' }] },
   {
     title: 'About the child',
     tabs: [
@@ -228,6 +229,7 @@ export function ParentModeScreen({ onExit }: Props) {
         ))}
       </nav>
       <main class="parent-mode-screen__main">
+      {tab.value === 'start' && <StartTab go={(place) => (tab.value = place as Tab)} />}
       {tab.value === 'guide' && <GuideTab />}
       {tab.value === 'user' && <UserTab />}
       {tab.value === 'boards' && <BoardsTab />}
