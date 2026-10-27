@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Board } from '../store/types';
 import { OPENABLE_SCREENS, buildLinkState, buildSentenceMessage, buildSyncMessage, parseCommand, startLink } from './appleLink';
 
 describe('what another device may ask for', () => {
@@ -132,14 +133,14 @@ describe('the link itself', () => {
 });
 
 describe('what the television is sent', () => {
-  const board = {
+  const board: Board = {
     id: 'talk-root',
     name: 'Talk',
-    grid: { rows: 2, columns: 2, order: [['a', 'b'], ['c', null]] as (string | null)[][] },
+    grid: { rows: 2, columns: 2, order: [['a', 'b'], ['c', null]] },
     buttons: [
-      { id: 'a', label: 'I', image: { kind: 'emoji' as const, char: '🙋' }, background_color: '#e9d5ff' },
+      { id: 'a', label: 'I', image: { kind: 'emoji', char: '🙋' }, background_color: '#e9d5ff' },
       { id: 'b', label: 'want', hidden: true },
-      { id: 'c', label: 'mum', image: { kind: 'photo' as const, blobId: 'p1' }, vocalization: 'Mummy' },
+      { id: 'c', label: 'mum', image: { kind: 'photo', blobId: 'p1' }, vocalization: 'Mummy' },
     ],
   };
   const input = {
@@ -182,7 +183,7 @@ describe('what the television is sent', () => {
   });
 
   it('puts the word stage in force: a word held back is an empty place too', () => {
-    const staged = { ...board, buttons: [{ id: 'a', label: 'I', stage: 3 }, { id: 'c', label: 'mum', stage: 1 }] };
+    const staged: Board = { ...board, buttons: [{ id: 'a', label: 'I', stage: 3 }, { id: 'c', label: 'mum', stage: 1 }] };
     const [sent] = buildSyncMessage({ ...input, boards: [staged], wordStage: 2 })['boards'] as Array<{ order: (string | null)[][] }>;
     expect(sent!.order).toEqual([[null, null], ['c', null]]);
   });
