@@ -54,7 +54,9 @@ describe('the diary page', () => {
       area.value = 'Said “help” at the shops.';
       area.dispatchEvent(new Event('input', { bubbles: true }));
     });
-    await act(() => container.querySelector<HTMLButtonElement>('button[type="submit"]')!.click());
+    await act(() => {
+      container.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
     await new Promise((resolve) => setTimeout(resolve, 20));
     expect(diarySetting.signal.value[0]).toMatchObject({ from: 'home', text: 'Said “help” at the shops.' });
   });
