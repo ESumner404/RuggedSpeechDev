@@ -5979,3 +5979,15 @@ html[data-labels='words'] .board-button__label {
   padding: 0.3rem 0;
   border-bottom: 1px solid var(--color-border);
 }
+
+.language-progress__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.language-progress__table th,
+.language-progress__table td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}

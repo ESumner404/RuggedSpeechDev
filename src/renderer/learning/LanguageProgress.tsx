@@ -15,7 +15,7 @@ export function LanguageProgress({ entries, now }: { entries: ActivityEntry[]; n
         Week by week, from the log. A rough guide for you and a speech and language therapist, not a score: saying more is not the
         same as communicating better, and what matters is what is right for this child.
       </p>
-      <table class="activity-tab__table">
+      <table class="language-progress__table">
         <thead>
           <tr>
             <th>Week from</th>
