@@ -28,6 +28,8 @@ async function enterParentMode(page: Page, pin: string): Promise<void> {
   await page.locator('.parent-mode-button').click();
   await setUpPin(page, pin);
   await expect(page.locator('.parent-mode-screen')).toBeVisible();
+  // Parent Mode opens on Start; these tests work on the Boards page.
+  await page.locator('.page-tabs__tab', { hasText: /^Boards$/ }).click();
 }
 
 function boardButton(page: Page, label: string) {

@@ -108,6 +108,7 @@ test.describe('Phase 4. Parent Mode and the PIN gate', () => {
     await setUpPin(page, '1234');
 
     await expect(page.locator('.parent-mode-screen')).toBeVisible();
+    await page.locator('.page-tabs__tab', { hasText: /^Boards$/ }).click(); // it opens on Start
 
     const helpRow = await rowWithLabel(page, 'help');
     await helpRow.locator('input[type="checkbox"]').click();

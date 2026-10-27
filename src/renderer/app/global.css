@@ -6403,3 +6403,316 @@ html[data-labels='words'] .board-button__label {
   color: var(--color-text);
   font-size: 1rem;
 }
+
+/* =============================================================================================================
+   Adult screens: one design for Parent Mode and School Mode.
+   Everything here is scoped to .parent-mode-screen, so the child's screens are not touched at all (PRINCIPLES.md I3, I4).
+   The ideas: a calm page with cards, one clear primary action, a muted second one, a warning colour only for taking
+   something away, big enough to hit, and always the same shape from page to page. Nothing moves or fades.
+   ============================================================================================================= */
+
+.parent-mode-screen {
+  --pm-card: var(--color-background);
+  --pm-page: var(--color-nav-background);
+  --pm-muted: color-mix(in srgb, var(--color-text) 68%, var(--color-background));
+  --pm-line: color-mix(in srgb, var(--color-border) 70%, var(--color-background));
+  --pm-radius: 14px;
+  background: var(--pm-page);
+}
+
+.school-mode-screen {
+  --color-accent: #0f766e;
+}
+
+/* The header: where you are, that your changes are safe, and the way out. */
+.parent-mode-screen .parent-mode-screen__header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding: 0.7rem 1.1rem;
+  background: var(--pm-card);
+  border-bottom: 2px solid var(--pm-line);
+}
+
+.parent-mode-screen .parent-mode-screen__title {
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.parent-mode-screen .parent-mode-screen__header-actions {
+  align-items: center;
+}
+
+.saved-note {
+  font-size: 0.9rem;
+  color: var(--pm-muted);
+}
+
+.saved-note::before {
+  content: '✓ ';
+}
+
+/* The menu. */
+.parent-mode-screen .parent-nav {
+  padding: 0.75rem;
+  background: var(--pm-card);
+  border-right: 2px solid var(--pm-line);
+}
+
+.parent-mode-screen .parent-nav__heading {
+  margin: 0.9rem 0.4rem 0.3rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--pm-muted);
+  opacity: 1;
+}
+
+.parent-mode-screen .parent-nav__heading::before {
+  content: attr(data-icon) ' ';
+}
+
+.parent-mode-screen .parent-nav__tab {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  margin-bottom: 0.15rem;
+  padding: 0 0.7rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.parent-mode-screen .parent-nav__tab::before {
+  content: attr(data-icon);
+  width: 1.5rem;
+  flex: none;
+  text-align: center;
+  font-size: 1.15rem;
+}
+
+.parent-mode-screen .parent-nav__tab[aria-pressed='true'] {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--color-accent) 16%, var(--color-background));
+  box-shadow: inset 4px 0 0 var(--color-accent);
+  font-weight: 800;
+}
+
+/* The page. */
+.parent-mode-screen .parent-mode-screen__main {
+  padding: 1.25rem 1.5rem 3rem;
+}
+
+.parent-mode-screen .parent-mode-screen__main > * {
+  max-width: 62rem;
+  margin-inline: auto;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.page-header__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  flex: none;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--color-accent) 16%, var(--color-background));
+  font-size: 1.7rem;
+}
+
+.page-header__title {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 800;
+}
+
+.page-header__purpose {
+  margin: 0.1rem 0 0;
+  color: var(--pm-muted);
+}
+
+.parent-mode-screen .parent-mode-screen__body {
+  padding: 0;
+  gap: 1rem;
+}
+
+/* Sections are cards. */
+.parent-mode-screen .access-tab__section,
+.parent-mode-screen .school-tab__section,
+.parent-mode-screen .music-tab__library,
+.parent-mode-screen .stories-tab__story,
+.parent-mode-screen .family-tab__person,
+.parent-mode-screen .pack-tab__waiting,
+.parent-mode-screen .ready-check,
+.parent-mode-screen .modelling-card {
+  padding: 1rem 1.1rem;
+  border: 2px solid var(--pm-line);
+  border-radius: var(--pm-radius);
+  background: var(--pm-card);
+}
+
+.parent-mode-screen .access-tab__heading,
+.parent-mode-screen .school-tab__heading {
+  margin: 0 0 0.4rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.parent-mode-screen .about-tab__hint,
+.parent-mode-screen .access-tab__hint,
+.parent-mode-screen .school-tab__hint,
+.parent-mode-screen .quick-access-tab__hint {
+  max-width: 46rem;
+  margin: 0.2rem 0 0.6rem;
+  color: var(--pm-muted);
+  line-height: 1.5;
+}
+
+/* Buttons: the main thing to do, the usual thing, and taking something away. */
+.parent-mode-screen .parent-mode-screen__button {
+  min-height: 2.75rem;
+  padding: 0 1.1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--pm-card);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.parent-mode-screen button[type='submit'].parent-mode-screen__button,
+.parent-mode-screen .parent-mode-screen__button--primary {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.parent-mode-screen .parent-mode-screen__button[aria-label^='Remove'],
+.parent-mode-screen .parent-mode-screen__button[aria-label^='Delete'],
+.parent-mode-screen .parent-mode-screen__button[aria-label^='Take away'] {
+  border-color: #b91c1c;
+  color: #b91c1c;
+  background: var(--pm-card);
+}
+
+.parent-mode-screen .parent-mode-screen__button:disabled {
+  opacity: 0.45;
+}
+
+.parent-mode-screen .parent-mode-screen__exit {
+  background: color-mix(in srgb, var(--color-accent) 14%, var(--color-background));
+  border-color: var(--color-accent);
+}
+
+.parent-mode-screen button:focus-visible,
+.parent-mode-screen input:focus-visible,
+.parent-mode-screen select:focus-visible,
+.parent-mode-screen textarea:focus-visible,
+.parent-mode-screen summary:focus-visible {
+  outline: 4px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Fields. */
+.parent-mode-screen input[type='text'],
+.parent-mode-screen input[type='search'],
+.parent-mode-screen input[type='time'],
+.parent-mode-screen input[type='number'],
+.parent-mode-screen input[type='date'],
+.parent-mode-screen textarea,
+.parent-mode-screen select {
+  min-height: 2.6rem;
+  padding: 0.35rem 0.6rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.parent-mode-screen textarea {
+  width: 100%;
+  line-height: 1.4;
+}
+
+.parent-mode-screen label {
+  font-weight: 600;
+}
+
+.parent-mode-screen .access-tab__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.4rem;
+  font-weight: 500;
+}
+
+.parent-mode-screen input[type='checkbox'] {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.parent-mode-screen details > summary {
+  min-height: 2.4rem;
+  padding: 0.3rem 0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.parent-mode-screen table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.parent-mode-screen th,
+.parent-mode-screen td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--pm-line);
+  text-align: left;
+}
+
+.parent-mode-screen .parent-mode-screen__notice {
+  margin: 0.75rem 1.1rem 0;
+  border-radius: var(--pm-radius);
+}
+
+/* A phone: no side menu, and the page uses the whole width. */
+@media (max-width: 600px) {
+  .parent-mode-screen .parent-mode-screen__main {
+    padding: 0.9rem 0.8rem 3rem;
+  }
+
+  .page-header__icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    font-size: 1.4rem;
+  }
+
+  .page-header__title {
+    font-size: 1.3rem;
+  }
+
+  .saved-note {
+    display: none;
+  }
+
+  .parent-mode-screen .parent-nav {
+    border-right: 0;
+  }
+}
+
+.parent-mode-screen .start-tab__link .parent-mode-screen__button {
+  width: auto;
+  align-self: flex-start;
+}

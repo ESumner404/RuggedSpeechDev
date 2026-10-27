@@ -772,6 +772,9 @@ export async function setQuickAccess(buttons: QuickAccessId[]): Promise<void> {
 
 
 // ---------------------------------------------------------------------------
+/** When anything an adult changed was last saved, so Parent Mode and School Mode can say that it was. */
+export const lastSavedAt = signal(0);
+
 // Simple stored settings. Each one lives under its own key in `meta`, keeps a
 // cached signal so screens can react without a database round trip, and is
 // registered in SETTINGS below, which is all it takes for it to load at
@@ -816,6 +819,7 @@ function storedSetting<T>(
       state.value = value;
       const db = await openMyWordsDB();
       await db.put('meta', value, key);
+      lastSavedAt.value = Date.now();
     },
     async restore(value) {
       if (!isValid(value)) return false;

@@ -9,6 +9,8 @@ import { AccessTab } from './AccessTab';
 import { LookTab } from './LookTab';
 import { BodyTab } from './BodyTab';
 import { StartTab } from './StartTab';
+import { PageHeader, SavedNote } from './shell';
+import { PARENT_SECTIONS, groupIcon } from './sectionInfo';
 import { StoriesTab } from '../stories/StoriesTab';
 import { DiaryTab } from '../diary/DiaryTab';
 import { FamilyTab } from '../family/FamilyTab';
@@ -111,7 +113,7 @@ const BACKUP_REMINDER_DAYS = 30;
 const IDLE_CHECK_MS = 5_000;
 
 export function ParentModeScreen({ onExit }: Props) {
-  const tab = useSignal<Tab>('boards');
+  const tab = useSignal<Tab>('start');
   const fullscreen = useSignal(false);
   // On a phone the list of sections is folded away behind a button, so the page gets the whole width.
   const menuOpen = useSignal(false);
@@ -174,6 +176,7 @@ export function ParentModeScreen({ onExit }: Props) {
       <header class="parent-mode-screen__header">
         <h1 class="parent-mode-screen__title">{name}</h1>
         <div class="parent-mode-screen__header-actions">
+          <SavedNote />
           {window.myWords.capabilities?.fullscreen === false ? null : (
             <button type="button" class="parent-mode-screen__button" onClick={() => void toggleFullscreen()}>
               Fullscreen: {fullscreen.value ? 'On' : 'Off'}
@@ -224,10 +227,11 @@ export function ParentModeScreen({ onExit }: Props) {
         />
         {GROUPS.map((group) => ({ group, tabs: group.tabs.filter((entry) => entry.label.toLowerCase().includes(navFilter.value.trim().toLowerCase())) })).filter(({ tabs }) => tabs.length > 0).map(({ group, tabs }) => (
           <div class="parent-nav__group" key={group.title}>
-            <p class="parent-nav__heading">{group.title}</p>
+            <p class="parent-nav__heading" data-icon={groupIcon[group.title] ?? ''}>{group.title}</p>
             {tabs.map((entry) => (
               <button
                 type="button"
+                data-icon={PARENT_SECTIONS[entry.id]?.icon ?? ''}
                 class="page-tabs__tab parent-nav__tab"
                 key={entry.id}
                 aria-pressed={tab.value === entry.id}
@@ -243,6 +247,7 @@ export function ParentModeScreen({ onExit }: Props) {
         ))}
       </nav>
       <main class="parent-mode-screen__main">
+      <PageHeader label={currentLabel} info={PARENT_SECTIONS[tab.value]} />
       {tab.value === 'start' && <StartTab go={(place) => (tab.value = place as Tab)} />}
       {tab.value === 'guide' && <GuideTab />}
       {tab.value === 'user' && <UserTab />}

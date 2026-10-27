@@ -1,4 +1,5 @@
-import { getFavourites, getMyPages } from '../store/db';
+import { appleLinkSetting, getFavourites, getMyPages } from '../store/db';
+import { linkPeers } from '../platform/linkStatus';
 import { useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import { ReadyCheck } from './ReadyCheck';
@@ -28,6 +29,14 @@ export function StartTab({ go }: Props) {
     void getMyPages().then((items) => (pages.value = items.length));
   }, []);
 
+  const linkOn = appleLinkSetting.signal.value.enabled;
+  const peers = linkPeers.value;
+  const linkText = !linkOn
+    ? 'Linking is off. Turn it on to show words on an Apple TV or Apple Watch, or to use this device as a controller.'
+    : peers === 0
+      ? 'Linking is on. No other device is connected yet.'
+      : `Linking is on. ${peers} ${peers === 1 ? 'device is' : 'devices are'} connected.`;
+
   return (
     <div class="parent-mode-screen__body start-tab">
       <h2 class="start-tab__title">What would you like to do?</h2>
@@ -42,6 +51,17 @@ export function StartTab({ go }: Props) {
           </button>
         ))}
       </div>
+      <section class="access-tab__section start-tab__link" aria-labelledby="start-link-heading">
+        <h3 class="access-tab__heading" id="start-link-heading">
+          Linked devices
+        </h3>
+        <p class="access-tab__hint" role="status">
+          {linkText}
+        </p>
+        <button type="button" class="parent-mode-screen__button" onClick={() => go('access')}>
+          {linkOn ? 'Manage linked devices' : 'Set up linking'}
+        </button>
+      </section>
       <ReadyCheck kind="parent" go={go} favouriteCount={favourites.value} lessonPageCount={pages.value} />
     </div>
   );

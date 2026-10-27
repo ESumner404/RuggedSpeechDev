@@ -32,6 +32,7 @@ test.describe('Learning: word stages, focus words, word counts (speech and langu
     await completeFirstRun(page, '1357');
 
     await enterParentMode(page, '1357');
+    await openTab(page, /^Boards$/); // Parent Mode opens on Start
     const want = await openDetails(page, 'want');
     await want.locator('.button-details__field', { hasText: 'Word stage' }).locator('select').selectOption('3');
     const go = await openDetails(page, 'go');

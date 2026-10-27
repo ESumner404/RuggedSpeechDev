@@ -14,6 +14,8 @@ import { TargetsTab } from '../parent/TargetsTab';
 import { ChoicesTab } from './ChoicesTab';
 import { ClassroomTab } from './ClassroomTab';
 import { PackTab } from './PackTab';
+import { PageHeader, SavedNote } from '../parent/shell';
+import { SCHOOL_SECTIONS, groupIcon } from '../parent/sectionInfo';
 import { DiaryTab } from '../diary/DiaryTab';
 import { PupilTab } from './PupilTab';
 import { SafeguardingTab } from './SafeguardingTab';
@@ -124,6 +126,7 @@ export function SchoolModeScreen({ onExit }: Props) {
       <header class="parent-mode-screen__header school-mode-screen__header">
         <h1 class="parent-mode-screen__title school-mode-screen__title">{SCHOOL_MODE_NAME}</h1>
         <div class="parent-mode-screen__header-actions">
+          <SavedNote />
           <button type="button" class="parent-mode-screen__button parent-mode-screen__exit school-mode-screen__exit" onClick={onExit}>
             Exit {SCHOOL_MODE_NAME}
           </button>
@@ -151,10 +154,11 @@ export function SchoolModeScreen({ onExit }: Props) {
           />
           {GROUPS.map((group) => ({ group, sections: group.sections.filter((entry) => entry.label.toLowerCase().includes(navFilter.value.trim().toLowerCase())) })).filter(({ sections }) => sections.length > 0).map(({ group, sections }) => (
             <div class="parent-nav__group" key={group.title}>
-              <p class="parent-nav__heading">{group.title}</p>
+              <p class="parent-nav__heading" data-icon={groupIcon[group.title] ?? ''}>{group.title}</p>
               {sections.map((entry) => (
                 <button
                   type="button"
+                  data-icon={SCHOOL_SECTIONS[entry.id]?.icon ?? ''}
                   class="page-tabs__tab parent-nav__tab school-nav__tab"
                   key={entry.id}
                   aria-pressed={section.value === entry.id}
@@ -167,6 +171,7 @@ export function SchoolModeScreen({ onExit }: Props) {
           ))}
         </nav>
         <main class="parent-mode-screen__main">
+          <PageHeader label={currentLabel} info={SCHOOL_SECTIONS[section.value]} />
           {section.value === 'today' && <TodayTab go={go} />}
           {section.value === 'pupil' && <PupilTab />}
           {section.value === 'aboutme' && <AboutMeTab />}
