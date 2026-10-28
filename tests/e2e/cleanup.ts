@@ -36,17 +36,46 @@ export async function launchElectron(options: LaunchOptions): Promise<ElectronAp
       app = await electron.launch({ ...options, timeout: options?.timeout ?? waitFor });
       // A start that gives no window is as good as one that never finished.
       await app.firstWindow({ timeout: waitFor });
-      return watch(app);
+      return closeSurely(watch(app));
     } catch (error) {
       lastError = error;
       // The first failure of a run is shown in full (Playwright's own call log says where it stopped).
       console.log(`[launch] attempt ${attempt + 1} did not finish: ${String(error).slice(0, attempt === 0 ? 2500 : 160)}`);
       await app?.close().catch(() => undefined);
-      clearLeftovers();
+      clearLeftovers(options?.args);
       await new Promise((resolve) => setTimeout(resolve, 1500));
     }
   }
   throw lastError;
+}
+
+/**
+ * Now and then the app's window closes on a Mac build computer but the program never exits, so a test waits
+ * on app.close() until it times out and the leftover program then stalls the whole run's teardown (the log
+ * shows 0 windows still open). A close that has not finished in ten seconds is ended outright; the app has
+ * nothing left to save by then, because every test that cares has already read what it needed.
+ */
+function closeSurely(app: ElectronApplication): ElectronApplication {
+  const close = app.close.bind(app);
+  app.close = async () => {
+    const pid = app.process().pid;
+    const timer = setTimeout(() => {
+      console.log('[close] the app did not exit in 10s; ending it');
+      if (pid) {
+        try {
+          killOutright(pid);
+        } catch {
+          /* already gone */
+        }
+      }
+    }, 10_000);
+    try {
+      await close();
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+  return app;
 }
 
 /**
@@ -97,8 +126,19 @@ export function killOutright(pid: number): void {
  * is killed outright), and they pile up and slow or block the starts after it. Tests run one at
  * a time here, so after a failed start anything left over is stray: end it.
  */
-function clearLeftovers(): void {
-  if (process.platform !== 'win32') return;
+function clearLeftovers(args: string[] | undefined): void {
+  if (process.platform !== 'win32') {
+    // A start that timed out is never handed back, so its program keeps running on the same profile folder and the
+    // next start finds it already there. End whatever is using this attempt's folder (it is a one-off temporary one).
+    const profile = args?.find((arg) => arg.startsWith('--user-data-dir='));
+    if (!profile) return;
+    try {
+      execFileSync('pkill', ['-9', '-f', profile], { stdio: 'ignore' });
+    } catch {
+      /* none left */
+    }
+    return;
+  }
   try {
     execFileSync('taskkill', ['/F', '/T', '/IM', 'Rugged Speech.exe'], { stdio: 'ignore' });
   } catch {
