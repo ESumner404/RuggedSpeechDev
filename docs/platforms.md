@@ -27,15 +27,15 @@ What every shell must keep to (see [the principles](../PRINCIPLES.md)):
 | --- | --- | --- |
 | Windows 10 and 11 | Released | Not yet signed or tested on real hardware |
 | macOS | Released | Not yet signed or notarised |
-| **iPhone and iPad** | **Built and run on the iPad simulator; not yet on a real device** | See [iPhone and iPad](#iphone-and-ipad) |
+| **iPhone and iPad** | **Beta on TestFlight (build 202610280741); run on the simulator, being tried on real devices** | See [iPhone and iPad](#iphone-and-ipad) |
 | Android | Next | Add the Capacitor Android shell, give it the same four bridge groups, and test voices and storage |
 | Amazon Fire OS | After Android | Fire tablets run Android, so the same shell; no Google services may be needed. Test on a Fire tablet |
-| Apple Watch | Not started | See below |
-| Apple TV | Not started | See below |
+| Apple Watch | Beta, inside the iPhone and iPad build (watchOS 10 or later) | Sound and linking to be checked on a real watch |
+| Apple TV | Beta on TestFlight (build 202610280744; tvOS 17 or later) | Games with the remote, and linking to the iPad, to be checked on a real Apple TV |
 
 ### Apple Watch and Apple TV
 
-Neither has a web view, so the page cannot run there. They would be small native apps (SwiftUI) that share the same words with the iPhone or iPad app, not copies of the whole app.
+Neither has a web view, so the page cannot run there. They are small native apps (SwiftUI) that share the same words with the iPhone or iPad app, not copies of the whole app.
 
 - **Apple Watch** is a good fit for a few things a child needs in one press: Yes, No, Help, Break, and a handful of favourites, spoken on the watch or on the paired phone. It would be a companion to the iPhone app, with the words sent over the local Bluetooth link between the two (never the internet).
 - **Apple TV** has no touch and is used from a distance with a remote, so it suits showing something rather than building a sentence: a visual timetable, First / Then, or the Show page, on a big screen. It needs its own design for moving between buttons with the remote.

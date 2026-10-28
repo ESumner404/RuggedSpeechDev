@@ -410,6 +410,7 @@ details p { padding-bottom: 16px; }
 .pill { font-family: var(--mono); font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 6px; height: fit-content; text-align: center; }
 .pill--done { background: #d6eed3; color: #1f5a1a; }
 .pill--todo { background: #ffe0cc; color: #8a3300; }
+.pill--beta { background: #dbe8ff; color: #1b3a7a; }
 @media (max-width: 860px) { .status { grid-template-columns: 1fr; } }
 @media (max-width: 460px) { .status-list li { grid-template-columns: 1fr; gap: 6px; } .pill { width: fit-content; } }
 
@@ -546,7 +547,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
    "@id": "https://www.ruggedspeech.dev/#webpage",
    "url": "https://www.ruggedspeech.dev/",
    "name": "Free AAC app for children that works offline | Rugged Speech",
-   "dateModified": "2026-10-12",
+   "dateModified": "2026-10-28",
    "isPartOf": {
     "@id": "https://www.ruggedspeech.dev/#website"
    },
@@ -568,7 +569,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
    "description": "A free AAC (augmentative and alternative communication) app for children and young people who find speaking hard. Big picture buttons that speak, a keyboard, a day planner, feelings and My body, games, and School Mode for staff. It works without wifi, and nothing about the child leaves the device.",
    "applicationCategory": "EducationalApplication",
    "applicationSubCategory": "Augmentative and alternative communication (AAC)",
-   "operatingSystem": "Windows 10, Windows 11, macOS",
+   "operatingSystem": "Windows 10, Windows 11, macOS, iOS, iPadOS, watchOS, tvOS",
    "softwareVersion": "0.0.1",
    "inLanguage": "en-GB",
    "isAccessibleForFree": true,
@@ -597,7 +598,12 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
     "Traffic light to show whether the child wants to be spoken to",
     "School Mode for staff, with its own PIN",
     "Medical Info and Lost mode",
-    "Switch scanning and other ways of pressing"
+    "Switch scanning and other ways of pressing",
+    "My family, with photos and a family tree, and My stories to get ready for something new",
+    "The school day on the child's Home screen, with the words for each lesson",
+    "A school pack that hands lesson pages and a timetable to many devices, one way",
+    "Videos kept on the device, and links to other apps on the same device",
+    "Beta apps for iPhone, iPad, Apple Watch and Apple TV, linked over the home network"
    ],
    "offers": {
     "@type": "Offer",
@@ -653,7 +659,15 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
      "name": "What does it run on?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Windows 10 and 11 (64-bit), and Mac (Apple silicon and Intel). iPad and iPhone, Android and Amazon Fire tablets are coming soon."
+      "text": "Windows 10 and 11 (64-bit), and Mac (Apple silicon and Intel). There are also beta apps for iPhone and iPad (iOS 15 or later), Apple Watch (watchOS 10) and Apple TV (tvOS 17), shared through Apple TestFlight. Android and Amazon Fire tablets are coming soon."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is it on the App Store?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not yet. The iPhone, iPad, Apple Watch and Apple TV apps are in beta and are shared through Apple TestFlight. Email aac@communitystack.io to ask for an invitation. We have not set a date for the App Store, and the apps are still being tried on real devices."
      }
     },
     {
@@ -669,7 +683,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
      "name": "Can a school set it up for a whole class?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. It is one device for one child, with no pupil accounts. School Mode gives staff their own side of the app with its own PIN, and a good set-up can be saved as a backup."
+      "text": "It is one device for one child, with no pupil accounts and no class dashboard. A school can make lesson pages and a timetable once and hand them to many devices with a school pack, one way, as a file or over the school wifi with a code. A pack holds nothing about any child, and nothing is ever sent back."
      }
     },
     {
@@ -734,7 +748,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
 <noscript>
   <div class="wrap" style="padding:24px 0">
     <h2>What Rugged Speech does</h2>
-    <p>Rugged Speech is a free AAC app for children and young people who find speaking hard. It has big picture buttons that speak, a keyboard with word suggestions, a day planner, feelings and pointing to where it hurts, games and music, and School Mode for staff. It works without wifi, and nothing about your child leaves the device. It runs on Windows 10 and 11 and on Mac.</p>
+    <p>Rugged Speech is a free AAC app for children and young people who find speaking hard. It has big picture buttons that speak, a keyboard with word suggestions, a day planner, feelings and pointing to where it hurts, games and music, and School Mode for staff. It works without wifi, and nothing about your child leaves the device. It runs on Windows 10 and 11 and on Mac, and there are beta apps for iPhone, iPad, Apple Watch and Apple TV.</p>
     <p><a href="/download/windows">Download for Windows</a>, <a href="/download/mac">Download for Mac (Apple silicon)</a> or <a href="/download/mac-intel">Download for Mac (Intel)</a>. The guides are on <a href="https://github.com/ESumner404/RuggedSpeechDev/tree/main/docs">GitHub</a>. The try-a-board demo and the app tour need JavaScript.</p>
   </div>
 </noscript>
@@ -753,8 +767,9 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         <a class="btn btn--ghost" href="#try">Try a board</a>
       </div>
       <p class="dl-hint">Intel Mac? <a href="/download/mac-intel" data-dl="mac-intel" rel="nofollow">Get the Intel version</a>. Not sure which you have? Apple menu, then About This Mac. Free, about 130 MB.</p>
+      <p class="dl-hint"><strong>On an iPhone, iPad, Apple Watch or Apple TV?</strong> Those apps are in beta on TestFlight. <a href="#coming-soon">How to join the beta</a>.</p>
       <p class="dl-hint"><strong>Mac says it cannot verify the app?</strong> That is expected for now. Open System Settings, then Privacy &amp; Security, scroll down and press <strong>Open Anyway</strong>. You only do this once.</p>
-      <ul class="trust"><li>Free</li><li>No wifi needed</li><li>No account</li><li>Windows and Mac</li></ul>
+      <ul class="trust"><li>Free</li><li>No wifi needed</li><li>No account</li><li>Windows and Mac</li><li>Apple devices (beta)</li></ul>
     </div>
     <div class="hero-visual">
       <div class="framed">
@@ -779,7 +794,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         <p class="story-sub">Rugged Speech is a communication aid made for real childhoods: muddy knees, car journeys, wobbly tables and the odd drop. It's designed to be used all day, every day, wherever your child is, so it never needs to be kept on a shelf for best.</p>
       </div>
       <div class="story-body">
-        <p>It runs on rugged Windows tablets, the chunky kind with rubber corners that are made to take a knock. That means your child's communication can come along to breakfast, to school, to Grandma's and to bed, with nobody worrying about breakages. It works on any Windows 10 or 11 device, and on Macs too, and every new feature arrives on both at the same time.</p>
+        <p>It runs on rugged Windows tablets, the chunky kind with rubber corners that are made to take a knock. That means your child's communication can come along to breakfast, to school, to Grandma's and to bed, with nobody worrying about breakages. It works on any Windows 10 or 11 device, and on Macs too, and every new feature arrives on both at the same time. There are also beta apps for iPad and iPhone, and small ones for Apple Watch and Apple TV.</p>
         <p>It's for children and young people who are non-speaking or minimally speaking, and for those whose speech comes and goes or takes a lot of effort. That includes autistic children, children with speech, language and communication needs (SLCN), and children and young people who stammer. Speech is always welcome alongside it: AAC supports talking, it doesn't replace it.</p>
       </div>
     </div>
@@ -838,7 +853,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         <div class="moment-copy">
           <p class="when">10:30am &middot; In class</p>
           <h3>School picks up where home left off.</h3>
-          <p>The teaching assistant opens School Mode with the school's own PIN to bring up the maths lesson page. Nothing on the child's screen moves. At the end of the day, a quick note goes in for home.</p>
+          <p>Home shows what is happening now and what comes next, from the timetable, with the words for the lesson one press away. The teaching assistant opens School Mode with the school's own PIN to add a note, and nothing on the child's screen moves. At the end of the day, a note goes in the diary for home.</p>
           <span class="said"><svg><use href="#i-speaker"/></svg>I need a break.</span>
         </div>
       </div>
@@ -1024,9 +1039,12 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         <li><b>Today</b><span>The timetable, targets due, the traffic light and the latest notes on one page.</span></li>
         <li><b>Pupil and school</b><span>Class teacher, key adult, SENCo and therapist. Never shown to the child.</span></li>
         <li><b>Safeguarding</b><span>Your designated safeguarding lead (DSL), and what the device does and doesn't do.</span></li>
-        <li><b>Classroom set-up</b><span>A school top bar and a typical school day, if you want them. Each one asks first, because it moves buttons.</span></li>
+        <li><b>Classroom set-up</b><span>A school top bar, a typical school day, and the school day on the child's Home screen, if you want them. Each one asks first where it moves buttons.</span></li>
         <li><b>Timetable</b><span>Enter it once and it repeats each week. Countdowns stay off unless you choose.</span></li>
-        <li><b>Lesson pages</b><span>Ready-made pages for maths, story time, PE, lunchtime, assembly and more.</span></li>
+        <li><b>Lesson pages</b><span>Ready-made pages for maths, story time, PE, lunchtime, assembly and more. A timetable activity can point at its page, so the child gets Words for this.</span></li>
+        <li><b>Choice boards</b><span>A page of two to six words for a real choice, made in a minute.</span></li>
+        <li><b>School pack</b><span>Hand lesson pages, a timetable and the school's details to many devices at once, one way, as a file or over the school wifi with a code. A pack holds nothing about any child, and nothing goes back.</span></li>
+        <li><b>Home&ndash;school diary</b><span>A note each way between home and school, for adults, kept on the device.</span></li>
         <li><b>Vocabulary</b><span>Word stages and focus words, agreed with the child's therapist.</span></li>
         <li><b>Targets</b><span>Written in plain words, with a review date and a status.</span></li>
         <li><b>Notes</b><span>A few kind, factual lines after a session, shared with home.</span></li>
@@ -1046,7 +1064,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
     <div class="senco-points">
       <div><b>Easy on your IT team</b><span>Installs for one user with no administrator password. Nothing to unblock on the network, because it never connects to it.</span></div>
       <div><b>Easier data protection</b><span>No pupil accounts and nothing stored in the cloud. You'll still want a data protection impact assessment (DPIA), and the security notes are written to help with it.</span></div>
-      <div><b>No cost to the budget</b><span>The app is free. You can run it on rugged tablets you already have, or any Windows 10 or 11 device or Mac.</span></div>
+      <div><b>No cost to the budget</b><span>The app is free. You can run it on rugged tablets you already have, any Windows 10 or 11 device or Mac, or an iPad (in beta).</span></div>
     </div>
 
     <div class="callout" style="margin-top:14px">
@@ -1148,9 +1166,10 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <details><summary>Does it need wifi or the internet?</summary><p>No. It never uses the internet, so it works on a coach, in a field or in a hospital waiting room. New versions arrive as a new installer that you choose to run.</p></details>
       <details><summary>Where is my child's information kept?</summary><p>On your device only. Photos, medical details and what your child says never leave it. The only way anything leaves is a file an adult chooses to save, such as a backup.</p></details>
       <details><summary>Why does my Mac say Apple could not verify it?</summary><p>Rugged Speech is not yet signed with an Apple Developer ID, so the Mac cannot check it against Apple's list and shows that message the first time. It does not mean anything is wrong. Open System Settings, then Privacy &amp; Security, scroll down to the message about Rugged Speech and press Open Anyway, then enter your Mac password. You only need to do this once. On Windows, press More info and then Run anyway.</p></details>
-      <details><summary>What does it run on?</summary><p>Windows 10 and 11 (64-bit), and Mac (Apple silicon and Intel). iPad and iPhone, Android and Amazon Fire tablets are coming soon.</p></details>
+      <details><summary>What does it run on?</summary><p>Windows 10 and 11 (64-bit), and Mac (Apple silicon and Intel). There are also beta apps for iPhone and iPad (iOS 15 or later), Apple Watch (watchOS 10) and Apple TV (tvOS 17), shared through Apple TestFlight. Android and Amazon Fire tablets are coming soon.</p></details>
+      <details><summary>Is it on the App Store?</summary><p>Not yet. The iPhone, iPad, Apple Watch and Apple TV apps are in beta and are shared through Apple TestFlight. <a href="#coming-soon">Ask to join the beta</a>. We have not set a date for the App Store, and the apps are still being tried on real devices.</p></details>
       <details><summary>Who is it for?</summary><p>Children and young people whose speech is difficult, unreliable or tiring, including autistic children, children with speech, language and communication needs, and children who stammer. It supports talking and does not replace it.</p></details>
-      <details><summary>Can a school set it up for a whole class?</summary><p>No. It is one device for one child, with no pupil accounts. School Mode gives staff their own side of the app with its own PIN, and a good set-up can be saved as a backup.</p></details>
+      <details><summary>Can a school set it up for a whole class?</summary><p>It is one device for one child, with no pupil accounts and no class dashboard. A school can make lesson pages and a timetable once and hand them to many devices with a school pack, one way, as a file or over the school wifi with a code. A pack holds nothing about any child, and nothing is ever sent back.</p></details>
       <details><summary>Does the PIN lock the device?</summary><p>No. The Parent PIN keeps the settings safe. A child can still switch to other programs, so use your Windows or Mac sign-in to protect the device itself.</p></details>
       <details><summary>Is it a medical device?</summary><p>No. Rugged Speech is a communication aid, not a medical device. The starter words are a sensible beginning, and choosing words for a child is a decision to make with a speech and language therapist.</p></details>
     </div>
@@ -1351,7 +1370,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
             <details><summary>Where is my child's information kept?</summary><p>On the tablet only. The only way anything leaves it is a file an adult chooses to save, such as a backup.</p></details>
             <details><summary>Does it cost anything?</summary><p>No. Rugged Speech is free, with no subscription and no in-app purchases.</p></details>
             <details><summary>Can school staff see what my child said?</summary><p>Only if the activity record or Recent is turned on. Both are off to begin with, and both have a Clear button and an off switch.</p></details>
-            <details><summary>Can a school set it up for a whole class?</summary><p>No. It's one device for one child. A good set-up can be saved as a backup, and single pages can be shared as files.</p></details>
+            <details><summary>Can a school set it up for a whole class?</summary><p>It's one device for one child, with no pupil accounts and no class dashboard. A school can hand lesson pages and a timetable to many devices at once with a <strong>school pack</strong>, one way, as a file or over the school wifi with a code. A pack holds nothing about any child. A good set-up can also be saved as a backup, and single pages can be shared as files.</p></details>
             <details><summary>Does the Parent PIN lock the tablet?</summary><p>No. It keeps the settings safe. Your child can still switch to other programs. Use your Windows or Mac sign-in to protect the device itself.</p></details>
           </div>
         </article>
@@ -1383,7 +1402,8 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <ul class="status-list" id="status" aria-label="Where we are">
         <li><span class="pill pill--done">Ready</span><span>The Windows and Mac apps work and have been carefully tested. Every new feature goes to both at once.</span></li>
         <li><span class="pill pill--todo">Next</span><span>A speech and language therapist review of the starter words, and trying it with children.</span></li>
-        <li><span class="pill pill--todo">Coming soon</span><span>iPad and iPhone (iOS), Android, and Amazon Fire tablets (Fire OS), with the same promises: no wifi needed, and nothing about your child leaving the device. <a href="#coming-soon">More about what's coming</a>.</span></li>
+        <li><span class="pill pill--beta">Beta</span><span>Apps for iPhone, iPad, Apple Watch and Apple TV are shared through Apple TestFlight. They are built and have been run in simulators, and are now being tried on real devices. <a href="#coming-soon">How to join</a>.</span></li>
+        <li><span class="pill pill--todo">Coming soon</span><span>Android and Amazon Fire tablets (Fire OS), with the same promises: no wifi needed, and nothing about your child leaving the device.</span></li>
       </ul>
       <a class="cs-badge" href="https://www.communitystack.io/"><img src="brand/community-stack-icon.png" alt="" width="28" height="28">Part of Community Stack</a>
     </div>
@@ -1419,16 +1439,28 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
 <section class="band band--navy" id="coming-soon">
   <div class="wrap">
     <div class="section-head">
-      <p class="eyebrow">Coming soon</p>
-      <h2>iPad, iPhone, Android and Fire tablets.</h2>
-      <p>Rugged Speech is on Windows and Mac now. We want it on the tablets and phones families already have, so we're bringing it to Apple's iPad and iPhone, to Android, and to Amazon's Fire tablets. There are no dates yet, and we won't promise one until we have it right.</p>
+      <p class="eyebrow">On Apple devices now, and more to come</p>
+      <h2>iPhone, iPad, Apple Watch and Apple TV in beta. Android and Fire next.</h2>
+      <p>Rugged Speech is on Windows and Mac now. The Apple apps are in <strong>beta</strong>: you can try them through Apple's TestFlight, which is how apps are tested before they reach the App Store. They are built and have been run in simulators, and we are now trying them on real devices, so please do not rely on one as a child's only way to speak yet. There are no dates for Android or Fire tablets, and we won't promise one until we have it right.</p>
     </div>
     <div class="soon-grid">
       <div class="dev-card">
-        <span class="tag tag--soft">Coming soon</span>
+        <span class="tag">Beta</span>
         <svg class="soon-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="5" width="30" height="38" rx="5" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="37" r="2.2" fill="currentColor"/></svg>
-        <h3>iPad and iPhone</h3>
-        <p>Apple's iOS and iPadOS. A good fit for children who already use an iPad at home or at school.</p>
+        <h3>iPhone and iPad</h3>
+        <p>The whole app, for iOS and iPadOS 15 or later. It works with the iPad's own Eye Tracking, Switch Control, Voice Control and VoiceOver. An iPad is best for setting up.</p>
+      </div>
+      <div class="dev-card">
+        <span class="tag">Beta</span>
+        <svg class="soon-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="12" width="22" height="24" rx="7" fill="none" stroke="currentColor" stroke-width="3"/><path d="M18 12l1.5-6h9L30 12M18 36l1.5 6h9L30 36" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></svg>
+        <h3>Apple Watch</h3>
+        <p>The words a child needs in one press: Yes, No, Help, Break, Toilet, Finished and Give me time. It works on its own, and does more when linked to the iPhone or iPad. For watchOS 10 or later.</p>
+      </div>
+      <div class="dev-card">
+        <span class="tag">Beta</span>
+        <svg class="soon-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="9" width="38" height="25" rx="3" fill="none" stroke="currentColor" stroke-width="3"/><path d="M16 41h16M24 34v7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        <h3>Apple TV</h3>
+        <p>The words, feelings and games on the big screen, for the whole family, with the iPad as the controller if you like. For tvOS 17 or later. Linked over your home network, never the internet.</p>
       </div>
       <div class="dev-card">
         <span class="tag tag--soft">Coming soon</span>
@@ -1444,11 +1476,12 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       </div>
     </div>
     <div class="promises-strip">
-      <p><b>The promises will be the same everywhere.</b> It will work without wifi. Nothing about your child will leave the device. Buttons will stay where your child learnt them. There will be no accounts and no subscription.</p>
+      <p><b>The promises are the same everywhere.</b> It works without wifi. Nothing about your child leaves the device. Buttons stay where your child learnt them. There are no accounts and no subscription.</p>
       <div class="cta-row">
-        <a class="btn btn--yellow" id="soon-mail" href="mailto:aac@communitystack.io?subject=Tell%20me%20when%20Rugged%20Speech%20is%20ready%20for%20my%20device">Tell us which one you need <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--yellow" id="beta-mail" href="mailto:aac@communitystack.io?subject=Please%20add%20me%20to%20the%20Rugged%20Speech%20Apple%20beta&amp;body=Which%20devices%20would%20you%20like%20to%20try%3F%20(iPhone%2C%20iPad%2C%20Apple%20Watch%2C%20Apple%20TV)%0A%0AThe%20email%20address%20your%20Apple%20ID%20uses%3A">Ask to join the Apple beta <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost" id="soon-mail" href="mailto:aac@communitystack.io?subject=Tell%20me%20when%20Rugged%20Speech%20is%20ready%20for%20my%20device">Tell us which device you need</a>
       </div>
-      <p class="soon-note">We'll only use your email to answer you. Until then, Windows and Mac are <a href="#install">ready to download</a>.</p>
+      <p class="soon-note">To join the beta we need the email address your Apple ID uses, so Apple can send the invitation. We'll only use your email to answer you. Until then, Windows and Mac are <a href="#install">ready to download</a>.</p>
     </div>
   </div>
 </section>
@@ -1460,7 +1493,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       <p class="eyebrow">Free for every family and school</p>
       <h2>Get Rugged Speech.</h2>
       <p style="font-size:var(--step-1);max-width:40ch">No subscription, no account, nothing to pay. If you can double-click, you can install it.</p>
-      <div class="soon" aria-label="Where it runs"><span>Windows: available now</span><span>Mac: available now</span><a href="#coming-soon">iPad and iPhone: coming soon</a><a href="#coming-soon">Android: coming soon</a><a href="#coming-soon">Fire tablets: coming soon</a></div>
+      <div class="soon" aria-label="Where it runs"><span>Windows: available now</span><span>Mac: available now</span><a href="#coming-soon">iPhone, iPad, Apple Watch and Apple TV: beta</a><a href="#coming-soon">Android: coming soon</a><a href="#coming-soon">Fire tablets: coming soon</a></div>
       <div class="cta-row">
         <a class="btn btn--navy" href="/download/windows" data-dl="windows" rel="nofollow">Download for Windows <svg><use href="#i-arrow"/></svg></a>
         <a class="btn btn--navy" href="/download/mac" data-dl="mac" rel="nofollow">Download for Mac (Apple silicon) <svg><use href="#i-arrow"/></svg></a>
@@ -1469,7 +1502,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       </div>
     </div>
     <div class="install-card">
-      <div class="need"><span>Windows 10 or 11, or a Mac</span><span>Touchscreen or mouse</span><span>No wifi needed</span><span>No administrator password</span></div>
+      <div class="need"><span>Windows 10 or 11, a Mac, or an Apple device (beta)</span><span>Touchscreen or mouse</span><span>No wifi needed</span><span>No administrator password</span></div>
       <h3 class="install-os">On Windows</h3>
       <ol>
         <li>Copy <strong>Rugged Speech Setup</strong> onto the tablet.</li>
@@ -1484,6 +1517,20 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
         <li>The first time, the Mac says it can't be opened. Go to <strong>System Settings, Privacy &amp; Security</strong> and press <strong>Open Anyway</strong>. You only need to do this once.</li>
         <li>Answer the short set-up, and <strong>write down your recovery code</strong>.</li>
       </ol>
+      <h3 class="install-os">On an iPhone, iPad, Apple Watch or Apple TV (beta)</h3>
+      <ol>
+        <li><a href="#coming-soon">Ask to join the beta</a> with the email address your Apple ID uses.</li>
+        <li>Apple sends an invitation. Install <strong>TestFlight</strong> from the App Store, then open the invitation and press <strong>Install</strong>.</li>
+        <li>The Apple Watch app comes with the iPhone app. The Apple TV app is a separate install from TestFlight on the TV.</li>
+        <li>Answer the short set-up, and <strong>write down your recovery code</strong>. To link the devices, use <strong>Parent Mode, Access</strong> on the iPhone or iPad.</li>
+      </ol>
+      <h3 class="install-os">Versions</h3>
+      <ul class="spec" style="grid-template-columns:1fr;margin-top:12px">
+        <li><b>Windows</b><span>0.0.1</span></li>
+        <li><b>Mac</b><span>0.0.1, for Apple silicon and Intel</span></li>
+        <li><b>iPhone, iPad and Apple Watch</b><span>Beta build 202610280741 (28 October 2026). iOS and iPadOS 15 or later; watchOS 10 or later</span></li>
+        <li><b>Apple TV</b><span>Beta build 202610280744 (28 October 2026). tvOS 17 or later</span></li>
+      </ul>
     </div>
   </div>
 </section>
@@ -1576,10 +1623,16 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
       ticks: ['The figure can have a wheelchair, a hijab, turban or kippah, hearing aids, a feeding tube or a pump', 'Always dressed. The private area is only ever called "under my pants"', 'Calm has a breathing guide and a quiet-time timer'], img: 'body-pointing', alt: 'My body, pointing to where it hurts', extra: ['feelings', 'calm'], extraAlt: ['Feelings with a little, medium and a lot', 'The Calm breathing guide'] },
     { id: 'kb', label: 'Keyboard', title: 'Keyboard', body: 'For children who can spell, a full-screen keyboard. It suggests words to save effort, but your child always chooses.',
       ticks: ['Show puts words on the screen without saying them out loud', 'No-pressure mode clears everything else away', 'Saved phrases and conversation starters'], img: 'keyboard', alt: 'The full-screen keyboard with word suggestions' },
-    { id: 'games', label: 'Games', title: 'Games', body: 'Find the word, Snap, a sentence-building Rollercoaster, Draw, Jokes, Music with playlists, a Piano with tunes to follow, Seasons, and a Christmas tree to decorate. Practice that feels like play.',
-      ticks: ['No clocks, no scores and nothing flashing', 'After two wrong tries, the right answer is pointed to', 'Nothing plays until your child presses something'], img: 'games', alt: 'The Games page', extra: ['game-piano', 'game-draw'], extraAlt: ['The Piano game', 'Draw'] },
+    { id: 'games', label: 'Games', title: 'Games', body: 'Find the word, Snap, Finish the sentence, a sentence-building Rollercoaster, Draw, Jokes, Music with playlists, a Piano with tunes to follow, Seasons, and a Christmas tree to decorate. Practice that feels like play.',
+      ticks: ['No clocks, no scores and nothing flashing', 'After two wrong tries, the right answer is pointed to', 'Nothing plays until your child presses something', 'On Apple TV, family games with the words built in, played with the iPad as the controller'], img: 'games', alt: 'The Games page', extra: ['game-piano', 'game-draw'], extraAlt: ['The Piano game', 'Draw'] },
     { id: 'seasons', label: 'Colours & seasons', title: 'Colours, seasons and celebrations', body: 'Pick a favourite colour, such as pink or orange, and the whole app takes it on. Seasons has words and games for spring to winter, and for Christmas, Easter, Halloween, Bonfire Night, Diwali, Eid and Hanukkah.',
       ticks: ['Parents choose which celebrations show, change the words, and add their own', 'Make a tree: hang baubles, lights and presents on a Christmas tree', 'Larger text scrolls, so nothing is ever hidden'], img: 'parent-look-pink', alt: 'The Look page in Parent Mode with the favourite colour pink chosen', extra: ['game-seasons', 'game-tree'], extraAlt: ['Seasons, with words for Christmas', 'Make a tree, a Christmas tree to decorate'] },
+    { id: 'family', label: 'Family & stories', title: 'My family, My stories and My apps', body: 'My family draws a family tree from the people an adult adds, with their photos, and pressing a person says who they are. My stories gets a child ready for something new, a step at a time. A silent visual timer shows how long is left.',
+      ticks: ['Family and friends, each with a photo, and a tree that shows how they fit together', 'Stories such as going to the dentist, written in plain, kind words with a picture for each step', 'Videos kept on the device, and other apps a press away. A link can open an app, never a web page'], img: 'family-tree', alt: 'My family, a family tree drawn from the people an adult added', extra: ['stories-step', 'apps-screen'], extraAlt: ['A story, one step at a time', 'Other apps on the device, as big tiles'] },
+    { id: 'schoolday', label: 'School day', title: 'The school day, on the child\u2019s own screen', body: 'With School Mode on, Home shows what is happening now and what comes next, taken from the timetable. When a lesson has its own page, Words for this opens it in one press. A This lesson button can sit in the top bar, so the words are there from anywhere.',
+      ticks: ['The strip is always the same size, so the six Home buttons never move', 'Nothing is said until something is pressed', 'Staff can turn it off in Classroom set-up'], img: 'school-day-home', alt: 'The Home screen at school, showing Now: Registration, Next: Lesson 1, and a Words for this button' },
+    { id: 'apple', label: 'iPad, Watch & TV', title: 'iPhone, iPad, Apple Watch and Apple TV (beta)', body: 'The same app on iPhone and iPad, a small app on Apple Watch for the words a child needs in one press, and an Apple TV app that puts the words and games on the big screen. Link them in Parent Mode with a four-digit code, and the iPad can be the controller for games on the TV.',
+      ticks: ['Works with the iPad\u2019s own Eye Tracking, Switch Control, Voice Control and VoiceOver', 'Linked over Bluetooth and the home network. Nothing goes on the internet', 'In beta: built and run in simulators, and now being tried on real devices'], img: 'apple-tv-talk', ext: 'jpg', alt: 'The Talk page on Apple TV, a grid of word buttons with Yes, No, Break, Toilet, Finished and Give me time underneath' },
     { id: 'safe', label: 'Medical Info & Lost mode', title: 'Medical Info, About me and Lost mode', body: 'Anyone can press Medical Info, with no PIN, to see allergies, medicines, an emergency plan and who to call. A phone camera can read it too.',
       ticks: ['About me: a one-page communication passport for anyone new', 'Lost mode: "This is a critical communication device. Please return it to \u2026"', 'Only the Parent PIN can turn Lost mode off'], img: 'medical-info', alt: 'Medical Info, with a code a phone can read', extra: ['lost-mode', 'traffic-light'], extraAlt: ['Lost mode', 'The traffic light'] }
   ];
@@ -1591,7 +1644,7 @@ footer { background: var(--navy); color: var(--on-navy-soft); padding-block: 56p
     panelEl.setAttribute('aria-labelledby', 'tt-' + t.id);
     var extra = '';
     if (t.extra) extra = '<div class="shot-pair">' + t.extra.map(function (e, k) { return '<div class="shot"><img src="screens/' + e + '.png" width="1280" height="800" alt="' + t.extraAlt[k] + '"></div>'; }).join('') + '</div>';
-    panelEl.innerHTML = '<div class="panel"><div><div class="shot"><img src="screens/' + t.img + '.png" width="1280" height="800" alt="' + t.alt + '"></div>' + extra + '</div>' +
+    panelEl.innerHTML = '<div class="panel"><div><div class="shot"><img src="screens/' + t.img + '.' + (t.ext || 'png') + '" width="' + (t.ext ? 1600 : 1280) + '" height="' + (t.ext ? 900 : 800) + '" alt="' + t.alt + '"></div>' + extra + '</div>' +
       '<div class="panel-copy"><h3>' + t.title + '</h3><p>' + t.body + '</p><ul class="ticks">' + t.ticks.map(function (x) { return '<li><span>' + x + '</span></li>'; }).join('') + '</ul></div></div>';
   }
   TOUR.forEach(function (t, i) {

@@ -7125,3 +7125,19 @@ html[data-labels='words'] .board-button__label {
     font-size: 0.9rem;
   }
 }
+
+/* The other top-bar choices have a picture too, so every button along the top looks the same kind of thing. */
+.quick-access-bar__button[data-id='family']::before { content: '👪'; }
+.quick-access-bar__button[data-id='stories']::before { content: '📖'; }
+.quick-access-bar__button[data-id='movies']::before { content: '🎬'; }
+.quick-access-bar__button[data-id='apps']::before { content: '📲'; }
+.quick-access-bar__button[data-id='lesson']::before { content: '🎒'; }
+.quick-access-bar__button[data-id='timer']::before { content: '⏳'; }
+
+/* With the drawn pictures on, these have no drawn picture of their own, so they keep their emoji. */
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='family']::before { content: '👪'; width: auto; height: auto; }
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='stories']::before { content: '📖'; width: auto; height: auto; }
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='movies']::before { content: '🎬'; width: auto; height: auto; }
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='apps']::before { content: '📲'; width: auto; height: auto; }
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='lesson']::before { content: '🎒'; width: auto; height: auto; }
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='timer']::before { content: '⏳'; width: auto; height: auto; }
