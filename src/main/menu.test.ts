@@ -6,13 +6,13 @@ const roles = (template: ReturnType<typeof buildMenuTemplate>): string[] =>
 
 describe('the application menu', () => {
   it('is removed on Windows and Linux', () => {
-    expect(buildMenuTemplate('Rugged Speech Test', 'win32')).toBeNull();
-    expect(buildMenuTemplate('Rugged Speech Test', 'linux')).toBeNull();
+    expect(buildMenuTemplate('Rugged Speech', 'win32')).toBeNull();
+    expect(buildMenuTemplate('Rugged Speech', 'linux')).toBeNull();
   });
 
   it('is small on a Mac: Hide, Quit and the editing shortcuts', () => {
-    const template = buildMenuTemplate('Rugged Speech Test', 'darwin');
-    expect(template?.map((entry) => entry.label)).toEqual(['Rugged Speech Test', 'Edit']);
+    const template = buildMenuTemplate('Rugged Speech', 'darwin');
+    expect(template?.map((entry) => entry.label)).toEqual(['Rugged Speech', 'Edit']);
     expect(roles(template)).toEqual(['hide', 'separator', 'quit', 'undo', 'redo', 'separator', 'cut', 'copy', 'paste', 'selectAll']);
   });
 

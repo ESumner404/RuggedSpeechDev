@@ -40,6 +40,11 @@ describe('ParentModeScreen', () => {
     await ensureSeeded();
     container = document.createElement('div');
     render(<ParentModeScreen onExit={() => {}} />, container);
+    // Parent Mode opens on Start; these tests are about the Boards page.
+    const boardsTab = Array.from(container.querySelectorAll<HTMLElement>('.parent-nav__tab')).find(
+      (el) => el.textContent?.trim().endsWith('Boards'),
+    );
+    act(() => boardsTab?.click());
     await waitFor(() => container.querySelectorAll('.parent-mode-screen__button-row').length > 0);
   });
 

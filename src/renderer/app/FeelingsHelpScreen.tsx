@@ -6,7 +6,8 @@ import { recordPress } from '../store/usage';
 import { CalmTab } from '../calm/CalmTab';
 import { MyBodyScreen } from '../body/MyBodyScreen';
 import type { Item } from '../store/types';
-import { Pic } from '../symbols/Pic';
+import { BoardButton } from '../board/BoardButton';
+import { useAccess } from '../board/useAccess';
 
 export type FeelingsHelpTab = 'feelings' | 'help' | 'calm' | 'body';
 
@@ -20,6 +21,7 @@ type Props = {
 
 export function FeelingsHelpScreen({ tab, onTabChange }: Props) {
   const chosenFeeling = useSignal<Item | null>(null);
+  const access = useAccess();
 
   useEffect(() => {
     chosenFeeling.value = null;
@@ -82,19 +84,14 @@ export function FeelingsHelpScreen({ tab, onTabChange }: Props) {
         <div class="feelings-help-screen__body">
           <div class="board-grid feelings-help-screen__grid">
             {FEELINGS_ITEMS.map((item) => (
-              <button
-                type="button"
-                class="board-button"
+              <BoardButton
                 key={item.id}
-                style={{ backgroundColor: item.background_color }}
-                onClick={() => pressFeeling(item)}
-                aria-pressed={chosenFeeling.value?.id === item.id}
-              >
-                {item.image?.kind === 'emoji' && (
-                  <Pic class="board-button__emoji" char={item.image.char} />
-                )}
-                <span class="board-button__label">{item.label}</span>
-              </button>
+                item={item}
+                onPress={pressFeeling}
+                dwellMs={access.dwellMs}
+                lowArousal={access.lowArousalPalette}
+                pressed={chosenFeeling.value?.id === item.id}
+              />
             ))}
           </div>
           <div class="intensity-row">
@@ -116,18 +113,13 @@ export function FeelingsHelpScreen({ tab, onTabChange }: Props) {
       {tab === 'help' && (
         <div class="board-grid feelings-help-screen__grid feelings-help-screen__grid--help">
           {HELP_ITEMS.map((item) => (
-            <button
-              type="button"
-              class="board-button"
+            <BoardButton
               key={item.id}
-              style={{ backgroundColor: item.background_color }}
-              onClick={() => pressHelp(item)}
-            >
-              {item.image?.kind === 'emoji' && (
-                <Pic class="board-button__emoji" char={item.image.char} />
-              )}
-              <span class="board-button__label">{item.label}</span>
-            </button>
+              item={item}
+              onPress={pressHelp}
+              dwellMs={access.dwellMs}
+              lowArousal={access.lowArousalPalette}
+            />
           ))}
         </div>
       )}

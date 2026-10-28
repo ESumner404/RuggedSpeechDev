@@ -66,3 +66,22 @@ jobs:
           name: failed-tests-${{ matrix.os }}
           path: test-results/**/error-context.md
           if-no-files-found: ignore
+
+  # The iPhone and iPad app is built for the simulator with no signing, to
+  # prove the native project and the page still go together. It does not run
+  # the end-to-end tests: those drive the desktop app.
+  ios:
+    name: iPhone and iPad app builds
+    needs: verify
+    runs-on: macos-latest
+    timeout-minutes: 25
+    # New, and not yet seen to pass on a build computer. Reported, but does not stop a change.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run ios:simulator

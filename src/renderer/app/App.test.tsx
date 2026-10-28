@@ -5,9 +5,13 @@ import { act } from 'preact/test-utils';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { App } from './App';
 import { resetPinLockoutForTests } from '../store/pinSecurity';
+import { getDateString } from '../day/dayLogic';
+import type { DayActivity } from '../store/types';
 import {
   EMPTY_USER_PROFILE,
+  createMyPage,
   resetDBConnectionForTests,
+  saveDayPlan,
   schoolModeSetting,
   setFirstRunCompleted,
   setParentPinState,
@@ -218,9 +222,32 @@ describe('App', () => {
     await waitFor(() => container.querySelector('.games-menu') !== null);
   });
 
+  it('"This lesson" opens the words for what is on now, and My Day when there are none', async () => {
+    const page = await createMyPage('Maths lesson');
+    await saveDayPlan({
+      date: getDateString(new Date()),
+      activities: [{ id: 'm', name: 'Maths', pageId: page.id } as DayActivity, { id: 'b', name: 'Break' } as DayActivity],
+    });
+    await setQuickAccess(['help', 'lesson', 'yes', 'no', 'home', 'talk']);
+    render(null, container);
+    container = document.createElement('div');
+    render(<App />, container);
+    await waitFor(
+      () => Array.from(container.querySelectorAll('.quick-access-bar__button')).map((b) => b.textContent)[1] === 'This lesson',
+    );
+    act(() => quickAccessButton(container, 'This lesson').click());
+    await waitFor(() => container.querySelector('.my-pages-screen') !== null || container.querySelector('.board-grid') !== null);
+    expect(container.querySelector('.my-day-screen')).toBeNull();
+
+    await saveDayPlan({ date: getDateString(new Date()), activities: [{ id: 'b', name: 'Break' } as DayActivity] });
+    act(() => quickAccessButton(container, 'Home').click());
+    act(() => quickAccessButton(container, 'This lesson').click());
+    await waitFor(() => container.querySelector('.my-day-screen') !== null);
+  });
+
   it('shows whose device it is along the top, names the window after them, and can be hidden', async () => {
     expect(container.querySelector('.app-shell__device-name')).toBeNull();
-    expect(document.title).toBe('Rugged Speech Test');
+    expect(document.title).toBe('Rugged Speech');
 
     await userProfileSetting.set({ ...EMPTY_USER_PROFILE, name: 'Lucy', emoji: '🦁' });
     await waitFor(() => container.querySelector('.app-shell__device-name') !== null);

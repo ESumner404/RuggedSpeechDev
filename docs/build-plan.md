@@ -1,4 +1,4 @@
-# Build plan: Rugged Speech Test
+# Build plan: Rugged Speech
 
 > **Historical.** This is the original phased plan the app was built from. Most of it is done, and the app now does a good deal more (see [the feature list](features.md)). It is kept for the reasoning and the acceptance criteria. Where it disagrees with the app, the app and [the principles](../PRINCIPLES.md) win.
 

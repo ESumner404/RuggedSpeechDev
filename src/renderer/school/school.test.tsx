@@ -71,12 +71,15 @@ describe('SchoolModeScreen', () => {
       'Safeguarding',
       'Timetable',
       'Lesson pages',
+      'Choice boards',
       'Vocabulary',
       'Targets',
       'Notes',
+      'Home–school diary',
       'Activity',
       'Reports',
       'Classroom set-up',
+      'School pack',
       'School guide',
     ]);
     expect(container.querySelector('.today-tab')).not.toBeNull();

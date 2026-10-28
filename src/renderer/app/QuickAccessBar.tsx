@@ -24,7 +24,7 @@ export function QuickAccessBar({ onNavigate }: Props) {
   }
 
   return (
-    <nav class="quick-access-bar">
+    <nav class="quick-access-bar" aria-label="Always-there buttons">
       {quickAccessButtons.value.map((id) => (
         <button type="button" class="quick-access-bar__button" key={id} data-id={id} onClick={() => press(id)}>
           {QUICK_ACCESS_LABELS[id]}

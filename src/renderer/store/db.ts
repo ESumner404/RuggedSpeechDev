@@ -8,6 +8,11 @@ import {
   STARTER_BOARDS,
 } from '../vocab/starter';
 import { EMPTY_LOST_MODE, isLostMode, type LostMode } from '../safety/lostMode';
+import { isFamilyList, type FamilyMember } from '../family/family';
+import { isMovieList, type Movie } from '../movies/movies';
+import { isAppList, type MyApp } from '../apps/apps';
+import { isDiaryList, type DiaryEntry } from '../diary/diary';
+import { isStoryList, type Story } from '../stories/stories';
 import { DEFAULT_TRAFFIC, isTrafficSetting, type TrafficSetting } from '../signals/traffic';
 import { hashSecret, isHashedSecret, verifySecret } from './pinSecurity';
 import { DEFAULT_RETENTION_DAYS, MAX_ENTRIES, MAX_LABEL, isRetention, type ActivityEntry, type ActivityKind } from './activity';
@@ -113,6 +118,11 @@ interface MyWordsDB extends DBSchema {
     key: string;
     value: Blob;
   };
+  /** Videos an adult added (Movies), kept in the app on a computer. Not in a backup: a film is far too big. */
+  movieFiles: {
+    key: string;
+    value: Blob;
+  };
   people: {
     key: string;
     value: PersonRecord;
@@ -135,7 +145,7 @@ interface MyWordsDB extends DBSchema {
   };
 }
 
-export const DB_VERSION = 6;
+export const DB_VERSION = 7;
 
 let dbPromise: Promise<IDBPDatabase<MyWordsDB>> | null = null;
 
@@ -165,6 +175,9 @@ function openMyWordsDB(): Promise<IDBPDatabase<MyWordsDB>> {
         }
         if (oldVersion < 6) {
           db.createObjectStore('activity', { keyPath: 'id', autoIncrement: true });
+        }
+        if (oldVersion < 7) {
+          db.createObjectStore('movieFiles');
         }
       },
     });
@@ -276,7 +289,11 @@ export async function getAllBoards(): Promise<Board[]> {
 export async function updateBoard(board: Board): Promise<void> {
   const db = await openMyWordsDB();
   await db.put('boards', board);
+  boardsVersion.value += 1;
 }
+
+/** Goes up whenever a board is changed, so something showing the boards elsewhere (the Apple TV) can follow. */
+export const boardsVersion = signal(0);
 
 function emptyGridOrder(rows: GridSize, columns: GridSize): (string | null)[][] {
   return Array.from({ length: rows }, () => Array.from({ length: columns }, () => null));
@@ -300,6 +317,7 @@ export async function createBoard(name: string, id: string = `board-${randomId()
     buttons: [],
   };
   await db.put('boards', board);
+  boardsVersion.value += 1;
   return board;
 }
 
@@ -347,6 +365,7 @@ export async function deleteMyPage(id: string): Promise<void> {
   const page = pages.find((candidate) => candidate.id === id);
   if (!page) return;
   await db.delete('boards', page.boardId);
+  boardsVersion.value += 1;
   await saveMyPages(pages.filter((candidate) => candidate.id !== id));
 }
 
@@ -363,12 +382,17 @@ export async function getFavourites(): Promise<Item[]> {
 export async function removeFavourite(id: string): Promise<void> {
   const db = await openMyWordsDB();
   await db.delete('favourites', id);
+  favouritesVersion.value += 1;
 }
 
 export async function saveFavourite(item: Item): Promise<void> {
   const db = await openMyWordsDB();
   await db.put('favourites', item);
+  favouritesVersion.value += 1;
 }
+
+/** Goes up whenever a Favourite is added or taken away, so something showing them elsewhere can follow. */
+export const favouritesVersion = signal(0);
 
 const RECENT_MAX_ENTRIES = 50;
 const RECENT_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
@@ -582,6 +606,21 @@ export async function deleteVoiceClip(blobId: string): Promise<void> {
   await db.delete('voiceClips', blobId);
 }
 
+export async function saveMovieFile(id: string, blob: Blob): Promise<void> {
+  const db = await openMyWordsDB();
+  await db.put('movieFiles', blob, id);
+}
+
+export async function getMovieFile(id: string): Promise<Blob | undefined> {
+  const db = await openMyWordsDB();
+  return db.get('movieFiles', id);
+}
+
+export async function deleteMovieFile(id: string): Promise<void> {
+  const db = await openMyWordsDB();
+  await db.delete('movieFiles', id);
+}
+
 export async function getVoiceClip(blobId: string): Promise<Blob | undefined> {
   const db = await openMyWordsDB();
   return db.get('voiceClips', blobId);
@@ -757,6 +796,9 @@ export async function setQuickAccess(buttons: QuickAccessId[]): Promise<void> {
 
 
 // ---------------------------------------------------------------------------
+/** When anything an adult changed was last saved, so Parent Mode and School Mode can say that it was. */
+export const lastSavedAt = signal(0);
+
 // Simple stored settings. Each one lives under its own key in `meta`, keeps a
 // cached signal so screens can react without a database round trip, and is
 // registered in SETTINGS below, which is all it takes for it to load at
@@ -801,6 +843,7 @@ function storedSetting<T>(
       state.value = value;
       const db = await openMyWordsDB();
       await db.put('meta', value, key);
+      lastSavedAt.value = Date.now();
     },
     async restore(value) {
       if (!isValid(value)) return false;
@@ -841,7 +884,7 @@ const isAboutMe = (value: unknown): value is AboutMe =>
   isPlainObject(value) && Object.keys(EMPTY_ABOUT_ME).every((field) => typeof value[field] === 'string');
 
 export const EMPTY_ROUTINE: WeeklyRoutine = { mon: [], tue: [], wed: [], thu: [], fri: [], sat: [], sun: [] };
-const isRoutine = (value: unknown): value is WeeklyRoutine =>
+export const isRoutine = (value: unknown): value is WeeklyRoutine =>
   isPlainObject(value) && Object.keys(EMPTY_ROUTINE).every((day) => Array.isArray(value[day]));
 
 /** 0 shows every word; 1 to 4 holds back words whose stage is higher. */
@@ -850,8 +893,28 @@ export const wordStageSetting = storedSetting<number>('wordStage', 0, isStageCho
 export const clearAfterSpeakSetting = storedSetting<boolean>('clearAfterSpeak', false, isBoolean);
 /** School (staff) wording and presets. */
 export const schoolModeSetting = storedSetting<boolean>('schoolMode', false, isBoolean);
+/** On a device with School Mode on: show what is happening now at school, and its words, on the child's Home screen. */
+export const schoolDayOnHomeSetting = storedSetting<boolean>('schoolDayOnHome', true, isBoolean);
 /** Minutes of inactivity before Parent Mode closes itself; 0 never. */
 export const parentModeTimeoutSetting = storedSetting<number>('parentModeTimeoutMin', 0, isMinutes);
+/** On a phone or tablet: follow the device's own Reduce Motion, Increase Contrast, Bold Text and text size. */
+export const followDeviceAccessibilitySetting = storedSetting<boolean>('followDeviceAccessibility', true, isBoolean);
+/** On a phone or tablet: a short buzz from the device when a button is pressed. Off unless an adult turns it on. */
+export const pressBuzzSetting = storedSetting<boolean>('pressBuzz', false, isBoolean);
+/**
+ * On a phone or tablet: whether the app links with the family's Apple Watch and Apple TV, and the four-digit code the
+ * television shows, which the television must give before it is let in. Off unless an adult turns it on, and never in a
+ * backup, because it belongs to this device and this home.
+ */
+export type AppleLinkSetting = { enabled: boolean; code: string; showSentence?: boolean };
+export const isAppleLinkSetting = (value: unknown): value is AppleLinkSetting =>
+  typeof value === 'object' &&
+  value !== null &&
+  typeof (value as AppleLinkSetting).enabled === 'boolean' &&
+  typeof (value as AppleLinkSetting).code === 'string' &&
+  /^\d{0,4}$/.test((value as AppleLinkSetting).code) &&
+  ((value as AppleLinkSetting).showSentence === undefined || typeof (value as AppleLinkSetting).showSentence === 'boolean');
+export const appleLinkSetting = storedSetting<AppleLinkSetting>('appleLink', { enabled: false, code: '' }, isAppleLinkSetting, false);
 /** Extra phrases beyond the four fixed slots in the keyboard's Phrases tab. */
 export const customPhrasesSetting = storedSetting<string[]>('customPhrases', [], isStringArray);
 export const aboutMeSetting = storedSetting<AboutMe>('aboutMe', EMPTY_ABOUT_ME, isAboutMe);
@@ -894,6 +957,27 @@ const isUserProfile = (value: unknown): value is UserProfile =>
 /** Whose device this is: a name, a device name, a picture and an age (Parent Mode, User). */
 export const userProfileSetting = storedSetting<UserProfile>('userProfile', EMPTY_USER_PROFILE, isUserProfile);
 /** What the figure in My body looks like (Parent Mode, My body). */
+/** School packs received and waiting for an adult to add them. Never in a backup, and only ever added by choice. */
+export type PendingPack = { id: string; name: string; receivedAt: number; text: string };
+const isPendingPacks = (value: unknown): value is PendingPack[] =>
+  Array.isArray(value) &&
+  value.length <= 3 &&
+  value.every((p) => typeof p === 'object' && p !== null && typeof (p as PendingPack).id === 'string' && typeof (p as PendingPack).name === 'string' && typeof (p as PendingPack).receivedAt === 'number' && typeof (p as PendingPack).text === 'string');
+export const pendingPacksSetting = storedSetting<PendingPack[]>('pendingPacks', [], isPendingPacks, false);
+/** My stories: step-by-step stories that get a child ready for something. */
+export const storiesSetting = storedSetting<Story[]>('stories', [], isStoryList);
+/** The home–school diary, and when each side last looked. */
+export const diarySetting = storedSetting<DiaryEntry[]>('diary', [], isDiaryList);
+export type DiarySeen = { home?: number; school?: number };
+const isDiarySeen = (value: unknown): value is DiarySeen =>
+  typeof value === 'object' && value !== null && ['home', 'school'].every((k) => (value as Record<string, unknown>)[k] === undefined || typeof (value as Record<string, unknown>)[k] === 'number');
+export const diarySeenSetting = storedSetting<DiarySeen>('diarySeen', {}, isDiarySeen, false);
+/** Movies kept on this device. Not in a backup: the films themselves are not, so the names would point at nothing. */
+export const moviesSetting = storedSetting<Movie[]>('movies', [], isMovieList, false);
+/** Links to other apps on this device (My apps). Not in a backup: a link that opens an app here may mean nothing elsewhere. */
+export const appsSetting = storedSetting<MyApp[]>('apps', [], isAppList, false);
+/** The people who matter to the child, and how they are related (My family). */
+export const familySetting = storedSetting<FamilyMember[]>('family', [], isFamilyList);
 export const myBodySetting = storedSetting<BodyLook>('myBody', DEFAULT_BODY_LOOK, isBodyLook);
 /** Jokes an adult has added to the built-in ones (Parent Mode, Jokes). */
 export const customJokesSetting = storedSetting<Joke[]>('customJokes', [], isJokeList);
@@ -1004,8 +1088,12 @@ const SETTINGS = [
   wordStageSetting,
   clearAfterSpeakSetting,
   schoolModeSetting,
+  schoolDayOnHomeSetting,
   schoolTimeoutSetting,
   parentModeTimeoutSetting,
+  followDeviceAccessibilitySetting,
+  pressBuzzSetting,
+  appleLinkSetting,
   customPhrasesSetting,
   aboutMeSetting,
   weeklyRoutineSetting,
@@ -1022,6 +1110,13 @@ const SETTINGS = [
   themeSetting,
   drawingsSetting,
   myBodySetting,
+  familySetting,
+  moviesSetting,
+  appsSetting,
+  storiesSetting,
+  diarySetting,
+  diarySeenSetting,
+  pendingPacksSetting,
   customJokesSetting,
   songsSetting,
   playlistsSetting,

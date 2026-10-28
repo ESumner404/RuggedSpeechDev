@@ -30,7 +30,7 @@ test('pictures for the guides', async () => {
   const title = page.locator('.first-run-wizard__title');
 
   // ---- Setting up
-  await expect(title).toHaveText('Welcome to Rugged Speech Test');
+  await expect(title).toHaveText('Welcome to Rugged Speech');
   await shot('setup-1-welcome');
   await next();
   await page.locator('.first-run-wizard__field input').first().fill('Lucy');

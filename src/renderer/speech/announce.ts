@@ -11,6 +11,7 @@ import {
 } from '../store/db';
 import { applyPronunciations } from './pronunciation';
 import type { Item } from '../store/types';
+import { lastSaid } from '../platform/liveSpeech';
 
 function baseSpeakOptions(): SpeakOptions {
   return {
@@ -55,6 +56,7 @@ export async function announceItem(item: Item, options?: SpeakOptions): Promise<
     }
   }
   speak(applyPronunciations(text, pronunciationsSetting.signal.value), { ...baseSpeakOptions(), ...options });
+  lastSaid.value = { text, at: Date.now() };
   void recordUtteranceIfEnabled(text);
 }
 
@@ -63,7 +65,10 @@ export async function announceItem(item: Item, options?: SpeakOptions): Promise<
  * something the person said and does not belong in Recent. */
 export function announceText(text: string, options?: { keepInHistory?: boolean }): void {
   speak(applyPronunciations(text, pronunciationsSetting.signal.value), baseSpeakOptions());
-  if (options?.keepInHistory !== false) void recordUtteranceIfEnabled(text);
+  if (options?.keepInHistory !== false) {
+    lastSaid.value = { text, at: Date.now() };
+    void recordUtteranceIfEnabled(text);
+  }
 }
 
 /**
@@ -80,6 +85,7 @@ export function announceSentence(words: string[], onWord: (index: number | null)
   const pronunciations = pronunciationsSetting.signal.value;
   if (style === 'wordByWord') {
     speakWordByWord(parts.map((part) => applyPronunciations(part, pronunciations)), baseSpeakOptions(), onWord);
+    lastSaid.value = { text: parts.join(' '), at: Date.now() };
     void recordUtteranceIfEnabled(parts.join(' '));
     return;
   }
@@ -89,5 +95,6 @@ export function announceSentence(words: string[], onWord: (index: number | null)
   } else {
     speak(applyPronunciations(parts.join(' '), pronunciations), base);
   }
+  lastSaid.value = { text: parts.join(' '), at: Date.now() };
   void recordUtteranceIfEnabled(parts.join(' '));
 }

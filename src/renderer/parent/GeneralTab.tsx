@@ -11,6 +11,8 @@ const TIMEOUT_CHOICES = [0, 5, 10, 15, 30, 60] as const;
 // read live from the OS rather than cached in this app's own database.
 export function GeneralTab() {
   const openAtLogin = useSignal<boolean | null>(null);
+  // A phone or tablet app has no start-up setting: it opens when it is tapped.
+  const hasStartup = window.myWords.capabilities?.startup !== false;
   const changingPin = useSignal(false);
   const pinChanged = useSignal(false);
   const favourites = useSignal<Item[]>([]);
@@ -22,7 +24,7 @@ export function GeneralTab() {
 
   useEffect(() => {
     void getFavourites().then((items) => (favourites.value = items));
-    void window.myWords.startup.getOpenAtLogin().then((value) => (openAtLogin.value = value));
+    if (hasStartup) void window.myWords.startup.getOpenAtLogin().then((value) => (openAtLogin.value = value));
   }, []);
 
   async function toggle(): Promise<void> {
@@ -31,15 +33,19 @@ export function GeneralTab() {
     openAtLogin.value = next;
   }
 
-  if (openAtLogin.value === null) return null;
+  if (hasStartup && openAtLogin.value === null) return null;
 
   return (
     <div class="parent-mode-screen__body general-tab">
-      <label class="general-tab__checkbox">
-        <input type="checkbox" checked={openAtLogin.value} onChange={() => void toggle()} />
-        Start when the computer starts
-      </label>
-      <p class="general-tab__hint">Off by default. On, the app opens automatically after login.</p>
+      {hasStartup && (
+        <>
+          <label class="general-tab__checkbox">
+            <input type="checkbox" checked={openAtLogin.value ?? false} onChange={() => void toggle()} />
+            Start when the computer starts
+          </label>
+          <p class="general-tab__hint">Off by default. On, the app opens automatically after login.</p>
+        </>
+      )}
 
       <label class="general-tab__row">
         Close {modeName()} after

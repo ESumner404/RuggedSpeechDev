@@ -2,6 +2,7 @@ import { useSignal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
 import { getVoiceClip, musicVolumeSetting, playlistsSetting, songsSetting } from '../store/db';
 import { songsInPlaylist, type Song } from './songs';
+import { deviceNoun } from '../platform/deviceWord';
 
 // Music: a big tile for each song. A song plays when its tile is pressed, and
 // never by itself. If an adult has made playlists, they are choices along the
@@ -15,6 +16,8 @@ export function MusicScreen() {
   const paused = useSignal(false);
   const problem = useSignal('');
   const queue = useRef<Song[]>([]);
+  // A song from the device's own Music library is played by the device, so it is watched rather than heard here.
+  const nativeTimer = useRef<number | null>(null);
   const listId = useSignal('all');
   const allSongs = songsSetting.signal.value;
   const playlists = playlistsSetting.signal.value;
@@ -22,6 +25,11 @@ export function MusicScreen() {
   const songs = chosenList ? songsInPlaylist(chosenList, allSongs) : allSongs;
 
   function release(): void {
+    if (nativeTimer.current !== null) {
+      window.clearInterval(nativeTimer.current);
+      nativeTimer.current = null;
+      void window.myWords?.music?.stop();
+    }
     audioRef.current?.pause();
     audioRef.current = null;
     if (urlRef.current) URL.revokeObjectURL(urlRef.current);
@@ -35,9 +43,41 @@ export function MusicScreen() {
     if (audioRef.current) audioRef.current.volume = musicVolumeSetting.signal.value;
   }, [musicVolumeSetting.signal.value]);
 
+  /** Plays a song that is already on the device, and moves on to the next when the device says it has finished. */
+  async function playFromLibrary(song: Song): Promise<void> {
+    const music = window.myWords?.music;
+    if (!music || !song.libraryId || !(await music.play(song.libraryId))) {
+      problem.value = 'That song is not on this device.';
+      playing.value = null;
+      return;
+    }
+    playing.value = song;
+    paused.value = false;
+    const startedAt = Date.now();
+    nativeTimer.current = window.setInterval(() => {
+      void music.state().then((state) => {
+        // Give the device a moment to start before treating "stopped" as the end.
+        if (state !== 'stopped' || Date.now() - startedAt < 2000 || nativeTimer.current === null) return;
+        window.clearInterval(nativeTimer.current);
+        nativeTimer.current = null;
+        const next = queue.current.shift();
+        if (next) {
+          void play(next);
+          return;
+        }
+        playing.value = null;
+        paused.value = false;
+      });
+    }, 800);
+  }
+
   async function play(song: Song): Promise<void> {
     release();
     problem.value = '';
+    if (song.libraryId) {
+      await playFromLibrary(song);
+      return;
+    }
     const blob = await getVoiceClip(song.blobId);
     if (!blob) {
       problem.value = 'That song could not be found.';
@@ -58,19 +98,26 @@ export function MusicScreen() {
       paused.value = false;
     });
     audio.addEventListener('error', () => {
-      problem.value = 'That song will not play on this computer.';
+      problem.value = `That song will not play on this ${deviceNoun()}.`;
       playing.value = null;
     });
     audioRef.current = audio;
     playing.value = song;
     paused.value = false;
     void audio.play().catch(() => {
-      problem.value = 'That song will not play on this computer.';
+      problem.value = `That song will not play on this ${deviceNoun()}.`;
       playing.value = null;
     });
   }
 
   function togglePause(): void {
+    if (nativeTimer.current !== null) {
+      const music = window.myWords?.music;
+      if (paused.value) void music?.resume();
+      else void music?.pause();
+      paused.value = !paused.value;
+      return;
+    }
     const audio = audioRef.current;
     if (!audio) return;
     if (audio.paused) {

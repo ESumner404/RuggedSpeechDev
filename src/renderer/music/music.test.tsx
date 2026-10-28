@@ -130,7 +130,7 @@ describe('Music', () => {
     });
 
     it('is clear that there is no streaming', () => {
-      expect(container.textContent).toContain('There is no Spotify or Apple Music');
+      expect(container.textContent).toContain('There is no Spotify and no streaming');
     });
   });
 

@@ -2,6 +2,7 @@ import { useSignal } from '@preact/signals';
 import { noteAuthorSetting, staffNotesSetting } from '../store/db';
 import { formatTime, } from '../store/activity';
 import { MAX_NOTES, NOTE_KINDS, type NoteKind } from '../store/staff';
+import { deviceNoun } from '../platform/deviceWord';
 
 // Notes after a session: what was tried and what was noticed. For the adults
 // only, kept on this computer, newest first.
@@ -29,7 +30,7 @@ export function NotesTab() {
     <div class="parent-mode-screen__body notes-tab">
       <p class="about-tab__hint">
         A short note after a session or a day: what was tried, what the child did, what to try next. Notes are for
-        adults only, stay on this computer, and appear on the Reports sheets. Please write about communication, and
+        adults only, stay on this {deviceNoun()}, and appear on the Reports sheets. Please write about communication, and
         keep it kind and factual.
       </p>
       <form class="notes-tab__form" onSubmit={add}>

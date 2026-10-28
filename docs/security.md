@@ -1,6 +1,6 @@
 # Security notes
 
-This is a plain account of how Rugged Speech Test protects a child's information, what has been checked, and what has not. It is written for people responsible for data protection or IT (a school, a trust, a family's IT-minded relative), and for anyone reviewing the app.
+This is a plain account of how Rugged Speech protects a child's information, what has been checked, and what has not. It is written for people responsible for data protection or IT (a school, a trust, a family's IT-minded relative), and for anyone reviewing the app.
 
 > **In one line.** The app never goes online, keeps everything on the computer, and is built so that even if something inside the window went wrong, it could not reach the internet, read other files or run other programs. It is not a lock on the device, and it does not encrypt the saved data.
 
@@ -53,7 +53,7 @@ An `afterPack` step switches off these Electron "fuses", which an app like this 
 - the Node debug port (`--inspect`), **in the Windows build** (the Mac test build keeps it, because the automated tests drive the app through it);
 - loading app code from anywhere but the packed app file (`OnlyLoadAppFromAsar` is on).
 
-You can read the setting of a build yourself: `npx @electron/fuses read --app "release/win-unpacked/Rugged Speech Test.exe"`.
+You can read the setting of a build yourself: `npx @electron/fuses read --app "release/win-unpacked/Rugged Speech.exe"`.
 
 ### The PIN, the recovery code and the backup
 

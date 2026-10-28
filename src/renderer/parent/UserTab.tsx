@@ -2,6 +2,7 @@ import { trafficSetting, userProfileSetting } from '../store/db';
 import { TRAFFIC_LIGHTS, type TrafficLight } from '../signals/traffic';
 import { deviceTitle } from '../ui/deviceName';
 import type { UserProfile } from '../store/types';
+import { deviceNoun } from '../platform/deviceWord';
 
 const PICTURES = ['🙂', '😀', '😎', '🦁', '🐯', '🐶', '🐱', '🐰', '🐻', '🦊', '🐼', '🐸', '🦄', '🚀', '⚽', '🌈', '⭐', '🌻', '🚂', '🎨'];
 
@@ -20,7 +21,7 @@ export function UserTab() {
   return (
     <div class="parent-mode-screen__body user-tab">
       <p class="about-tab__hint">
-        Tell the app whose device this is. All of it is optional, it stays on this computer, and none of it is sent
+        Tell the app whose device this is. All of it is optional, it stays on this {deviceNoun()}, and none of it is sent
         anywhere. The device name shows along the top of the child's screen and in the window title, so it is
         clear whose device it is if it goes missing.
       </p>

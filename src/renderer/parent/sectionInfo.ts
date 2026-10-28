@@ -1,0 +1,60 @@
+// What each section of Parent Mode and School Mode is for, in one plain sentence. Shown in the menu and
+// at the top of each page, so an adult always knows where they are and what the page is for.
+
+export type SectionInfo = { purpose: string };
+
+export const PARENT_SECTIONS: Record<string, SectionInfo> = {
+  start: { purpose: 'What to do next, and whether everything is ready.' },
+  guide: { purpose: 'Step-by-step help for everything in the app.' },
+  user: { purpose: 'Who the device is for, and what it is called.' },
+  aboutme: { purpose: 'A one-page guide to the child for new people.' },
+  medical: { purpose: 'Medical details anyone can see in an emergency.' },
+  body: { purpose: 'How the My body figure looks, and the equipment on it.' },
+  family: { purpose: 'The people who matter, with photos and a family tree.' },
+  stories: { purpose: 'Step-by-step stories that get a child ready for something.' },
+  boards: { purpose: 'The words on the Talk page: add, hide, rename and move them.' },
+  people: { purpose: 'People, as buttons with their photos.' },
+  places: { purpose: 'Places, as buttons with their photos.' },
+  mypages: { purpose: 'Pages of your own, for a place, a routine or a lesson.' },
+  quickaccess: { purpose: 'The buttons that are always along the top.' },
+  profiles: { purpose: 'Which page Talk opens to at home, at school and elsewhere.' },
+  myday: { purpose: 'Today’s plan, a weekly timetable, and First / Then.' },
+  music: { purpose: 'Songs and playlists, kept on this device.' },
+  movies: { purpose: 'Movies kept on this device.' },
+  apps: { purpose: 'Other apps on this device, a press away.' },
+  jokes: { purpose: 'Jokes, and your own.' },
+  seasons: { purpose: 'Words and games for times of the year and celebrations.' },
+  access: { purpose: 'Voice, ways of pressing, switches, eye tracking and text size.' },
+  look: { purpose: 'Colours and pictures.' },
+  learning: { purpose: 'Word stages, focus words, and a word to model each week.' },
+  targets: { purpose: 'What is being worked on, in plain words.' },
+  notes: { purpose: 'Short notes about how things are going.' },
+  diary: { purpose: 'A note each way between home and school.' },
+  activity: { purpose: 'What was said and used (off until you turn it on).' },
+  reports: { purpose: 'Sheets to print for meetings and reviews.' },
+  school: { purpose: 'Turn on School Mode, and choose its PIN.' },
+  lost: { purpose: 'What the screen says if the device is lost.' },
+  backup: { purpose: 'Save everything to a file, or restore from one.' },
+  print: { purpose: 'Cards and templates to print for use without the device.' },
+  general: { purpose: 'Start-up, how long Parent Mode stays open, favourites and the PIN.' },
+};
+
+export const SCHOOL_SECTIONS: Record<string, SectionInfo> = {
+  today: { purpose: 'The day at a glance, what is due, and a quick note.' },
+  pupil: { purpose: 'The pupil, the school and the key adults.' },
+  aboutme: { purpose: 'A one-page guide to the pupil for supply staff.' },
+  safeguarding: { purpose: 'What to do if a child tells you something, and who to tell.' },
+  timetable: { purpose: 'The week, entered once, so My Day fills itself in.' },
+  lessons: { purpose: 'Pages of words for each lesson.' },
+  choices: { purpose: 'Make a page of two to six words for a real choice.' },
+  vocabulary: { purpose: 'Word stages and focus words, with the speech and language therapist.' },
+  targets: { purpose: 'What is being worked on, with review dates.' },
+  notes: { purpose: 'A few kind, factual lines after a session or a day.' },
+  diary: { purpose: 'A note each way between home and school.' },
+  activity: { purpose: 'What was said and used (off until you turn it on).' },
+  reports: { purpose: 'A handover sheet and a review report to print.' },
+  classroom: { purpose: 'The school top bar, a typical school day, and how long School Mode stays open.' },
+  pack: { purpose: 'Hand lesson pages and a timetable to other devices, one way.' },
+  guide: { purpose: 'Step-by-step help for school staff.' },
+};
+

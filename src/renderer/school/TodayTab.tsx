@@ -1,3 +1,5 @@
+import { ModellingCard } from '../learning/ModellingCard';
+import { ReadyCheck } from '../parent/ReadyCheck';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { getDateString } from '../day/dayLogic';
@@ -5,6 +7,7 @@ import {
   activityEnabledSetting,
   getActivity,
   getEffectiveDayPlan,
+  getMyPages,
   noteAuthorSetting,
   staffNotesSetting,
   targetsSetting,
@@ -27,6 +30,10 @@ const LONG_DATE = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'nume
 export function TodayTab({ go }: { go: (section: SchoolSection) => void }) {
   const today = getDateString(new Date());
   const plan = useSignal<DayActivity[]>([]);
+  const lessonPages = useSignal(0);
+  useEffect(() => {
+    void getMyPages().then((pages) => (lessonPages.value = pages.length));
+  }, []);
   const activity = useSignal<ActivityEntry[]>([]);
   const quick = useSignal('');
   const added = useSignal(false);
@@ -65,6 +72,8 @@ export function TodayTab({ go }: { go: (section: SchoolSection) => void }) {
 
   return (
     <div class="parent-mode-screen__body today-tab">
+      <ReadyCheck kind="school" go={(place) => go(place as SchoolSection)} lessonPageCount={lessonPages.value} />
+      <ModellingCard />
       <header class="today-tab__head">
         <h2 class="today-tab__date">{LONG_DATE.format(new Date())}</h2>
         <p class="today-tab__who">{deviceTitle(profile)}</p>

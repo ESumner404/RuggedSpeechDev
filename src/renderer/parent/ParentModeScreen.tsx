@@ -8,6 +8,14 @@ import { QuickAccessTab } from './QuickAccessTab';
 import { AccessTab } from './AccessTab';
 import { LookTab } from './LookTab';
 import { BodyTab } from './BodyTab';
+import { StartTab } from './StartTab';
+import { PageHeader, SavedNote } from './shell';
+import { PARENT_SECTIONS } from './sectionInfo';
+import { StoriesTab } from '../stories/StoriesTab';
+import { DiaryTab } from '../diary/DiaryTab';
+import { FamilyTab } from '../family/FamilyTab';
+import { MoviesTab } from '../movies/MoviesTab';
+import { AppsTab } from '../apps/AppsTab';
 import { MusicTab } from './MusicTab';
 import { JokesTab } from './JokesTab';
 import { SeasonsTab } from './SeasonsTab';
@@ -28,6 +36,7 @@ import { BackupTab } from '../backup/BackupTab';
 import { PrintTab } from '../print/PrintTab';
 import { hasContentWorthBackingUp, lastBackupSetting, parentModeTimeoutSetting } from '../store/db';
 import { modeName } from '../ui/modeName';
+import { deviceNoun } from '../platform/deviceWord';
 
 type Props = {
   onExit: () => void;
@@ -36,7 +45,7 @@ type Props = {
 // The tabs, in groups so a long list is easy to find your way around. The
 // guide comes first, because it answers "what do I do?".
 const GROUPS = [
-  { title: 'Start here', tabs: [{ id: 'guide', label: 'User guide' }] },
+  { title: 'Start here', tabs: [{ id: 'start', label: 'Start' }, { id: 'guide', label: 'User guide' }] },
   {
     title: 'About the child',
     tabs: [
@@ -44,6 +53,8 @@ const GROUPS = [
       { id: 'aboutme', label: 'About me' },
       { id: 'medical', label: 'Medical' },
       { id: 'body', label: 'My body' },
+      { id: 'family', label: 'My family' },
+      { id: 'stories', label: 'My stories' },
     ],
   },
   {
@@ -62,6 +73,8 @@ const GROUPS = [
     tabs: [
       { id: 'myday', label: 'My Day' },
       { id: 'music', label: 'Music' },
+      { id: 'movies', label: 'Movies' },
+      { id: 'apps', label: 'My apps' },
       { id: 'jokes', label: 'Jokes' },
       { id: 'seasons', label: 'Seasons' },
     ],
@@ -79,6 +92,7 @@ const GROUPS = [
       { id: 'learning', label: 'Learning' },
       { id: 'targets', label: 'Targets' },
       { id: 'notes', label: 'Notes' },
+      { id: 'diary', label: 'Home–school diary' },
       { id: 'activity', label: 'Activity' },
       { id: 'reports', label: 'Reports' },
       { id: 'school', label: 'School' },
@@ -101,8 +115,15 @@ const BACKUP_REMINDER_DAYS = 30;
 const IDLE_CHECK_MS = 5_000;
 
 export function ParentModeScreen({ onExit }: Props) {
-  const tab = useSignal<Tab>('boards');
+  const tab = useSignal<Tab>('start');
   const fullscreen = useSignal(false);
+  // On a phone the list of sections is folded away behind a button, so the page gets the whole width.
+  const menuOpen = useSignal(false);
+  // Typing here narrows the list of sections, so a section can be found by name.
+  const navFilter = useSignal('');
+  const currentLabel =
+    GROUPS.flatMap((group): readonly { id: string; label: string }[] => group.tabs).find((entry) => entry.id === tab.value)?.label ??
+    'Sections';
   const needsBackup = useSignal(false);
 
   useEffect(() => {
@@ -157,9 +178,12 @@ export function ParentModeScreen({ onExit }: Props) {
       <header class="parent-mode-screen__header">
         <h1 class="parent-mode-screen__title">{name}</h1>
         <div class="parent-mode-screen__header-actions">
-          <button type="button" class="parent-mode-screen__button" onClick={() => void toggleFullscreen()}>
-            Fullscreen: {fullscreen.value ? 'On' : 'Off'}
-          </button>
+          <SavedNote />
+          {window.myWords.capabilities?.fullscreen === false ? null : (
+            <button type="button" class="parent-mode-screen__button" onClick={() => void toggleFullscreen()}>
+              Fullscreen: {fullscreen.value ? 'On' : 'Off'}
+            </button>
+          )}
           <button type="button" class="parent-mode-screen__button parent-mode-screen__exit" onClick={onExit}>
             Exit {name}
           </button>
@@ -169,7 +193,7 @@ export function ParentModeScreen({ onExit }: Props) {
       {needsBackup.value && (
         <div class="parent-mode-screen__notice" role="status">
           <span>
-            There's no recent backup. A backup keeps the photos, pages and settings safe if this computer is
+            There's no recent backup. A backup keeps the photos, pages and settings safe if this {deviceNoun()} is
             lost or breaks.
           </span>
           <button
@@ -185,17 +209,37 @@ export function ParentModeScreen({ onExit }: Props) {
       )}
 
       <div class="parent-mode-screen__layout">
-      <nav class="parent-nav" aria-label={`${name} sections`}>
-        {GROUPS.map((group) => (
+      <button
+        type="button"
+        class="parent-nav-toggle"
+        aria-expanded={menuOpen.value}
+        onClick={() => (menuOpen.value = !menuOpen.value)}
+      >
+        {currentLabel}
+        <span aria-hidden="true">{menuOpen.value ? ' ▴' : ' ▾'}</span>
+      </button>
+      <nav class={menuOpen.value ? 'parent-nav parent-nav--open' : 'parent-nav'} aria-label={`${name} sections`}>
+        <input
+          class="parent-nav__search"
+          type="search"
+          aria-label="Find a section"
+          placeholder="Find a section"
+          value={navFilter.value}
+          onInput={(event) => (navFilter.value = (event.target as HTMLInputElement).value)}
+        />
+        {GROUPS.map((group) => ({ group, tabs: group.tabs.filter((entry) => entry.label.toLowerCase().includes(navFilter.value.trim().toLowerCase())) })).filter(({ tabs }) => tabs.length > 0).map(({ group, tabs }) => (
           <div class="parent-nav__group" key={group.title}>
             <p class="parent-nav__heading">{group.title}</p>
-            {group.tabs.map((entry) => (
+            {tabs.map((entry) => (
               <button
                 type="button"
                 class="page-tabs__tab parent-nav__tab"
                 key={entry.id}
                 aria-pressed={tab.value === entry.id}
-                onClick={() => (tab.value = entry.id)}
+                onClick={() => {
+                  tab.value = entry.id;
+                  menuOpen.value = false;
+                }}
               >
                 {entry.label}
               </button>
@@ -204,6 +248,8 @@ export function ParentModeScreen({ onExit }: Props) {
         ))}
       </nav>
       <main class="parent-mode-screen__main">
+      <PageHeader label={currentLabel} info={PARENT_SECTIONS[tab.value]} />
+      {tab.value === 'start' && <StartTab go={(place) => (tab.value = place as Tab)} />}
       {tab.value === 'guide' && <GuideTab />}
       {tab.value === 'user' && <UserTab />}
       {tab.value === 'boards' && <BoardsTab />}
@@ -216,6 +262,10 @@ export function ParentModeScreen({ onExit }: Props) {
       {tab.value === 'access' && <AccessTab />}
       {tab.value === 'look' && <LookTab />}
       {tab.value === 'body' && <BodyTab />}
+      {tab.value === 'family' && <FamilyTab />}
+      {tab.value === 'stories' && <StoriesTab />}
+      {tab.value === 'movies' && <MoviesTab />}
+      {tab.value === 'apps' && <AppsTab />}
       {tab.value === 'music' && <MusicTab />}
       {tab.value === 'jokes' && <JokesTab />}
       {tab.value === 'seasons' && <SeasonsTab />}
@@ -223,6 +273,7 @@ export function ParentModeScreen({ onExit }: Props) {
       {tab.value === 'learning' && <LearningTab />}
       {tab.value === 'targets' && <TargetsTab />}
       {tab.value === 'notes' && <NotesTab />}
+      {tab.value === 'diary' && <DiaryTab side="home" />}
       {tab.value === 'activity' && <ActivityTab />}
       {tab.value === 'reports' && <ReportsTab />}
       {tab.value === 'aboutme' && <AboutMeTab />}

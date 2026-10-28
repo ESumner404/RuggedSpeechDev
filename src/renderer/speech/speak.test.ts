@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import { getOfflineVoices } from './speak';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { getOfflineVoices, watchVoices } from './speak';
 
 function voice(name: string, localService?: boolean): SpeechSynthesisVoice {
   return { name, localService } as SpeechSynthesisVoice;
@@ -72,5 +72,43 @@ describe('speakWordByWord', () => {
     speakWordByWord(['I', 'want'], {}, () => {});
     said[0]!.onerror!();
     expect(said.map((u) => u.text)).toEqual(['I', 'want']);
+  });
+});
+
+describe('watching for voices', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  it('asks again while the list is empty, and stops once voices appear', async () => {
+    vi.useFakeTimers();
+    const voice = { voiceURI: 'a', localService: true } as SpeechSynthesisVoice;
+    let available: SpeechSynthesisVoice[] = [];
+    const getVoices = vi.fn(() => available);
+    vi.stubGlobal('speechSynthesis', { getVoices, addEventListener: vi.fn(), removeEventListener: vi.fn() });
+    const seen: number[] = [];
+    const stop = watchVoices((voices) => seen.push(voices.length));
+    expect(seen).toEqual([0]);
+
+    available = [voice];
+    await vi.advanceTimersByTimeAsync(250);
+    expect(seen).toEqual([0, 1]);
+
+    const asked = getVoices.mock.calls.length;
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(getVoices.mock.calls.length).toBe(asked);
+    stop();
+  });
+
+  it('stops asking when told to', async () => {
+    vi.useFakeTimers();
+    const getVoices = vi.fn(() => [] as SpeechSynthesisVoice[]);
+    vi.stubGlobal('speechSynthesis', { getVoices, addEventListener: vi.fn(), removeEventListener: vi.fn() });
+    const stop = watchVoices(() => undefined);
+    stop();
+    const asked = getVoices.mock.calls.length;
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(getVoices.mock.calls.length).toBe(asked);
   });
 });

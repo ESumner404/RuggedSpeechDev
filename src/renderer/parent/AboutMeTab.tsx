@@ -1,6 +1,7 @@
 import { aboutMeSetting, userProfileSetting } from '../store/db';
 import { ABOUT_ME_FIELDS, aboutMeHeading, aboutMeSections, hasAboutMe } from '../safety/aboutMe';
 import type { AboutMe } from '../store/types';
+import { printPage } from '../platform/print';
 
 // A communication passport. Anyone can read it from the child's screen with
 // the About me button (no PIN), so write only what you are happy for a new
@@ -51,7 +52,7 @@ export function AboutMeTab() {
           type="button"
           class="parent-mode-screen__button"
           disabled={!hasAboutMe(info)}
-          onClick={() => window.print()}
+          onClick={() => printPage()}
         >
           Print this page
         </button>

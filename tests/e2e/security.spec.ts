@@ -32,7 +32,7 @@ test.describe('security of the packaged app', () => {
     expect(found.process).toBe('undefined');
     expect(found.buffer).toBe('undefined');
     expect(found.global).toBe('undefined');
-    expect(found.bridge).toEqual(['backup', 'files', 'parentMode', 'startup', 'versions']);
+    expect(found.bridge).toEqual(['apps', 'backup', 'files', 'parentMode', 'startup', 'versions']);
     expect(found.secure).toBe(true);
     expect(found.origin).toBe('app://renderer');
     await app.close();

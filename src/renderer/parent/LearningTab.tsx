@@ -1,3 +1,4 @@
+import { ModellingCard } from '../learning/ModellingCard';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import {
@@ -59,6 +60,7 @@ export function LearningTab() {
 
   return (
     <div class="parent-mode-screen__body learning-tab">
+      <ModellingCard />
       <section class="learning-tab__section">
         <h2 class="learning-tab__heading">Word stage</h2>
         <p class="learning-tab__hint">

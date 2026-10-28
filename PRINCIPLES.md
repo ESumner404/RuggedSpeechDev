@@ -1,4 +1,4 @@
-# Principles: Rugged Speech Test
+# Principles: Rugged Speech
 
 A communication companion for when speaking is difficult.
 
@@ -26,6 +26,13 @@ story. Windows was the first target and is where the child's own computer is
 most often found, so where the two differ, Windows is the one the wording and
 the defaults are written for.
 
+The same page also runs inside a native shell on **iPhone and iPad**, and the
+same arrangement is planned for Android and Amazon Fire OS (see
+[platforms](docs/platforms.md)). A shell supplies only the bridge the page
+already uses and keeps to every invariant below: no network, nothing leaves
+the device, buttons do not move. Anything a device cannot do is hidden, not
+faked.
+
 ## 2. The five invariants
 
 These are not preferences. Breaking any of them is a defect.
@@ -49,6 +56,11 @@ explicit user action producing a file the adult controls.
 
 Communication history is off by default. When enabled it has a retention
 period, a visible clear button, and a hard off switch.
+
+A school may hand the same lesson pages, timetable and school details to many devices (a **school pack**). This does not
+break I2, because it only ever goes one way, from the school's device to the pupils', holds nothing about any child, is
+let in only with a code, and is never added to a device except by an adult who has looked at what is in it. Nothing about
+a child ever travels the other way.
 
 ### I3. Consistent position beats everything
 

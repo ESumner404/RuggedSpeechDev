@@ -21,6 +21,9 @@ import {
 import type { AccessSettings, ContrastMode, KeyboardLayout, PressMode, ScanningMode } from '../store/types';
 import { announceText } from '../speech/announce';
 import { VoiceSettings } from './VoiceSettings';
+import { AppleAccessibilitySection } from './AppleAccessibilitySection';
+import { AppleLinkSection } from './AppleLinkSection';
+import { deviceNoun } from '../platform/deviceWord';
 
 // Access (docs/build-plan.md Phase 7): everything here defaults off, and stays off
 // for a family that never opens this tab, ordinary touch/mouse behaviour
@@ -125,7 +128,7 @@ export function AccessTab() {
       <section class="access-tab__section">
         <h2 class="access-tab__heading">Voice volume</h2>
         <p class="access-tab__hint">
-          How loud the app speaks, on top of the computer's own volume. Turn it down for a quiet room.
+          How loud the app speaks, on top of the {deviceNoun()}'s own volume. Turn it down for a quiet room.
         </p>
         <label class="access-tab__slider-row">
           Volume {Math.round(speechVolumeSetting.signal.value * 100)}%
@@ -292,6 +295,9 @@ export function AccessTab() {
           </label>
         )}
       </section>
+
+      <AppleAccessibilitySection />
+      <AppleLinkSection />
 
       <section class="access-tab__section">
         <h2 class="access-tab__heading">Keyboard and sentence</h2>

@@ -1,5 +1,5 @@
 import { useSignal } from '@preact/signals';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { HomeScreen, type HomeTileId } from './HomeScreen';
 import { FeelingsHelpScreen, type FeelingsHelpTab } from './FeelingsHelpScreen';
 import { FavouritesScreen, type FavouritesTab } from './FavouritesScreen';
@@ -22,6 +22,22 @@ import { announceText } from '../speech/announce';
 import {
   DEFAULT_ACCESS_SETTINGS,
   accessSettingsVersion,
+  activeProfileVersion,
+  appleLinkSetting,
+  boardsVersion,
+  clearAfterSpeakSetting,
+  getActiveProfile,
+  getAllBoards,
+  pronunciationsSetting,
+  speechVolumeSetting,
+  wordStageSetting,
+  dayPlanVersion,
+  favouritesVersion,
+  getEffectiveDayPlan,
+  getFavourites,
+  trafficSetting,
+  followDeviceAccessibilitySetting,
+  pressBuzzSetting,
   getAccessSettings,
   getPreferredSpeechPitch,
   getPreferredSpeechRate,
@@ -38,12 +54,25 @@ import {
   lostModeSetting,
   recordActivity,
   schoolModeSetting,
+  schoolDayOnHomeSetting,
   labelStyleSetting,
   symbolStyleSetting,
   themeSetting,
   userProfileSetting,
 } from '../store/db';
 import { applyAccessSettings } from '../access/applyAccessSettings';
+import { buzzOnPress, deviceAccessibility, followDevice, watchDeviceAccessibility } from '../platform/deviceAccessibility';
+import { buildLinkState, buildSentenceMessage, buildSyncMessage, startLink, type LinkCommand, type LinkSession } from '../platform/appleLink';
+import { lastSaid, liveSentence } from '../platform/liveSpeech';
+import { controllerSpec, linkPeers } from '../platform/linkStatus';
+import { ControllerScreen } from '../game/ControllerScreen';
+import { FamilyScreen } from '../family/FamilyScreen';
+import { MoviesScreen } from '../movies/MoviesScreen';
+import { AppsScreen } from '../apps/AppsScreen';
+import { readSchoolNow } from '../day/schoolDay';
+import { TimerScreen } from '../timer/TimerScreen';
+import { StoriesScreen } from '../stories/StoriesScreen';
+import { getDateString } from '../day/dayLogic';
 import { applyTheme } from '../ui/theme';
 import { applyLabelStyle, applySymbolStyle } from '../symbols/icons';
 import { deviceTitle } from '../ui/deviceName';
@@ -54,19 +83,26 @@ import { AboutMeButton } from '../safety/AboutMeButton';
 import { SCHOOL_MODE_NAME, modeName } from '../ui/modeName';
 import { FirstRunWizard } from '../setup/FirstRunWizard';
 import { SplashScreen } from '../setup/SplashScreen';
+import { favouriteNotice } from '../board/favouriteNotice';
 
 type AppScreen =
   | { name: 'home' }
   | { name: 'talk' }
   | { name: 'keyboard' }
   | { name: 'myday' }
-  | { name: 'mypages' }
+  | { name: 'mypages'; pageId?: string }
   | { name: 'firstthen' }
   | { name: 'game' }
   | { name: 'draw' }
   | { name: 'body' }
+  | { name: 'family' }
+  | { name: 'movies' }
+  | { name: 'apps' }
+  | { name: 'timer' }
+  | { name: 'stories' }
   | { name: 'music' }
   | { name: 'traffic' }
+  | { name: 'controller' }
   | { name: 'feelings'; tab?: FeelingsHelpTab }
   | { name: 'favourites'; tab?: FavouritesTab };
 
@@ -80,8 +116,14 @@ const SCREEN_LABELS: Record<AppScreen['name'], string> = {
   game: 'Games',
   draw: 'Draw',
   body: 'My body',
+  family: 'My family',
+  movies: 'Movies',
+  apps: 'Apps',
+  timer: 'Timer',
+  stories: 'My stories',
   music: 'Music',
   traffic: 'Traffic light',
+  controller: 'Game controller',
   feelings: 'Feelings & Help',
   favourites: 'Favourites',
 };
@@ -100,6 +142,7 @@ export function App() {
   const access = useSignal(DEFAULT_ACCESS_SETTINGS);
   const firstRunDone = useSignal<boolean | null>(null);
   const settingsReady = useSignal(false);
+  const accessLoaded = useSignal(false);
 
   useEffect(() => {
     void hasCompletedFirstRun().then((done) => (firstRunDone.value = done));
@@ -117,9 +160,127 @@ export function App() {
   useEffect(() => {
     void getAccessSettings().then((settings) => {
       access.value = settings;
-      applyAccessSettings(settings);
+      accessLoaded.value = true;
     });
   }, [accessVersion]);
+
+  // On a phone or tablet, the device's own accessibility settings are added to
+  // the app's (never taking anything away), unless an adult turned that off.
+  useEffect(() => watchDeviceAccessibility(), []);
+  const followDeviceNow = followDeviceAccessibilitySetting.signal.value && settingsReady.value;
+  const device = deviceAccessibility.value;
+  useEffect(() => {
+    if (!accessLoaded.value) return;
+    const effective = followDeviceNow ? followDevice(access.value, device) : access.value;
+    applyAccessSettings(effective, { boldText: followDeviceNow && device.boldText });
+  }, [access.value, accessLoaded.value, followDeviceNow, device]);
+
+  // The link to the family's own Apple Watch and Apple TV, only if an adult turned it on. Other devices may ask for a
+  // page to open or the traffic light to change, never for anything to be spoken, and never while an adult has
+  // Parent Mode or School Mode open.
+  const linkSettings = appleLinkSetting.signal.value;
+  const linkOn = linkSettings.enabled && /^\d{4}$/.test(linkSettings.code) && settingsReady.value;
+  const linkRef = useRef<LinkSession | undefined>(undefined);
+  function handleLinkCommand(command: LinkCommand): void {
+    if (command.kind === 'sync') {
+      linkRef.current?.resend();
+      return;
+    }
+    if (command.kind === 'controller') {
+      // A game on the television asks for its buttons here; an empty set means it has finished.
+      controllerSpec.value = command.spec;
+      if (mode.value !== 'child') return;
+      if (command.spec) screen.value = { name: 'controller' };
+      else if (screen.value.name === 'controller') screen.value = { name: 'home' };
+      return;
+    }
+    if (mode.value !== 'child') return;
+    if (command.kind === 'open') {
+      screen.value = command.screen === 'feelings' ? { name: 'feelings' } : command.screen === 'favourites' ? { name: 'favourites' } : { name: command.screen };
+    } else {
+      void trafficSetting.set({ ...trafficSetting.signal.value, status: command.status });
+    }
+  }
+  useEffect(() => {
+    if (!linkOn) return undefined;
+    const session = startLink(linkSettings.code, handleLinkCommand, (count) => (linkPeers.value = count));
+    linkRef.current = session;
+    return () => {
+      session?.stop();
+      linkRef.current = undefined;
+      linkPeers.value = 0;
+    };
+  }, [linkOn, linkSettings.code]);
+  const favouritesNow = favouritesVersion.value;
+  const planNow = dayPlanVersion.value;
+  const trafficNow = trafficSetting.signal.value.status;
+  const linkedScreen = screen.value.name;
+  useEffect(() => {
+    if (!linkRef.current) return;
+    void Promise.all([getFavourites(), getEffectiveDayPlan(getDateString(new Date()))]).then(([favourites, { plan }]) => {
+      linkRef.current?.publish(buildLinkState({ screen: linkedScreen, traffic: trafficNow, plan: plan.activities, favourites }));
+    });
+  }, [linkOn, favouritesNow, planNow, trafficNow, linkedScreen]);
+
+  // The words on the boards and how the app is set up, for the television, so it says the same words in the same
+  // places with the same voice. Sent again whenever any of it changes.
+  const boardsNow = boardsVersion.value;
+  const activeProfileNow = activeProfileVersion.value;
+  const speechRateNow = preferredSpeechRate.value;
+  const speechPitchNow = preferredSpeechPitch.value;
+  const speechVolumeNow = speechVolumeSetting.signal.value;
+  const pronunciationsNow = pronunciationsSetting.signal.value;
+  const labelStyleNow = labelStyleSetting.signal.value;
+  const pressModeNow = pressMode.value;
+  const clearAfterSpeakNow = clearAfterSpeakSetting.signal.value;
+  const wordStageNow = wordStageSetting.signal.value;
+  const deviceProfileNow = userProfileSetting.signal.value;
+  const accessNow = access.value;
+  useEffect(() => {
+    if (!linkRef.current) return;
+    void Promise.all([getAllBoards(), getActiveProfile()]).then(([boards, active]) => {
+      linkRef.current?.publish(
+        buildSyncMessage({
+          deviceName: deviceTitle(deviceProfileNow),
+          rootBoardId: active.rootBoardId,
+          boards,
+          wordStage: wordStageNow,
+          speech: { rate: speechRateNow, pitch: speechPitchNow, volume: speechVolumeNow },
+          pronunciations: pronunciationsNow,
+          labelStyle: labelStyleNow,
+          pressMode: pressModeNow,
+          clearAfterSpeak: clearAfterSpeakNow,
+          access: accessNow,
+        }),
+      );
+    });
+  }, [
+    linkOn,
+    boardsNow,
+    activeProfileNow,
+    speechRateNow,
+    speechPitchNow,
+    speechVolumeNow,
+    pronunciationsNow,
+    labelStyleNow,
+    pressModeNow,
+    clearAfterSpeakNow,
+    wordStageNow,
+    deviceProfileNow,
+    accessNow,
+  ]);
+
+  // What is being built and said, for the television, only if an adult separately turned that on.
+  const showSentence = linkSettings.showSentence === true;
+  const sentenceNow = liveSentence.value;
+  const saidNow = lastSaid.value;
+  useEffect(() => {
+    if (!linkRef.current) return;
+    linkRef.current.publish(showSentence ? buildSentenceMessage(sentenceNow, saidNow?.text ?? null) : buildSentenceMessage([], null));
+  }, [linkOn, showSentence, sentenceNow, saidNow]);
+
+  const buzzNow = pressBuzzSetting.signal.value && settingsReady.value;
+  useEffect(() => (buzzNow ? buzzOnPress() : undefined), [buzzNow]);
 
   // Which part of the app is being used, for the activity log (if an adult
   // has turned that on). Only the name of the screen, nothing on it.
@@ -183,7 +344,17 @@ export function App() {
       screen.value = { name: 'feelings', tab: 'help' };
       return;
     }
+    if (target === 'lesson') {
+      void openThisLesson();
+      return;
+    }
     screen.value = { name: target };
+  }
+
+  // The words for what is happening now at school; My Day when there are none to offer.
+  async function openThisLesson(): Promise<void> {
+    const pageId = (await readSchoolNow()).now?.pageId;
+    screen.value = pageId ? { name: 'mypages', pageId } : { name: 'myday' };
   }
 
   // A single press opens the PIN gate. Parent Mode itself still requires
@@ -199,21 +370,45 @@ export function App() {
   function renderScreen() {
     switch (screen.value.name) {
       case 'home':
-        return <HomeScreen onSelect={handleHomeSelect} />;
+        return (
+          <HomeScreen
+            onSelect={handleHomeSelect}
+            {...(schoolModeSetting.signal.value && schoolDayOnHomeSetting.signal.value
+              ? {
+                  schoolDay: {
+                    onOpenDay: () => (screen.value = { name: 'myday' }),
+                    onOpenPage: (pageId: string) => (screen.value = { name: 'mypages', pageId }),
+                  },
+                }
+              : {})}
+          />
+        );
       case 'talk':
         return <TalkScreen onExit={goHome} />;
       case 'keyboard':
         return <KeyboardScreen />;
+      case 'controller':
+        return <ControllerScreen onPress={(button) => linkRef.current?.sendNow({ type: 'input', button })} />;
       case 'myday':
-        return <MyDayScreen />;
+        return <MyDayScreen onOpenPage={(pageId) => (screen.value = { name: 'mypages', pageId })} />;
       case 'mypages':
-        return <MyPagesScreen onExit={goHome} />;
+        return <MyPagesScreen onExit={goHome} {...(screen.value.name === 'mypages' && screen.value.pageId ? { initialPageId: screen.value.pageId } : {})} />;
       case 'firstthen':
         return <FirstThenScreen />;
       case 'game':
         return <GamesScreen />;
       case 'draw':
         return <DrawScreen />;
+      case 'stories':
+        return <StoriesScreen />;
+      case 'timer':
+        return <TimerScreen />;
+      case 'movies':
+        return <MoviesScreen />;
+      case 'apps':
+        return <AppsScreen />;
+      case 'family':
+        return <FamilyScreen />;
       case 'body':
         return <MyBodyScreen />;
       case 'music':
@@ -310,7 +505,10 @@ export function App() {
           </button>
         )}
       </div>
-      <div class="app-shell__screen">{renderScreen()}</div>
+      <main class="app-shell__screen">{renderScreen()}</main>
+      <div class="favourite-notice" role="status">
+        {favouriteNotice.value}
+      </div>
       {pinGateOpen.value && (
         <div class="pin-gate-overlay">
           <PinGate

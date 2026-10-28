@@ -3,9 +3,12 @@ import type { AccessSettings } from '../store/types';
 // Visual adjustments (docs/build-plan.md Phase 7): applied as attributes/CSS custom
 // properties on the document root so global.css can key off them without
 // every component needing to know about Access settings itself.
-export function applyAccessSettings(settings: AccessSettings): void {
+export function applyAccessSettings(settings: AccessSettings, options: { boldText?: boolean } = {}): void {
   const root = document.documentElement;
   root.dataset['contrast'] = settings.highContrast;
   root.dataset['reduceMotion'] = String(settings.reduceMotion);
   root.style.setProperty('--text-scale', String(settings.textScale));
+  // The device's Bold Text setting, when the app is following the device.
+  if (options.boldText) root.dataset['boldText'] = 'true';
+  else delete root.dataset['boldText'];
 }

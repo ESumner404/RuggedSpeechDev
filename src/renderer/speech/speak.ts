@@ -7,6 +7,39 @@ export function getOfflineVoices(voices: SpeechSynthesisVoice[]): SpeechSynthesi
   return voices.filter((voice) => voice.localService !== false);
 }
 
+/**
+ * Calls `onVoices` with the offline voices as soon as there are any, and again
+ * if the list changes. Some devices (an iPad, notably) report no voices for the
+ * first moments after the page opens and then fill the list in, with or without
+ * a `voiceschanged` event, so an empty list is asked about again a few times.
+ * Returns a function that stops watching.
+ */
+export function watchVoices(onVoices: (voices: SpeechSynthesisVoice[]) => void): () => void {
+  const synth = window.speechSynthesis;
+  if (!synth) return () => undefined;
+  let stopped = false;
+  let tries = 0;
+  let timer: number | undefined;
+
+  const load = (): void => {
+    if (stopped) return;
+    const voices = getOfflineVoices(synth.getVoices());
+    onVoices(voices);
+    if (voices.length === 0 && tries < 20) {
+      tries += 1;
+      timer = window.setTimeout(load, 250);
+    }
+  };
+
+  load();
+  synth.addEventListener?.('voiceschanged', load);
+  return () => {
+    stopped = true;
+    if (timer !== undefined) window.clearTimeout(timer);
+    synth.removeEventListener?.('voiceschanged', load);
+  };
+}
+
 export type SpeakOptions = {
   rate?: number;
   pitch?: number;

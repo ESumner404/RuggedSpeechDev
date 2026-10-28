@@ -1,10 +1,10 @@
-# Rugged Speech Test
+# Rugged Speech
 
 **A communication companion for when speaking is difficult.**
 
 ![The Talk page: big, coloured buttons with a picture and a word on each](docs/images/talk.png)
 
-Rugged Speech Test is an open-source AAC (augmentative and alternative communication) application for young children with limited speech: autistic children, children with speech and language difficulties, and children and young people who stammer. It is a normal Windows desktop application: install it, double-click the icon, and it opens. **It never uses the internet. Nothing about the child ever leaves the computer.**
+Rugged Speech is an open-source AAC (augmentative and alternative communication) application for young children with limited speech: autistic children, children with speech and language difficulties, and children and young people who stammer. It is a normal Windows desktop application: install it, double-click the icon, and it opens. **It never uses the internet. Nothing about the child ever leaves the computer.**
 
 It is deliberately **not** positioned as "a device for non-verbal children". It is a companion for anyone whose speech is unavailable, unreliable or costly in the moment, including people who speak most of the time and reach for it only when they are stuck.
 
@@ -16,21 +16,25 @@ It is deliberately **not** positioned as "a device for non-verbal children". It 
 
 ### Windows
 
-1. Get the installer, a single file called **`Rugged Speech Test Setup 0.0.1.exe`** (the number may be newer). It is built by `npm run dist` and saved in the `release` folder; see [Building the installers, and releasing](#building-the-installers-and-releasing).
+1. Get the installer, a single file called **`Rugged Speech Setup 0.0.1.exe`** (the number may be newer). It is built by `npm run dist` and saved in the `release` folder; see [Building the installers, and releasing](#building-the-installers-and-releasing).
 2. Double-click it. If Windows shows **Windows protected your PC**, press **More info**, then **Run anyway**. (This appears because the installer is not yet signed with a paid certificate.)
 3. Follow the steps. It installs just for you, and opens when it is done.
 4. A short **set-up** asks about the voice, the size of the buttons, the pictures and a Parent PIN. Write down the **recovery code** it shows you.
 
-To check a download, compare its SHA-256 code with the one you were given: `certutil -hashfile "Rugged Speech Test Setup 0.0.1.exe" SHA256`.
+To check a download, compare its SHA-256 code with the one you were given: `certutil -hashfile "Rugged Speech Setup 0.0.1.exe" SHA256`.
 
 ### Mac
 
-1. Get the disk image for your Mac: **`Rugged-Speech-Test-0.0.1-mac-arm64.dmg`** for a Mac with Apple silicon (M1 or later), or **`-mac-x64.dmg`** for an Intel Mac. (Apple menu, **About This Mac**, says which.)
-2. Open it and drag **Rugged Speech Test** onto **Applications**.
-3. **The first time, a Mac will not open it by double-click**, because the app is not yet signed with an Apple Developer ID. Open it once, and when the Mac says it cannot be opened, go to **System Settings, Privacy & Security**, scroll down, and press **Open Anyway**. (On macOS 14 and earlier you can instead Control-click the app and choose **Open**.) After that it opens normally. Or, in Terminal, once: `xattr -dr com.apple.quarantine "/Applications/Rugged Speech Test.app"`.
+1. Get the disk image for your Mac: **`Rugged-Speech-0.0.1-mac-arm64.dmg`** for a Mac with Apple silicon (M1 or later), or **`-mac-x64.dmg`** for an Intel Mac. (Apple menu, **About This Mac**, says which.)
+2. Open it and drag **Rugged Speech** onto **Applications**.
+3. **The first time, a Mac will not open it by double-click**, because the app is not yet signed with an Apple Developer ID. Open it once, and when the Mac says it cannot be opened, go to **System Settings, Privacy & Security**, scroll down, and press **Open Anyway**. (On macOS 14 and earlier you can instead Control-click the app and choose **Open**.) After that it opens normally. Or, in Terminal, once: `xattr -dr com.apple.quarantine "/Applications/Rugged Speech.app"`.
 4. A short **set-up** asks about the voice, the size of the buttons, the pictures and a Parent PIN. Write down the **recovery code** it shows you.
 
-To check a download: `shasum -a 256 Rugged-Speech-Test-0.0.1-mac-arm64.dmg`, and compare it with `SHA256SUMS.txt`.
+To check a download: `shasum -a 256 Rugged-Speech-0.0.1-mac-arm64.dmg`, and compare it with `SHA256SUMS.txt`.
+
+### iPhone and iPad
+
+An iPhone and iPad app is built from the same page, and is **not released yet**: it has been built but not yet run on a device. Android and Amazon Fire OS come next. See [docs/platforms.md](docs/platforms.md) for how to build it and what is still to do.
 
 ## Where to start
 
@@ -147,6 +151,8 @@ npm run verify     # typecheck + lint + unit tests + build
 | `npm run test:e2e` | Playwright, driving the **packaged** app from `release/`. |
 | `npm run dist` | The Windows NSIS installer, written to `release/`. |
 | `npm run dist:mac` | A macOS `.dmg` (for local testing only; not a release channel). |
+| `npm run ios:open` | Builds the page, copies it into the iPhone and iPad app, and opens Xcode. See [docs/platforms.md](docs/platforms.md). |
+| `npm run ios:simulator` | Builds the iPhone and iPad app for the simulator, from the command line, with no signing. |
 | `SCREENSHOTS=1 npx playwright test tests/e2e/screenshots.spec.ts` | Retakes the pictures in `docs/images` from the packaged app. |
 
 ---
@@ -193,8 +199,10 @@ Photographs are blobs in IndexedDB referenced by id, never filesystem paths, so 
 src/
   main/            Electron main process: window, app:// scheme, dialogs, startup setting
   preload/         The narrow bridge exposed to the renderer, and nothing else
+ios/               The iPhone and iPad app: a small native shell around the same page
   renderer/
     app/           App shell, Home, Quick Access bar, Feelings & Help, Favourites
+    platform/      The bridge for phone and tablet shells, and printing
     board/         Grid, buttons, sentence strip, Talk and My Pages screens
     keyboard/      On-screen keyboard, prediction, phrase bank, conversation starters
     day/           My Day: child screen, day builder, countdown and change-of-plan logic
@@ -280,7 +288,7 @@ npm run dist:mac   # the two Mac disk images (Apple silicon and Intel)
 npm run dist:all   # all three
 ```
 
-This produces `release/Rugged Speech Test Setup <version>.exe`, a **per-user** NSIS installer that needs no administrator rights, and `release/win-unpacked/`, the same program unpacked. It can be built from macOS or Linux. electron-builder cross-compiles it without Wine. An `afterPack` step (`build/afterPack.cjs`) switches off the Electron fuses the app does not need; check them with `npx @electron/fuses read --app "release/win-unpacked/Rugged Speech Test.exe"`.
+This produces `release/Rugged Speech Setup <version>.exe`, a **per-user** NSIS installer that needs no administrator rights, and `release/win-unpacked/`, the same program unpacked. It can be built from macOS or Linux. electron-builder cross-compiles it without Wine. An `afterPack` step (`build/afterPack.cjs`) switches off the Electron fuses the app does not need; check them with `npx @electron/fuses read --app "release/win-unpacked/Rugged Speech.exe"`.
 
 - **Code signing is not configured.** Without a certificate, Windows SmartScreen shows a "Windows protected your PC" warning on first run (users click **More info**, then **Run anyway**), and a school IT department may refuse an unsigned installer. Set `win.certificateFile` and `win.certificatePassword` (or the `CSC_LINK` / `CSC_KEY_PASSWORD` environment variables) in [electron-builder.yml](electron-builder.yml) before distributing widely. The certificate has a lead time, so start early.
 - **Uninstall** asks whether to keep or remove the child's saved data. That script ([build/installer.nsh](build/installer.nsh)) has **not yet been exercised on real Windows**.
@@ -288,10 +296,10 @@ This produces `release/Rugged Speech Test Setup <version>.exe`, a **per-user** N
 
 ### The Mac build
 
-`npm run dist:mac` makes `release/Rugged-Speech-Test-<version>-mac-arm64.dmg` and `-mac-x64.dmg`. It is the same app and the same code. The differences are small and deliberate: the menu bar cannot be removed on a Mac, so there is a tiny one (Hide, Quit and the editing shortcuts, so Cmd+C and Cmd+V work in text boxes), and closing the window leaves the app in the Dock, as Mac apps do. Voices are the ones macOS provides.
+`npm run dist:mac` makes `release/Rugged-Speech-<version>-mac-arm64.dmg` and `-mac-x64.dmg`. It is the same app and the same code. The differences are small and deliberate: the menu bar cannot be removed on a Mac, so there is a tiny one (Hide, Quit and the editing shortcuts, so Cmd+C and Cmd+V work in text boxes), and closing the window leaves the app in the Dock, as Mac apps do. Voices are the ones macOS provides.
 
 - **Not signed or notarised yet.** A Mac will not open it by double-click the first time (the README's install steps say what to do). To sign and notarise, set `MAC_CSC_LINK`, `MAC_CSC_KEY_PASSWORD`, `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` and `APPLE_TEAM_ID` as repository secrets and add `notarize: true` under `mac:` in [electron-builder.yml](electron-builder.yml). This needs an Apple Developer Program membership, so start early.
-- **Where the data is:** `~/Library/Application Support/Rugged Speech Test`. Removing the app is dragging it to the Bin; delete that folder too if the child's data should go.
+- **Where the data is:** `~/Library/Application Support/Rugged Speech`. Removing the app is dragging it to the Bin; delete that folder too if the child's data should go.
 
 ### Releasing to both
 

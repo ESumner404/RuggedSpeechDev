@@ -7,11 +7,13 @@ import {
   MAX_SONG_BYTES,
   formatSize,
   isAudioFile,
+  songFromLibrary,
   songsInPlaylist,
   titleFromFile,
   type Playlist,
   type Song,
 } from '../music/songs';
+import { deviceNoun } from '../platform/deviceWord';
 
 const EMOJIS = ['🎵', '🎶', '🎤', '🎸', '🥁', '🎹', '🎺', '🐑', '⭐', '🌙', '🚌', '🐸', '🦆', '🌈', '🎄', '💤'];
 
@@ -58,6 +60,91 @@ export function MusicTab() {
     message.value = notes.length > 0 ? notes.join(' ') : `Added ${files.length === 1 ? 'the song' : `${files.length} songs`}.`;
   }
 
+  // Songs already on this iPhone or iPad, in its Music library. Only those stored on the device are offered, because a
+  // song that is only in the cloud cannot play with no internet. Nothing is copied: the device plays them. A library of
+  // a few hundred songs can be searched, narrowed to one of the device's own playlists, and added in one go.
+  type Entry = { id: string; title: string; artist: string };
+  const library = window.myWords?.music;
+  const libraryOpen = useSignal(false);
+  const libraryList = useSignal<Entry[]>([]);
+  const devicePlaylists = useSignal<Array<{ id: string; name: string; count: number }>>([]);
+  const deviceListId = useSignal('');
+  const search = useSignal('');
+  const ticked = useSignal<Set<string>>(new Set());
+  const libraryNote = useSignal('');
+
+  async function loadLibrary(): Promise<void> {
+    if (!library) return;
+    const found = await library.list({
+      ...(deviceListId.value ? { playlistId: deviceListId.value } : {}),
+      ...(search.value.trim() ? { search: search.value.trim() } : {}),
+    });
+    libraryList.value = found;
+    libraryNote.value = found.length === 0 ? 'No songs match. Only songs stored on the device are listed.' : '';
+  }
+
+  async function openLibrary(): Promise<void> {
+    if (!library) return;
+    libraryNote.value = '';
+    const status = await library.access();
+    if (status !== 'granted') {
+      libraryNote.value =
+        'Rugged Speech is not allowed to see the Music library. Allow it in Settings, Privacy & Security, Media & Apple Music, then try again.';
+      return;
+    }
+    libraryOpen.value = true;
+    devicePlaylists.value = await library.playlists();
+    await loadLibrary();
+  }
+
+  const room = (): number => MAX_SONGS - songsSetting.signal.value.length;
+  const alreadyHave = (id: string): boolean => songsSetting.signal.value.some((song) => song.libraryId === id);
+
+  function toggle(id: string): void {
+    const next = new Set(ticked.value);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    ticked.value = next;
+  }
+
+  /** Adds these songs, as many as there is room for, leaving out any already added. */
+  async function addEntries(entries: Entry[]): Promise<Song[]> {
+    const fresh = entries.filter((entry) => !alreadyHave(entry.id)).slice(0, Math.max(0, room()));
+    if (fresh.length === 0) return [];
+    const added = fresh.map(songFromLibrary);
+    await songsSetting.set([...songsSetting.signal.value, ...added]);
+    return added;
+  }
+
+  async function addTicked(): Promise<void> {
+    const chosen = libraryList.value.filter((entry) => ticked.value.has(entry.id));
+    const added = await addEntries(chosen);
+    ticked.value = new Set();
+    libraryNote.value = added.length === chosen.length ? `Added ${added.length}.` : `Added ${added.length}. There is room for ${MAX_SONGS} songs, or some were already added.`;
+  }
+
+  async function addAllShown(): Promise<void> {
+    const added = await addEntries(libraryList.value);
+    libraryNote.value = `Added ${added.length}${added.length < libraryList.value.length ? ', the rest were already added or there is no more room' : ''}.`;
+  }
+
+  /** Makes one of this app's playlists from one of the device's, adding its songs too. */
+  async function importDevicePlaylist(): Promise<void> {
+    const source = devicePlaylists.value.find((list) => list.id === deviceListId.value);
+    if (!library || !source) return;
+    if (playlistsSetting.signal.value.length >= MAX_PLAYLISTS) {
+      libraryNote.value = `There is room for ${MAX_PLAYLISTS} playlists.`;
+      return;
+    }
+    const entries = await library.list({ playlistId: source.id });
+    await addEntries(entries);
+    const have = songsSetting.signal.value;
+    const songIds = entries.map((entry) => have.find((song) => song.libraryId === entry.id)?.id).filter((id): id is string => Boolean(id));
+    const list: Playlist = { id: `list-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, name: source.name, emoji: '🎶', songIds };
+    await playlistsSetting.set([...playlistsSetting.signal.value, list]);
+    libraryNote.value = `Made the playlist ${source.name} with ${songIds.length} songs.`;
+  }
+
   function update(id: string, changes: Partial<Song>): void {
     void songsSetting.set(songsSetting.signal.value.map((song) => (song.id === id ? { ...song, ...changes } : song)));
   }
@@ -75,7 +162,7 @@ export function MusicTab() {
     await playlistsSetting.set(
       playlistsSetting.signal.value.map((list) => ({ ...list, songIds: list.songIds.filter((id) => id !== song.id) })),
     );
-    await deleteVoiceClip(song.blobId);
+    if (song.blobId) await deleteVoiceClip(song.blobId);
   }
 
   function addPlaylist(): void {
@@ -101,14 +188,14 @@ export function MusicTab() {
   return (
     <div class="parent-mode-screen__body music-tab">
       <p class="about-tab__hint">
-        Add songs from files on this computer, such as MP3s. They stay on this computer and play with no internet.
-        There is no Spotify or Apple Music: those need an account and an internet connection, which this app never
+        Add songs from files on this {deviceNoun()}, such as MP3s. They stay on this {deviceNoun()} and play with no internet.
+        There is no Spotify and no streaming: that needs an account and an internet connection, which this app never
         uses. Songs you have bought as ordinary files, songs copied from a CD, and recordings of someone singing
-        all work. Songs that are locked to a streaming app cannot be added.
+        all work. Songs that are locked to a streaming app cannot be added as files.
       </p>
 
       <label class="parent-mode-screen__button music-tab__add">
-        {adding.value ? 'Adding…' : 'Add songs from this computer'}
+        {adding.value ? 'Adding…' : `Add songs from this ${deviceNoun()}`}
         <input
           type="file"
           accept="audio/*,.mp3,.m4a,.wav,.ogg,.opus,.flac"
@@ -123,6 +210,95 @@ export function MusicTab() {
       <p role="status" class="music-tab__message">
         {message.value}
       </p>
+
+      {library && (
+        <section class="music-tab__library" data-section="music-library">
+          <button type="button" class="parent-mode-screen__button" onClick={() => void openLibrary()}>
+            Add songs from the Music library
+          </button>
+          <p class="about-tab__hint">
+            Songs already stored on this device in the Music app, including ones downloaded from Apple Music, and the
+            playlists you made there. Only songs stored on the device are listed, because a song that is only in the cloud
+            needs the internet. The device plays them at its own volume, and nothing is copied or sent anywhere.
+          </p>
+          {libraryNote.value && (
+            <p role="status" class="music-tab__message">
+              {libraryNote.value}
+            </p>
+          )}
+          {libraryOpen.value && (
+            <>
+              <div class="music-tab__library-tools">
+                <label>
+                  Search
+                  <input
+                    type="search"
+                    placeholder="Song or artist"
+                    value={search.value}
+                    onInput={(event) => {
+                      search.value = (event.target as HTMLInputElement).value;
+                      void loadLibrary();
+                    }}
+                  />
+                </label>
+                <label>
+                  From
+                  <select
+                    value={deviceListId.value}
+                    onChange={(event) => {
+                      deviceListId.value = (event.target as HTMLSelectElement).value;
+                      void loadLibrary();
+                    }}
+                  >
+                    <option value="">All songs</option>
+                    {devicePlaylists.value.map((list) => (
+                      <option value={list.id} key={list.id}>
+                        {list.name} ({list.count})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <div class="music-tab__library-actions">
+                <button type="button" class="parent-mode-screen__button" disabled={ticked.value.size === 0} onClick={() => void addTicked()}>
+                  Add {ticked.value.size} ticked
+                </button>
+                <button type="button" class="parent-mode-screen__button" disabled={libraryList.value.length === 0} onClick={() => void addAllShown()}>
+                  Add all {libraryList.value.length} shown
+                </button>
+                <button type="button" class="parent-mode-screen__button" disabled={!deviceListId.value} onClick={() => void importDevicePlaylist()}>
+                  Make a playlist from this one
+                </button>
+              </div>
+              <p class="about-tab__hint">
+                {libraryList.value.length} {libraryList.value.length === 1 ? 'song' : 'songs'} shown. There is room for {room()} more.
+              </p>
+              <ul class="music-tab__library-list">
+                {libraryList.value.map((entry) => {
+                  const added = alreadyHave(entry.id);
+                  return (
+                    <li key={entry.id}>
+                      <label class="access-tab__checkbox">
+                        <input
+                          type="checkbox"
+                          checked={added || ticked.value.has(entry.id)}
+                          disabled={added}
+                          onChange={() => toggle(entry.id)}
+                        />
+                        <span>
+                          {entry.title}
+                          {entry.artist ? `, ${entry.artist}` : ''}
+                          {added ? ' (added)' : ''}
+                        </span>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )}
+        </section>
+      )}
 
       <label class="access-tab__slider-row">
         Music volume {Math.round(musicVolumeSetting.signal.value * 100)}%

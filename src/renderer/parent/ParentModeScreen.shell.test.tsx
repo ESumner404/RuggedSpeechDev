@@ -46,11 +46,14 @@ describe('ParentModeScreen shell', () => {
   it('has a tab for every area, in a fixed order', async () => {
     render(<ParentModeScreen onExit={onExit} />, container);
     expect(tabLabels()).toEqual([
+      'Start',
       'User guide',
       'User',
       'About me',
       'Medical',
       'My body',
+      'My family',
+      'My stories',
       'Boards',
       'People',
       'Places',
@@ -59,6 +62,8 @@ describe('ParentModeScreen shell', () => {
       'Profiles',
       'My Day',
       'Music',
+      'Movies',
+      'My apps',
       'Jokes',
       'Seasons',
       'Access',
@@ -66,6 +71,7 @@ describe('ParentModeScreen shell', () => {
       'Learning',
       'Targets',
       'Notes',
+      'Home–school diary',
       'Activity',
       'Reports',
       'School',

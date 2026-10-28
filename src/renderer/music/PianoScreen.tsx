@@ -2,6 +2,7 @@ import { useSignal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
 import { musicVolumeSetting } from '../store/db';
 import { NOTES, TUNES, noteForKey, playNote, type Tune } from './piano';
+import { deviceNoun } from '../platform/deviceWord';
 
 // Piano: eight big coloured keys. Press one and it plays. Pick a tune and the
 // next key to press is outlined, with a pointer above it; pressing the wrong
@@ -121,7 +122,7 @@ export function PianoScreen() {
       </div>
 
       <p class="game-screen__message" role="status">
-        {noSound.value ? 'This computer cannot make piano sounds.' : message.value}
+        {noSound.value ? `This ${deviceNoun()} cannot make piano sounds.` : message.value}
       </p>
       <div class="piano-screen__controls">
         <button type="button" class="game-screen__button" disabled={!tune.value} onClick={hear}>

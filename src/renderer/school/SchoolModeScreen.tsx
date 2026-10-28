@@ -11,7 +11,12 @@ import { MyPagesTab } from '../parent/MyPagesTab';
 import { NotesTab } from '../parent/NotesTab';
 import { ReportsTab } from '../parent/ReportsTab';
 import { TargetsTab } from '../parent/TargetsTab';
+import { ChoicesTab } from './ChoicesTab';
 import { ClassroomTab } from './ClassroomTab';
+import { PackTab } from './PackTab';
+import { PageHeader, SavedNote } from '../parent/shell';
+import { SCHOOL_SECTIONS } from '../parent/sectionInfo';
+import { DiaryTab } from '../diary/DiaryTab';
 import { PupilTab } from './PupilTab';
 import { SafeguardingTab } from './SafeguardingTab';
 import { TodayTab } from './TodayTab';
@@ -23,12 +28,15 @@ export type SchoolSection =
   | 'safeguarding'
   | 'timetable'
   | 'lessons'
+  | 'choices'
   | 'vocabulary'
   | 'targets'
   | 'notes'
+  | 'diary'
   | 'activity'
   | 'reports'
   | 'classroom'
+  | 'pack'
   | 'guide';
 
 const GROUPS: { title: string; sections: { id: SchoolSection; label: string }[] }[] = [
@@ -46,6 +54,7 @@ const GROUPS: { title: string; sections: { id: SchoolSection; label: string }[] 
     sections: [
       { id: 'timetable', label: 'Timetable' },
       { id: 'lessons', label: 'Lesson pages' },
+      { id: 'choices', label: 'Choice boards' },
       { id: 'vocabulary', label: 'Vocabulary' },
     ],
   },
@@ -54,6 +63,7 @@ const GROUPS: { title: string; sections: { id: SchoolSection; label: string }[] 
     sections: [
       { id: 'targets', label: 'Targets' },
       { id: 'notes', label: 'Notes' },
+      { id: 'diary', label: 'Home–school diary' },
       { id: 'activity', label: 'Activity' },
       { id: 'reports', label: 'Reports' },
     ],
@@ -62,6 +72,7 @@ const GROUPS: { title: string; sections: { id: SchoolSection; label: string }[] 
     title: 'Set-up',
     sections: [
       { id: 'classroom', label: 'Classroom set-up' },
+      { id: 'pack', label: 'School pack' },
       { id: 'guide', label: 'School guide' },
     ],
   },
@@ -100,13 +111,22 @@ export function SchoolModeScreen({ onExit }: Props) {
     };
   }, [minutes]);
 
-  const go = (next: SchoolSection) => (section.value = next);
+  const menuOpen = useSignal(false);
+  const navFilter = useSignal('');
+  const currentLabel =
+    GROUPS.flatMap((group): readonly { id: string; label: string }[] => group.sections).find((entry) => entry.id === section.value)?.label ??
+    'Sections';
+  const go = (next: SchoolSection) => {
+    section.value = next;
+    menuOpen.value = false;
+  };
 
   return (
     <div class="parent-mode-screen school-mode-screen">
       <header class="parent-mode-screen__header school-mode-screen__header">
         <h1 class="parent-mode-screen__title school-mode-screen__title">{SCHOOL_MODE_NAME}</h1>
         <div class="parent-mode-screen__header-actions">
+          <SavedNote />
           <button type="button" class="parent-mode-screen__button parent-mode-screen__exit school-mode-screen__exit" onClick={onExit}>
             Exit {SCHOOL_MODE_NAME}
           </button>
@@ -114,11 +134,28 @@ export function SchoolModeScreen({ onExit }: Props) {
       </header>
 
       <div class="parent-mode-screen__layout">
-        <nav class="parent-nav school-nav" aria-label={`${SCHOOL_MODE_NAME} sections`}>
-          {GROUPS.map((group) => (
+        <button
+          type="button"
+          class="parent-nav-toggle"
+          aria-expanded={menuOpen.value}
+          onClick={() => (menuOpen.value = !menuOpen.value)}
+        >
+          {currentLabel}
+          <span aria-hidden="true">{menuOpen.value ? ' ▴' : ' ▾'}</span>
+        </button>
+        <nav class={menuOpen.value ? 'parent-nav school-nav parent-nav--open' : 'parent-nav school-nav'} aria-label={`${SCHOOL_MODE_NAME} sections`}>
+          <input
+            class="parent-nav__search"
+            type="search"
+            aria-label="Find a section"
+            placeholder="Find a section"
+            value={navFilter.value}
+            onInput={(event) => (navFilter.value = (event.target as HTMLInputElement).value)}
+          />
+          {GROUPS.map((group) => ({ group, sections: group.sections.filter((entry) => entry.label.toLowerCase().includes(navFilter.value.trim().toLowerCase())) })).filter(({ sections }) => sections.length > 0).map(({ group, sections }) => (
             <div class="parent-nav__group" key={group.title}>
               <p class="parent-nav__heading">{group.title}</p>
-              {group.sections.map((entry) => (
+              {sections.map((entry) => (
                 <button
                   type="button"
                   class="page-tabs__tab parent-nav__tab school-nav__tab"
@@ -133,18 +170,22 @@ export function SchoolModeScreen({ onExit }: Props) {
           ))}
         </nav>
         <main class="parent-mode-screen__main">
+          <PageHeader label={currentLabel} info={SCHOOL_SECTIONS[section.value]} />
           {section.value === 'today' && <TodayTab go={go} />}
           {section.value === 'pupil' && <PupilTab />}
           {section.value === 'aboutme' && <AboutMeTab />}
           {section.value === 'safeguarding' && <SafeguardingTab />}
           {section.value === 'timetable' && <DayBuilderTab />}
           {section.value === 'lessons' && <MyPagesTab />}
+          {section.value === 'choices' && <ChoicesTab />}
           {section.value === 'vocabulary' && <LearningTab />}
           {section.value === 'targets' && <TargetsTab />}
           {section.value === 'notes' && <NotesTab />}
+          {section.value === 'diary' && <DiaryTab side="school" />}
           {section.value === 'activity' && <ActivityTab />}
           {section.value === 'reports' && <ReportsTab />}
           {section.value === 'classroom' && <ClassroomTab />}
+          {section.value === 'pack' && <PackTab />}
           {section.value === 'guide' && <GuideTab start="staff" />}
         </main>
       </div>

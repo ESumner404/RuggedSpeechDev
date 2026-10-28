@@ -1,6 +1,7 @@
 import { useSignal } from '@preact/signals';
-import { weeklyRoutineSetting } from '../store/db';
-import { WEEKDAYS, type DayActivity, type Weekday } from '../store/types';
+import { useEffect } from 'preact/hooks';
+import { getMyPages, weeklyRoutineSetting } from '../store/db';
+import { WEEKDAYS, type DayActivity, type MyPage, type Weekday } from '../store/types';
 import {
   WEEKDAY_LABELS,
   addRoutineActivity,
@@ -33,6 +34,11 @@ export function WeeklyRoutineEditor() {
     newName.value = '';
     save(addRoutineActivity(weeklyRoutineSetting.signal.value, day.value, { id: newActivityId(), name }));
   }
+
+  const pages = useSignal<MyPage[]>([]);
+  useEffect(() => {
+    void getMyPages().then((found) => (pages.value = found));
+  }, []);
 
   const edit = (activity: DayActivity, updates: Parameters<typeof editRoutineActivity>[3]) =>
     save(editRoutineActivity(weeklyRoutineSetting.signal.value, day.value, activity.id, updates));
@@ -100,6 +106,21 @@ export function WeeklyRoutineEditor() {
               value={activity.person ?? ''}
               onInput={(event) => edit(activity, { person: (event.target as HTMLInputElement).value })}
             />
+            {pages.value.length > 0 && (
+              <select
+                class="weekly-routine__input"
+                aria-label="Words for this"
+                value={activity.pageId ?? ''}
+                onChange={(event) => edit(activity, { pageId: (event.target as HTMLSelectElement).value })}
+              >
+                <option value="">No words page</option>
+                {pages.value.map((page) => (
+                  <option value={page.id} key={page.id}>
+                    Words: {page.name}
+                  </option>
+                ))}
+              </select>
+            )}
             <button
               type="button"
               class="parent-mode-screen__move-button"

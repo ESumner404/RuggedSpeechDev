@@ -1,0 +1,111 @@
+# The Xcode project for every Apple app: iPhone and iPad (the same page in a native shell), Apple Watch and
+# Apple TV. Written for XcodeGen (brew install xcodegen), and the project it makes is kept in git, so building
+# does not need XcodeGen; it is only needed after changing this file:
+#
+#   npm run apple:project
+#
+# This file lives next to the project it makes (ios/App/App.xcodeproj), because XcodeGen writes some paths relative to
+# the project. The iPhone and iPad app's own files stay where Capacitor puts them (ios/App/App), so `npx cap sync ios`
+# keeps working. The Apple Watch and Apple TV apps are in apple/Watch and apple/TV, with their shared words in apple/Shared.
+name: App
+
+options:
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+  deploymentTarget:
+    iOS: "15.0"
+    watchOS: "10.0"
+    tvOS: "17.0"
+
+configFiles:
+  Debug: ../debug.xcconfig
+
+packages:
+  CapApp-SPM:
+    path: CapApp-SPM
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+  configs:
+    Debug:
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+
+targets:
+  # iPhone and iPad. Named App because Capacitor and the scripts call it that.
+  App:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+        excludes:
+          - public
+          - Info.plist
+      - path: App/public
+        type: folder
+        buildPhase: resources
+    dependencies:
+      - package: CapApp-SPM
+        product: CapApp-SPM
+      - target: RuggedSpeechWatch
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ruggedspeechaac
+        PRODUCT_NAME: $(TARGET_NAME)
+        INFOPLIST_FILE: App/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+        LD_RUNPATH_SEARCH_PATHS: ["$(inherited)", "@executable_path/Frameworks"]
+
+  # Apple Watch: the few things a child needs in one press, spoken from the watch.
+  RuggedSpeechWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: ../../apple/Watch
+      - path: ../../apple/Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ruggedspeechaac.watchkitapp
+        PRODUCT_NAME: Rugged Speech
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Rugged Speech
+        INFOPLIST_KEY_WKApplication: YES
+        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: ruggedspeechaac
+        INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "4"
+
+  # Apple TV: the words on a big screen. The same bundle identifier as the iPhone and iPad app, so it is one purchase.
+  RuggedSpeechTV:
+    type: application
+    platform: tvOS
+    sources:
+      - path: ../../apple/TV
+        excludes:
+          - Info.plist
+      - path: ../../apple/Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ruggedspeechaac
+        PRODUCT_NAME: Rugged Speech
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: ../../apple/TV/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: Rugged Speech
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: "App Icon & Top Shelf Image"
+        TARGETED_DEVICE_FAMILY: "3"
+
+schemes:
+  App:
+    build:
+      targets:
+        App: all
+    run:
+      config: Debug
+    archive:
+      config: Release

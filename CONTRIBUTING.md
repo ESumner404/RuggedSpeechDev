@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for helping. Rugged Speech Test is a communication aid that a child may depend on, so a few rules matter more than they would in most projects.
+Thank you for helping. Rugged Speech is a communication aid that a child may depend on, so a few rules matter more than they would in most projects.
 
 ## Before you start
 
@@ -54,6 +54,10 @@ The page in `website/` is plain HTML. Its "Have a go" board uses the app's own s
 The download buttons point at `/download/windows`, `/download/mac` and `/download/mac-intel`. `website/vercel.json` serves those from the website itself, from `website/downloads/`, so a visitor never goes to GitHub. The installers are over 100 MB so that folder is not kept in git: after `npm run dist:all`, run `npm run website:downloads` to copy the builds in under their fixed names (with checksums), then `cd website && vercel deploy --prod` to upload them with the site. The download links work only once that has been done.
 
 The page's search-engine set-up (title, description, structured data, `robots.txt`, `sitemap.xml`) is in `website/`; if you move the site to its own domain, change the address in `index.html`, `robots.txt` and `sitemap.xml`.
+
+## The app icon
+
+The icon is the Rugged Speech logo in `build/icon.svg`. After changing it, run `npm run icon` to redraw `build/icon.png`; the Windows and Mac icon files are made from that when the app is built.
 
 ## Releasing
 

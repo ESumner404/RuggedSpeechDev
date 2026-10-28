@@ -1,14 +1,15 @@
 # Features
 
-Everything Rugged Speech Test does, in one list. For how to use each part, see [the whole guide](user-guide.md). For a quick start, see [parents and carers](getting-started-parents.md) or [teachers and staff](getting-started-staff.md).
+Everything Rugged Speech does, in one list. For how to use each part, see [the whole guide](user-guide.md). For a quick start, see [parents and carers](getting-started-parents.md) or [teachers and staff](getting-started-staff.md).
 
-Rugged Speech Test is a communication companion for children and young people whose speech is difficult, unreliable or tiring: young children, autistic children, children with speech and language difficulties, and children who stammer. It is a Windows desktop app that works with **no internet, ever**.
+Rugged Speech is a communication companion for children and young people whose speech is difficult, unreliable or tiring: young children, autistic children, children with speech and language difficulties, and children who stammer. It is a Windows desktop app that works with **no internet, ever**.
 
 ## Where it runs
 
 - **Windows 10 and 11** (64-bit), as a per-user installer that needs no administrator password.
 - **macOS**, as a disk image for Apple silicon and one for Intel Macs.
-- The same app and the same features go out for both at every release.
+- **iPhone and iPad**, as an app built from the same page (run on the simulator, not yet on a device). **Apple Watch** and **Apple TV**, as small apps that work alone and link to the iPhone or iPad if an adult turns that on. Android and Amazon Fire OS are next. See [platforms](platforms.md).
+- The same app and the same features go out for Windows and Mac at every release.
 
 ## Principles that shape every feature
 
@@ -74,7 +75,11 @@ See [the principles](../PRINCIPLES.md) for the reasoning.
 ## Games and fun
 
 - **Find the word**, **Snap**, **Rollercoaster** (build short sentences), **Draw**, **Jokes** (with your own), **Music** (songs from files you add, with playlists) and **Piano**.
+- **Music from the device (iPhone and iPad):** songs already stored in the Music library, including downloaded Apple Music songs, can be added in Parent Mode. Only songs stored on the device are offered, they are played by the device, and nothing is copied or streamed.
 - **Seasons**: words, Find the word and Snap for spring, summer, autumn, winter, Christmas, Easter, Halloween, Bonfire Night, Diwali, Eid and Hanukkah, with the one that suits today's date marked. An adult chooses which to show, changes the words, and adds others (Ramadan, Vaisakhi, Holi, Passover, Chinese New Year, Birthday, or their own).
+- **Movies:** videos kept on the device. On an iPhone or iPad they are picked from Photos or Files and played full screen when pressed; on a computer they are chosen from a folder, kept in the app, and played in the page with their own play button. They never start by themselves, nothing is streamed or sent, and they are not part of a backup.
+- **My apps:** links to other apps on the same device (a call, photos, a favourite game), each a big tile on the Apps screen that opens that app when pressed. Only a link that opens an app can be added, never a web address, so it cannot take the child onto the internet.
+- **My family and friends:** a family tree with photos, built in Parent Mode, where pressing a person says who they are.
 - **Make a tree**: decorate a Christmas tree with baubles, lights, a star and presents; it is remembered.
 - No scores against anyone, no clocks, nothing moves or flashes.
 
@@ -85,6 +90,7 @@ See [the principles](../PRINCIPLES.md) for the reasoning.
 - **Hold-to-select** for eye gaze and head pointers.
 - **Repeat-press suppression** for a double-firing finger or switch.
 - **Text size** up to twice (boards scroll rather than hiding buttons), **high contrast** (light or dark), **low-arousal colours**, **reduce motion**.
+- **On iPhone and iPad:** follows the device's own Reduce Motion, Increase Contrast, Bold Text and text size; works with iOS **Eye Tracking**, Switch Control, Voice Control, VoiceOver, Guided Access and Assistive Access; an optional buzz when a button is pressed.
 
 ## Looks
 
@@ -98,20 +104,31 @@ See [the principles](../PRINCIPLES.md) for the reasoning.
 - **Word stages**: bring words in gradually, with held-back words leaving an empty place.
 - **Focus words**: a blue outline on the words being practised.
 - **Clear the sentence after it is spoken**, if that suits the person.
+- **A word to model each week**: one word for a partner to press while they talk, with easy ways to try it (Today and Learning).
+- **Goals to start from**: a bank of plain-words communication goals to put in Targets.
+- **How what is said is changing**: week by week, from the opt-in log (sentence length, different words, new words), as a rough guide for adults.
+- **Pages for communication functions**: asking, saying no and stop, commenting, asking questions, and hello and goodbye.
+- **Finish the sentence**, **My stories** (step-by-step stories with pictures), and a silent **visual timer** of ten blocks.
 - **Word counts** (off by default): how often each word is pressed, and which are never pressed.
 
 ## School Mode
 
-A separate side for school staff, with its own button next to Parent Mode and its own **School PIN**, both switched on afterwards in Parent Mode.
+A separate side for school staff, with a Start page, readiness check and a search for sections, with its own button next to Parent Mode and its own **School PIN**, both switched on afterwards in Parent Mode.
 
 - **Today**: the day at a glance, with a quick note.
 - **Pupil and school**: school details, key adults, the speech and language therapist.
 - **Safeguarding**: steps to follow and the designated safeguarding lead.
 - **Timetable**, **Lesson pages**, **Vocabulary**.
+- **Words for this:** a timetable activity can point at a lesson page, so the child's My Day offers the words for it in one press (and **Link lesson pages to the timetable** does the matching by name).
 - **Targets** with review dates, and **Notes** by kind (something noticed, went well, an idea, to follow up).
 - **Activity** (off by default): counts by hour, day, week and month, saved as a spreadsheet only when you choose.
 - **Reports**: a printable **handover sheet** and a **review report**.
-- **Classroom set-up**: the school top bar, a typical school day, and an automatic close after a set time.
+- **School pack**: hands lesson pages, a timetable and the school's details to many devices at once, one way, as a file or over the school's wifi with a code. A pack holds nothing about any child, never goes back, and is only ever added by an adult's choice.
+- **Home–school diary**: a note each way between home and school, for adults (also in Parent Mode).
+- **Choice boards**: make a page of two to six words for a real choice.
+- **Is everything ready?**: a short, kind checklist on Today with a button to sort each thing out.
+- **Classroom set-up**: the school top bar, a typical school day, the school day on the child's Home screen, and an automatic close after a set time.
+- **The school day on the child's Home screen:** with School Mode on, a strip above the six buttons shows what is happening now and what comes next, from today's plan or the timetable, with **Words for this** when the activity has a lesson page. It is always the same size, so nothing moves. A **This lesson** button can go in the top bar in Quick Access to reach the same words from anywhere.
 - **School guide** inside School Mode.
 
 ## Parent Mode
@@ -133,4 +150,4 @@ Behind a four-digit PIN with a recovery code, in a grouped menu with the whole g
 - It does **not** stream music or connect to Spotify or Apple Music.
 - It does **not** call, message or alert anyone, and it is **not** a safeguarding record.
 - It does **not** find or lock a lost device, because it has no internet.
-- It does **not** manage a class: one device, one child.
+- It does **not** manage a class: one device, one child. A school can hand the same pages and timetable to many devices (School pack), one way, and nothing about any child ever travels back.

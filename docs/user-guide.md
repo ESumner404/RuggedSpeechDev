@@ -1,12 +1,12 @@
-# Rugged Speech Test: the whole guide
+# Rugged Speech: the whole guide
 
-A guide for the parents, carers, teachers and therapists who set up and use Rugged Speech Test with a child or young person. It describes every part of the app. If you are new, start with the shorter guides:
+A guide for the parents, carers, teachers and therapists who set up and use Rugged Speech with a child or young person. It describes every part of the app. If you are new, start with the shorter guides:
 
 - [Getting started: parents and carers](getting-started-parents.md)
 - [Getting started: teachers and staff](getting-started-staff.md)
 - A one-page printable [setup sheet](setup-sheet.md)
 
-Rugged Speech Test is a communication companion for when speaking is difficult, unreliable or tiring. It helps someone say what they want to say by pressing large buttons, typing, pointing, or showing their words. It is made for young children and for children with limited speech, and it works for people who rarely speak and for people who speak most of the time but sometimes get stuck, including those who stammer.
+Rugged Speech is a communication companion for when speaking is difficult, unreliable or tiring. It helps someone say what they want to say by pressing large buttons, typing, pointing, or showing their words. It is made for young children and for children with limited speech, and it works for people who rarely speak and for people who speak most of the time but sometimes get stuck, including those who stammer.
 
 ![The Home screen](images/home.png)
 
@@ -43,18 +43,18 @@ Rugged Speech Test is a communication companion for when speaking is difficult, 
 
 ## 2. Installing
 
-1. Copy the **Rugged Speech Test Setup** file (for example *Rugged Speech Test Setup 0.0.1.exe*) onto the computer, from a USB stick, a shared drive, or wherever it was given to you.
+1. Copy the **Rugged Speech Setup** file (for example *Rugged Speech Setup 0.0.1.exe*) onto the computer, from a USB stick, a shared drive, or wherever it was given to you.
 2. Double-click it. Windows may show a blue **"Windows protected your PC"** screen. Click **More info**, then **Run anyway**. This is normal for new software that has not been through Windows' paid signing process. It does not mean anything is wrong.
 3. Follow the installer. It does **not** need an administrator password. It installs just for the person who is signed in, and lets you choose the folder.
-4. When it finishes, Rugged Speech Test opens on its own. A shortcut is added to the desktop and the Start menu.
+4. When it finishes, Rugged Speech opens on its own. A shortcut is added to the desktop and the Start menu.
 
-**Checking the file.** If you want to be sure the file is exactly the one you were sent, ask for its SHA-256 code and compare it with the one from a Command Prompt: `certutil -hashfile "Rugged Speech Test Setup 0.0.1.exe" SHA256`.
+**Checking the file.** If you want to be sure the file is exactly the one you were sent, ask for its SHA-256 code and compare it with the one from a Command Prompt: `certutil -hashfile "Rugged Speech Setup 0.0.1.exe" SHA256`.
 
-**On a Mac.** Copy the disk image for your Mac (**Rugged-Speech-Test-0.0.1-mac-arm64.dmg** for Apple silicon, **-mac-x64.dmg** for an Intel Mac), open it, and drag **Rugged Speech Test** onto **Applications**. The first time, the Mac will say it cannot be opened, because the app is not yet signed with an Apple Developer ID. Go to **System Settings**, **Privacy & Security**, and press **Open Anyway** (on macOS 14 or earlier, Control-click the app and choose **Open**). After that it opens normally. Checking the file: `shasum -a 256` on the disk image, compared with the code you were given.
+**On a Mac.** Copy the disk image for your Mac (**Rugged-Speech-0.0.1-mac-arm64.dmg** for Apple silicon, **-mac-x64.dmg** for an Intel Mac), open it, and drag **Rugged Speech** onto **Applications**. The first time, the Mac will say it cannot be opened, because the app is not yet signed with an Apple Developer ID. Go to **System Settings**, **Privacy & Security**, and press **Open Anyway** (on macOS 14 or earlier, Control-click the app and choose **Open**). After that it opens normally. Checking the file: `shasum -a 256` on the disk image, compared with the code you were given.
 
 **Updating.** There is no automatic update, by design, because the app never goes online. A new version arrives as a new installer file. Run it over the old one and your child's saved pages, photos and settings stay.
 
-**Where your data is.** On Windows, in the folder **Rugged Speech Test** inside your **AppData\Roaming** folder, for the person who is signed in. On a Mac, in **Library/Application Support/Rugged Speech Test** in your home folder. A backup file is the safe way to move or keep it.
+**Where your data is.** On Windows, in the folder **Rugged Speech** inside your **AppData\Roaming** folder, for the person who is signed in. On a Mac, in **Library/Application Support/Rugged Speech** in your home folder. A backup file is the safe way to move or keep it.
 
 **Removing it:** on a Mac, drag the app to the Bin (and delete the data folder above if you want the saved things gone). On Windows, use the usual **Add or remove programs**. It will ask whether to **keep** or **delete** the saved boards, photos and settings. Choose keep if the computer might be used again, or delete if you are finished with it.
 
@@ -508,6 +508,22 @@ Settings for different ways of pressing buttons, and for how things sound and ar
 
 With a **physical keyboard**, the arrow keys move around a board and **Enter** presses a button.
 
+#### On an iPhone or iPad
+
+Two more groups appear in **Access** in the iPhone and iPad app. They are not in the Windows and Mac apps.
+
+| Setting | What it does |
+| --- | --- |
+| **Follow this device's accessibility settings** | On to begin with. The device's own **Reduce Motion**, **Increase Contrast**, **Bold Text** and text size (set in Settings, Accessibility) are used in the app too. What you chose in the app is never made weaker: the device can only ask for more. It says what the device is asking for right now. |
+| **Buzz when a button is pressed** | A short buzz from the device so a press can be felt. Off to begin with. |
+
+The same place explains how the iPhone and iPad's own ways of pressing work with the app:
+
+- **Eye Tracking** (iPadOS and iOS 18 or later, on recent devices) is switched on in Settings, Accessibility, Eye Tracking. It works in this app as it does everywhere else. The app cannot see where anyone is looking and cannot switch it on. If you use Eye Tracking's own dwell, leave **Hold-to-select** at 0.
+- **Switch Control** and **Voice Control** reach every button, and **VoiceOver** reads each one.
+- **Guided Access** keeps a child inside the app. The app tells you whether it is on.
+- **Assistive Access** fills the whole screen with the app.
+
 ### Look
 
 The pictures and colours of the whole app. Changes show straight away.
@@ -635,7 +651,7 @@ A menu down the left, in groups:
   ![Vocabulary](images/school-vocabulary.png)
 
 - **Targets**, **Notes**, **Activity** and **Reports**: described below. Parent Mode has these too.
-- **Classroom set-up**: **Use the school top bar** (Home, Help, Yes, No, Break, Question, and Talk opens to the School page; it asks first because it moves buttons), **Start from a typical school day** (a Monday to Friday timetable, never replacing one you have), **Close School Mode after**, and **Choose a new School PIN**.
+- **Classroom set-up**: **Use the school top bar** (Home, Help, Yes, No, Break, Question, and Talk opens to the School page; it asks first because it moves buttons), **Start from a typical school day** (a Monday to Friday timetable, never replacing one you have), **Show the school day on the Home screen** (a strip above the six buttons with what is happening **Now** and **Next**, and **Words for this** when the activity has a lesson page; it is always the same size, so nothing moves; put **This lesson** in the top bar in Quick Access to reach the same words from anywhere), **Close School Mode after**, and **Choose a new School PIN**.
 
   ![Classroom set-up](images/school-classroom.png)
 
@@ -786,3 +802,46 @@ A sensible order for a new child:
 | Social | Pink |
 | Little words | Purple |
 | No and stop | Red |
+
+#### Linking an Apple Watch and Apple TV
+
+In the iPhone and iPad app, **Access** has **Link with the Apple Watch and Apple TV**. It is off to begin with.
+
+- **Apple Watch:** pair it with the iPhone as usual, then turn the link on. The watch shows the Favourites and today's plan, shares the traffic light, and its **On iPhone** page opens Games, Draw, Music and the rest on the iPhone.
+- **Apple TV:** open Rugged Speech on the television, go to its **iPad** tab, and type the four-digit code it shows into the box in Access, then **Turn the link on**. The iPad and the television must be on the same home wifi. **New code** on the television changes the code.
+- Only the Favourites, today's plan, the traffic light and the page that is open are shared. Nothing the child has said or typed is. Another device can open a page or change the traffic light, and cannot make the iPad speak.
+
+#### Music from this iPhone or iPad
+
+In the iPhone and iPad app, **Music** in Parent Mode has **Add songs from the Music library**. It lists songs already stored on the device (including songs you have downloaded from Apple Music), even a few hundred. **Search** by song or artist, narrow it to one of the playlists you made in the Music app, tick the songs you want (or **Add all shown**), and **Make a playlist from this one** brings a device playlist across with its songs. Songs that are only in the cloud are not listed, because they need the internet. The device plays them at its own volume, and nothing is copied or sent anywhere. The first time, the device asks whether Rugged Speech may see the library.
+
+#### Words for a timetable activity
+
+In **Timetable**, each activity can have **Words: (a lesson page)**. On the child's **My Day**, pressing that activity then offers **Words for this**, which opens the page. In School Mode, **Classroom set-up** has **Link lesson pages to the timetable**, which fills this in for activities whose names match a page (Maths and Maths lesson). It never changes one you chose.
+
+#### My family and friends
+
+In **My family**, add each person with a name, how they are related, a photo (or an emoji), their parents and a partner. The child's **My family** page draws the family tree from the oldest generation down, with partners together, and friends on their own tab. Pressing a person says who they are ("This is Nan, my grandma."), or what you wrote instead. Add **My family** to the top bar in **Quick Access** to reach it from every screen.
+
+#### Movies and videos kept on this device
+
+On a **computer**, choose **Add videos** and pick video files (up to 1.5 GB each). Each is copied into the app and plays inside it, with its own play button, only when the child presses its tile and never by itself. The rest of this section describes the iPhone and iPad app.
+
+#### Movies kept on this iPhone or iPad
+
+In **Movies**, add videos already on the device, from **Photos** or from **Files**. Each is copied into the app, so it plays with no internet and nothing is sent anywhere. Films you bought or rented in the TV app are locked to that app and cannot be added. A movie plays full screen, only when the child presses its tile (add **Movies** to the top bar in **Quick Access**). Movies are not part of a backup, because they are too big.
+
+
+#### Other apps on this device (My apps)
+
+In **My apps**, put other apps on this device a press away: a call, photos, a favourite game. Press **Add** next to an app that comes with the device, or **Add another app** and give it a name and a link. A link looks like `facetime:` or `mygame://start`; the app's help page or its maker will say what it is. **Try it** checks that it opens. Each shows as a big tile on the **Apps** screen (add **Apps** to the top bar in **Quick Access**), and the app opens only when the child presses its tile.
+
+Only links that open an app can be added. A web address (starting `http` or `https`), a file or a script is refused, so nothing here can take the child onto the internet. The list is for this device and is not part of a backup, because a link that opens an app here may mean nothing on another device.
+
+#### School pack: handing lesson pages to many devices
+
+In **School Mode**, **School pack** hands a school's lesson pages, timetable and school details (not the key adult) to other devices at once. A pack holds nothing about any child, and it only ever goes one way, from the school's device to the pupils'.
+
+- **Save as a file** makes a `.rspack` file to share by AirDrop, email or a memory stick; **Open a pack file** reads one.
+- **Over the school's wifi** (iPhone and iPad): choose a four-digit code, press **Send** on the school's device and **Listen** on each pupil's device with the same code, with that page open. The pupil's device lets in only a sender that gives the code, and never sends anything back.
+- A pack that arrives only **waits**. An adult on the pupil's device sees what adding it would do (pages added, pages already there and left alone, whether the timetable goes in, which blank details it fills in) and chooses **Add to this device**. It only ever adds: nothing is replaced and nothing is removed, and a timetable only goes in if there is none.

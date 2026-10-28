@@ -54,6 +54,37 @@ body,
   overflow: hidden;
 }
 
+/* A phone or tablet has a notch, rounded corners and a home bar. The edges of
+   the screen are kept clear of them; on the desktop these are all zero. */
+body {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* In the iPhone and iPad app, a long press holds a button (to add a favourite)
+   and must not open the system's copy menu or start a text selection. */
+html[data-platform] body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* The device's Bold Text setting, when the app is following the device. */
+html[data-bold-text='true'] body,
+html[data-bold-text='true'] button,
+html[data-bold-text='true'] input,
+html[data-bold-text='true'] select,
+html[data-bold-text='true'] textarea {
+  font-weight: 700;
+}
+
+html[data-platform] input,
+html[data-platform] textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 body {
   background: var(--color-background);
   color: var(--color-text);
@@ -3178,7 +3209,9 @@ button {
 .games-menu {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(3, minmax(9rem, 1fr));
+  grid-auto-rows: minmax(9rem, 1fr);
+  overflow-y: auto;
   gap: 1rem;
   height: 100%;
   padding: 1.25rem;
@@ -5316,6 +5349,42 @@ html[data-labels='words'] .board-button__label {
   border-radius: 50%;
 }
 
+.tree-screen__gift {
+  position: relative;
+  display: block;
+  width: 82%;
+  aspect-ratio: 1;
+  border: 2px solid #1a1a1a;
+  border-radius: 4px;
+}
+
+/* The ribbon: one band across and one down, white, so the three colours of present stay apart. */
+.tree-screen__gift::before,
+.tree-screen__gift::after {
+  content: '';
+  position: absolute;
+  background: #ffffff;
+  border: 1px solid #1a1a1a;
+}
+
+.tree-screen__gift::before {
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 0.14rem);
+  width: 0.28rem;
+}
+
+.tree-screen__gift::after {
+  left: 0;
+  right: 0;
+  top: calc(50% - 0.14rem);
+  height: 0.28rem;
+}
+
+.tree-screen__tool-sample .tree-screen__gift {
+  width: 1.5rem;
+}
+
 .tree-screen__emoji {
   display: flex;
   align-items: center;
@@ -5431,3 +5500,1644 @@ html[data-labels='words'] .board-button__label {
   font-size: 1.4rem;
   text-align: center;
 }
+
+/* On a phone the six always-there buttons must all stay on screen, so they
+   share the width and shrink their writing; none moves or wraps to a new row. */
+@media (max-width: 600px) {
+  .quick-access-bar {
+    gap: 0.25rem;
+    padding: 0.35rem 0.25rem;
+  }
+
+  .quick-access-bar__button {
+    min-width: 0;
+    padding: 0.25rem 0.1rem;
+    font-size: 0.64rem;
+  }
+
+  /* The same three columns and two rows as everywhere else, only smaller. */
+  .home-screen {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .home-screen__tile {
+    min-width: 0;
+    padding: 0.25rem;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Parent Mode and School Mode on a phone: the list of sections folds away behind a button, and the page has the
+   whole width. The button is not there on a tablet or a computer. */
+.parent-nav-toggle {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .parent-mode-screen__layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .parent-nav-toggle {
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0 1rem;
+    border: 0;
+    border-bottom: 2px solid var(--color-border);
+    background: var(--color-nav-background);
+    color: var(--color-text);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  /* The open menu sits over the page, never pushing it down. */
+  .parent-nav {
+    display: none;
+    grid-column: 1;
+    grid-row: 2;
+    z-index: 2;
+    border-right: 0;
+  }
+
+  .parent-nav--open {
+    display: block;
+  }
+
+  .parent-mode-screen__main {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .parent-mode-screen__header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .parent-mode-screen__title {
+    font-size: 1.3rem;
+  }
+
+  .parent-mode-screen__body {
+    padding: 0.75rem;
+  }
+}
+
+/* The row of Home, Medical Info, About me and Parent Mode: on a phone it may go onto a second line rather than
+   run off the edge, and its buttons are a little smaller. */
+@media (max-width: 600px) {
+  .app-shell__toolbar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    padding: 0.35rem 0.4rem;
+  }
+
+  .app-shell__toolbar button {
+    padding-inline: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .app-shell__toolbar .parent-mode-button,
+  .app-shell__toolbar .school-mode-button {
+    margin-left: auto;
+  }
+}
+
+/* Words on the buttons of a five-across page, so none is cut off on a phone. */
+@media (max-width: 600px) {
+  .board-button {
+    padding-inline: 0.15rem;
+  }
+
+  .board-button__label {
+    font-size: 0.72rem;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* The iPad as the controller for a game on the Apple TV: a question, and big buttons that stay where they are. */
+.controller-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+
+.controller-screen__prompt {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.controller-screen__turn {
+  margin: 0;
+  text-align: center;
+  font-size: 1.05rem;
+  opacity: 0.8;
+}
+
+.controller-screen__grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(6.5rem, 1fr);
+  gap: 0.75rem;
+}
+
+.controller-screen__button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: 3px solid var(--color-border);
+  border-radius: 16px;
+  color: #0f1e2e;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.controller-screen__emoji {
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.controller-screen__stop {
+  min-height: 3.2rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* My family and friends: a tree, oldest at the top, and a set of friend cards. It scrolls both ways rather than shrinking. */
+.family-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.family-screen__tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.family-screen__tab {
+  flex: 1;
+  min-height: 3rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.family-screen__tab[aria-pressed='true'] {
+  background: var(--color-chip-background);
+  border-color: var(--color-accent);
+}
+
+.family-screen__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.75rem;
+}
+
+.family-screen__empty {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.family-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 8rem;
+  padding: 0.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: 14px;
+  background: #fef08a;
+  color: #0f1e2e;
+}
+
+.family-card__photo {
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.family-card__emoji {
+  font-size: 3.4rem;
+  line-height: 5.5rem;
+}
+
+.family-card__name {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.family-card__relation {
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.family-friends {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.family-tree,
+.family-tree__children {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 1.25rem 0 0;
+  list-style: none;
+  position: relative;
+}
+
+.family-tree__node {
+  position: relative;
+  padding: 1.25rem 0.4rem 0;
+  text-align: center;
+  list-style: none;
+}
+
+.family-tree__node::before,
+.family-tree__node::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  width: 50%;
+  height: 1.25rem;
+  border-top: 3px solid var(--color-border);
+}
+
+.family-tree__node::after {
+  right: auto;
+  left: 50%;
+  border-left: 3px solid var(--color-border);
+}
+
+.family-tree__node:only-child::before,
+.family-tree__node:only-child::after {
+  display: none;
+}
+
+.family-tree__node:only-child {
+  padding-top: 0;
+}
+
+.family-tree__node:first-child::before,
+.family-tree__node:last-child::after {
+  border: 0 none;
+}
+
+.family-tree__node:last-child::before {
+  border-right: 3px solid var(--color-border);
+  border-radius: 0 12px 0 0;
+}
+
+.family-tree__node:first-child::after {
+  border-radius: 12px 0 0 0;
+}
+
+.family-tree > .family-tree__node::before,
+.family-tree > .family-tree__node::after {
+  display: none;
+}
+
+.family-tree > .family-tree__node {
+  padding-top: 0;
+}
+
+.family-tree__children::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 1.25rem;
+  border-left: 3px solid var(--color-border);
+}
+
+.family-tree__couple {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.family-tab__add,
+.family-tab__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.family-tab__list {
+  list-style: none;
+  padding: 0;
+}
+
+.family-tab__person {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.family-tab__thumb,
+.family-tab__emoji {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+  font-size: 2rem;
+  line-height: 3rem;
+  text-align: center;
+}
+
+.family-tab__more {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+/* Choosing from a few hundred songs on the device: a list that scrolls, so the page does not get long. */
+.music-tab__library-tools,
+.music-tab__library-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.music-tab__library-list {
+  max-height: 22rem;
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  overflow-y: auto;
+  list-style: none;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.music-tab__library-list li {
+  padding: 0.2rem 0;
+}
+
+/* Movies: big tiles, each a movie kept on the device. */
+.movies-screen,
+.apps-screen {
+  height: 100%;
+  overflow-y: auto;
+  padding: 0.75rem;
+}
+
+.movies-screen__tiles,
+.apps-screen__tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 0.75rem;
+}
+
+.movies-screen__tile,
+.apps-screen__tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 9rem;
+  padding: 0.75rem;
+  border: 3px solid var(--color-border);
+  border-radius: 16px;
+  background: #bfdbfe;
+  color: #0f1e2e;
+}
+
+.movies-screen__emoji,
+.apps-screen__emoji {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.movies-screen__title,
+.apps-screen__title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.movies-screen__length {
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.movies-tab__add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.movies-tab__list {
+  list-style: none;
+  padding: 0;
+}
+
+.movies-tab__list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.4rem 0;
+}
+
+/* The word to model this week, for adults. */
+.modelling-card {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-chip-background);
+}
+
+.modelling-card__title {
+  margin: 0 0 0.25rem;
+  font-size: 1.2rem;
+}
+
+.modelling-card__word {
+  font-size: 1.5rem;
+}
+
+.modelling-card__why,
+.modelling-card__lead {
+  margin: 0.25rem 0;
+}
+
+.modelling-card__list {
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.targets-tab__bank {
+  margin: 0.75rem 0;
+}
+
+.targets-tab__bank-list {
+  list-style: none;
+  padding: 0;
+}
+
+.targets-tab__bank-list li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.language-progress__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.language-progress__table th,
+.language-progress__table td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+/* The first page of Parent Mode, and "Is everything ready?". */
+.start-tab__title {
+  margin: 0 0 0.75rem;
+}
+
+.start-tab__jobs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.start-tab__job {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  padding: 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-background);
+  color: var(--color-text);
+  text-align: left;
+}
+
+.start-tab__label {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.start-tab__hint {
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.ready-check {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.ready-check__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+}
+
+.ready-check__count {
+  font-size: 1rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.ready-check__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ready-check__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+}
+
+.ready-check__mark {
+  width: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.ready-check__item--done {
+  opacity: 0.75;
+}
+
+.ready-check__text {
+  flex: 1;
+  min-width: 12rem;
+}
+
+/* Text for a screen reader only. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The home–school diary. */
+.diary-tab__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 40rem;
+  margin-bottom: 1rem;
+}
+
+.diary-tab__form textarea {
+  width: 100%;
+}
+
+.diary-tab__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.diary-tab__entry {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--color-border);
+  border-left-width: 8px;
+  border-radius: 10px;
+}
+
+.diary-tab__entry--home {
+  border-left-color: #f59e0b;
+}
+
+.diary-tab__entry--school {
+  border-left-color: #0f766e;
+}
+
+.diary-tab__meta {
+  margin: 0 0 0.2rem;
+  font-size: 0.95rem;
+}
+
+.diary-tab__text {
+  margin: 0 0 0.4rem;
+  white-space: pre-wrap;
+}
+
+/* The visual timer: blocks that are there or are not. Nothing moves. */
+.timer-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  height: 100%;
+  padding: 1rem;
+}
+
+.timer-screen__title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.timer-screen__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.timer-screen__preset {
+  min-width: 9rem;
+  min-height: 4rem;
+  padding: 0 1.25rem;
+  border: 3px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-chip-background);
+  color: var(--color-text);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.timer-screen__blocks {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(3.5rem, 8rem));
+  gap: 0.75rem;
+}
+
+.timer-screen__block {
+  aspect-ratio: 1;
+  border: 3px solid var(--color-border);
+  border-radius: 12px;
+  background: transparent;
+}
+
+.timer-screen__block--on {
+  background: #16a34a;
+  border-color: #166534;
+}
+
+/* My stories: a story a step at a time. */
+.stories-screen {
+  height: 100%;
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+
+.stories-screen__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 0.75rem;
+}
+
+.stories-screen__tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 9rem;
+  padding: 0.75rem;
+  border: 3px solid var(--color-border);
+  border-radius: 16px;
+  background: #fde68a;
+  color: #0f1e2e;
+}
+
+.stories-screen__emoji {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.stories-screen__title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.stories-screen--reading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.stories-screen__count {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.stories-screen__picture {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 8rem;
+}
+
+.stories-screen__big-emoji {
+  font-size: 7rem;
+  line-height: 1;
+}
+
+.stories-screen__photo {
+  max-width: 100%;
+  max-height: 16rem;
+  border-radius: 16px;
+  object-fit: contain;
+}
+
+.stories-screen__text {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.stories-screen__controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.stories-screen__button {
+  min-height: 4rem;
+  border: 3px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-chip-background);
+  color: var(--color-text);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.stories-tab__add,
+.stories-tab__head,
+.stories-tab__step,
+.stories-tab__starters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.stories-tab__story {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.stories-tab__steps {
+  padding-left: 1.25rem;
+}
+
+.stories-tab__text {
+  flex: 1;
+  min-width: 14rem;
+}
+
+.stories-tab__thumb {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+
+/* Finish the sentence. */
+.finish-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+}
+
+.finish-screen__sentence {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.finish-screen__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 40rem;
+}
+
+.finish-screen__option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 8rem;
+  border: 3px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-chip-background);
+  color: var(--color-text);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.finish-screen__option--chosen {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 3px var(--color-accent);
+}
+
+.finish-screen__emoji {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.finish-screen__photo {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.finish-screen__controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.choices-tab__words {
+  max-height: 20rem;
+  margin: 0.5rem 0;
+  padding: 0.25rem 0.5rem;
+  overflow-y: auto;
+  list-style: none;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.parent-nav__search {
+  width: 100%;
+  min-height: 2.6rem;
+  margin: 0 0 0.6rem;
+  padding: 0 0.6rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+/* =============================================================================================================
+   Adult screens: one design for Parent Mode and School Mode.
+   Everything here is scoped to .parent-mode-screen, so the child's screens are not touched at all (PRINCIPLES.md I3, I4).
+   The ideas: a calm page with cards, one clear primary action, a muted second one, a warning colour only for taking
+   something away, big enough to hit, and always the same shape from page to page. Nothing moves or fades.
+   ============================================================================================================= */
+
+.parent-mode-screen {
+  --pm-card: var(--color-background);
+  --pm-page: var(--color-nav-background);
+  --pm-muted: color-mix(in srgb, var(--color-text) 68%, var(--color-background));
+  --pm-line: color-mix(in srgb, var(--color-border) 70%, var(--color-background));
+  --pm-radius: 14px;
+  background: var(--pm-page);
+}
+
+.school-mode-screen {
+  --color-accent: #0f766e;
+}
+
+/* The header: where you are, that your changes are safe, and the way out. */
+.parent-mode-screen .parent-mode-screen__header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding: 0.7rem 1.1rem;
+  background: var(--pm-card);
+  border-bottom: 2px solid var(--pm-line);
+}
+
+.parent-mode-screen .parent-mode-screen__title {
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.parent-mode-screen .parent-mode-screen__header-actions {
+  align-items: center;
+}
+
+.saved-note {
+  font-size: 0.9rem;
+  color: var(--pm-muted);
+}
+
+.saved-note::before {
+  content: '✓ ';
+}
+
+/* The menu. */
+.parent-mode-screen .parent-nav {
+  padding: 0.75rem;
+  background: var(--pm-card);
+  border-right: 2px solid var(--pm-line);
+}
+
+.parent-mode-screen .parent-nav__heading {
+  margin: 0.9rem 0.4rem 0.3rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--pm-muted);
+  opacity: 1;
+}
+
+.parent-mode-screen .parent-nav__tab {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  margin-bottom: 0.15rem;
+  padding: 0 0.7rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.parent-mode-screen .parent-nav__tab[aria-pressed='true'] {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--color-accent) 16%, var(--color-background));
+  box-shadow: inset 4px 0 0 var(--color-accent);
+  font-weight: 800;
+}
+
+/* The page. */
+.parent-mode-screen .parent-mode-screen__main {
+  padding: 1.25rem 1.5rem 3rem;
+}
+
+.parent-mode-screen .parent-mode-screen__main > * {
+  max-width: 62rem;
+  margin-inline: auto;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.page-header__title {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 800;
+}
+
+.page-header__purpose {
+  margin: 0.1rem 0 0;
+  color: var(--pm-muted);
+}
+
+.parent-mode-screen .parent-mode-screen__body {
+  padding: 0;
+  gap: 1rem;
+}
+
+/* Sections are cards. */
+.parent-mode-screen .access-tab__section,
+.parent-mode-screen .school-tab__section,
+.parent-mode-screen .music-tab__library,
+.parent-mode-screen .stories-tab__story,
+.parent-mode-screen .family-tab__person,
+.parent-mode-screen .pack-tab__waiting,
+.parent-mode-screen .ready-check,
+.parent-mode-screen .modelling-card {
+  padding: 1rem 1.1rem;
+  border: 2px solid var(--pm-line);
+  border-radius: var(--pm-radius);
+  background: var(--pm-card);
+}
+
+.parent-mode-screen .access-tab__heading,
+.parent-mode-screen .school-tab__heading {
+  margin: 0 0 0.4rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.parent-mode-screen .about-tab__hint,
+.parent-mode-screen .access-tab__hint,
+.parent-mode-screen .school-tab__hint,
+.parent-mode-screen .quick-access-tab__hint {
+  max-width: 46rem;
+  margin: 0.2rem 0 0.6rem;
+  color: var(--pm-muted);
+  line-height: 1.5;
+}
+
+/* Buttons: the main thing to do, the usual thing, and taking something away. */
+.parent-mode-screen .parent-mode-screen__button {
+  min-height: 2.75rem;
+  padding: 0 1.1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--pm-card);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.parent-mode-screen button[type='submit'].parent-mode-screen__button,
+.parent-mode-screen .parent-mode-screen__button--primary {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.parent-mode-screen .parent-mode-screen__button[aria-label^='Remove'],
+.parent-mode-screen .parent-mode-screen__button[aria-label^='Delete'],
+.parent-mode-screen .parent-mode-screen__button[aria-label^='Take away'] {
+  border-color: #b91c1c;
+  color: #b91c1c;
+  background: var(--pm-card);
+}
+
+.parent-mode-screen .parent-mode-screen__button:disabled {
+  opacity: 0.45;
+}
+
+.parent-mode-screen .parent-mode-screen__exit {
+  background: color-mix(in srgb, var(--color-accent) 14%, var(--color-background));
+  border-color: var(--color-accent);
+}
+
+.parent-mode-screen button:focus-visible,
+.parent-mode-screen input:focus-visible,
+.parent-mode-screen select:focus-visible,
+.parent-mode-screen textarea:focus-visible,
+.parent-mode-screen summary:focus-visible {
+  outline: 4px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Fields. */
+.parent-mode-screen input[type='text'],
+.parent-mode-screen input[type='search'],
+.parent-mode-screen input[type='time'],
+.parent-mode-screen input[type='number'],
+.parent-mode-screen input[type='date'],
+.parent-mode-screen textarea,
+.parent-mode-screen select {
+  min-height: 2.6rem;
+  padding: 0.35rem 0.6rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.parent-mode-screen textarea {
+  width: 100%;
+  line-height: 1.4;
+}
+
+.parent-mode-screen label {
+  font-weight: 600;
+}
+
+.parent-mode-screen .access-tab__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.4rem;
+  font-weight: 500;
+}
+
+.parent-mode-screen input[type='checkbox'] {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.parent-mode-screen details > summary {
+  min-height: 2.4rem;
+  padding: 0.3rem 0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.parent-mode-screen table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.parent-mode-screen th,
+.parent-mode-screen td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--pm-line);
+  text-align: left;
+}
+
+.parent-mode-screen .parent-mode-screen__notice {
+  margin: 0.75rem 1.1rem 0;
+  border-radius: var(--pm-radius);
+}
+
+/* A phone: no side menu, and the page uses the whole width. */
+@media (max-width: 600px) {
+  .parent-mode-screen .parent-mode-screen__main {
+    padding: 0.9rem 0.8rem 3rem;
+  }
+
+  .page-header__title {
+    font-size: 1.3rem;
+  }
+
+  .saved-note {
+    display: none;
+  }
+
+  .parent-mode-screen .parent-nav {
+    border-right: 0;
+  }
+}
+
+.parent-mode-screen .start-tab__link .parent-mode-screen__button {
+  width: auto;
+  align-self: flex-start;
+}
+
+/* ---------------------------------------------------------------------------------------------------------------
+   Small screens: a phone held either way up.
+   A tester on an iPhone could not scroll to the bottom of Help and Feelings, the "a little / medium / a lot" row
+   sat on top of the buttons, the Games tiles ran into each other, and the bars along the top took most of the
+   screen when the phone was on its side. The buttons keep their places and their order (invariant I3); only their
+   height and the room around them are trimmed, and a page that is taller than the screen now scrolls.
+   --------------------------------------------------------------------------------------------------------------- */
+
+/* A page of words is only as tall as its rows need and the page scrolls; it is never squeezed into the space left over. */
+.feelings-help-screen__grid {
+  height: auto;
+}
+
+.feelings-help-screen__grid--help {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+}
+
+.favourites-screen__tip {
+  flex: none;
+  margin: 0;
+  padding: 0.5rem 0.9rem 0.75rem;
+  color: var(--color-text);
+  opacity: 0.8;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+@media (max-width: 600px), (max-height: 520px) {
+  .quick-access-bar {
+    gap: 0.25rem;
+    padding: 0.25rem;
+  }
+
+  .quick-access-bar__button {
+    min-height: 2.5rem;
+    min-width: 0;
+    padding: 0.15rem 0.2rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .quick-access-bar__button::before {
+    margin-right: 0.25em;
+  }
+
+  .give-me-time-bar {
+    min-height: 2rem;
+    font-size: 0.9rem;
+  }
+
+  .app-shell__toolbar {
+    flex-wrap: nowrap;
+    gap: 0.3rem;
+    padding: 0.25rem 0.3rem;
+  }
+
+  .app-shell__toolbar button {
+    min-height: 2.5rem;
+    padding-inline: 0.5rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  /* The device's name stays on the line, shortened with dots if it is long, rather than pushing the buttons onto a second line. */
+  .app-shell__toolbar > :not(button) {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.95rem;
+  }
+
+  .feelings-help-screen .page-tabs,
+  .favourites-screen .page-tabs {
+    flex-wrap: nowrap;
+    gap: 0.25rem;
+    padding: 0.35rem;
+  }
+
+  .feelings-help-screen .page-tabs__tab,
+  .favourites-screen .page-tabs__tab {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 2.5rem;
+    padding: 0 0.2rem;
+    font-size: 0.9rem;
+  }
+
+  .feelings-help-screen__body,
+  .feelings-help-screen__grid--help {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .intensity-row__button {
+    min-height: 2.75rem;
+    font-size: 1rem;
+  }
+}
+
+/* A phone held upright: the picture sits above the word in each top button, so the whole word fits. */
+@media (max-width: 600px) {
+  .quick-access-bar__button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    font-size: 0.65rem;
+    line-height: 1.1;
+  }
+
+  .quick-access-bar__button::before {
+    margin-right: 0;
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+}
+
+/* A phone held upright: the tiles of the Games menu are two wide, and what is written on them fits inside. */
+@media (max-width: 600px) {
+  .games-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: minmax(8rem, auto);
+    gap: 0.6rem;
+    height: 100%;
+    padding: 0.75rem;
+  }
+
+  .games-menu__tile {
+    min-width: 0;
+    padding: 0.5rem;
+    overflow: hidden;
+  }
+
+  .games-menu__icon {
+    font-size: 2.4rem;
+  }
+
+  .games-menu__label {
+    font-size: 1.15rem;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  .games-menu__hint {
+    font-size: 0.8rem;
+    text-align: center;
+  }
+}
+
+/* A phone on its side has little height: the Games tiles stay three across and are as tall as their writing. */
+@media (max-height: 520px) and (min-width: 601px) {
+  .games-menu {
+    grid-template-rows: none;
+    grid-auto-rows: minmax(7rem, auto);
+    gap: 0.6rem;
+    padding: 0.75rem;
+  }
+
+  .games-menu__icon {
+    font-size: 2.4rem;
+  }
+
+  .games-menu__label {
+    font-size: 1.3rem;
+  }
+
+  .games-menu__hint {
+    font-size: 0.85rem;
+  }
+}
+
+/* Make a tree on a phone held upright: the tree on top and the decorations underneath, the page scrolling down to them,
+   rather than the decorations sitting off the edge of the screen to the right. */
+@media (max-width: 600px) {
+  .tree-screen {
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.5rem;
+  }
+
+  .tree-screen__stage {
+    flex: none;
+  }
+
+  .tree-screen__picture {
+    height: auto;
+    min-height: 0;
+    width: min(100%, 22rem);
+  }
+}
+
+/* The sentence being built and the Home / Back row: trimmed on a small screen so the words get the room. */
+@media (max-width: 600px), (max-height: 520px) {
+  .sentence-strip {
+    gap: 0.4rem;
+    padding: 0.3rem 0.4rem;
+    min-height: 3.25rem;
+  }
+
+  .sentence-strip__chips {
+    min-height: 2.5rem;
+  }
+
+  .sentence-strip__chip {
+    min-height: 2.5rem;
+    padding: 0 0.7rem;
+    font-size: 1rem;
+  }
+
+  .sentence-strip__clear,
+  .sentence-strip__speak {
+    min-height: 2.75rem;
+    padding: 0 0.9rem;
+    font-size: 1rem;
+  }
+
+  .talk-screen__grid {
+    padding: 0.4rem;
+  }
+
+  .talk-screen__nav {
+    gap: 0.4rem;
+    padding: 0.3rem 0.4rem;
+  }
+
+  .talk-screen__nav-button {
+    min-height: 2.75rem;
+    font-size: 1.05rem;
+  }
+}
+
+/* Said on the screen for a moment after a word is held and added to Favourites, as well as spoken. It only appears; nothing slides or fades. */
+.favourite-notice {
+  position: fixed;
+  left: 50%;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  z-index: 20;
+  max-width: calc(100% - 2rem);
+  padding: 0.6rem 1.1rem;
+  border: 2px solid var(--color-text);
+  border-radius: 12px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.favourite-notice:empty {
+  display: none;
+}
+
+.apps-tab__form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
+.apps-tab__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+/* A video playing in the page (on a computer). It has its own play button and never starts by itself. */
+.movies-player {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 0.5rem;
+}
+
+.movies-player__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.movies-player__close {
+  min-height: var(--tap-target-min);
+  padding: 0 1.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-background);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.movies-player__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.movies-player__video {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  background: #000000;
+  border-radius: 12px;
+}
+
+/* The school day above the six Home buttons: always the same size, so nothing below it moves. */
+.home-with-day {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.home-with-day > .home-screen {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+}
+
+.now-strip {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.75rem 1.5rem 0;
+  min-height: calc(var(--tap-target-min) + 0.75rem);
+}
+
+.now-strip__day {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-chip-background);
+  text-align: left;
+}
+
+.now-strip__label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.now-strip__now {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.now-strip__next {
+  flex: none;
+  font-size: 1rem;
+}
+
+.now-strip__words {
+  flex: none;
+  padding: 0 1.25rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-background);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .now-strip {
+    padding: 0.5rem 0.75rem 0;
+    min-height: 3.5rem;
+  }
+
+  .now-strip__day {
+    gap: 0.4rem;
+    padding: 0 0.6rem;
+  }
+
+  .now-strip__now {
+    font-size: 1.1rem;
+  }
+
+  .now-strip__next {
+    display: none;
+  }
+
+  .now-strip__words {
+    padding: 0 0.7rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* The other top-bar choices have a picture too, so every button along the top looks the same kind of thing. */
+.quick-access-bar__button[data-id='family']::before { content: '👪'; }
+.quick-access-bar__button[data-id='stories']::before { content: '📖'; }
+.quick-access-bar__button[data-id='movies']::before { content: '🎬'; }
+.quick-access-bar__button[data-id='apps']::before { content: '📲'; }
+.quick-access-bar__button[data-id='lesson']::before { content: '🎒'; }
+.quick-access-bar__button[data-id='timer']::before { content: '⏳'; }
+
+/* With the drawn pictures on, these have no drawn picture of their own, so they keep their emoji. */
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='family']::before { content: '👪'; width: auto; height: auto; }
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='stories']::before { content: '📖'; width: auto; height: auto; }
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='movies']::before { content: '🎬'; width: auto; height: auto; }
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='apps']::before { content: '📲'; width: auto; height: auto; }
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='lesson']::before { content: '🎒'; width: auto; height: auto; }
+html[data-symbols='drawn'] .quick-access-bar__button[data-id='timer']::before { content: '⏳'; width: auto; height: auto; }

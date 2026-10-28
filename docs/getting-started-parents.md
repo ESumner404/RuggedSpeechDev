@@ -1,6 +1,6 @@
 # Getting started: parents and carers
 
-Rugged Speech Test is a communication companion for a child who finds speaking difficult. It has big buttons with pictures and words. When your child presses them, the app says the words out loud.
+Rugged Speech is a communication companion for a child who finds speaking difficult. It has big buttons with pictures and words. When your child presses them, the app says the words out loud.
 
 This guide takes you from nothing to a child using it, in about twenty minutes. You do not need to be good with computers.
 
@@ -11,7 +11,7 @@ This guide takes you from nothing to a child using it, in about twenty minutes. 
 ## What you need
 
 - A **Windows 10 or Windows 11** computer or tablet (64-bit), or a **Mac**. A touchscreen is ideal, but a mouse works.
-- The installer: a single file called **Rugged Speech Test Setup 0.0.1.exe** (the number may be newer).
+- The installer: a single file called **Rugged Speech Setup 0.0.1.exe** (the number may be newer).
 - About 10 minutes for set-up, and a quiet moment to choose a voice with your child if you can.
 
 You do **not** need an internet connection, an account or an administrator password.
@@ -26,17 +26,17 @@ You do **not** need an internet connection, an account or an administrator passw
 2. Double-click it.
 3. Windows may show a blue box saying **Windows protected your PC**. This is normal for new software that has not paid for a signing certificate. Press **More info**, then **Run anyway**.
 4. Follow the steps. It installs just for you and does not ask for an administrator password.
-5. When it finishes, **Rugged Speech Test** opens by itself. There is also a shortcut on the desktop and in the Start menu.
+5. When it finishes, **Rugged Speech** opens by itself. There is also a shortcut on the desktop and in the Start menu.
 
-If you want to be sure the file is exactly the one that was sent to you, ask whoever gave it to you for its "SHA-256" code, then open a Command Prompt and type `certutil -hashfile "Rugged Speech Test Setup 0.0.1.exe" SHA256`. The two codes should match.
+If you want to be sure the file is exactly the one that was sent to you, ask whoever gave it to you for its "SHA-256" code, then open a Command Prompt and type `certutil -hashfile "Rugged Speech Setup 0.0.1.exe" SHA256`. The two codes should match.
 
 ### Installing on a Mac
 
-1. Get the disk image for your Mac: **Rugged-Speech-Test-0.0.1-mac-arm64.dmg** for a Mac with Apple silicon (M1 or later), or **-mac-x64.dmg** for an Intel Mac. The Apple menu, then **About This Mac**, says which you have.
-2. Double-click it, and drag **Rugged Speech Test** onto **Applications**.
+1. Get the disk image for your Mac: **Rugged-Speech-0.0.1-mac-arm64.dmg** for a Mac with Apple silicon (M1 or later), or **-mac-x64.dmg** for an Intel Mac. The Apple menu, then **About This Mac**, says which you have.
+2. Double-click it, and drag **Rugged Speech** onto **Applications**.
 3. Open it from Applications. The first time, the Mac says it cannot be opened, because the app is not yet signed with an Apple Developer ID. This is normal for new software and does not mean anything is wrong. Open **System Settings**, then **Privacy & Security**, scroll down and press **Open Anyway**, and enter your Mac password. (On macOS 14 or earlier, Control-click the app and choose **Open** instead.) After this once, it opens normally.
 
-On a Mac, your child's saved pages, photos and settings are in **Library/Application Support/Rugged Speech Test** in your home folder. To remove the app, drag it to the Bin (and that folder too, if you want the saved things gone).
+On a Mac, your child's saved pages, photos and settings are in **Library/Application Support/Rugged Speech** in your home folder. To remove the app, drag it to the Bin (and that folder too, if you want the saved things gone).
 
 ## 2. The first-run set-up
 

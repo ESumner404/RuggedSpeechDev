@@ -1,0 +1,824 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		025643294D1903CD4992DC89 /* RuggedNativePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD2617EAB5002448AAC0E2D /* RuggedNativePlugin.swift */; };
+		0AF5FB10639AA3F032AF113E /* BigButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85626B44C1FDB678049D785D /* BigButton.swift */; };
+		0BB059505B4E6481C62BE33A /* Vocabulary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816380435624AC5EC5C1CECD /* Vocabulary.swift */; };
+		17E3DE56EA9CACDA501A00E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A348982BCE2FD882CD176B83 /* Assets.xcassets */; };
+		1CA998C627766237F2232BEB /* CapApp-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = FD127B870EFB46EFAC91834E /* CapApp-SPM */; };
+		22F37DD22BEBF53182CA49FE /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130CB5C5D6306CD4797EFB5A /* RootView.swift */; };
+		26E51AC20D9FE4119F144870 /* public in Resources */ = {isa = PBXBuildFile; fileRef = 7E5BBB12596EE01767A6151A /* public */; };
+		2700A5422E45C887BEAE5B76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CC6C49B810BBC284BCED483 /* Main.storyboard */; };
+		28B8157B5DA9DE580217157A /* LinkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22F1099B57DD0E23A8C3774 /* LinkState.swift */; };
+		2B608FC58D68A11CF0A3B6C7 /* ShowingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5434C6526F1663FF6280341 /* ShowingView.swift */; };
+		2D5F37D56024307203CB15BE /* MovieLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E0585172AC0E29E475454 /* MovieLibrary.swift */; };
+		317D9CB082EA48B9D62A8585 /* FeelingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */; };
+		33894972445A547C53525D94 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 42299223C1270749CDB36540 /* PrivacyInfo.xcprivacy */; };
+		3ECAA36FE1937631F99ECE2C /* TrafficLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19361A32DC5EBBED296019C2 /* TrafficLightView.swift */; };
+		3FB3C8C0634A765EE81D042E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76989E05CECAD7B8B3C424A7 /* Assets.xcassets */; };
+		44DEC6B5EFBFC1F083A04CC9 /* Vocabulary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816380435624AC5EC5C1CECD /* Vocabulary.swift */; };
+		49FDF93485BD1B5F5D5C6804 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65879761B3E0FB60EDF1A2D /* HelpView.swift */; };
+		4AC31C8FEA32681A0D3611EB /* RuggedSpeechWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4340C25CC735B51F5C321827 /* RuggedSpeechWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4B2D6E0EDEA9EA5B37136DFC /* MyDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF500EA76A709DA65D08690 /* MyDayView.swift */; };
+		4D3F2630D26594B18A1E0A3C /* Colours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0E9A0BF464C7375090A551 /* Colours.swift */; };
+		4FB34C264C0E482A4F3BA9EA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23F8D68E28D07D16EB72E4AA /* LaunchScreen.storyboard */; };
+		59FB32608DC2CF140CE2C646 /* FavouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33C3818573C48EE3123579D /* FavouritesView.swift */; };
+		5CBA01DD0B2C2B9C9AC30752 /* TalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA37DFD3E6C0695C200E19D /* TalkView.swift */; };
+		5E04533C01261A377D816DB8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8776CD2CC1249496A6F18C86 /* config.xml */; };
+		67740B5377F807ABF1532F55 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2016878D44EAA9692D059F /* SceneDelegate.swift */; };
+		6993295D9B2B685761EEA4C6 /* FamilyGames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673736C7D886FA30C3FB1CEE /* FamilyGames.swift */; };
+		722A9217FCDD97B83B13D3B0 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B78992D825F92552EF69B09 /* LinkView.swift */; };
+		75CA7222FA8143CBE81D8BB1 /* RuggedSpeechWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053D8104D4D23A62373CD05E /* RuggedSpeechWatchApp.swift */; };
+		78728FD8E95658F1C8DA4664 /* PressButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A3C29165F901B0885CF9EE /* PressButton.swift */; };
+		7BD6CE0FB1784F77D688A0AD /* RuggedSpeechTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AC3A845CA43A906419F93A /* RuggedSpeechTVApp.swift */; };
+		7BD7675BBE05FE204398178A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABEFBEC61F4D2C38E025080 /* SettingsView.swift */; };
+		81138B00431411BE1EF97D97 /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 68ED4E8FE0185474B6E8E85B /* capacitor.config.json */; };
+		82CC858946A4DD0E610E5121 /* SchoolLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5A569782FBA263894E0BEA /* SchoolLink.swift */; };
+		83A3212E3B3AD97B444D83B0 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03156A005B8D5FB142B0035 /* RootView.swift */; };
+		8EDB8EBD884F018026E55497 /* PhoneLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5BD6EA66DFD5807E09B6E1 /* PhoneLink.swift */; };
+		93215BD4FBEAFA498541BA87 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1BE806AA055FC55BEC1EF /* Speaker.swift */; };
+		93AF4DCA86CB972AF0E661BB /* RuggedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A3D357482A33BD0752F017 /* RuggedViewController.swift */; };
+		9E54AAD49E83D5816503A190 /* TVContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB2773832555232C75F9F50 /* TVContent.swift */; };
+		A00EB09D051C71E95664BD1C /* TrafficView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A415F5AA01D3EE30B4CE2D5 /* TrafficView.swift */; };
+		A3D11A276F42E90F148C2438 /* FavouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */; };
+		A6E9F12CE19C8EC25B2B2675 /* LinkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22F1099B57DD0E23A8C3774 /* LinkState.swift */; };
+		A844A5FAE996B6AD81C77182 /* AppleLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF7D807DC10CEDCD9D4AD7 /* AppleLink.swift */; };
+		ABED17246DE431A4F4340003 /* Colours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0E9A0BF464C7375090A551 /* Colours.swift */; };
+		B859A9687FD05E5191691BCE /* MusicLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AA27FA6AC072E8E6546709 /* MusicLibrary.swift */; };
+		BF216F575F36258A76ECC8D2 /* FeelingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0002DBFC6DEC9F6EFC5E28E /* FeelingsView.swift */; };
+		C06343D200D067F1C1D47579 /* Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1BE806AA055FC55BEC1EF /* Speaker.swift */; };
+		CA3A0BA5422B7D487E3B5B04 /* WordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7994EED4E82B742F75D509CB /* WordsView.swift */; };
+		CA976459D2F292787FA33570 /* GameHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6E2232872DC3AB28188AD9 /* GameHub.swift */; };
+		CD43577A7360E52D644FABA0 /* MyDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A472A1CFB488F926C0D5DEC /* MyDayView.swift */; };
+		DAC8B61E340368A6B1C6703E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81927A013CDB49DBF3B7C3 /* SettingsView.swift */; };
+		DE5A67874BD3153E9239C24C /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96A26BA16DA21949B12B73 /* HelpView.swift */; };
+		E30FEAF4D7BA9B789913141A /* GamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF52DEE947CDC57195F4D348 /* GamesView.swift */; };
+		E49A0FC24814F4D0489B9DEF /* OnPhoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5071B07446383C163124C636 /* OnPhoneView.swift */; };
+		E8E03F4FB1BE61A377693A7C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420949282AB92AA28A975D3 /* AppDelegate.swift */; };
+		F7C1492D97661B6AC1A562FF /* IPadLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */; };
+		F92779BB8232E0C901958308 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52BA3F8A9E19DEB1FA0B7E0A /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2014FD0EAFCA274BDA9BF6D2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6B590BF25178DC7D824D09CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F59D72105C9D07829BA9636D;
+			remoteInfo = RuggedSpeechWatch;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8FB70F68C37A7E71D356530E /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				4AC31C8FEA32681A0D3611EB /* RuggedSpeechWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		00974E067C806B76249CC31E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		053D8104D4D23A62373CD05E /* RuggedSpeechWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuggedSpeechWatchApp.swift; sourceTree = "<group>"; };
+		130CB5C5D6306CD4797EFB5A /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		1613B4CACB108E77F6BBEFAA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		19361A32DC5EBBED296019C2 /* TrafficLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficLightView.swift; sourceTree = "<group>"; };
+		1ABEFBEC61F4D2C38E025080 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		1CD2617EAB5002448AAC0E2D /* RuggedNativePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuggedNativePlugin.swift; sourceTree = "<group>"; };
+		28AA27FA6AC072E8E6546709 /* MusicLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicLibrary.swift; sourceTree = "<group>"; };
+		2B78992D825F92552EF69B09 /* LinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkView.swift; sourceTree = "<group>"; };
+		3F81927A013CDB49DBF3B7C3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		42299223C1270749CDB36540 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		4340C25CC735B51F5C321827 /* RuggedSpeechWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RuggedSpeechWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		49D88A349FD70A9153DD2C03 /* App.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5071B07446383C163124C636 /* OnPhoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPhoneView.swift; sourceTree = "<group>"; };
+		50A3D357482A33BD0752F017 /* RuggedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuggedViewController.swift; sourceTree = "<group>"; };
+		52BA3F8A9E19DEB1FA0B7E0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5A415F5AA01D3EE30B4CE2D5 /* TrafficView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficView.swift; sourceTree = "<group>"; };
+		5BB2773832555232C75F9F50 /* TVContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVContent.swift; sourceTree = "<group>"; };
+		673736C7D886FA30C3FB1CEE /* FamilyGames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyGames.swift; sourceTree = "<group>"; };
+		68ED4E8FE0185474B6E8E85B /* capacitor.config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
+		6B04ADF7B81E144C4949AE51 /* CapApp-SPM */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "CapApp-SPM"; path = "CapApp-SPM"; sourceTree = SOURCE_ROOT; };
+		6BF500EA76A709DA65D08690 /* MyDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayView.swift; sourceTree = "<group>"; };
+		6DD84CC12F631F85CABE53A8 /* RuggedSpeechTV.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RuggedSpeechTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		76989E05CECAD7B8B3C424A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7994EED4E82B742F75D509CB /* WordsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsView.swift; sourceTree = "<group>"; };
+		7D0E9A0BF464C7375090A551 /* Colours.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colours.swift; sourceTree = "<group>"; };
+		7D2AEC5B428FFE44C9BA1261 /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = debug.xcconfig; sourceTree = "<group>"; };
+		7DD1BE806AA055FC55BEC1EF /* Speaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Speaker.swift; sourceTree = "<group>"; };
+		7E5BBB12596EE01767A6151A /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; name = public; path = App/public; sourceTree = SOURCE_ROOT; };
+		816380435624AC5EC5C1CECD /* Vocabulary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vocabulary.swift; sourceTree = "<group>"; };
+		85626B44C1FDB678049D785D /* BigButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigButton.swift; sourceTree = "<group>"; };
+		86AC3A845CA43A906419F93A /* RuggedSpeechTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuggedSpeechTVApp.swift; sourceTree = "<group>"; };
+		8776CD2CC1249496A6F18C86 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
+		89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
+		8A472A1CFB488F926C0D5DEC /* MyDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayView.swift; sourceTree = "<group>"; };
+		9420949282AB92AA28A975D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9E3E0585172AC0E29E475454 /* MovieLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieLibrary.swift; sourceTree = "<group>"; };
+		A33C3818573C48EE3123579D /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
+		A348982BCE2FD882CD176B83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA5A569782FBA263894E0BEA /* SchoolLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolLink.swift; sourceTree = "<group>"; };
+		AEA37DFD3E6C0695C200E19D /* TalkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkView.swift; sourceTree = "<group>"; };
+		B0002DBFC6DEC9F6EFC5E28E /* FeelingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingsView.swift; sourceTree = "<group>"; };
+		C5434C6526F1663FF6280341 /* ShowingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowingView.swift; sourceTree = "<group>"; };
+		C7A3C29165F901B0885CF9EE /* PressButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressButton.swift; sourceTree = "<group>"; };
+		C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeelingsView.swift; sourceTree = "<group>"; };
+		CA96A26BA16DA21949B12B73 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		D65879761B3E0FB60EDF1A2D /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadLink.swift; sourceTree = "<group>"; };
+		EA6E2232872DC3AB28188AD9 /* GameHub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHub.swift; sourceTree = "<group>"; };
+		EC5BD6EA66DFD5807E09B6E1 /* PhoneLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneLink.swift; sourceTree = "<group>"; };
+		ED2016878D44EAA9692D059F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		EEFF7D807DC10CEDCD9D4AD7 /* AppleLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLink.swift; sourceTree = "<group>"; };
+		F03156A005B8D5FB142B0035 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		F22F1099B57DD0E23A8C3774 /* LinkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkState.swift; sourceTree = "<group>"; };
+		FF52DEE947CDC57195F4D348 /* GamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BC0DC3536DED64E0E8C9923E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1CA998C627766237F2232BEB /* CapApp-SPM in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4102E3E068508DD683953C7D = {
+			isa = PBXGroup;
+			children = (
+				443E9F32F0EC65EEBF466F3B /* App */,
+				9F557102F400C46FF3A051D7 /* Community Stack AAC */,
+				92ACA850132D7931F18F9889 /* ios */,
+				A09E2501204CB86B4B2B6562 /* Packages */,
+				E9C3DB3EC6D7655028A9C0D3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		443E9F32F0EC65EEBF466F3B /* App */ = {
+			isa = PBXGroup;
+			children = (
+				9420949282AB92AA28A975D3 /* AppDelegate.swift */,
+				EEFF7D807DC10CEDCD9D4AD7 /* AppleLink.swift */,
+				76989E05CECAD7B8B3C424A7 /* Assets.xcassets */,
+				68ED4E8FE0185474B6E8E85B /* capacitor.config.json */,
+				8776CD2CC1249496A6F18C86 /* config.xml */,
+				9E3E0585172AC0E29E475454 /* MovieLibrary.swift */,
+				28AA27FA6AC072E8E6546709 /* MusicLibrary.swift */,
+				42299223C1270749CDB36540 /* PrivacyInfo.xcprivacy */,
+				7E5BBB12596EE01767A6151A /* public */,
+				1CD2617EAB5002448AAC0E2D /* RuggedNativePlugin.swift */,
+				50A3D357482A33BD0752F017 /* RuggedViewController.swift */,
+				ED2016878D44EAA9692D059F /* SceneDelegate.swift */,
+				AA5A569782FBA263894E0BEA /* SchoolLink.swift */,
+				23F8D68E28D07D16EB72E4AA /* LaunchScreen.storyboard */,
+				9CC6C49B810BBC284BCED483 /* Main.storyboard */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		91666E74BB9B6CB98828BA77 /* Watch */ = {
+			isa = PBXGroup;
+			children = (
+				A348982BCE2FD882CD176B83 /* Assets.xcassets */,
+				A33C3818573C48EE3123579D /* FavouritesView.swift */,
+				B0002DBFC6DEC9F6EFC5E28E /* FeelingsView.swift */,
+				CA96A26BA16DA21949B12B73 /* HelpView.swift */,
+				6BF500EA76A709DA65D08690 /* MyDayView.swift */,
+				5071B07446383C163124C636 /* OnPhoneView.swift */,
+				EC5BD6EA66DFD5807E09B6E1 /* PhoneLink.swift */,
+				C7A3C29165F901B0885CF9EE /* PressButton.swift */,
+				130CB5C5D6306CD4797EFB5A /* RootView.swift */,
+				053D8104D4D23A62373CD05E /* RuggedSpeechWatchApp.swift */,
+				1ABEFBEC61F4D2C38E025080 /* SettingsView.swift */,
+				5A415F5AA01D3EE30B4CE2D5 /* TrafficView.swift */,
+				7994EED4E82B742F75D509CB /* WordsView.swift */,
+			);
+			path = Watch;
+			sourceTree = "<group>";
+		};
+		92ACA850132D7931F18F9889 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				7D2AEC5B428FFE44C9BA1261 /* debug.xcconfig */,
+			);
+			name = ios;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		9F557102F400C46FF3A051D7 /* Community Stack AAC */ = {
+			isa = PBXGroup;
+			children = (
+				CE24391024E41EE1985EF4C4 /* apple */,
+			);
+			name = "Community Stack AAC";
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		A09E2501204CB86B4B2B6562 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				6B04ADF7B81E144C4949AE51 /* CapApp-SPM */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		CE24391024E41EE1985EF4C4 /* apple */ = {
+			isa = PBXGroup;
+			children = (
+				FF627C6AB8FA7FE5FE9D4FF6 /* Shared */,
+				D2E48DEF3FA32E31624F67CC /* TV */,
+				91666E74BB9B6CB98828BA77 /* Watch */,
+			);
+			path = apple;
+			sourceTree = "<group>";
+		};
+		D2E48DEF3FA32E31624F67CC /* TV */ = {
+			isa = PBXGroup;
+			children = (
+				52BA3F8A9E19DEB1FA0B7E0A /* Assets.xcassets */,
+				85626B44C1FDB678049D785D /* BigButton.swift */,
+				673736C7D886FA30C3FB1CEE /* FamilyGames.swift */,
+				89B778D6CFA27B32D95EC0AD /* FavouritesView.swift */,
+				C87D5B1041F68295FDDBD5C4 /* FeelingsView.swift */,
+				EA6E2232872DC3AB28188AD9 /* GameHub.swift */,
+				FF52DEE947CDC57195F4D348 /* GamesView.swift */,
+				D65879761B3E0FB60EDF1A2D /* HelpView.swift */,
+				D6BA644CB0FB40451E00C0B3 /* IPadLink.swift */,
+				2B78992D825F92552EF69B09 /* LinkView.swift */,
+				8A472A1CFB488F926C0D5DEC /* MyDayView.swift */,
+				F03156A005B8D5FB142B0035 /* RootView.swift */,
+				86AC3A845CA43A906419F93A /* RuggedSpeechTVApp.swift */,
+				3F81927A013CDB49DBF3B7C3 /* SettingsView.swift */,
+				C5434C6526F1663FF6280341 /* ShowingView.swift */,
+				AEA37DFD3E6C0695C200E19D /* TalkView.swift */,
+				19361A32DC5EBBED296019C2 /* TrafficLightView.swift */,
+				5BB2773832555232C75F9F50 /* TVContent.swift */,
+			);
+			path = TV;
+			sourceTree = "<group>";
+		};
+		E9C3DB3EC6D7655028A9C0D3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				49D88A349FD70A9153DD2C03 /* App.app */,
+				6DD84CC12F631F85CABE53A8 /* RuggedSpeechTV.app */,
+				4340C25CC735B51F5C321827 /* RuggedSpeechWatch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FF627C6AB8FA7FE5FE9D4FF6 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				7D0E9A0BF464C7375090A551 /* Colours.swift */,
+				F22F1099B57DD0E23A8C3774 /* LinkState.swift */,
+				7DD1BE806AA055FC55BEC1EF /* Speaker.swift */,
+				816380435624AC5EC5C1CECD /* Vocabulary.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		93E9E330FC2CE7458D9C925F /* App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FFC1863BD4026D2C17CBE82B /* Build configuration list for PBXNativeTarget "App" */;
+			buildPhases = (
+				B77F0AF073564580D75A2CF1 /* Sources */,
+				37BFF6A8CB5CC7FA21AD3FA3 /* Resources */,
+				BC0DC3536DED64E0E8C9923E /* Frameworks */,
+				8FB70F68C37A7E71D356530E /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C5CAFBA372D3EB6EA4341038 /* PBXTargetDependency */,
+			);
+			name = App;
+			packageProductDependencies = (
+				FD127B870EFB46EFAC91834E /* CapApp-SPM */,
+			);
+			productName = App;
+			productReference = 49D88A349FD70A9153DD2C03 /* App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C63ABA84CDA2AACF95758E13 /* RuggedSpeechTV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D73FA75D2DE31290D9E34CB8 /* Build configuration list for PBXNativeTarget "RuggedSpeechTV" */;
+			buildPhases = (
+				55C3886D8AFB67827AB393B2 /* Sources */,
+				E38D3EF172D41053C89E4858 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RuggedSpeechTV;
+			packageProductDependencies = (
+			);
+			productName = RuggedSpeechTV;
+			productReference = 6DD84CC12F631F85CABE53A8 /* RuggedSpeechTV.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F59D72105C9D07829BA9636D /* RuggedSpeechWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F821E328587C5C8495843EA /* Build configuration list for PBXNativeTarget "RuggedSpeechWatch" */;
+			buildPhases = (
+				AF2EC916B3C99D56BF6963DA /* Sources */,
+				D80772E0CC7DBF10FEA011B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RuggedSpeechWatch;
+			packageProductDependencies = (
+			);
+			productName = RuggedSpeechWatch;
+			productReference = 4340C25CC735B51F5C321827 /* RuggedSpeechWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6B590BF25178DC7D824D09CE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					93E9E330FC2CE7458D9C925F = {
+						ProvisioningStyle = Automatic;
+					};
+					C63ABA84CDA2AACF95758E13 = {
+						ProvisioningStyle = Automatic;
+					};
+					F59D72105C9D07829BA9636D = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = B3FD05C59F197F398A0B04AB /* Build configuration list for PBXProject "App" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 4102E3E068508DD683953C7D;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				397805CC4E683B158816CC6E /* XCLocalSwiftPackageReference "CapApp-SPM" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E9C3DB3EC6D7655028A9C0D3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				93E9E330FC2CE7458D9C925F /* App */,
+				F59D72105C9D07829BA9636D /* RuggedSpeechWatch */,
+				C63ABA84CDA2AACF95758E13 /* RuggedSpeechTV */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		37BFF6A8CB5CC7FA21AD3FA3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3FB3C8C0634A765EE81D042E /* Assets.xcassets in Resources */,
+				4FB34C264C0E482A4F3BA9EA /* LaunchScreen.storyboard in Resources */,
+				2700A5422E45C887BEAE5B76 /* Main.storyboard in Resources */,
+				33894972445A547C53525D94 /* PrivacyInfo.xcprivacy in Resources */,
+				81138B00431411BE1EF97D97 /* capacitor.config.json in Resources */,
+				5E04533C01261A377D816DB8 /* config.xml in Resources */,
+				26E51AC20D9FE4119F144870 /* public in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D80772E0CC7DBF10FEA011B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				17E3DE56EA9CACDA501A00E0 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E38D3EF172D41053C89E4858 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F92779BB8232E0C901958308 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		55C3886D8AFB67827AB393B2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AF5FB10639AA3F032AF113E /* BigButton.swift in Sources */,
+				4D3F2630D26594B18A1E0A3C /* Colours.swift in Sources */,
+				6993295D9B2B685761EEA4C6 /* FamilyGames.swift in Sources */,
+				A3D11A276F42E90F148C2438 /* FavouritesView.swift in Sources */,
+				317D9CB082EA48B9D62A8585 /* FeelingsView.swift in Sources */,
+				CA976459D2F292787FA33570 /* GameHub.swift in Sources */,
+				E30FEAF4D7BA9B789913141A /* GamesView.swift in Sources */,
+				49FDF93485BD1B5F5D5C6804 /* HelpView.swift in Sources */,
+				F7C1492D97661B6AC1A562FF /* IPadLink.swift in Sources */,
+				A6E9F12CE19C8EC25B2B2675 /* LinkState.swift in Sources */,
+				722A9217FCDD97B83B13D3B0 /* LinkView.swift in Sources */,
+				CD43577A7360E52D644FABA0 /* MyDayView.swift in Sources */,
+				83A3212E3B3AD97B444D83B0 /* RootView.swift in Sources */,
+				7BD6CE0FB1784F77D688A0AD /* RuggedSpeechTVApp.swift in Sources */,
+				DAC8B61E340368A6B1C6703E /* SettingsView.swift in Sources */,
+				2B608FC58D68A11CF0A3B6C7 /* ShowingView.swift in Sources */,
+				C06343D200D067F1C1D47579 /* Speaker.swift in Sources */,
+				9E54AAD49E83D5816503A190 /* TVContent.swift in Sources */,
+				5CBA01DD0B2C2B9C9AC30752 /* TalkView.swift in Sources */,
+				3ECAA36FE1937631F99ECE2C /* TrafficLightView.swift in Sources */,
+				44DEC6B5EFBFC1F083A04CC9 /* Vocabulary.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AF2EC916B3C99D56BF6963DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ABED17246DE431A4F4340003 /* Colours.swift in Sources */,
+				59FB32608DC2CF140CE2C646 /* FavouritesView.swift in Sources */,
+				BF216F575F36258A76ECC8D2 /* FeelingsView.swift in Sources */,
+				DE5A67874BD3153E9239C24C /* HelpView.swift in Sources */,
+				28B8157B5DA9DE580217157A /* LinkState.swift in Sources */,
+				4B2D6E0EDEA9EA5B37136DFC /* MyDayView.swift in Sources */,
+				E49A0FC24814F4D0489B9DEF /* OnPhoneView.swift in Sources */,
+				8EDB8EBD884F018026E55497 /* PhoneLink.swift in Sources */,
+				78728FD8E95658F1C8DA4664 /* PressButton.swift in Sources */,
+				22F37DD22BEBF53182CA49FE /* RootView.swift in Sources */,
+				75CA7222FA8143CBE81D8BB1 /* RuggedSpeechWatchApp.swift in Sources */,
+				7BD7675BBE05FE204398178A /* SettingsView.swift in Sources */,
+				93215BD4FBEAFA498541BA87 /* Speaker.swift in Sources */,
+				A00EB09D051C71E95664BD1C /* TrafficView.swift in Sources */,
+				0BB059505B4E6481C62BE33A /* Vocabulary.swift in Sources */,
+				CA3A0BA5422B7D487E3B5B04 /* WordsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B77F0AF073564580D75A2CF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8E03F4FB1BE61A377693A7C /* AppDelegate.swift in Sources */,
+				A844A5FAE996B6AD81C77182 /* AppleLink.swift in Sources */,
+				2D5F37D56024307203CB15BE /* MovieLibrary.swift in Sources */,
+				B859A9687FD05E5191691BCE /* MusicLibrary.swift in Sources */,
+				025643294D1903CD4992DC89 /* RuggedNativePlugin.swift in Sources */,
+				93AF4DCA86CB972AF0E661BB /* RuggedViewController.swift in Sources */,
+				67740B5377F807ABF1532F55 /* SceneDelegate.swift in Sources */,
+				82CC858946A4DD0E610E5121 /* SchoolLink.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C5CAFBA372D3EB6EA4341038 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F59D72105C9D07829BA9636D /* RuggedSpeechWatch */;
+			targetProxy = 2014FD0EAFCA274BDA9BF6D2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		23F8D68E28D07D16EB72E4AA /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				00974E067C806B76249CC31E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		9CC6C49B810BBC284BCED483 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1613B4CACB108E77F6BBEFAA /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2817EC322A8BC3CD3264C494 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Rugged Speech";
+				INFOPLIST_KEY_WKApplication = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = ruggedspeechaac;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ruggedspeechaac.watchkitapp;
+				PRODUCT_NAME = "Rugged Speech";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Release;
+		};
+		3EE953DB24C60DFBA1B78E81 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Rugged Speech";
+				INFOPLIST_KEY_WKApplication = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = ruggedspeechaac;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ruggedspeechaac.watchkitapp;
+				PRODUCT_NAME = "Rugged Speech";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Debug;
+		};
+		4A0C935808978B5A7673E412 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ruggedspeechaac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5C9EF0E6AF4F9491454DE177 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		724C498BED3F8BEC1F245BA3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ../../apple/TV/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Rugged Speech";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ruggedspeechaac;
+				PRODUCT_NAME = "Rugged Speech";
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Debug;
+		};
+		B16C91F57956DDADE91CCEA9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ../../apple/TV/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Rugged Speech";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ruggedspeechaac;
+				PRODUCT_NAME = "Rugged Speech";
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Release;
+		};
+		EB1CC3A930E09FEBECF9195D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ruggedspeechaac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F61063B78755D98B1B9C3697 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7D2AEC5B428FFE44C9BA1261 /* debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4F821E328587C5C8495843EA /* Build configuration list for PBXNativeTarget "RuggedSpeechWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3EE953DB24C60DFBA1B78E81 /* Debug */,
+				2817EC322A8BC3CD3264C494 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B3FD05C59F197F398A0B04AB /* Build configuration list for PBXProject "App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F61063B78755D98B1B9C3697 /* Debug */,
+				5C9EF0E6AF4F9491454DE177 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D73FA75D2DE31290D9E34CB8 /* Build configuration list for PBXNativeTarget "RuggedSpeechTV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				724C498BED3F8BEC1F245BA3 /* Debug */,
+				B16C91F57956DDADE91CCEA9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FFC1863BD4026D2C17CBE82B /* Build configuration list for PBXNativeTarget "App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A0C935808978B5A7673E412 /* Debug */,
+				EB1CC3A930E09FEBECF9195D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		397805CC4E683B158816CC6E /* XCLocalSwiftPackageReference "CapApp-SPM" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "CapApp-SPM";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FD127B870EFB46EFAC91834E /* CapApp-SPM */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = "CapApp-SPM";
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 6B590BF25178DC7D824D09CE /* Project object */;
+}

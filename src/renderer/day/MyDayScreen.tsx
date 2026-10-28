@@ -11,7 +11,12 @@ import { Pic } from '../symbols/Pic';
 
 const DEFAULT_SETTINGS: DaySettings = { view: 'today', countdownEnabled: false };
 
-export function MyDayScreen() {
+type Props = {
+  /** Opens one of the child's pages. Given by the app, so My Day can offer the words for an activity. */
+  onOpenPage?: (pageId: string) => void;
+};
+
+export function MyDayScreen({ onOpenPage }: Props = {}) {
   const dateString = useSignal(getDateString(new Date()));
   const activities = useSignal<DayActivity[]>([]);
   const settings = useSignal<DaySettings>(DEFAULT_SETTINGS);
@@ -229,6 +234,11 @@ export function MyDayScreen() {
             <button type="button" onClick={() => askWhoWith(askingActivity.value!)}>
               Who with?
             </button>
+            {askingActivity.value.pageId && onOpenPage && (
+              <button type="button" onClick={() => onOpenPage(askingActivity.value!.pageId!)}>
+                Words for this
+              </button>
+            )}
             <button type="button" onClick={() => finishActivity(askingActivity.value!)}>
               Finished
             </button>

@@ -1,3 +1,5 @@
+import { NowStrip } from '../day/NowStrip';
+
 export type HomeTileId = 'talk' | 'keyboard' | 'myday' | 'favourites' | 'mypages' | 'feelings';
 
 type Tile = { id: HomeTileId; label: string };
@@ -15,10 +17,12 @@ const TILES: Tile[] = [
 
 type Props = {
   onSelect: (tile: HomeTileId) => void;
+  /** When set, the school day (now, next, and the words for the lesson) is shown above the six tiles. */
+  schoolDay?: { onOpenDay: () => void; onOpenPage: (pageId: string) => void };
 };
 
-export function HomeScreen({ onSelect }: Props) {
-  return (
+export function HomeScreen({ onSelect, schoolDay }: Props) {
+  const grid = (
     <div class="home-screen">
       {TILES.map((tile) => (
         <button
@@ -31,6 +35,13 @@ export function HomeScreen({ onSelect }: Props) {
           {tile.label}
         </button>
       ))}
+    </div>
+  );
+  if (!schoolDay) return grid;
+  return (
+    <div class="home-with-day">
+      <NowStrip onOpenDay={schoolDay.onOpenDay} onOpenPage={schoolDay.onOpenPage} />
+      {grid}
     </div>
   );
 }

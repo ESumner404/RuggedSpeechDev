@@ -4,6 +4,7 @@ import { getDateString } from './dayLogic';
 import { addActivity, moveActivity, removeActivity, updateActivity } from './dayEditing';
 import {
   getDaySettings,
+  getMyPages,
   getEffectiveDayPlan,
   savePhoto,
   saveDayPlan,
@@ -14,7 +15,7 @@ import { PhotoCapture } from '../parent/PhotoCapture';
 import { PhotoThumbnail } from '../ui/PhotoThumbnail';
 import { WeeklyRoutineEditor } from './WeeklyRoutineEditor';
 import { FirstThenEditor } from './FirstThenEditor';
-import type { DayActivity, DayPlan, DaySettings, DayViewMode } from '../store/types';
+import type { DayActivity, DayPlan, DaySettings, DayViewMode, MyPage } from '../store/types';
 
 const DEFAULT_SETTINGS: DaySettings = { view: 'today', countdownEnabled: false };
 
@@ -27,6 +28,7 @@ export function DayBuilderTab() {
   const plan = useSignal<DayPlan>({ date: dateString.value, activities: [] });
   const settings = useSignal<DaySettings>(DEFAULT_SETTINGS);
   const newName = useSignal('');
+  const pages = useSignal<MyPage[]>([]);
   // True while this date has no plan of its own and is showing the weekly
   // routine; the first change saves it as the day's own.
   const usesRoutine = useSignal(false);
@@ -58,6 +60,10 @@ export function DayBuilderTab() {
   useEffect(() => {
     void load();
   }, [dateString.value]);
+
+  useEffect(() => {
+    void getMyPages().then((found) => (pages.value = found));
+  }, []);
 
   async function persist(activities: DayActivity[]): Promise<void> {
     const next = { ...plan.value, activities };
@@ -198,6 +204,23 @@ export function DayBuilderTab() {
               value={activity.person ?? ''}
               onInput={(event) => updateField(activity.id, 'person', (event.target as HTMLInputElement).value)}
             />
+            {pages.value.length > 0 && (
+              <select
+                aria-label="Words for this"
+                value={activity.pageId ?? ''}
+                onChange={(event) => {
+                  const value = (event.target as HTMLSelectElement).value;
+                  updateField(activity.id, 'pageId', value || undefined);
+                }}
+              >
+                <option value="">No words page</option>
+                {pages.value.map((page) => (
+                  <option value={page.id} key={page.id}>
+                    Words: {page.name}
+                  </option>
+                ))}
+              </select>
+            )}
             <select
               value={activity.countdownMinutes ?? ''}
               onChange={(event) => {

@@ -1,4 +1,5 @@
 import { buildMenuTemplate } from './menu';
+import { keepOldDataFolder } from './dataFolder';
 import { join } from 'node:path';
 import { readFile, stat, writeFile } from 'node:fs/promises';
 import {
@@ -10,6 +11,7 @@ import {
   powerSaveBlocker,
   protocol,
   session,
+  shell,
 } from 'electron';
 import {
   MAX_FILE_CHARS,
@@ -22,6 +24,7 @@ import {
   safeFileName,
   safeLabel,
 } from './security';
+import { isAppLink } from '../shared/appLink';
 
 // Must run before app is ready. This makes app:// a "standard, secure"
 // scheme so window.isSecureContext is true in the packaged build, photo
@@ -40,7 +43,13 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 // The folder the saved data lives in is named after this, so it must never change by accident.
-app.setName('Rugged Speech Test');
+app.setName('Rugged Speech');
+// Builds before this one were named "Rugged Speech Test": keep a person's saved data when they update.
+if (!process.argv.some((argument) => argument.startsWith('--user-data-dir'))) {
+  const appData = app.getPath('appData');
+  const kept = keepOldDataFolder(appData, 'Rugged Speech Test', 'Rugged Speech');
+  if (kept) app.setPath('userData', kept);
+}
 
 const RENDERER_DIST = join(__dirname, '../renderer');
 const isDev = !app.isPackaged;
@@ -209,6 +218,18 @@ if (!gotLock) {
       return readFile(path, 'utf-8');
     };
 
+    // Another app on this computer, from a link an adult added. A web address, a file or a script is refused.
+    ipcMain.handle('apps:open', async (event, link: unknown) => {
+      if (!trusted(event) || !isAppLink(link)) return false;
+      if (hiddenForTests) return true;
+      try {
+        await shell.openExternal(link.trim());
+        return true;
+      } catch {
+        return false;
+      }
+    });
+
     ipcMain.handle('parent:set-fullscreen', (event, value: boolean) => {
       if (!trusted(event) || !isBoolean(value)) return;
       if (hiddenForTests) {
@@ -234,7 +255,7 @@ if (!gotLock) {
       const dialogOptions = {
         title: 'Save backup',
         defaultPath: `rugged-speech-backup-${new Date().toISOString().slice(0, 10)}.mwbackup`,
-        filters: [{ name: 'Rugged Speech Test backup', extensions: ['mwbackup'] }],
+        filters: [{ name: 'Rugged Speech backup', extensions: ['mwbackup'] }],
       };
       const result = win
         ? await dialog.showSaveDialog(win, dialogOptions)
@@ -249,7 +270,7 @@ if (!gotLock) {
       const win = BrowserWindow.fromWebContents(event.sender);
       const dialogOptions = {
         title: 'Restore backup',
-        filters: [{ name: 'Rugged Speech Test backup', extensions: ['mwbackup'] }],
+        filters: [{ name: 'Rugged Speech backup', extensions: ['mwbackup'] }],
         properties: ['openFile'] as Array<'openFile'>,
       };
       const result = win

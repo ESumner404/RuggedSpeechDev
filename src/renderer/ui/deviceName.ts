@@ -1,6 +1,6 @@
 import type { UserProfile } from '../store/types';
 
-export const APP_NAME = 'Rugged Speech Test';
+export const APP_NAME = 'Rugged Speech';
 
 /** "Lucy's", "James's": the name with its possessive, as it is said in English. */
 export function possessive(name: string): string {

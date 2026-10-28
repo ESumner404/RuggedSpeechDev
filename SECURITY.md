@@ -1,6 +1,6 @@
 # Security policy
 
-Rugged Speech Test holds sensitive information about children (photographs, medical details, and optionally what they said), so security reports are taken seriously.
+Rugged Speech holds sensitive information about children (photographs, medical details, and optionally what they said), so security reports are taken seriously.
 
 ## Reporting a problem
 

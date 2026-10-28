@@ -33,6 +33,11 @@ contextBridge.exposeInMainWorld('myWords', {
       extensions: string[];
     }): Promise<{ ok: true; data: string } | { ok: false }> => ipcRenderer.invoke('files:open', options),
   },
+  apps: {
+    // Another program on this computer, from a link the adult added. The main process refuses anything that is not
+    // a link to an app (a web address, a file or a script).
+    open: (link: string): Promise<boolean> => ipcRenderer.invoke('apps:open', link),
+  },
   startup: {
     // A real OS login-item setting (docs/build-plan.md Phase 8), only settable from
     // the main process.

@@ -320,7 +320,7 @@ test.describe('newer features, in the real app', () => {
     await exitParentMode(page);
     await spyOnSpeech(page);
     await page.locator('.quick-access-bar__button', { hasText: 'Games' }).click();
-    await expect(page.locator('.games-menu__label')).toHaveText(['Find the word', 'Snap', 'Rollercoaster', 'Draw', 'Jokes', 'Music', 'Piano', 'Seasons', 'Make a tree']);
+    await expect(page.locator('.games-menu__label')).toHaveText(['Find the word', 'Snap', 'Rollercoaster', 'Draw', 'Jokes', 'Music', 'Piano', 'Seasons', 'Make a tree', 'Finish the sentence']);
     expect(await allSpoken(page)).toEqual([]);
 
     // Snap
@@ -420,7 +420,7 @@ test.describe('newer features, in the real app', () => {
     await completeFirstRun(page, PIN);
     await enterParentMode(page, PIN);
     await openTab(page, /^Music$/);
-    await expect(page.locator('.music-tab')).toContainText('There is no Spotify or Apple Music');
+    await expect(page.locator('.music-tab')).toContainText('There is no Spotify and no streaming');
 
     // A very short, silent WAV.
     const wav = join(user.dir, '03 - Row_Row_Row.wav');

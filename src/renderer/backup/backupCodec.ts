@@ -7,8 +7,8 @@ import type { BackupPayload } from '../store/db';
 // Web Crypto, so no passphrase or key material ever needs to leave this
 // process or touch disk unencrypted.
 
-// Kept as the original app name from before the "Rugged Speech Test" / "Rugged Speech Test"
-// renames, it's an internal format tag stored inside every backup file,
+// Kept as the original app name from before the app was named
+// "Rugged Speech", it's an internal format tag stored inside every backup file,
 // invisible to the user, and changing it would make every backup made
 // before a rename fail to import (the check below is an exact string
 // match).
@@ -101,14 +101,14 @@ function parseEnvelope(fileText: string): Envelope {
   try {
     parsed = JSON.parse(fileText);
   } catch {
-    throw new BackupFormatError('This file is not a Rugged Speech Test backup.');
+    throw new BackupFormatError('This file is not a Rugged Speech backup.');
   }
   if (
     typeof parsed !== 'object' ||
     parsed === null ||
     (parsed as { format?: unknown }).format !== FORMAT
   ) {
-    throw new BackupFormatError('This file is not a Rugged Speech Test backup.');
+    throw new BackupFormatError('This file is not a Rugged Speech backup.');
   }
   return parsed as Envelope;
 }

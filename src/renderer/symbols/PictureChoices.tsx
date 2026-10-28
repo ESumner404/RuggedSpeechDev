@@ -4,7 +4,7 @@ import { Pic } from './Pic';
 
 const STYLES: { id: SymbolStyle; label: string; hint: string }[] = [
   { id: 'drawn', label: 'Drawn symbols', hint: 'Simple, bold pictures made for this app.' },
-  { id: 'emoji', label: 'Emoji', hint: 'The pictures your computer already has.' },
+  { id: 'emoji', label: 'Emoji', hint: 'The pictures this device already has.' },
 ];
 
 const LABELS: { id: LabelStyle; label: string; hint: string }[] = [
