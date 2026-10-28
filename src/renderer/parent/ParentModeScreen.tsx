@@ -15,6 +15,7 @@ import { StoriesTab } from '../stories/StoriesTab';
 import { DiaryTab } from '../diary/DiaryTab';
 import { FamilyTab } from '../family/FamilyTab';
 import { MoviesTab } from '../movies/MoviesTab';
+import { AppsTab } from '../apps/AppsTab';
 import { MusicTab } from './MusicTab';
 import { JokesTab } from './JokesTab';
 import { SeasonsTab } from './SeasonsTab';
@@ -73,6 +74,7 @@ const GROUPS = [
       { id: 'myday', label: 'My Day' },
       { id: 'music', label: 'Music' },
       { id: 'movies', label: 'Movies' },
+      { id: 'apps', label: 'My apps' },
       { id: 'jokes', label: 'Jokes' },
       { id: 'seasons', label: 'Seasons' },
     ],
@@ -263,6 +265,7 @@ export function ParentModeScreen({ onExit }: Props) {
       {tab.value === 'family' && <FamilyTab />}
       {tab.value === 'stories' && <StoriesTab />}
       {tab.value === 'movies' && <MoviesTab />}
+      {tab.value === 'apps' && <AppsTab />}
       {tab.value === 'music' && <MusicTab />}
       {tab.value === 'jokes' && <JokesTab />}
       {tab.value === 'seasons' && <SeasonsTab />}

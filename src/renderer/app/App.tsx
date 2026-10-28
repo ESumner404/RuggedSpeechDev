@@ -54,6 +54,7 @@ import {
   lostModeSetting,
   recordActivity,
   schoolModeSetting,
+  schoolDayOnHomeSetting,
   labelStyleSetting,
   symbolStyleSetting,
   themeSetting,
@@ -67,6 +68,8 @@ import { controllerSpec, linkPeers } from '../platform/linkStatus';
 import { ControllerScreen } from '../game/ControllerScreen';
 import { FamilyScreen } from '../family/FamilyScreen';
 import { MoviesScreen } from '../movies/MoviesScreen';
+import { AppsScreen } from '../apps/AppsScreen';
+import { readSchoolNow } from '../day/schoolDay';
 import { TimerScreen } from '../timer/TimerScreen';
 import { StoriesScreen } from '../stories/StoriesScreen';
 import { getDateString } from '../day/dayLogic';
@@ -80,6 +83,7 @@ import { AboutMeButton } from '../safety/AboutMeButton';
 import { SCHOOL_MODE_NAME, modeName } from '../ui/modeName';
 import { FirstRunWizard } from '../setup/FirstRunWizard';
 import { SplashScreen } from '../setup/SplashScreen';
+import { favouriteNotice } from '../board/favouriteNotice';
 
 type AppScreen =
   | { name: 'home' }
@@ -93,6 +97,7 @@ type AppScreen =
   | { name: 'body' }
   | { name: 'family' }
   | { name: 'movies' }
+  | { name: 'apps' }
   | { name: 'timer' }
   | { name: 'stories' }
   | { name: 'music' }
@@ -113,6 +118,7 @@ const SCREEN_LABELS: Record<AppScreen['name'], string> = {
   body: 'My body',
   family: 'My family',
   movies: 'Movies',
+  apps: 'Apps',
   timer: 'Timer',
   stories: 'My stories',
   music: 'Music',
@@ -338,7 +344,17 @@ export function App() {
       screen.value = { name: 'feelings', tab: 'help' };
       return;
     }
+    if (target === 'lesson') {
+      void openThisLesson();
+      return;
+    }
     screen.value = { name: target };
+  }
+
+  // The words for what is happening now at school; My Day when there are none to offer.
+  async function openThisLesson(): Promise<void> {
+    const pageId = (await readSchoolNow()).now?.pageId;
+    screen.value = pageId ? { name: 'mypages', pageId } : { name: 'myday' };
   }
 
   // A single press opens the PIN gate. Parent Mode itself still requires
@@ -354,7 +370,19 @@ export function App() {
   function renderScreen() {
     switch (screen.value.name) {
       case 'home':
-        return <HomeScreen onSelect={handleHomeSelect} />;
+        return (
+          <HomeScreen
+            onSelect={handleHomeSelect}
+            {...(schoolModeSetting.signal.value && schoolDayOnHomeSetting.signal.value
+              ? {
+                  schoolDay: {
+                    onOpenDay: () => (screen.value = { name: 'myday' }),
+                    onOpenPage: (pageId: string) => (screen.value = { name: 'mypages', pageId }),
+                  },
+                }
+              : {})}
+          />
+        );
       case 'talk':
         return <TalkScreen onExit={goHome} />;
       case 'keyboard':
@@ -377,6 +405,8 @@ export function App() {
         return <TimerScreen />;
       case 'movies':
         return <MoviesScreen />;
+      case 'apps':
+        return <AppsScreen />;
       case 'family':
         return <FamilyScreen />;
       case 'body':
@@ -476,6 +506,9 @@ export function App() {
         )}
       </div>
       <main class="app-shell__screen">{renderScreen()}</main>
+      <div class="favourite-notice" role="status">
+        {favouriteNotice.value}
+      </div>
       {pinGateOpen.value && (
         <div class="pin-gate-overlay">
           <PinGate

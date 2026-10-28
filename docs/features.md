@@ -77,7 +77,8 @@ See [the principles](../PRINCIPLES.md) for the reasoning.
 - **Find the word**, **Snap**, **Rollercoaster** (build short sentences), **Draw**, **Jokes** (with your own), **Music** (songs from files you add, with playlists) and **Piano**.
 - **Music from the device (iPhone and iPad):** songs already stored in the Music library, including downloaded Apple Music songs, can be added in Parent Mode. Only songs stored on the device are offered, they are played by the device, and nothing is copied or streamed.
 - **Seasons**: words, Find the word and Snap for spring, summer, autumn, winter, Christmas, Easter, Halloween, Bonfire Night, Diwali, Eid and Hanukkah, with the one that suits today's date marked. An adult chooses which to show, changes the words, and adds others (Ramadan, Vaisakhi, Holi, Passover, Chinese New Year, Birthday, or their own).
-- **Movies (iPhone and iPad):** videos already on the device, picked from Photos or Files and played full screen when pressed. Nothing is streamed or sent.
+- **Movies:** videos kept on the device. On an iPhone or iPad they are picked from Photos or Files and played full screen when pressed; on a computer they are chosen from a folder, kept in the app, and played in the page with their own play button. They never start by themselves, nothing is streamed or sent, and they are not part of a backup.
+- **My apps:** links to other apps on the same device (a call, photos, a favourite game), each a big tile on the Apps screen that opens that app when pressed. Only a link that opens an app can be added, never a web address, so it cannot take the child onto the internet.
 - **My family and friends:** a family tree with photos, built in Parent Mode, where pressing a person says who they are.
 - **Make a tree**: decorate a Christmas tree with baubles, lights, a star and presents; it is remembered.
 - No scores against anyone, no clocks, nothing moves or flashes.
@@ -126,7 +127,8 @@ A separate side for school staff, with a Start page, readiness check and a searc
 - **Home–school diary**: a note each way between home and school, for adults (also in Parent Mode).
 - **Choice boards**: make a page of two to six words for a real choice.
 - **Is everything ready?**: a short, kind checklist on Today with a button to sort each thing out.
-- **Classroom set-up**: the school top bar, a typical school day, and an automatic close after a set time.
+- **Classroom set-up**: the school top bar, a typical school day, the school day on the child's Home screen, and an automatic close after a set time.
+- **The school day on the child's Home screen:** with School Mode on, a strip above the six buttons shows what is happening now and what comes next, from today's plan or the timetable, with **Words for this** when the activity has a lesson page. It is always the same size, so nothing moves. A **This lesson** button can go in the top bar in Quick Access to reach the same words from anywhere.
 - **School guide** inside School Mode.
 
 ## Parent Mode

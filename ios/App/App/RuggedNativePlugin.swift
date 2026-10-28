@@ -38,6 +38,7 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
         CAPPluginMethod(name: "moviePick", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "moviePlay", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "movieRemove", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "appOpen", returnType: CAPPluginReturnPromise),
     ]
 
     /// The largest file the app will read: a backup with a great many photographs and songs.
@@ -298,6 +299,22 @@ public class RuggedNativePlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDe
     @objc func movieRemove(_ call: CAPPluginCall) {
         MovieLibrary.shared.remove(id: call.getString("id") ?? "")
         call.resolve()
+    }
+
+    // MARK: Other apps on this device.
+
+    /// Opens another app from a link an adult added. Web addresses and files are refused here as well as on the page:
+    /// they would open a browser and go onto the internet. If no app handles the link, the answer is false.
+    @objc func appOpen(_ call: CAPPluginCall) {
+        let text = (call.getString("link") ?? "").trimmingCharacters(in: .whitespaces)
+        let blocked: Set<String> = ["http", "https", "ftp", "ftps", "sftp", "ws", "wss", "smb", "file", "data", "blob", "javascript", "vbscript", "about", "chrome", "view-source"]
+        guard !text.isEmpty, text.count <= 200, let url = URL(string: text), let scheme = url.scheme?.lowercased(), !blocked.contains(scheme) else {
+            call.resolve(["ok": false])
+            return
+        }
+        DispatchQueue.main.async {
+            UIApplication.shared.open(url, options: [:]) { opened in call.resolve(["ok": opened]) }
+        }
     }
 
     /// A file name with nothing in it that could name a folder.

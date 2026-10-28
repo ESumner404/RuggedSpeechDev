@@ -1,6 +1,7 @@
 import { useSignal } from '@preact/signals';
 import { moviesSetting } from '../store/db';
 import { MAX_MOVIES, formatLength, movieFromPick } from './movies';
+import { pickVideos, removeVideo } from './webLibrary';
 
 function formatBytes(bytes: number): string {
   return bytes >= 1024 * 1024 * 1024 ? `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB` : `${Math.max(1, Math.round(bytes / (1024 * 1024)))} MB`;
@@ -15,16 +16,19 @@ export function MoviesTab() {
   const total = movies.reduce((sum, movie) => sum + movie.bytes, 0);
 
   async function add(source: 'photos' | 'files'): Promise<void> {
-    if (!library) return;
     busy.value = true;
     message.value = '';
-    const picked = await library.pick(source);
+    // A phone or tablet keeps the films with the device's own player; a computer keeps them in the app and plays them in the page.
+    const result = library ? { movies: await library.pick(source), tooBig: 0 } : await pickVideos();
+    const picked = result.movies;
     const room = Math.max(0, MAX_MOVIES - moviesSetting.signal.value.length);
     const fresh = picked.slice(0, room);
-    for (const left of picked.slice(room)) await library.remove(left.id);
+    for (const left of picked.slice(room)) await (library ? library.remove(left.id) : removeVideo(left.id));
     if (fresh.length > 0) await moviesSetting.set([...moviesSetting.signal.value, ...fresh.map(movieFromPick)]);
     message.value =
-      picked.length === 0
+      result.tooBig > 0
+        ? `${result.tooBig === 1 ? 'A video was' : `${result.tooBig} videos were`} too big to add (the limit is 1.5 GB each).${fresh.length > 0 ? ` Added ${fresh.length}.` : ''}`
+        : picked.length === 0
         ? 'Nothing was added.'
         : fresh.length < picked.length
           ? `Added ${fresh.length}. There is room for ${MAX_MOVIES} movies.`
@@ -34,35 +38,36 @@ export function MoviesTab() {
 
   async function remove(id: string): Promise<void> {
     await moviesSetting.set(moviesSetting.signal.value.filter((movie) => movie.id !== id));
-    await library?.remove(id);
+    await (library ? library.remove(id) : removeVideo(id));
   }
 
   function update(id: string, changes: { title?: string; emoji?: string }): void {
     void moviesSetting.set(moviesSetting.signal.value.map((movie) => (movie.id === id ? { ...movie, ...changes } : movie)));
   }
 
-  if (!library) {
-    return (
-      <div class="parent-mode-screen__body movies-tab">
-        <p class="about-tab__hint">Movies kept on the device are available in the iPhone and iPad app.</p>
-      </div>
-    );
-  }
-
   return (
     <div class="parent-mode-screen__body movies-tab">
       <p class="about-tab__hint">
-        Add movies already on this device, from Photos or from Files. Each is copied into the app, so it plays with no
-        internet and nothing is sent anywhere. Films you bought or rented in the TV app are locked to that app and cannot
-        be added. A movie plays only when the child presses it. Movies are not part of a backup, because they are too big.
+        {library
+          ? 'Add movies already on this device, from Photos or from Files. Each is copied into the app, so it plays with no internet and nothing is sent anywhere. Films you bought or rented in the TV app are locked to that app and cannot be added.'
+          : 'Add videos from this computer: films, clips, a recording of a school trip. Each is copied into the app, so it plays with no internet and nothing is sent anywhere.'}{' '}
+        A movie plays only when the child presses it. Movies are not part of a backup, because they are too big.
       </p>
       <div class="movies-tab__add">
-        <button type="button" class="parent-mode-screen__button" disabled={busy.value} onClick={() => void add('photos')}>
-          {busy.value ? 'Adding…' : 'Add from Photos'}
-        </button>
-        <button type="button" class="parent-mode-screen__button" disabled={busy.value} onClick={() => void add('files')}>
-          Add from Files
-        </button>
+        {library ? (
+          <>
+            <button type="button" class="parent-mode-screen__button" disabled={busy.value} onClick={() => void add('photos')}>
+              {busy.value ? 'Adding…' : 'Add from Photos'}
+            </button>
+            <button type="button" class="parent-mode-screen__button" disabled={busy.value} onClick={() => void add('files')}>
+              Add from Files
+            </button>
+          </>
+        ) : (
+          <button type="button" class="parent-mode-screen__button" disabled={busy.value} onClick={() => void add('files')}>
+            {busy.value ? 'Adding…' : 'Add videos'}
+          </button>
+        )}
       </div>
       <p role="status" class="music-tab__message">
         {message.value}

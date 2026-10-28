@@ -651,7 +651,7 @@ A menu down the left, in groups:
   ![Vocabulary](images/school-vocabulary.png)
 
 - **Targets**, **Notes**, **Activity** and **Reports**: described below. Parent Mode has these too.
-- **Classroom set-up**: **Use the school top bar** (Home, Help, Yes, No, Break, Question, and Talk opens to the School page; it asks first because it moves buttons), **Start from a typical school day** (a Monday to Friday timetable, never replacing one you have), **Close School Mode after**, and **Choose a new School PIN**.
+- **Classroom set-up**: **Use the school top bar** (Home, Help, Yes, No, Break, Question, and Talk opens to the School page; it asks first because it moves buttons), **Start from a typical school day** (a Monday to Friday timetable, never replacing one you have), **Show the school day on the Home screen** (a strip above the six buttons with what is happening **Now** and **Next**, and **Words for this** when the activity has a lesson page; it is always the same size, so nothing moves; put **This lesson** in the top bar in Quick Access to reach the same words from anywhere), **Close School Mode after**, and **Choose a new School PIN**.
 
   ![Classroom set-up](images/school-classroom.png)
 
@@ -823,9 +823,20 @@ In **Timetable**, each activity can have **Words: (a lesson page)**. On the chil
 
 In **My family**, add each person with a name, how they are related, a photo (or an emoji), their parents and a partner. The child's **My family** page draws the family tree from the oldest generation down, with partners together, and friends on their own tab. Pressing a person says who they are ("This is Nan, my grandma."), or what you wrote instead. Add **My family** to the top bar in **Quick Access** to reach it from every screen.
 
+#### Movies and videos kept on this device
+
+On a **computer**, choose **Add videos** and pick video files (up to 1.5 GB each). Each is copied into the app and plays inside it, with its own play button, only when the child presses its tile and never by itself. The rest of this section describes the iPhone and iPad app.
+
 #### Movies kept on this iPhone or iPad
 
 In **Movies**, add videos already on the device, from **Photos** or from **Files**. Each is copied into the app, so it plays with no internet and nothing is sent anywhere. Films you bought or rented in the TV app are locked to that app and cannot be added. A movie plays full screen, only when the child presses its tile (add **Movies** to the top bar in **Quick Access**). Movies are not part of a backup, because they are too big.
+
+
+#### Other apps on this device (My apps)
+
+In **My apps**, put other apps on this device a press away: a call, photos, a favourite game. Press **Add** next to an app that comes with the device, or **Add another app** and give it a name and a link. A link looks like `facetime:` or `mygame://start`; the app's help page or its maker will say what it is. **Try it** checks that it opens. Each shows as a big tile on the **Apps** screen (add **Apps** to the top bar in **Quick Access**), and the app opens only when the child presses its tile.
+
+Only links that open an app can be added. A web address (starting `http` or `https`), a file or a script is refused, so nothing here can take the child onto the internet. The list is for this device and is not part of a backup, because a link that opens an app here may mean nothing on another device.
 
 #### School pack: handing lesson pages to many devices
 

@@ -11,7 +11,8 @@ import {
 import { announceItem, announceText } from '../speech/announce';
 import { recordPress } from '../store/usage';
 import type { Item, RecentEntry } from '../store/types';
-import { Pic } from '../symbols/Pic';
+import { BoardButton } from '../board/BoardButton';
+import { useAccess } from '../board/useAccess';
 
 export type FavouritesTab = 'favourites' | 'recent';
 
@@ -25,6 +26,7 @@ type Props = {
 
 export function FavouritesScreen({ tab, onTabChange }: Props) {
   const favourites = useSignal<Item[]>([]);
+  const access = useAccess();
   const recentEnabled = useSignal(false);
   const recentEntries = useSignal<RecentEntry[]>([]);
 
@@ -83,21 +85,17 @@ export function FavouritesScreen({ tab, onTabChange }: Props) {
         <>
           <div class="board-grid favourites-screen__grid">
             {favourites.value.map((item) => (
-              <button
-                type="button"
-                class="board-button"
+              <BoardButton
                 key={item.id}
-                style={{ backgroundColor: item.background_color }}
-                onClick={() => {
+                item={item}
+                onPress={() => {
                   void recordPress(item.label);
                   void announceItem(item);
                 }}
-              >
-                {item.image?.kind === 'emoji' && (
-                  <Pic class="board-button__emoji" char={item.image.char} />
-                )}
-                <span class="board-button__label">{item.label}</span>
-              </button>
+                dwellMs={access.dwellMs}
+                lowArousal={access.lowArousalPalette}
+                holdForFavourite={false}
+              />
             ))}
           </div>
           <p class="favourites-screen__tip">

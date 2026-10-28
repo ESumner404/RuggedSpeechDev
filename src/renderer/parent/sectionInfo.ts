@@ -21,6 +21,7 @@ export const PARENT_SECTIONS: Record<string, SectionInfo> = {
   myday: { purpose: 'Today’s plan, a weekly timetable, and First / Then.' },
   music: { purpose: 'Songs and playlists, kept on this device.' },
   movies: { purpose: 'Movies kept on this device.' },
+  apps: { purpose: 'Other apps on this device, a press away.' },
   jokes: { purpose: 'Jokes, and your own.' },
   seasons: { purpose: 'Words and games for times of the year and celebrations.' },
   access: { purpose: 'Voice, ways of pressing, switches, eye tracking and text size.' },

@@ -13,6 +13,7 @@ import {
 } from '../store/db';
 import { speak } from '../speech/speak';
 import { Pic } from '../symbols/Pic';
+import { showFavouriteNotice } from './favouriteNotice';
 
 type ScanHighlight = 'row' | 'cell' | null;
 
@@ -36,6 +37,10 @@ type Props = {
   scanHighlight?: ScanHighlight;
   tabIndex?: number;
   lowArousal?: boolean;
+  /** For a button that stays chosen once pressed (a feeling, before its strength is chosen). */
+  pressed?: boolean;
+  /** Holding the button adds it to Favourites. Off on the Favourites page itself, where it would add nothing. */
+  holdForFavourite?: boolean;
 };
 
 export function BoardButton({
@@ -45,6 +50,8 @@ export function BoardButton({
   scanHighlight = null,
   tabIndex,
   lowArousal = false,
+  pressed,
+  holdForFavourite = true,
 }: Props) {
   const dwelling = useSignal(false);
   const timerRef = useRef<number | null>(null);
@@ -79,12 +86,14 @@ export function BoardButton({
 
   function startLongPress(): void {
     clearLongPress();
+    if (!holdForFavourite) return;
     longPressFiredRef.current = false;
     longPressing.value = true;
     longPressTimerRef.current = window.setTimeout(() => {
       longPressing.value = false;
       longPressFiredRef.current = true;
       void saveFavourite(item);
+      showFavouriteNotice(item.label);
       speak('Added to Favourites', {
         rate: preferredSpeechRate.value,
         pitch: preferredSpeechPitch.value,
@@ -151,6 +160,7 @@ export function BoardButton({
         : item.target
           ? { 'aria-label': `${item.label}, focus word` }
           : {})}
+      {...(pressed !== undefined ? { 'aria-pressed': pressed } : {})}
       {...(tabIndex !== undefined ? { tabIndex } : {})}
     >
       {item.image?.kind === 'emoji' && (

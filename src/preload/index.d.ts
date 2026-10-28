@@ -20,6 +20,14 @@ export interface PlatformCapabilities {
   movies: boolean;
   /** Handing a school pack to nearby devices over the school's wifi. */
   school: boolean;
+  /** Opening another app on the same device, from a link an adult has added. */
+  apps: boolean;
+}
+
+/** Opens another app on this device from a link such as "facetime:". Never a web page: those are refused. */
+export interface AppLinksBridge {
+  /** Whether an app opened. False when the link is not one that opens an app, or no app on the device handles it. */
+  open: (link: string) => Promise<boolean>;
 }
 
 /** One-way hand-over of a school pack: a sender (the school's device) to listeners (pupils' devices), with a code. */
@@ -106,6 +114,8 @@ export interface MyWordsBridge {
   music?: MusicLibraryBridge;
   /** Movies kept on the device. Absent where there are none. */
   movies?: MovieLibraryBridge;
+  /** Opening other apps on this device. Absent where the page cannot. */
+  apps?: AppLinksBridge;
   /** One-way school pack hand-over. Absent where there is none. */
   school?: SchoolLinkBridge;
   parentMode: {

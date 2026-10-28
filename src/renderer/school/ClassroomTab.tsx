@@ -1,5 +1,5 @@
 import { useSignal } from '@preact/signals';
-import { getMyPages, quickAccessButtons, schoolTimeoutSetting, weeklyRoutineSetting } from '../store/db';
+import { getMyPages, quickAccessButtons, schoolDayOnHomeSetting, schoolTimeoutSetting, weeklyRoutineSetting } from '../store/db';
 import { linkLessonPages } from '../day/lessonPages';
 import { applySchoolTopBar } from '../store/school';
 import { SCHOOL_QUICK_ACCESS, QUICK_ACCESS_LABELS } from '../store/quickAccess';
@@ -106,6 +106,24 @@ export function ClassroomTab() {
             Added Monday to Friday. Change the times and names in Timetable to match.
           </p>
         )}
+      </section>
+
+      <section class="school-tab__section">
+        <h2 class="school-tab__heading">The school day on the child's Home screen</h2>
+        <p class="school-tab__hint">
+          Above the six Home buttons, the child sees what is happening <strong>Now</strong> and what comes <strong>Next</strong>,
+          taken from today's plan or the timetable. When the activity has a lesson page, a <strong>Words for this</strong> button
+          opens it. The strip is always the same size, so the six buttons do not move. You can also put <strong>This lesson</strong>{' '}
+          in the top bar in Quick Access, so the words for the lesson are one press away from anywhere.
+        </p>
+        <label class="access-tab__checkbox">
+          <input
+            type="checkbox"
+            checked={schoolDayOnHomeSetting.signal.value}
+            onChange={(event) => void schoolDayOnHomeSetting.set((event.target as HTMLInputElement).checked)}
+          />
+          Show the school day on the Home screen
+        </label>
       </section>
 
       <section class="school-tab__section">

@@ -10,6 +10,7 @@ import {
 import { EMPTY_LOST_MODE, isLostMode, type LostMode } from '../safety/lostMode';
 import { isFamilyList, type FamilyMember } from '../family/family';
 import { isMovieList, type Movie } from '../movies/movies';
+import { isAppList, type MyApp } from '../apps/apps';
 import { isDiaryList, type DiaryEntry } from '../diary/diary';
 import { isStoryList, type Story } from '../stories/stories';
 import { DEFAULT_TRAFFIC, isTrafficSetting, type TrafficSetting } from '../signals/traffic';
@@ -117,6 +118,11 @@ interface MyWordsDB extends DBSchema {
     key: string;
     value: Blob;
   };
+  /** Videos an adult added (Movies), kept in the app on a computer. Not in a backup: a film is far too big. */
+  movieFiles: {
+    key: string;
+    value: Blob;
+  };
   people: {
     key: string;
     value: PersonRecord;
@@ -139,7 +145,7 @@ interface MyWordsDB extends DBSchema {
   };
 }
 
-export const DB_VERSION = 6;
+export const DB_VERSION = 7;
 
 let dbPromise: Promise<IDBPDatabase<MyWordsDB>> | null = null;
 
@@ -169,6 +175,9 @@ function openMyWordsDB(): Promise<IDBPDatabase<MyWordsDB>> {
         }
         if (oldVersion < 6) {
           db.createObjectStore('activity', { keyPath: 'id', autoIncrement: true });
+        }
+        if (oldVersion < 7) {
+          db.createObjectStore('movieFiles');
         }
       },
     });
@@ -597,6 +606,21 @@ export async function deleteVoiceClip(blobId: string): Promise<void> {
   await db.delete('voiceClips', blobId);
 }
 
+export async function saveMovieFile(id: string, blob: Blob): Promise<void> {
+  const db = await openMyWordsDB();
+  await db.put('movieFiles', blob, id);
+}
+
+export async function getMovieFile(id: string): Promise<Blob | undefined> {
+  const db = await openMyWordsDB();
+  return db.get('movieFiles', id);
+}
+
+export async function deleteMovieFile(id: string): Promise<void> {
+  const db = await openMyWordsDB();
+  await db.delete('movieFiles', id);
+}
+
 export async function getVoiceClip(blobId: string): Promise<Blob | undefined> {
   const db = await openMyWordsDB();
   return db.get('voiceClips', blobId);
@@ -869,6 +893,8 @@ export const wordStageSetting = storedSetting<number>('wordStage', 0, isStageCho
 export const clearAfterSpeakSetting = storedSetting<boolean>('clearAfterSpeak', false, isBoolean);
 /** School (staff) wording and presets. */
 export const schoolModeSetting = storedSetting<boolean>('schoolMode', false, isBoolean);
+/** On a device with School Mode on: show what is happening now at school, and its words, on the child's Home screen. */
+export const schoolDayOnHomeSetting = storedSetting<boolean>('schoolDayOnHome', true, isBoolean);
 /** Minutes of inactivity before Parent Mode closes itself; 0 never. */
 export const parentModeTimeoutSetting = storedSetting<number>('parentModeTimeoutMin', 0, isMinutes);
 /** On a phone or tablet: follow the device's own Reduce Motion, Increase Contrast, Bold Text and text size. */
@@ -948,6 +974,8 @@ const isDiarySeen = (value: unknown): value is DiarySeen =>
 export const diarySeenSetting = storedSetting<DiarySeen>('diarySeen', {}, isDiarySeen, false);
 /** Movies kept on this device. Not in a backup: the films themselves are not, so the names would point at nothing. */
 export const moviesSetting = storedSetting<Movie[]>('movies', [], isMovieList, false);
+/** Links to other apps on this device (My apps). Not in a backup: a link that opens an app here may mean nothing elsewhere. */
+export const appsSetting = storedSetting<MyApp[]>('apps', [], isAppList, false);
 /** The people who matter to the child, and how they are related (My family). */
 export const familySetting = storedSetting<FamilyMember[]>('family', [], isFamilyList);
 export const myBodySetting = storedSetting<BodyLook>('myBody', DEFAULT_BODY_LOOK, isBodyLook);
@@ -1060,6 +1088,7 @@ const SETTINGS = [
   wordStageSetting,
   clearAfterSpeakSetting,
   schoolModeSetting,
+  schoolDayOnHomeSetting,
   schoolTimeoutSetting,
   parentModeTimeoutSetting,
   followDeviceAccessibilitySetting,
@@ -1083,6 +1112,7 @@ const SETTINGS = [
   myBodySetting,
   familySetting,
   moviesSetting,
+  appsSetting,
   storiesSetting,
   diarySetting,
   diarySeenSetting,

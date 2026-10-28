@@ -175,6 +175,9 @@ export const QUICK_ACCESS_IDS = [
   'body',
   'family',
   'movies',
+  'apps',
+  // The words for what is happening at school now, from the day plan or the timetable.
+  'lesson',
   'timer',
   'stories',
   'music',

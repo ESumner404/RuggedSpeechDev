@@ -6,6 +6,8 @@
 // app's version, tells the page which of the device's accessibility settings
 // are on, and gives a short buzz. Nothing else crosses over.
 
+import { isAppLink } from '../../shared/appLink';
+
 type Bridge = Window['myWords'];
 
 /** What the native plugin offers. Matches `RuggedNativePlugin.swift`. */
@@ -35,6 +37,7 @@ export interface NativeShell {
   moviePick: (options: { source: 'photos' | 'files' }) => Promise<{ movies: Array<{ id: string; title: string; bytes: number; seconds: number }> }>;
   moviePlay: (options: { id: string }) => Promise<{ ok: boolean }>;
   movieRemove: (options: { id: string }) => Promise<void>;
+  appOpen: (options: { link: string }) => Promise<{ ok: boolean }>;
 }
 
 export type DeviceAccessibility = Awaited<ReturnType<NonNullable<Window['myWords']['deviceAccessibility']>>>;
@@ -53,7 +56,7 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
     versions: { app: version },
     platform,
     // A phone or tablet app is always full screen, and starts only when it is opened.
-    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true, movies: true, school: true },
+    capabilities: { fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true, movies: true, school: true, apps: true },
     parentMode: {
       setFullscreen: async () => undefined,
       isFullscreen: async () => true,
@@ -102,6 +105,16 @@ export function buildNativeBridge(shell: NativeShell, platform: 'ios', version: 
       stop: () => shell.schoolStop(),
       send: async (text) => (await shell.schoolSend({ json: text })).sent,
       inbox: () => shell.schoolInbox(),
+    },
+    apps: {
+      open: async (link) => {
+        if (!isAppLink(link)) return false;
+        try {
+          return (await shell.appOpen({ link: link.trim() })).ok;
+        } catch {
+          return false;
+        }
+      },
     },
     movies: {
       pick: async (source) => (await shell.moviePick({ source })).movies,

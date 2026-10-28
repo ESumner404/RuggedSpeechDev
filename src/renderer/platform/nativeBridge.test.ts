@@ -30,6 +30,7 @@ function fakeShell(overrides: Partial<NativeShell> = {}): NativeShell {
     moviePick: vi.fn(async () => ({ movies: [{ id: 'a.mov', title: 'Holiday', bytes: 10, seconds: 60 }] })),
     moviePlay: vi.fn(async () => ({ ok: true })),
     movieRemove: vi.fn(async () => undefined),
+    appOpen: vi.fn(async () => ({ ok: true })),
     musicPlaylists: vi.fn(async () => ({ playlists: [{ id: '7', name: 'Bedtime', count: 3 }] })),
     musicPlay: vi.fn(async () => ({ ok: true })),
     musicPause: vi.fn(async () => undefined),
@@ -45,7 +46,7 @@ describe('the phone and tablet bridge', () => {
   it('says what a phone or tablet cannot do, so the page can hide it', () => {
     const bridge = buildNativeBridge(fakeShell(), 'ios', '1.0');
     expect(bridge.platform).toBe('ios');
-    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true, movies: true, school: true });
+    expect(bridge.capabilities).toEqual({ fullscreen: false, startup: false, deviceAccessibility: true, haptics: true, link: true, music: true, movies: true, school: true, apps: true });
     expect(bridge.versions.app).toBe('1.0');
   });
 
@@ -128,6 +129,15 @@ describe('the phone and tablet bridge', () => {
     expect(await bridge.movies!.play('a.mov')).toBe(true);
     await bridge.movies!.remove('a.mov');
     expect(shell.movieRemove).toHaveBeenCalledWith({ id: 'a.mov' });
+  });
+
+  it('opens another app from a link, and refuses a web address without asking the device', async () => {
+    const shell = fakeShell();
+    const bridge = buildNativeBridge(shell, 'ios', '1.0');
+    expect(await bridge.apps!.open(' facetime:// ')).toBe(true);
+    expect(shell.appOpen).toHaveBeenCalledWith({ link: 'facetime://' });
+    expect(await bridge.apps!.open('https://example.com')).toBe(false);
+    expect(shell.appOpen).toHaveBeenCalledTimes(1);
   });
 
   it('hands a school pack one way over the school’s wifi', async () => {

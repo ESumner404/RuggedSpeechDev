@@ -11,6 +11,7 @@ import {
   powerSaveBlocker,
   protocol,
   session,
+  shell,
 } from 'electron';
 import {
   MAX_FILE_CHARS,
@@ -23,6 +24,7 @@ import {
   safeFileName,
   safeLabel,
 } from './security';
+import { isAppLink } from '../shared/appLink';
 
 // Must run before app is ready. This makes app:// a "standard, secure"
 // scheme so window.isSecureContext is true in the packaged build, photo
@@ -215,6 +217,18 @@ if (!gotLock) {
       if (!info.isFile() || info.size > MAX_FILE_CHARS) return undefined;
       return readFile(path, 'utf-8');
     };
+
+    // Another app on this computer, from a link an adult added. A web address, a file or a script is refused.
+    ipcMain.handle('apps:open', async (event, link: unknown) => {
+      if (!trusted(event) || !isAppLink(link)) return false;
+      if (hiddenForTests) return true;
+      try {
+        await shell.openExternal(link.trim());
+        return true;
+      } catch {
+        return false;
+      }
+    });
 
     ipcMain.handle('parent:set-fullscreen', (event, value: boolean) => {
       if (!trusted(event) || !isBoolean(value)) return;
