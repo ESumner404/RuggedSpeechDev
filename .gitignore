@@ -36,3 +36,4 @@ website/downloads/
 # iOS build output
 ios/DerivedData/
 ios/App/build/
+ios/build/
