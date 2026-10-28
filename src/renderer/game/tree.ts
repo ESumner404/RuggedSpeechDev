@@ -67,8 +67,10 @@ export type TreeTool = {
   /** Where it can go; "off" takes a decoration off any place. */
   kind: SlotKind | 'any';
   emoji?: string;
-  /** A round bauble is drawn in this colour. */
+  /** A round bauble, or a present, is drawn in this colour. */
   colour?: string;
+  /** Drawn as a wrapped present in the colour, rather than as a round bauble. */
+  gift?: boolean;
 };
 
 export const TREE_TOOLS: TreeTool[] = [
@@ -81,9 +83,9 @@ export const TREE_TOOLS: TreeTool[] = [
   { id: 'light', label: 'Light', kind: 'tree', emoji: '💡' },
   { id: 'bell', label: 'Bell', kind: 'tree', emoji: '🔔' },
   { id: 'candy', label: 'Sweet', kind: 'tree', emoji: '🍬' },
-  { id: 'giftRed', label: 'Red present', kind: 'floor', emoji: '🎁' },
-  { id: 'giftBlue', label: 'Blue present', kind: 'floor', colour: '#2563eb', emoji: '🎁' },
-  { id: 'giftGold', label: 'Gold present', kind: 'floor', colour: '#eab308', emoji: '🎁' },
+  { id: 'giftRed', label: 'Red present', kind: 'floor', colour: '#dc2626', gift: true },
+  { id: 'giftBlue', label: 'Blue present', kind: 'floor', colour: '#2563eb', gift: true },
+  { id: 'giftGold', label: 'Gold present', kind: 'floor', colour: '#eab308', gift: true },
   { id: 'off', label: 'Take off', kind: 'any', emoji: '🧽' },
 ];
 

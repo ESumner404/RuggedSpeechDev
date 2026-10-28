@@ -80,25 +80,30 @@ export function FavouritesScreen({ tab, onTabChange }: Props) {
       </div>
 
       {tab === 'favourites' ? (
-        <div class="board-grid favourites-screen__grid">
-          {favourites.value.map((item) => (
-            <button
-              type="button"
-              class="board-button"
-              key={item.id}
-              style={{ backgroundColor: item.background_color }}
-              onClick={() => {
-                void recordPress(item.label);
-                void announceItem(item);
-              }}
-            >
-              {item.image?.kind === 'emoji' && (
-                <Pic class="board-button__emoji" char={item.image.char} />
-              )}
-              <span class="board-button__label">{item.label}</span>
-            </button>
-          ))}
-        </div>
+        <>
+          <div class="board-grid favourites-screen__grid">
+            {favourites.value.map((item) => (
+              <button
+                type="button"
+                class="board-button"
+                key={item.id}
+                style={{ backgroundColor: item.background_color }}
+                onClick={() => {
+                  void recordPress(item.label);
+                  void announceItem(item);
+                }}
+              >
+                {item.image?.kind === 'emoji' && (
+                  <Pic class="board-button__emoji" char={item.image.char} />
+                )}
+                <span class="board-button__label">{item.label}</span>
+              </button>
+            ))}
+          </div>
+          <p class="favourites-screen__tip">
+            To add a word here, press and hold its button on a Talk page until you hear "Added to Favourites".
+          </p>
+        </>
       ) : (
         <div class="recent-screen">
           <div class="recent-screen__controls">

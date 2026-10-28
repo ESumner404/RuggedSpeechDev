@@ -5,6 +5,7 @@ import { TREE_SLOTS, TREE_TOOLS, hungCount, place, toolById, type ToolId, type T
 
 function Hung({ tool }: { tool: ToolId }) {
   const item = toolById(tool);
+  if (item.gift) return <span class="tree-screen__gift" style={{ background: item.colour }} aria-hidden="true" />;
   if (item.colour && !item.emoji) return <span class="tree-screen__bauble" style={{ background: item.colour }} aria-hidden="true" />;
   return (
     <span class="tree-screen__emoji" aria-hidden="true">
@@ -96,7 +97,9 @@ export function TreeScreen() {
               onClick={() => (tool.value = item.id)}
             >
               <span class="tree-screen__tool-sample" aria-hidden="true">
-                {item.colour && !item.emoji ? (
+                {item.gift ? (
+                  <span class="tree-screen__gift" style={{ background: item.colour }} />
+                ) : item.colour && !item.emoji ? (
                   <span class="tree-screen__bauble" style={{ background: item.colour }} />
                 ) : (
                   <Pic char={item.emoji ?? ''} class="tree-screen__pic" />

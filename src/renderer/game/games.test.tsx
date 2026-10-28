@@ -365,6 +365,18 @@ describe('Games', () => {
       expect(after).toEqual(before);
     });
 
+    it('each present is drawn in its own colour, on the tree and in the list of decorations', async () => {
+      await enter('Make a tree', '.tree-screen');
+      const sample = (label: string) => tool(label).querySelector<HTMLElement>('.tree-screen__gift')!.style.background;
+      expect(new Set([sample('Red present'), sample('Blue present'), sample('Gold present')]).size).toBe(3);
+      act(() => tool('Blue present').click());
+      act(() => slot(19).click());
+      act(() => tool('Gold present').click());
+      act(() => slot(20).click());
+      const hung = Array.from(container.querySelectorAll<HTMLElement>('.tree-screen__slot--full .tree-screen__gift'));
+      expect(hung.map((el) => el.style.background)).toEqual([sample('Blue present'), sample('Gold present')]);
+    });
+
     it('presents go under the tree, not on it', async () => {
       await enter('Make a tree', '.tree-screen');
       act(() => tool('Red present').click());
